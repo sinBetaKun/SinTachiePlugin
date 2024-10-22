@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "SinTachiePlugin": {
+      "commandName": "Project"
+    },
+    "プロファイル 1": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\shinm\\Desktop\\YukkuriMovieMaker4\\YukkuriMovieMaker.exe"
+    }
+  }
+}
