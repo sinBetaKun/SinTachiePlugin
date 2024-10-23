@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SinTachiePlugin.Informations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ namespace SinTachiePlugin.ShapePludin
 
         public bool IsExoMaskSupported => false;
 
-        public string Name => "sin型カスタムパーツ立ち絵【図形】";
+        public string Name => PluginInfo.Title;
 
         public IShapeParameter CreateShapeParameter(SharedDataStore? sharedData)
         {
