@@ -25,8 +25,7 @@ namespace SinTachiePlugin.LayerValueListController
         public ID2D1Image? Output;
         readonly ID2D1Bitmap empty;
         IImageFileSource? source;
-
-        AffineTransform2D offset;
+        private AffineTransform2D trans;
         public int? Index { get; set; } = null;
         public int Depth { get; set; } = -1;
         public List<LayerNode> Children { get; set; } = [];
@@ -34,7 +33,7 @@ namespace SinTachiePlugin.LayerValueListController
         public LayerNode(IGraphicsDevicesAndContext devices)
         {
             this.devices = devices;
-            offset = new AffineTransform2D(devices.DeviceContext);
+            trans = new AffineTransform2D(devices.DeviceContext);
             empty = devices.DeviceContext.CreateEmptyBitmap();
         }
 
@@ -98,9 +97,9 @@ namespace SinTachiePlugin.LayerValueListController
                     tmp.source = ImageFileSourceFactory.Create(devices, Path.Combine(dirName, kv.Key));
                     if (tmp.source != null)
                     {
-                        tmp.offset.SetInput(0, tmp.source.Output, true);
-                        tmp.offset.TransformMatrix = Matrix3x2.CreateTranslation(-tmp.source.Output.Size.Width / 2, -tmp.source.Output.Size.Height / 2);
-                        tmp.Output = tmp.offset.Output;
+                        tmp.trans.SetInput(0, tmp.source.Output, true);
+                        tmp.trans.TransformMatrix = Matrix3x2.CreateTranslation(-tmp.source.Output.Size.Width / 2, -tmp.source.Output.Size.Height / 2);
+                        tmp.Output = tmp.trans.Output;
                     }
                     AddLeaf(tmp, kv.Value);
                 }
@@ -110,9 +109,9 @@ namespace SinTachiePlugin.LayerValueListController
             source = ImageFileSourceFactory.Create(devices, root);
             if (source != null)
             {
-                offset.SetInput(0, source.Output, true);
-                offset.TransformMatrix = Matrix3x2.CreateTranslation(-source.Output.Size.Width / 2, -source.Output.Size.Height / 2);
-                Output = offset.Output;
+                trans.SetInput(0, source.Output, true);
+                trans.TransformMatrix = Matrix3x2.CreateTranslation(-source.Output.Size.Width / 2, -source.Output.Size.Height / 2);
+                Output = trans.Output;
             }
         }
 
@@ -249,8 +248,9 @@ namespace SinTachiePlugin.LayerValueListController
 
         public void Dispose()
         {
-            offset.SetInput(0, null, true);
-            offset.Dispose();
+            Output?.Dispose();
+            trans.SetInput(0, null, true);
+            trans.Dispose();
             source?.Dispose();
             empty?.Dispose();
             foreach (var child in Children) child.Dispose();

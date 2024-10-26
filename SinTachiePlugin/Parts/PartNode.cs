@@ -24,8 +24,8 @@ namespace SinTachiePlugin.Parts
         readonly AffineTransform2D offset;
         readonly AffineTransform2D transform;
         readonly Opacity opacityEffect;
-        readonly GaussianBlur gblurEffect;
-        readonly DirectionalBlur dblurEffect;
+        //readonly GaussianBlur gblurEffect;
+        //readonly DirectionalBlur dblurEffect;
         readonly ID2D1Bitmap empty;
         private readonly IGraphicsDevicesAndContext devices;
         public LayerNode? layerTree;
@@ -77,8 +77,8 @@ namespace SinTachiePlugin.Parts
             offset = new AffineTransform2D(devices.DeviceContext);
             transform = new AffineTransform2D(devices.DeviceContext);
             opacityEffect = new Opacity(devices.DeviceContext);
-            gblurEffect = new GaussianBlur(devices.DeviceContext);
-            dblurEffect = new DirectionalBlur(devices.DeviceContext);
+            //gblurEffect = new GaussianBlur(devices.DeviceContext);
+            //dblurEffect = new DirectionalBlur(devices.DeviceContext);
             empty = devices.DeviceContext.CreateEmptyBitmap();
         }
 
@@ -285,8 +285,8 @@ namespace SinTachiePlugin.Parts
             ID2D1Image? output = source;
 
             // リセット
-            dblurEffect.SetInput(0, null, true);
-            gblurEffect.SetInput(0, null, true);
+            //dblurEffect.SetInput(0, null, true);
+            //gblurEffect.SetInput(0, null, true);
             opacityEffect.SetInput(0, null, true);
             transform.SetInput(0, null, true);
             //cropEffect.SetInput(0, null, true);
@@ -379,11 +379,11 @@ namespace SinTachiePlugin.Parts
         {
             Output?.Dispose(); // EffectからgetしたOutputは必ずDisposeする必要がある。Effect側では開放されない。
 
-            dblurEffect.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
-            dblurEffect.Dispose();
+            //dblurEffect.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
+            //dblurEffect.Dispose();
 
-            gblurEffect.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
-            gblurEffect.Dispose();
+            //gblurEffect.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
+            //gblurEffect.Dispose();
 
             opacityEffect.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
             opacityEffect.Dispose();
