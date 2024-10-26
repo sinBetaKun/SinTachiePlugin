@@ -65,10 +65,10 @@ namespace SinTachiePlugin.Informations
         /// <param name="cont">内容</param>
         static public void ShowError(string cont , string? className, string? methodName)
         {
-            MessageBox.Show(
+            var result = MessageBox.Show(
                             "エラーが発生しました。" +
                             $"\nスクリーンショットと共に開発者sinβ（{SinBetaKunX}）までご報告お願いします。" +
-                            "\n（次のダイアログで「OK」を押すとリンク先をブラウザで開きます。）" +
+                            "\n（「はい(Y)」を押すとリンク先をブラウザで開きます。）" +
                             "\nエラー内容" +
                             "\n---" +
                             "\n" + cont +
@@ -77,11 +77,10 @@ namespace SinTachiePlugin.Informations
                             "\n\tクラス：" + (className ?? "(情報なし)") +
                             "\n\tメソッド：" + (methodName ?? "(情報なし)"),
                             PluginInfo.Title,
-                            MessageBoxButtons.OK,
+                            MessageBoxButtons.YesNo,
                             MessageBoxIcon.Error
                             );
-            var result = GetDialog($"開発者のXプロフィールページ（{SinBetaKunX}）をブラウザで開きますか？");
-            if ( result == DialogResult.OK)
+            if ( result == DialogResult.Yes)
             {
                 ProcessStartInfo pi = new ProcessStartInfo()
                 {
