@@ -247,7 +247,7 @@ namespace SinTachiePlugin.Parts
 
         private void SetCommandList()
         {
-            if (partNodes.Count < 1)
+            if (numOfNodes == 0)
             {
                 transformEffect.SetInput(0, empty, true);
                 return;
