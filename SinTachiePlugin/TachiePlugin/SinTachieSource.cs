@@ -23,6 +23,7 @@ namespace SinTachiePlugin.Parts
         List<PartNode> partNodes = [];
         readonly AffineTransform2D transformEffect;
         readonly ID2D1Image output;
+        readonly ID2D1Bitmap empty;
 
         bool isFirst = true;
 
@@ -33,8 +34,9 @@ namespace SinTachiePlugin.Parts
         {
             this.devices = devices;
 
-            //Outputのインスタンスを固定するために、間にエフェクトを挟む
+            empty = devices.DeviceContext.CreateEmptyBitmap();
             transformEffect = new AffineTransform2D(devices.DeviceContext);
+            transformEffect.SetInput(0, empty, true);
             output = transformEffect.Output;//EffectからgetしたOutputは必ずDisposeする必要がある。Effect側では開放されない。
         }
 
@@ -43,16 +45,15 @@ namespace SinTachiePlugin.Parts
         /// </summary>
         public void Update(TachieSourceDescription description)
         {
-
-            if (updateValuesOfNodes(description))
+            if (UpdateValuesOfNodes(description))
             {
                 commandList?.Dispose();
 
                 UpdateParentPaths();
 
-                updateOutputs();
+                UpdateOutputs();
 
-                setCommandList();
+                SetCommandList();
             }
         }
 
@@ -69,7 +70,7 @@ namespace SinTachiePlugin.Parts
             transformEffect.Dispose();
         }
 
-        private bool updateValuesOfNodes(TachieSourceDescription description)
+        private bool UpdateValuesOfNodes(TachieSourceDescription description)
         {
             var cp = description.Tachie.CharacterParameter as SinTachieCharacterParameter;
             var ip = description.Tachie.ItemParameter as SinTachieItemParameter;
@@ -237,15 +238,21 @@ namespace SinTachiePlugin.Parts
             }
         }
 
-        private void updateOutputs()
+        private void UpdateOutputs()
         {
             foreach (var PartNode in partNodes)
                 PartNode.CommitOutput();
 
         }
 
-        private void setCommandList()
+        private void SetCommandList()
         {
+            if (partNodes.Count < 1)
+            {
+                transformEffect.SetInput(0, empty, true);
+                return;
+            }
+
             commandList = devices.DeviceContext.CreateCommandList();
             var dc = devices.DeviceContext;
             dc.Target = commandList;
