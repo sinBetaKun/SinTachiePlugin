@@ -19,11 +19,11 @@ namespace SinTachiePlugin.ShapePludin
         readonly ShapeParameterOfSinTachie param;
 
         public ID2D1Image Output => commandList ?? throw new InvalidOperationException("commandList is null");
+        readonly ID2D1Bitmap empty; 
 
         int numOfNodes = -1;
         bool isFirst = true;
         List<PartNode> nodes = [];
-        Vector2[] points = [];
 
 
         ID2D1CommandList? commandList;
@@ -32,6 +32,7 @@ namespace SinTachiePlugin.ShapePludin
         {
             this.devices = devices;
             this.param = param;
+            empty = devices.DeviceContext.CreateEmptyBitmap();
         }
 
         public void Dispose()
@@ -55,9 +56,9 @@ namespace SinTachiePlugin.ShapePludin
 
                 UpdateParentPaths();
 
-                updateOutputs();
+                UpdateOutputs();
 
-                setCommandList();
+                SetCommandList();
             }
         }
 
@@ -175,14 +176,14 @@ namespace SinTachiePlugin.ShapePludin
             }
         }
 
-        private void updateOutputs()
+        private void UpdateOutputs()
         {
             foreach (var PartNode in nodes)
                 PartNode.CommitOutput();
 
         }
 
-        private void setCommandList()
+        private void SetCommandList()
         {
             commandList = devices.DeviceContext.CreateCommandList();
             var dc = devices.DeviceContext;
@@ -190,148 +191,155 @@ namespace SinTachiePlugin.ShapePludin
             dc.BeginDraw();
             dc.Clear(null);
 
-            for (int i = 0; i < numOfNodes; i++)
+            if (numOfNodes == 0)
             {
-                if (nodes[i].Appear)
+                dc.DrawImage(empty, compositeMode: CompositeMode.SourceOver);
+            }
+            else
+            {
+                for (int i = 0; i < numOfNodes; i++)
                 {
-                    if (nodes[i].Output is ID2D1Image output)
+                    if (nodes[i].Appear)
                     {
-                        var vec2 = nodes[i].Shift;
-                        switch (nodes[i].BlendMode)
+                        if (nodes[i].Output is ID2D1Image output)
                         {
-                            case BlendSTP.SourceOver:
-                                dc.DrawImage(output, vec2, compositeMode: CompositeMode.SourceOver);
-                                break;
+                            var vec2 = nodes[i].Shift;
+                            switch (nodes[i].BlendMode)
+                            {
+                                case BlendSTP.SourceOver:
+                                    dc.DrawImage(output, vec2, compositeMode: CompositeMode.SourceOver);
+                                    break;
 
-                            case BlendSTP.Plus:
-                                dc.DrawImage(output, vec2, compositeMode: CompositeMode.Plus);
-                                break;
+                                case BlendSTP.Plus:
+                                    dc.DrawImage(output, vec2, compositeMode: CompositeMode.Plus);
+                                    break;
 
-                            case BlendSTP.DestinationOver:
-                                dc.DrawImage(output, vec2, compositeMode: CompositeMode.DestinationOver);
-                                break;
+                                case BlendSTP.DestinationOver:
+                                    dc.DrawImage(output, vec2, compositeMode: CompositeMode.DestinationOver);
+                                    break;
 
-                            case BlendSTP.DestinationOut:
-                                dc.DrawImage(output, vec2, compositeMode: CompositeMode.DestinationOut);
-                                break;
+                                case BlendSTP.DestinationOut:
+                                    dc.DrawImage(output, vec2, compositeMode: CompositeMode.DestinationOut);
+                                    break;
 
-                            case BlendSTP.SourceAtop:
-                                dc.DrawImage(output, vec2, compositeMode: CompositeMode.SourceAtop);
-                                break;
+                                case BlendSTP.SourceAtop:
+                                    dc.DrawImage(output, vec2, compositeMode: CompositeMode.SourceAtop);
+                                    break;
 
-                            case BlendSTP.XOR:
-                                dc.DrawImage(output, vec2, compositeMode: CompositeMode.Xor);
-                                break;
+                                case BlendSTP.XOR:
+                                    dc.DrawImage(output, vec2, compositeMode: CompositeMode.Xor);
+                                    break;
 
-                            case BlendSTP.MaskInverseErt:
-                                dc.DrawImage(output, vec2, compositeMode: CompositeMode.MaskInverseErt);
-                                break;
+                                case BlendSTP.MaskInverseErt:
+                                    dc.DrawImage(output, vec2, compositeMode: CompositeMode.MaskInverseErt);
+                                    break;
 
-                            case BlendSTP.Multiply:
-                                dc.BlendImage(output, BlendMode.Multiply, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Multiply:
+                                    dc.BlendImage(output, BlendMode.Multiply, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Screen:
-                                dc.BlendImage(output, BlendMode.Screen, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Screen:
+                                    dc.BlendImage(output, BlendMode.Screen, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Darken:
-                                dc.BlendImage(output, BlendMode.Darken, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Darken:
+                                    dc.BlendImage(output, BlendMode.Darken, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Lighten:
-                                dc.BlendImage(output, BlendMode.Lighten, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Lighten:
+                                    dc.BlendImage(output, BlendMode.Lighten, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Dissolve:
-                                dc.BlendImage(output, BlendMode.Dissolve, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Dissolve:
+                                    dc.BlendImage(output, BlendMode.Dissolve, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.ColorBurn:
-                                dc.BlendImage(output, BlendMode.ColorBurn, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.ColorBurn:
+                                    dc.BlendImage(output, BlendMode.ColorBurn, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.LinearBurn:
-                                dc.BlendImage(output, BlendMode.LinearBurn, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.LinearBurn:
+                                    dc.BlendImage(output, BlendMode.LinearBurn, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.DarkerColor:
-                                dc.BlendImage(output, BlendMode.DarkerColor, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.DarkerColor:
+                                    dc.BlendImage(output, BlendMode.DarkerColor, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.LighterColor:
-                                dc.BlendImage(output, BlendMode.LighterColor, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.LighterColor:
+                                    dc.BlendImage(output, BlendMode.LighterColor, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.ColorDodge:
-                                dc.BlendImage(output, BlendMode.ColorDodge, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.ColorDodge:
+                                    dc.BlendImage(output, BlendMode.ColorDodge, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.LinearDodge:
-                                dc.BlendImage(output, BlendMode.LinearDodge, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.LinearDodge:
+                                    dc.BlendImage(output, BlendMode.LinearDodge, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Overlay:
-                                dc.BlendImage(output, BlendMode.Overlay, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Overlay:
+                                    dc.BlendImage(output, BlendMode.Overlay, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.SoftLight:
-                                dc.BlendImage(output, BlendMode.SoftLight, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.SoftLight:
+                                    dc.BlendImage(output, BlendMode.SoftLight, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.HardLight:
-                                dc.BlendImage(output, BlendMode.HardLight, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.HardLight:
+                                    dc.BlendImage(output, BlendMode.HardLight, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.VividLight:
-                                dc.BlendImage(output, BlendMode.VividLight, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.VividLight:
+                                    dc.BlendImage(output, BlendMode.VividLight, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.LinearLight:
-                                dc.BlendImage(output, BlendMode.LinearLight, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.LinearLight:
+                                    dc.BlendImage(output, BlendMode.LinearLight, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.PinLight:
-                                dc.BlendImage(output, BlendMode.PinLight, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.PinLight:
+                                    dc.BlendImage(output, BlendMode.PinLight, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.HardMix:
-                                dc.BlendImage(output, BlendMode.HardMix, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.HardMix:
+                                    dc.BlendImage(output, BlendMode.HardMix, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Difference:
-                                dc.BlendImage(output, BlendMode.Difference, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Difference:
+                                    dc.BlendImage(output, BlendMode.Difference, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Exclusion:
-                                dc.BlendImage(output, BlendMode.Exclusion, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Exclusion:
+                                    dc.BlendImage(output, BlendMode.Exclusion, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Hue:
-                                dc.BlendImage(output, BlendMode.Hue, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Hue:
+                                    dc.BlendImage(output, BlendMode.Hue, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Saturation:
-                                dc.BlendImage(output, BlendMode.Saturation, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Saturation:
+                                    dc.BlendImage(output, BlendMode.Saturation, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Color:
-                                dc.BlendImage(output, BlendMode.Color, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Color:
+                                    dc.BlendImage(output, BlendMode.Color, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Luminosity:
-                                dc.BlendImage(output, BlendMode.Luminosity, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Luminosity:
+                                    dc.BlendImage(output, BlendMode.Luminosity, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Subtract:
-                                dc.BlendImage(output, BlendMode.Subtract, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Subtract:
+                                    dc.BlendImage(output, BlendMode.Subtract, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
 
-                            case BlendSTP.Division:
-                                dc.BlendImage(output, BlendMode.Division, vec2, null, InterpolationMode.MultiSampleLinear);
-                                break;
+                                case BlendSTP.Division:
+                                    dc.BlendImage(output, BlendMode.Division, vec2, null, InterpolationMode.MultiSampleLinear);
+                                    break;
+                            }
+
                         }
-
                     }
                 }
             }
