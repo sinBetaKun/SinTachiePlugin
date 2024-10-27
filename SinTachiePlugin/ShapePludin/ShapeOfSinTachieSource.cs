@@ -42,6 +42,7 @@ namespace SinTachiePlugin.ShapePludin
                 partnode.Dispose();
             // 最後のUpdateで作成したCommandListを破棄
             commandList?.Dispose();
+            empty.Dispose();
         }
 
         public void Update(TimelineItemSourceDescription timelineItemSourceDescription)

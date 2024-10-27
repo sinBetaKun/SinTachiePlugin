@@ -68,6 +68,7 @@ namespace SinTachiePlugin.Parts
             transformEffect.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
             output.Dispose(); // EffectからgetしたOutputは必ずDisposeする必要がある。Effect側では開放されない。
             transformEffect.Dispose();
+            empty.Dispose();
         }
 
         private bool UpdateValuesOfNodes(TachieSourceDescription description)
