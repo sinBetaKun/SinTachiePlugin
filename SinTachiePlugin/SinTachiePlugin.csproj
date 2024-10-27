@@ -63,4 +63,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="mkdir &quot;C:\Users\shinm\Desktop\YukkuriMovieMaker4\user\plugin\$(ProjectName)&quot; &gt; NUL 2&gt;&amp;1&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;C:\Users\shinm\Desktop\YukkuriMovieMaker4\user\plugin\$(ProjectName)\&quot;" />
+	</Target>
+
 </Project>
