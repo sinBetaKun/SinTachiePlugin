@@ -126,6 +126,7 @@ namespace SinTachiePlugin.Parts
                         tagLookup[partBlocks[i].TagName] = i;
                     }
                 }
+                int lengthOfParts = partBlocks.Count;
                 foreach (var fd in fdList)
                 {
                     if (fd.FaceParameter is SinTachieFaceParameter fp)
@@ -152,6 +153,7 @@ namespace SinTachiePlugin.Parts
                                 frameList.Add(frameOfFace);
                                 partBlocks.Add(part);
                                 busNums.Add((int)part.BusNum.GetValue(lengthOfFace, frameOfFace, description.FPS));
+                                tagLookup[part.TagName] = lengthOfParts++;  // タグ辞書をここでも更新しないと、表情アイテムの多段重ねの機能を実装できない。
                             }
                         }
                     }
@@ -159,15 +161,26 @@ namespace SinTachiePlugin.Parts
             }
             int numOfNodes = partBlocks.Count;
             var indexedBusNums = new (int busNum, int originalIndex)[numOfNodes];
-
+            var countOfBusNum = new Dictionary<int, int>();
             for (int i = 0; i < numOfNodes; i++)
             {
-                indexedBusNums[i] = (busNums[i], i);    // 頭おかしかった。ごめんよkotolin
+                var busNum = busNums[i];
+                if (countOfBusNum.ContainsKey(busNum)) countOfBusNum[busNum]++;
+                else countOfBusNum[busNum] = 1;
+                indexedBusNums[i] = (busNum, i);
             }
 
             Array.Sort(indexedBusNums, (a, b) => a.busNum.CompareTo(b.busNum));
-            //☝ここが怪しい。
-            //indexedBusNums[]のbusNumが等しい部分で、originalIndexが昇順になるように組んでみてほしい。
+            
+            // ここのソートが不足していた。
+            for (int pos = 0; pos < numOfNodes;)
+            {
+                int count = countOfBusNum[indexedBusNums[pos].busNum];
+                Array.Sort(indexedBusNums, pos, count,
+                    Comparer<(int busNum, int originalIndex)>.Create((a, b) =>
+                    a.originalIndex.CompareTo(b.originalIndex)));
+                pos += count;
+            }
 
             List<long> sortedLengthList = new List<long>(numOfNodes);
             List<long> sortedFrameList = new List<long>(numOfNodes);
