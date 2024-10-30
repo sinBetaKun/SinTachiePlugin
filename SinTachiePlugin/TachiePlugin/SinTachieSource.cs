@@ -82,7 +82,7 @@ namespace SinTachiePlugin.Parts
         {
             var cp = description.Tachie.CharacterParameter as SinTachieCharacterParameter;
             var ip = description.Tachie.ItemParameter as SinTachieItemParameter;
-            //前に持ってくる。効果は分からない
+
             // 立ち絵アイテムがnullの時
             if (ip?.Parts == null)
             {
@@ -97,24 +97,22 @@ namespace SinTachiePlugin.Parts
             var fdList = description.Tachie.Faces.ToList();
             fdList.Reverse();
 
-            //こいつらの使う容量を事前確保しておく
-            List<PartBlock> partBlocks = ip.Parts.ToList();
-            List<long> lengthList = new List<long>(partBlocks.Count);
-            List<long> frameList = new List<long>(partBlocks.Count);
-            List<int> busNums = new List<int>(partBlocks.Count);
 
+            List<PartBlock> partBlocks = ip.Parts.ToList();
+            List<long> lengthList = new(partBlocks.Count);
+            List<long> frameList = new(partBlocks.Count);
+            List<int> busNums = new(partBlocks.Count);
             long lengthOfItem = description.ItemDuration.Frame;
             long frameOfItem = description.ItemPosition.Frame;
             int fps = description.FPS;
             double voiceVolume = description.VoiceVolume;
             if (voiceVolume < 0) voiceVolume = 0;
 
-            
             for (int i = 0; i < partBlocks.Count; i++)
             {
                 lengthList.Add(lengthOfItem);
                 frameList.Add(frameOfItem);
-                busNums.Add((int)partBlocks[i].BusNum.GetValue(lengthOfItem, frameOfItem, description.FPS));
+                busNums.Add((int)partBlocks[i].BusNum.GetValue(lengthOfItem, frameOfItem, fps));
             }
             // 表情アイテムがnullでない時
             if (fdList != null)
@@ -128,57 +126,61 @@ namespace SinTachiePlugin.Parts
                         tagLookup[partBlocks[i].TagName] = i;
                     }
                 }
-
+                int lengthOfParts = partBlocks.Count;
                 foreach (var fd in fdList)
                 {
                     if (fd.FaceParameter is SinTachieFaceParameter fp)
                     {
                         long lengthOfFace = fd.ItemDuration.Frame;
                         long frameOfFace = fd.ItemPosition.Frame;
-
-                        for (int i = 0; i < fp.Parts.Count; i++)
+                        // 表情アイテムのパーツで立ち絵アイテムと名前が重複するパーツを上書き・補足する
+                        var tagsOfFace = (from node in fp.Parts select node.TagName).ToList();
+                        for (int i = 0; i < tagsOfFace.Count; i++)
                         {
                             var part = fp.Parts[i];
                             if (string.IsNullOrEmpty(part.TagName)) continue;
 
+                            string tag = tagsOfFace[i];
                             if (tagLookup.TryGetValue(part.TagName, out int index))
                             {
-                                // 既存パーツの更新
                                 lengthList[index] = lengthOfFace;
                                 frameList[index] = frameOfFace;
                                 partBlocks[index] = part;
                             }
                             else
                             {
-                                // 新規パーツの追加
                                 lengthList.Add(lengthOfFace);
                                 frameList.Add(frameOfFace);
                                 partBlocks.Add(part);
                                 busNums.Add((int)part.BusNum.GetValue(lengthOfFace, frameOfFace, description.FPS));
+                                tagLookup[part.TagName] = lengthOfParts++;  // タグ辞書をここでも更新しないと、表情アイテムの多段重ねの機能を実装できない。
                             }
                         }
                     }
                 }
             }
-
-
-
             int numOfNodes = partBlocks.Count;
-            /*List<int> busNums = (from block in partBlocks
-                             select block.GetBusNum(lengthOfItem, frameOfItem, fps)).ToList();*/
-            /*List<int> busNums = (from block in partBlocks
-                                 select (int)block.BusNum.GetValue(lengthOfItem, frameOfItem, fps)).ToList();*/
-
             var indexedBusNums = new (int busNum, int originalIndex)[numOfNodes];
+            var countOfBusNum = new Dictionary<int, int>();
             for (int i = 0; i < numOfNodes; i++)
             {
-                indexedBusNums[i] = (
-                    (int)partBlocks[i].BusNum.GetValue(lengthOfItem, frameOfItem, fps),
-                    i
-                );
+                var busNum = busNums[i];
+                if (countOfBusNum.ContainsKey(busNum)) countOfBusNum[busNum]++;
+                else countOfBusNum[busNum] = 1;
+                indexedBusNums[i] = (busNum, i);
             }
 
             Array.Sort(indexedBusNums, (a, b) => a.busNum.CompareTo(b.busNum));
+            
+            // ここのソートが不足していた。
+            for (int pos = 0; pos < numOfNodes;)
+            {
+                int count = countOfBusNum[indexedBusNums[pos].busNum];
+                Array.Sort(indexedBusNums, pos, count,
+                    Comparer<(int busNum, int originalIndex)>.Create((a, b) =>
+                    a.originalIndex.CompareTo(b.originalIndex)));
+                pos += count;
+            }
 
             List<long> sortedLengthList = new List<long>(numOfNodes);
             List<long> sortedFrameList = new List<long>(numOfNodes);
@@ -191,10 +193,7 @@ namespace SinTachiePlugin.Parts
                 sortedFrameList.Add(frameList[originalIndex]);
                 sortedPartBlocks.Add(partBlocks[originalIndex]);
             }
-            lengthList.Clear();
-            frameList.Clear();
-            partBlocks.Clear();
-            
+
             // そもそもパーツ数が異なる場合
             if (this.numOfNodes != numOfNodes || isFirst)
             {
@@ -213,9 +212,7 @@ namespace SinTachiePlugin.Parts
                 }
 
                 for (int i = 0; i < numOfReloadNodes; i++)
-                    partNodes[i].Update(sortedPartBlocks[i], sortedLengthList[i],
-                        sortedFrameList[i], fps, voiceVolume);
-
+                    partNodes[i].Update(sortedPartBlocks[i], sortedLengthList[i], sortedFrameList[i], fps, voiceVolume);
                 this.numOfNodes = numOfNodes;
 
                 isFirst = false;
