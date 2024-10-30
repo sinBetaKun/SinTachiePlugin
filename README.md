@@ -1,4 +1,5 @@
 # SinTachiePlugin
+![image](https://github.com/user-attachments/assets/05c9273e-b6fb-4879-a191-6b09aa31511b)
 
 ### 概要
 　これは『ゆっくりMovieMaker4』のプラグインです。
