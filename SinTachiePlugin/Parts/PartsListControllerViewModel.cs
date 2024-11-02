@@ -32,6 +32,9 @@ namespace SinTachiePlugin.Parts
 
         public int SelectedIndex { get => selectedIndex; set => Set(ref selectedIndex, value); }
         int selectedIndex = -1;
+
+        public bool PopupIsOpen = false;
+
         public SinTachieCharacterParameter? CharacterParameter
         {
             get => characterParameter;
