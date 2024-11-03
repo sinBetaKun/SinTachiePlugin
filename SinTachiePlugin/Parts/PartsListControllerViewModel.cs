@@ -11,6 +11,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Vortice.Direct2D1;
@@ -22,7 +24,7 @@ namespace SinTachiePlugin.Parts
     public class PartsListControllerViewModel : Bindable, INotifyPropertyChanged, IPropertyEditorControl, IDisposable
     {
         readonly INotifyPropertyChanged item;
-        readonly ItemProperty[] properties;
+        internal readonly ItemProperty[] properties;
 
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
@@ -32,6 +34,9 @@ namespace SinTachiePlugin.Parts
 
         public int SelectedIndex { get => selectedIndex; set => Set(ref selectedIndex, value); }
         int selectedIndex = -1;
+
+        public bool PopupIsOpen = false;
+
         public SinTachieCharacterParameter? CharacterParameter
         {
             get => characterParameter;
@@ -71,6 +76,8 @@ namespace SinTachiePlugin.Parts
         public string SelectedAddingPart { get => selectedAddingPart; set => Set(ref selectedAddingPart, value); }
         string selectedAddingPart = string.Empty;
 
+        //public bool AddPopupOpen = false;
+
         public ActionCommand AddCommand { get; }
         public ActionCommand RemoveCommand { get; }
         public ActionCommand DuplicationCommand { get; }
@@ -92,27 +99,32 @@ namespace SinTachiePlugin.Parts
                 _ => true,
                 _ =>
                 {
-                    if (String.IsNullOrWhiteSpace(selectedAddingPart))
+                    if (SelectedAddingPart != null)
                     {
-                        SinTachieDialog.ShowWarning("「追加するパーツ」が選択されていないため、パーツを追加できません。");
-                        return;
+                        if (String.IsNullOrWhiteSpace(SelectedAddingPart))
+                        {
+                            SinTachieDialog.ShowWarning("「追加するパーツ」が選択されていないため、パーツを追加できません。");
+                            return;
+                        }
+
+                        var tmpSelectedIndex = SelectedIndex;
+                        BeginEdit?.Invoke(this, EventArgs.Empty);
+                        string partImagePath = FindFirstImageOfPart(SelectedAddingPart);
+                        string tag = SelectedAddingPart;
+                        var tags = from part in Parts select part.TagName;
+                        if (tags.Contains(tag))
+                        {
+                            int sideNum = 1;
+                            while (tags.Contains($"{tag}({sideNum})")) sideNum++;
+                            tag += $"({sideNum})";
+                        }
+                        Parts = Parts.Insert(tmpSelectedIndex + 1, new PartBlock(partImagePath, tag));
+                        foreach (var property in properties)
+                            property.SetValue(Parts);
+                        EndEdit?.Invoke(this, EventArgs.Empty);
+                        SelectedIndex = tmpSelectedIndex + 1;
                     }
-                    var tmpSelectedIndex = SelectedIndex;
-                    BeginEdit?.Invoke(this, EventArgs.Empty);
-                    string partImagePath = FindFirstImageOfPart(SelectedAddingPart);
-                    string tag = SelectedAddingPart;
-                    var tags = from part in Parts select part.TagName;
-                    if (tags.Contains(tag))
-                    {
-                        int sideNum = 1;
-                        while (tags.Contains($"{tag}({sideNum})")) sideNum++;
-                        tag += $"({sideNum})";
-                    }
-                    Parts = Parts.Insert(tmpSelectedIndex + 1, new PartBlock(partImagePath, tag));
-                    foreach (var property in properties)
-                        property.SetValue(Parts);
-                    EndEdit?.Invoke(this, EventArgs.Empty);
-                    SelectedIndex = tmpSelectedIndex + 1;
+                    //AddPopupOpen = true;
                 });
 
             RemoveCommand = new ActionCommand(
@@ -250,7 +262,7 @@ namespace SinTachiePlugin.Parts
         /// </summary>
         /// <param name="directory">ユーザが指定したフォルダのパス</param>
         /// <returns>最初の画像ファイルまたは空文字列</returns>
-        private string FindFirstImageOfPart(string partName)
+        internal string FindFirstImageOfPart(string partName)
         {
             string directory = Path.Combine(Root, partName);
             DirectoryInfo di = new DirectoryInfo(directory);

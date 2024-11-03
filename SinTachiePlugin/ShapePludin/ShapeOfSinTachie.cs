@@ -17,7 +17,7 @@ namespace SinTachiePlugin.ShapePludin
 
         public bool IsExoMaskSupported => false;
 
-        public string Name => PluginInfo.Title;
+        public string Name => PluginInfo.Title + "（図形）";
 
         public IShapeParameter CreateShapeParameter(SharedDataStore? sharedData)
         {

@@ -62,7 +62,7 @@ namespace SinTachiePlugin.LayerValueListController
                     num = cerrar + abrir;
                     break;
                 case LayerAnimationMode.CerrarTimesAbrir:
-                    num = cerrar * abrir;
+                    num = cerrar * abrir / 100;
                     break;
                 case LayerAnimationMode.Sin:
                     num = cerrar * Math.Sin(abrir / 100 * 2 * Math.PI);

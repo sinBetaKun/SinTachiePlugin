@@ -65,7 +65,7 @@ namespace SinTachiePlugin.ShapePludin
 
         private bool updateValuesOfNodes(TimelineItemSourceDescription description)
         {
-            var parts = param.Parts.ToList();
+            var parts = param.PartsAndRoot.Parts.ToList();
             var length = description.ItemDuration.Frame;
             var frame = description.ItemPosition.Frame;
             var fps = description.FPS;

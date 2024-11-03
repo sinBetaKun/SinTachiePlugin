@@ -80,6 +80,7 @@ namespace SinTachiePlugin.Parts
             }
         }
         string imagePath = string.Empty;
+
         protected void SetOnlyImagePth(string input)
         {
             imagePath = input;

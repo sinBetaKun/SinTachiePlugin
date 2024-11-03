@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Settings;
 
@@ -37,6 +38,8 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
         public string SelectedAddingPart { get => selectedAddingPart; set => Set(ref selectedAddingPart, value); }
         string selectedAddingPart = string.Empty;
 
+        public ICommand BeginEditCommand { get; }
+        public ICommand EndEditCommand { get; }
         public ActionCommand AddCommand { get; }
         public ActionCommand RemoveCommand { get; }
         public ActionCommand DuplicationCommand { get; }
@@ -76,7 +79,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
                     }
                     Parts = Parts.Insert(tmpSelectedIndex + 1, new PartBlock(partImagePath, tag));
                     foreach (var property in properties)
-                        property.SetValue(Parts);
+                        property.SetValue(new PartsOfShapeItem() { Root = Root, Parts = Parts});
                     EndEdit?.Invoke(this, EventArgs.Empty);
                     SelectedIndex = tmpSelectedIndex + 1;
                 });
@@ -89,7 +92,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
                     BeginEdit?.Invoke(this, EventArgs.Empty);
                     Parts = Parts.RemoveAt(tmpSelectedIndex);
                     foreach (var property in properties)
-                        property.SetValue(Parts);
+                        property.SetValue(new PartsOfShapeItem() { Root = Root, Parts = Parts });
                     EndEdit?.Invoke(this, EventArgs.Empty);
                     if (parts.Count > 0) SelectedIndex = Math.Min(tmpSelectedIndex, parts.Count - 1);
                 });
@@ -103,7 +106,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
                     var copied = new PartBlock(Parts[SelectedIndex]/*, ImagePathCopyMode.BySetter*/);
                     Parts = Parts.Insert(tmpSelectedIndex + 1, copied);
                     foreach (var property in properties)
-                        property.SetValue(Parts);
+                        property.SetValue(new PartsOfShapeItem() { Root = Root, Parts = Parts });
                     EndEdit?.Invoke(this, EventArgs.Empty);
                     SelectedIndex = tmpSelectedIndex + 1;
                 });
@@ -118,7 +121,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
                     Parts = Parts.RemoveAt(tmpSelectedIndex);
                     Parts = Parts.Insert(tmpSelectedIndex - 1, clone);
                     foreach (var property in properties)
-                        property.SetValue(Parts);
+                        property.SetValue(new PartsOfShapeItem() { Root = Root, Parts = Parts });
                     EndEdit?.Invoke(this, EventArgs.Empty);
                     SelectedIndex = tmpSelectedIndex - 1;
                 });
@@ -133,7 +136,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
                     Parts = Parts.RemoveAt(tmpSelectedIndex);
                     Parts = Parts.Insert(tmpSelectedIndex + 1, clone);
                     foreach (var property in properties)
-                        property.SetValue(Parts);
+                        property.SetValue(new PartsOfShapeItem() { Root = Root, Parts = Parts});
                     EndEdit?.Invoke(this, EventArgs.Empty);
                     SelectedIndex = tmpSelectedIndex + 1;
                 });
@@ -235,11 +238,12 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
 
         void UpdateParts()
         {
-            var values = properties[0].GetValue<ImmutableList<PartBlock>>() ?? [];
-            if (!Parts.SequenceEqual(values))
+            var values = properties[0].GetValue<PartsOfShapeItem>() ?? new();
+            if (!Parts.SequenceEqual(values.Parts))
             {
-                Parts = [.. values];
+                Parts = [.. values.Parts];
             }
+            Root = values.Root;
 
             var commands = new[] { AddCommand, RemoveCommand, DuplicationCommand, MoveUpCommand, MoveDownCommand, ReloadDefaultCommand };
             foreach (var command in commands)
@@ -279,12 +283,18 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             }
         }
 
+
         public void CopyToOtherItems()
         {
             //現在のアイテムの内容を他のアイテムにコピーする
             var otherProperties = properties.Skip(1);
             foreach (var property in otherProperties)
-                property.SetValue(Parts.Select(x => new PartBlock(x/*, ImagePathCopyMode.BySetter*/)).ToImmutableList());
+                property.SetValue(
+                    new PartsOfShapeItem()
+                    {
+                        Parts = Parts.Select(x => new PartBlock(x)).ToImmutableList(),
+                        Root = Root
+                    });
         }
 
         public void Dispose()

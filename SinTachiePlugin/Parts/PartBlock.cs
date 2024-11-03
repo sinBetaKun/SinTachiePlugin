@@ -178,6 +178,7 @@ namespace SinTachiePlugin.Parts
             {
                 var path = ImagePath;
                 SetOnlyImagePth(String.Empty);
+                //ImagePath = string.Empty;
                 try
                 {
                     string stpi = JsonConvert.SerializeObject(partInfo, Formatting.Indented);
@@ -192,6 +193,7 @@ namespace SinTachiePlugin.Parts
                     return false;
                 }
                 SetOnlyImagePth(path);
+                //ImagePath = path;
                 return true;
             }
             return false;
