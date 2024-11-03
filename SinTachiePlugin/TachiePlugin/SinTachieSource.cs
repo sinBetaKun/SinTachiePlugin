@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using SinTachiePlugin.Informations;
 using YukkuriMovieMaker.Player.Video;
 using System.Reflection.PortableExecutable;
+using Vortice.DirectWrite;
 
 namespace SinTachiePlugin.Parts
 {

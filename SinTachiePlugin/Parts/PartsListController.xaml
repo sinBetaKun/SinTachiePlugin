@@ -28,6 +28,11 @@
                     <DataTemplate>
                         <Grid Background="#FF808080">
                             <StackPanel Margin="0,4,4,4" VerticalAlignment="Top" Orientation="Horizontal">
+                                <!-->
+                                <Border BorderBrush="#FF484848" Margin="6,0,0,0" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <c:FileSelector Height="40" Value="{Binding ImagePath, Mode=TwoWay}" IsDirectoryPathLocked="False" DirectoryPath="" ShowThumbnail="True" BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
+                                </Border>
+                                <!-->
                                 <Border BorderBrush="#FF484848" Margin="6,0,0,0" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top">
                                     <Image Source="{Binding ImageSource}" Width="71" Height="40" Margin="2,2,2,2" ToolTip="パーツが指定している画像がここに表示されます。&#xa;（画像を指定しているのに何も映らない場合は、リスト下にある「画像枠リロード」ボタンを押してみてください。）"/>
                                 </Border>
@@ -66,7 +71,16 @@
                     <RowDefinition Height="26"/>
                     <RowDefinition Height="26"/>
                 </Grid.RowDefinitions>
-
+                <!-->
+                <StackPanel Grid.Row="0">
+                    <Button Content="╋" Height="26" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="「追加するパーツ」で選択している名前のパーツが追加されます。"/>
+                    <Popup IsOpen="{Binding AddPopupOpen, Mode=TwoWay}" StaysOpen="False" Placement="Left">
+                        <ListBox SelectionChanged="ItemListBox_SelectionChanged" ItemsSource="{Binding Path=PartsComboSource}">
+            
+                        </ListBox>
+                    </Popup>
+                </StackPanel>
+                <!-->
                 <Button Grid.Row="0" Content="╋" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="「追加するパーツ」で選択している名前のパーツが追加されます。"/>
                 <Button Grid.Row="1" Content="━" Command="{Binding RemoveCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを取り除きます。"/>
                 <Button Grid.Row="2" Content="複" Command="{Binding DuplicationCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを複製します。"/>
