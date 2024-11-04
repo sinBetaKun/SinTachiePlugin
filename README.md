@@ -41,7 +41,7 @@
 　申し訳ございませんが、本プラグインは仕様が少し複雑でございまして、製作者なのに解説力がミジンコレベルな私には、（現状は）READMEファイルでの説明は上手くできません。そんな中、[小畑あぽろ](x.com/obata_aporo)様が[使い方解説動画](https://www.youtube.com/watch?v=IPy-zE5nGKg)を作ってくださいました。
 <p align="center">
   <a href="https://www.youtube.com/watch?v=IPy-zE5nGKg">
-    <img src="https://github.com/user-attachments/assets/ead12467-8e25-4030-a706-530c03317ea4" width="500>
+    <img src="https://github.com/user-attachments/assets/ead12467-8e25-4030-a706-530c03317ea4" width="500">
   </a>
 </p>
 また、初期リリース版はユーザーもなかなか使い慣れない、あるいは、説明書アリでも全く使い方が理解できないと思われますので、私がユーザーの質問に対して直々に答えられるよう、
