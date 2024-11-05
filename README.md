@@ -38,7 +38,7 @@
 
 
 ### 使い方
-　申し訳ございませんが、本プラグインは仕様が少し複雑でございまして、製作者なのに解説力がミジンコレベルな私には、（現状は）READMEファイルでの説明は上手くできません。そんな中、[小畑あぽろ](x.com/obata_aporo)様が[使い方解説動画](https://www.youtube.com/watch?v=IPy-zE5nGKg)を作ってくださいました。
+　申し訳ございませんが、本プラグインは仕様が少し複雑でございまして、製作者なのに解説力がミジンコレベルな私には、（現状は）READMEファイルでの説明は上手くできません。そんな中、[小畑あぽろ](https://x.com/obata_aporo)様が[使い方解説動画](https://www.youtube.com/watch?v=IPy-zE5nGKg)を作ってくださいました。
 <p align="center">
   <a href="https://www.youtube.com/watch?v=IPy-zE5nGKg">
     <img src="https://github.com/user-attachments/assets/ead12467-8e25-4030-a706-530c03317ea4" width="500">
