@@ -17,8 +17,10 @@ using Path = System.IO.Path;
 
 namespace SinTachiePlugin.Parts
 {
-    public class PartBlock : ControlledParamsOfPart
+    public partial class PartBlock : ControlledParamsOfPart
     {
+        //public Func<string, bool> NameFilter() => (x) => !(from c in Path.GetFileName(x) where c == '.' select c).Skip(1).Any();
+
         static string? MakeStpiPath(string path)
         {
             if (!File.Exists(path))
@@ -28,7 +30,7 @@ namespace SinTachiePlugin.Parts
             }
             string? dn = Path.GetDirectoryName(path);
             string? name = Path.GetFileNameWithoutExtension(path);
-            if (String.IsNullOrEmpty(dn) || String.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(dn) || string.IsNullOrEmpty(name))
             {
                 ShowWarning($"パスが無効な画像ファイルの{PartInfo.Extension}ファイルパスは作れません。\n({path})");
                 return null;
@@ -43,13 +45,13 @@ namespace SinTachiePlugin.Parts
 
         public PartBlock(string fp, string tag)
         {
-            if (String.IsNullOrEmpty(fp)) return;
+            if (string.IsNullOrEmpty(fp)) return;
             ImagePath = fp;
             if (InputStpi() is PartInfo partInfo)
                 if (partInfo.DefaltValues is PartBlock block)
                     CopyFrom(block);
             ImagePath = fp;
-            if(String.IsNullOrEmpty(TagName)) TagName = tag;
+            if(string.IsNullOrEmpty(TagName)) TagName = tag;
         }
 
         public PartBlock(PartBlock original)
@@ -122,7 +124,7 @@ namespace SinTachiePlugin.Parts
             string fp = ImagePath;
             string tag = TagName;
             string? path = MakeStpiPath(fp);
-            if (String.IsNullOrEmpty(path)) return;
+            if (string.IsNullOrEmpty(path)) return;
             if (InputStpi() is PartInfo partInfo)
                 if (partInfo.DefaltValues is PartBlock block)
                     CopyFrom(block/*, ImagePathCopyMode.BySetter*/);
@@ -134,6 +136,11 @@ namespace SinTachiePlugin.Parts
             ShowInformation($"デフォルト値を{str}しました。");
         }
 
+        private static JsonSerializerSettings GetJsonSetting =>
+            new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
 
         private PartInfo? InputStpi()
         {
@@ -148,7 +155,8 @@ namespace SinTachiePlugin.Parts
                     {
                         using (var sr = new StreamReader(stream))
                         {
-                            if (JsonConvert.DeserializeObject<PartInfo>(sr.ReadToEnd()) is PartInfo info)
+                            
+                            if (JsonConvert.DeserializeObject<PartInfo>(sr.ReadToEnd(), GetJsonSetting) is PartInfo info)
                             {
                                 return info;
                             }
@@ -177,10 +185,10 @@ namespace SinTachiePlugin.Parts
             if (MakeStpiPath(ImagePath) is string stpiPath)
             {
                 var path = ImagePath;
-                SetOnlyImagePth(String.Empty);
+                SetOnlyImagePth(string.Empty);
                 try
                 {
-                    string stpi = JsonConvert.SerializeObject(partInfo, Formatting.Indented);
+                    string stpi = JsonConvert.SerializeObject(partInfo, Formatting.Indented, GetJsonSetting);
                     using (var sw = new StreamWriter(stpiPath, false, Encoding.UTF8))
                         sw.Write(stpi);
                 }

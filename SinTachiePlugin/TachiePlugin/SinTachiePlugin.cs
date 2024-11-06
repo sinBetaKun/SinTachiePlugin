@@ -5,13 +5,17 @@ using YukkuriMovieMaker.Plugin.Tachie;
 
 namespace SinTachiePlugin.Parts
 {
-    [PluginDetails(AuthorName = "sinβ")]
     public class SinTachiePlugin : ITachiePlugin
     {
         /// <summary>
         /// プラグインの名前
         /// </summary>
         public string Name => PluginInfo.Title;
+
+        /// <summary>
+        /// 俺ちゃんの名前
+        /// </summary>
+        public PluginDetailsAttribute Details => new() { AuthorName = "sinβ" };
 
         /// <summary>
         /// キャラクターに設定する立ち絵のパラメーター

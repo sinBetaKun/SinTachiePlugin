@@ -1,5 +1,7 @@
 ﻿using SinTachiePlugin.Enums;
 using SinTachiePlugin.Informations;
+using SinTachiePlugin.LayerValueListController.Extra;
+using SinTachiePlugin.LayerValueListController.Extra.Parameter;
 using SinTachiePlugin.Parts.LayerValueListController;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,8 @@ using System.Text;
 using System.Threading.Tasks;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
+using YukkuriMovieMaker.Plugin.Community.Effect.Video.ZoomPixel.Size;
+using YukkuriMovieMaker.Plugin.Effects;
 
 namespace SinTachiePlugin.LayerValueListController
 {
@@ -33,21 +37,28 @@ namespace SinTachiePlugin.LayerValueListController
         [AnimationSlider("F1", "%", -150, 150)]
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 
+        [Display(GroupName = "レイヤー制御", AutoGenerateField = true)]
+        public LayerValueExtraBase Extra {
+            get => extra;
+            set => Set(ref extra, value);
+        }
+        LayerValueExtraBase extra = new NoExtra();
 
         [Display(GroupName = "レイヤー制御", Name = "備考")]
         [TextEditor(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public string Comment { get => comment; set => Set(ref comment, value); }
-        string comment = String.Empty;
+        string comment = string.Empty;
 
         public LayerValue()
         {
-
         }
 
         public LayerValue(LayerValue block)
         {
             Cerrar.CopyFrom(block.Cerrar);
             Abrir.CopyFrom(block.Abrir);
+
+            Extra.CopyFrom(block?.Extra);
         }
 
         public double GetValue(long len, long frame, int fps, double voiceVolume)
@@ -55,7 +66,9 @@ namespace SinTachiePlugin.LayerValueListController
             double cerrar = Cerrar.GetValue(frame, len, fps);
             double abrir = Abrir.GetValue(frame, len, fps);
             double num;
-
+            string clsName = GetType().Name;
+            string? mthName = MethodBase.GetCurrentMethod()?.Name;
+            double extraValue = Extra.GetValue(frame, len, fps);
             switch (AnimationMode)
             {
                 case LayerAnimationMode.CerrarPlusAbrir:
@@ -70,11 +83,17 @@ namespace SinTachiePlugin.LayerValueListController
                 case LayerAnimationMode.VoiceVolume:
                     num = cerrar + voiceVolume * (abrir - cerrar);
                     break;
+                case LayerAnimationMode.PeriodicShuttle:
+                    extraValue = (0.5 - extraValue) * (extraValue <= 0.5 ? 2 : -2);
+                    num = cerrar + extraValue * (abrir - cerrar);
+                    break;
+                case LayerAnimationMode.PeriodicLoop:
+                    num = cerrar + extraValue * (abrir - cerrar);
+                    break;
                 default:
-                    string clsName = GetType().Name;
-                    string? mthName = MethodBase.GetCurrentMethod()?.Name;
-                    SinTachieDialog.ShowError("存在しないタイプのレイヤー制御モードが指定されました。", clsName, mthName);
-                    throw new Exception($"[{PluginInfo.Title}]存在しないタイプのレイヤー制御モードが指定されました。\n(AnimationMode = {AnimationMode})");
+                    string message = $"存在しないタイプのレイヤー制御モードが指定されました。\n(AnimationMode = {AnimationMode})";
+                    SinTachieDialog.ShowError(message, clsName, mthName);
+                    throw new Exception($"[{PluginInfo.Title}]{message}");
             }
 
             switch (OuterMode)
@@ -88,13 +107,23 @@ namespace SinTachiePlugin.LayerValueListController
                     while (num < 0) num += 100;
                     return num % 100 / 100;
                 default:
-                    string clsName = GetType().Name;
-                    string? mthName = MethodBase.GetCurrentMethod()?.Name;
                     SinTachieDialog.ShowError("存在しないタイプのレイヤー制御モードが指定されました。", clsName, mthName);
                     throw new Exception($"[{PluginInfo.Title}]存在しないタイプの範囲外変換モードが指定されました。\n(OuterMode = {OuterMode})");
             }
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [Cerrar, Abrir];
+        public override void BeginEdit()
+        {
+            base.BeginEdit();
+        }
+
+        public override ValueTask EndEditAsync()
+        {
+            Extra = AnimationMode.Convert(Extra);
+
+            return base.EndEditAsync();
+        }
+
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [Cerrar, Abrir, Extra];
     }
 }

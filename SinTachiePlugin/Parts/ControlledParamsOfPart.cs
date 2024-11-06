@@ -22,6 +22,8 @@ using Vortice;
 using Windows.Services.Maps;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
+using System.Windows.Media.Effects;
+using YukkuriMovieMaker.Plugin.Effects;
 
 namespace SinTachiePlugin.Parts
 {
@@ -29,7 +31,7 @@ namespace SinTachiePlugin.Parts
     /// ユーザがコントローラーで編集できるパラメータをまとめたクラス。
     /// 何か新しくパラメータを追加したり、それらの管理システムを変更したいときは、このクラスを編集すること。
     /// </summary>
-    public class ControlledParamsOfPart : SinTachieDialog
+    public partial class ControlledParamsOfPart : SinTachieDialog
     {
         public bool Appear { get => appear; set { Set(ref appear, value); } }
         bool appear = true;
@@ -165,6 +167,9 @@ namespace SinTachiePlugin.Parts
         [AnimationSlider("F1", "%", 0, 200)]
         public Animation Exp_Y { get; } = new Animation(100, 0, 5000);
 
+        [Display(GroupName = "パーツ個別エフェクト", Name = "")]
+        [VideoEffectSelector(PropertyEditorSize = PropertyEditorSize.FullWidth)]
+        public ImmutableList<IVideoEffect> Effects { get; set; } = [];
         //[Display(GroupName = "クリッピング", Name = "上")]
         //[AnimationSlider("F1", "px", 0, 500)]
         //public Animation Top { get; } = new Animation(0, 0, 10000);
@@ -226,6 +231,6 @@ namespace SinTachiePlugin.Parts
             RotateDependent = original.RotateDependent;
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [BusNum, ..LayerValues, X, Y, Opacity, Scale, Rotate, Mirror, Cnt_X, Cnt_Y, Exp_X, Exp_Y/*, Top, Bottom, Left, Right, GBlurValue, DBlurValue, DBlurAngle*/];
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [BusNum, ..LayerValues, X, Y, Opacity, Scale, Rotate, Mirror, Cnt_X, Cnt_Y, Exp_X, Exp_Y, ..Effects/*, Top, Bottom, Left, Right, GBlurValue, DBlurValue, DBlurAngle*/];
     }
 }

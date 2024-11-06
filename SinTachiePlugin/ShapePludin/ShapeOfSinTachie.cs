@@ -10,14 +10,18 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.ShapePludin
 {
-    [PluginDetails(AuthorName = "sinβ")]
     internal class ShapeOfSinTachie : IShapePlugin
     {
+        public string Name => PluginInfo.Title + "(図形アイテム版)";
+
+        /// <summary>
+        /// 俺ちゃんの名前
+        /// </summary>
+        public PluginDetailsAttribute Details => new() { AuthorName = "sinβ" };
+
         public bool IsExoShapeSupported => false;
 
         public bool IsExoMaskSupported => false;
-
-        public string Name => PluginInfo.Title;
 
         public IShapeParameter CreateShapeParameter(SharedDataStore? sharedData)
         {

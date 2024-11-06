@@ -17,5 +17,9 @@ namespace SinTachiePlugin.Parts.LayerValueListController
         Sin,
         [Display(Name = "口パク", Description = "（セラール）～（アブリール）の範囲で口パクします。\n口が閉じるときに(セラール)の値に、\n全開のときに(アブリール)の値になります。")]
         VoiceVolume,
+        [Display(Name = "周期的往復", Description = "（セラール）～（アブリール）の範囲で「往復」と同じ動きを定期的にします。\n(セラール)の値と(アブリール)の値の間を周期的に往復します。")]
+        PeriodicShuttle,
+        [Display(Name = "周期的ループ", Description = "（セラール）～（アブリール）の範囲で「ループ」と同じ動きを定期的にします。\n(セラール)の値と(アブリール)の値の間を周期的に往復します。")]
+        PeriodicLoop,
     }
 }

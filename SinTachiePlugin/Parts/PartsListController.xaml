@@ -30,7 +30,10 @@
                             <StackPanel Margin="0,4,4,4" VerticalAlignment="Top" Orientation="Horizontal">
                                 <Border BorderBrush="#FF484848" Margin="6,0,0,0" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top">
                                     <Image Source="{Binding ImageSource}" Width="71" Height="40" Margin="2,2,2,2" ToolTip="パーツが指定している画像がここに表示されます。&#xa;（画像を指定しているのに何も映らない場合は、リスト下にある「画像枠リロード」ボタンを押してみてください。）"/>
-                                </Border>
+                                    <!-->
+                                    <c:FileSelector Value="{Binding ImagePath}" Height="40" ShowThumbnail="True" FileType="画像" BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
+                                    <!-->
+                                    </Border>
                                 <StackPanel Margin="4,0,0,0" VerticalAlignment="Top" Orientation="Vertical">
                                     <Border BorderBrush="#FF3F3F3F" BorderThickness="2">
                                         <StackPanel Margin="0,0,0,0" VerticalAlignment="Top" Orientation="Horizontal">
