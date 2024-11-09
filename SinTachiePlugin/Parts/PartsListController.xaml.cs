@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SinTachiePlugin.Informations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -62,5 +63,37 @@ namespace SinTachiePlugin.Parts
             vm?.CopyToOtherItems();
             EndEdit?.Invoke(this, e);
         }
+
+        //private void ItemListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    var vm = DataContext as PartsListControllerViewModel;
+        //    if (vm.SelectedAddingPart != null)
+        //    {
+        //        if (String.IsNullOrWhiteSpace(vm.SelectedAddingPart))
+        //        {
+        //            SinTachieDialog.ShowWarning("「追加するパーツ」が選択されていないため、パーツを追加できません。");
+        //            return;
+        //        }
+
+        //        var tmpSelectedIndex = vm.SelectedIndex;
+        //        BeginEdit?.Invoke(this, EventArgs.Empty);
+        //        string partImagePath = vm.FindFirstImageOfPart(vm.SelectedAddingPart);
+        //        string tag = vm.SelectedAddingPart;
+        //        var tags = from part in vm.Parts select part.TagName;
+        //        if (tags.Contains(tag))
+        //        {
+        //            int sideNum = 1;
+        //            while (tags.Contains($"{tag}({sideNum})")) sideNum++;
+        //            tag += $"({sideNum})";
+        //        }
+        //        vm.Parts = vm.Parts.Insert(tmpSelectedIndex + 1, new PartBlock(partImagePath, tag));
+        //        foreach (var property in vm.properties)
+        //            property.SetValue(vm.Parts);
+
+        //        vm.AddPopupOpen = false;
+        //        EndEdit?.Invoke(this, EventArgs.Empty);
+        //        vm.SelectedIndex = tmpSelectedIndex + 1;
+        //    }
+        //}
     }
 }

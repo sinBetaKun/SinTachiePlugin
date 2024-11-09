@@ -18,7 +18,6 @@ namespace SinTachiePlugin.ShapePludin
 {
     internal class ShapeParameterOfSinTachie(SharedDataStore? sharedData) : ShapeParameterBase(sharedData)
     {
-
         [Display(Name = "描画順序", Description = "描画順序\n(アイテムを閉じると「ルート」が空になってしまうので、その都度「素材の場所」のパスをコピペして使ってください。)")]
         [PartsListControllerForShape(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public PartsOfShapeItem PartsAndRoot { get => partsAndRoot; set => Set(ref partsAndRoot, value); }

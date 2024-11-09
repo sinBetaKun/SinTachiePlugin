@@ -83,6 +83,7 @@ namespace SinTachiePlugin.Parts
             }
         }
         string imagePath = string.Empty;
+
         [Display(GroupName = "ブロック情報", Name = "備考")]
         [TextEditor(AcceptsReturn = true)]
         public string Comment { get => comment; set => Set(ref comment, value); }
