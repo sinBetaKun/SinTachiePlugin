@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using SinTachiePlugin.Informations;
 using YukkuriMovieMaker.Player.Video;
 using System.Reflection.PortableExecutable;
+using FrameTime = YukkuriMovieMaker.Commons.FrameTime;
 
 namespace SinTachiePlugin.Parts
 {
@@ -200,9 +201,10 @@ namespace SinTachiePlugin.Parts
                 int numOfReloadNodes;
                 if (this.numOfNodes < numOfNodes)
                 {
+                    //var frame = new FrameTime();
                     numOfReloadNodes = this.numOfNodes < 0 ? 0 : this.numOfNodes;
                     for (int i = numOfReloadNodes; i < numOfNodes; i++)
-                        partNodes.Add(new PartNode(devices, sortedPartBlocks[i],
+                        partNodes.Add(new PartNode(devices, /*description,*/ sortedPartBlocks[i],
                             sortedLengthList[i], sortedFrameList[i], fps, voiceVolume));
                 }
                 else

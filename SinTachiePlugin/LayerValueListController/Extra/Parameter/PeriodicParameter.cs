@@ -69,14 +69,14 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => [Start, Interval, Transition];
 
-        protected override void LoadSharedData(SharedDataStore store)
+        protected override void SaveSharedData(SharedDataStore store)
         {
             store.Save(new StartSharedData(this));
             store.Save(new IntervalSharedData(this));
             store.Save(new TransitionSharedData(this));
         }
 
-        protected override void SaveSharedData(SharedDataStore store)
+        protected override void LoadSharedData(SharedDataStore store)
         {
             if (store.Load<StartSharedData>() is StartSharedData startParameter)
                 startParameter.CopyTo(this);

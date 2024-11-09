@@ -224,8 +224,8 @@ namespace SinTachiePlugin.LayerValueListController
             {
                 string clsName = GetType().Name;
                 string? mthName = MethodBase.GetCurrentMethod()?.Name;
-                SinTachieDialog.ShowError($"無効なレイヤー値({values[Depth]})", clsName, mthName);
-                throw new Exception($"無効なレイヤー値({values[Depth]})");
+                SinTachieDialog.ShowError($"無効な差分指定({values[Depth]})", clsName, mthName);
+                throw new Exception($"無効な差分指定({values[Depth]})");
             }
 
             ID2D1Image? output;
