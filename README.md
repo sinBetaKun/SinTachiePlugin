@@ -1,5 +1,7 @@
 # SinTachiePlugin
-![image](https://github.com/user-attachments/assets/05c9273e-b6fb-4879-a191-6b09aa31511b)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/05c9273e-b6fb-4879-a191-6b09aa31511b" width="75%">
+</p>
 
 ### 概要
 　これは『ゆっくりMovieMaker4』のプラグインです。
@@ -38,10 +40,10 @@
 
 
 ### 使い方
-　申し訳ございませんが、本プラグインは仕様が少し複雑でございまして、製作者なのに解説力がミジンコレベルな私には、（現状は）READMEファイルでの説明は上手くできません。そんな中、[小畑あぽろ](https://x.com/obata_aporo)様が[使い方解説動画](https://www.youtube.com/watch?v=IPy-zE5nGKg)を作ってくださいました。
+　申し訳ございませんが、本プラグインは仕様が少し複雑でございまして、製作者なのに解説力がミジンコレベルな私には、（現状は）READMEファイルでの説明は上手くできません。そんな中、[小畑あぽろ](https://x.com/obata_aporo)様が[使い方解説動画](https://www.youtube.com/watch?v=IPy-zE5nGKg)を作ってくださいました。（※この動画は`v1.0.2.0`のものです。一部変更がございますので、ご注意ください）
 <p align="center">
   <a href="https://www.youtube.com/watch?v=IPy-zE5nGKg">
-    <img src="https://github.com/user-attachments/assets/ead12467-8e25-4030-a706-530c03317ea4" width="500">
+    <img src="https://github.com/user-attachments/assets/ead12467-8e25-4030-a706-530c03317ea4" width="75%">
   </a>
 </p>
 また、初期リリース版はユーザーもなかなか使い慣れない、あるいは、説明書アリでも全く使い方が理解できないと思われますので、私がユーザーの質問に対して直々に答えられるよう、
@@ -59,8 +61,8 @@
 
 <br>もし本プラグインをご利用になる場合、こちらのサーバーに参加することを推奨します。
 <br>ただし、ルールはしっかり守りましょうね。
-
-[ SinTachiePlugin Community ](https://discord.gg/bns6GjJzT8) 
+<br>[ SinTachiePlugin Community ](https://discord.gg/bns6GjJzT8) 
+<br>本プラグインのアップデート内容は、一部ユーザー様の意見を取り入れております。いつもご利用いただきありがとうございます。
 
 ---
 
