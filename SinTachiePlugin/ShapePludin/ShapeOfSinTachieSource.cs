@@ -104,7 +104,7 @@ namespace SinTachiePlugin.ShapePludin
                 {
                     numOfReloadNodes = this.numOfNodes < 0 ? 0 : this.numOfNodes;
                     for (int i = numOfReloadNodes; i < numOfNodes; i++)
-                        nodes.Add(new PartNode(devices, sortedparts[i], length, frame, fps, 0));
+                        nodes.Add(new PartNode(devices, /*description,*/ sortedparts[i], length, frame, fps, 0));
                 }
                 else
                 {

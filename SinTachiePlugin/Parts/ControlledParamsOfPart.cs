@@ -22,6 +22,9 @@ using Vortice;
 using Windows.Services.Maps;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
+using System.Windows.Media.Effects;
+using YukkuriMovieMaker.Plugin.Effects;
+using System.Xml.Linq;
 
 namespace SinTachiePlugin.Parts
 {
@@ -29,9 +32,9 @@ namespace SinTachiePlugin.Parts
     /// ユーザがコントローラーで編集できるパラメータをまとめたクラス。
     /// 何か新しくパラメータを追加したり、それらの管理システムを変更したいときは、このクラスを編集すること。
     /// </summary>
-    public class ControlledParamsOfPart : SinTachieDialog
+    public partial class ControlledParamsOfPart : SinTachieDialog
     {
-        public bool Appear { get => appear; set { Set(ref appear, value); } }
+        public bool Appear { get => appear; set => Set(ref appear, value); }
         bool appear = true;
 
         [Display(GroupName = "ブロック情報", Name = "タグ")]
@@ -76,26 +79,17 @@ namespace SinTachiePlugin.Parts
             set
             {
                 Set(ref imagePath, value);
-                SetImageSource(value);
+                //SetImageSource(value);
             }
         }
         string imagePath = string.Empty;
 
-        protected void SetOnlyImagePth(string input)
-        {
-            imagePath = input;
-        }
+        [Display(GroupName = "ブロック情報", Name = "備考")]
+        [TextEditor(AcceptsReturn = true)]
+        public string Comment { get => comment; set => Set(ref comment, value); }
+        string comment = string.Empty;
 
-        [JsonIgnore]
-        public BitmapSource? ImageSource { get => imageSource; set => Set(ref imageSource, value); }
-        BitmapSource? imageSource = null;
-
-        async void SetImageSource(string file)
-        {
-            ImageSource = await ShellThumbnail.LoadCroppedThumbnailAsync(file);
-        }
-
-        [Display(GroupName = "ブロック情報", Name = "レイヤー")]
+        [Display(GroupName = "ブロック情報", Name = "差分レイヤー")]
         [LayerValueListController(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<LayerValue> LayerValues { get => layerValue; set => Set(ref layerValue, value); }
         ImmutableList<LayerValue> layerValue = [];
@@ -121,7 +115,7 @@ namespace SinTachiePlugin.Parts
         public Animation Rotate { get; } = new Animation(0, -36000, 36000, 360);
 
         [Display(GroupName = "描画", Name = "左右反転")]
-        [AnimationSlider("F0", "", -1, 2)]
+        [AnimationSlider("F0", "", 0, 1)]
         public Animation Mirror { get; } = new Animation(0, 0, 1);
 
         [Display(GroupName = "描画", Name = "合成モード")]
@@ -166,6 +160,10 @@ namespace SinTachiePlugin.Parts
         [AnimationSlider("F1", "%", 0, 200)]
         public Animation Exp_Y { get; } = new Animation(100, 0, 5000);
 
+        //[Display(GroupName = "パーツ個別エフェクト", Name = "")]
+        //[VideoEffectSelector(PropertyEditorSize = PropertyEditorSize.FullWidth)]
+        //public ImmutableList<IVideoEffect> Effects { get => effects; set => Set(ref effects, value); }
+        //ImmutableList<IVideoEffect> effects = [];
         //[Display(GroupName = "クリッピング", Name = "上")]
         //[AnimationSlider("F1", "px", 0, 500)]
         //public Animation Top { get; } = new Animation(0, 0, 10000);
@@ -202,6 +200,7 @@ namespace SinTachiePlugin.Parts
             TagName = original.TagName;
             Parent = original.Parent;
             ImagePath = original.ImagePath;
+            Comment = original.Comment;
             LayerValues = original.LayerValues.Select(x => new LayerValue(x)).ToImmutableList();
             X.CopyFrom(original.X);
             Y.CopyFrom(original.Y);
@@ -227,6 +226,6 @@ namespace SinTachiePlugin.Parts
             RotateDependent = original.RotateDependent;
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [BusNum, ..LayerValues, X, Y, Opacity, Scale, Rotate, Mirror, Cnt_X, Cnt_Y, Exp_X, Exp_Y/*, Top, Bottom, Left, Right, GBlurValue, DBlurValue, DBlurAngle*/];
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [BusNum, ..LayerValues, X, Y, Opacity, Scale, Rotate, Mirror, Cnt_X, Cnt_Y, Exp_X, Exp_Y/*, ..Effects, Top, Bottom, Left, Right, GBlurValue, DBlurValue, DBlurAngle*/];
     }
 }

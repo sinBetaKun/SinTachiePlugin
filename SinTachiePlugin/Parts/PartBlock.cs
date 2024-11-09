@@ -17,7 +17,7 @@ using Path = System.IO.Path;
 
 namespace SinTachiePlugin.Parts
 {
-    public class PartBlock : ControlledParamsOfPart
+    public partial class PartBlock : ControlledParamsOfPart
     {
         static string? MakeStpiPath(string path)
         {
@@ -28,7 +28,7 @@ namespace SinTachiePlugin.Parts
             }
             string? dn = Path.GetDirectoryName(path);
             string? name = Path.GetFileNameWithoutExtension(path);
-            if (String.IsNullOrEmpty(dn) || String.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(dn) || string.IsNullOrEmpty(name))
             {
                 ShowWarning($"パスが無効な画像ファイルの{PartInfo.Extension}ファイルパスは作れません。\n({path})");
                 return null;
@@ -41,15 +41,27 @@ namespace SinTachiePlugin.Parts
 
         }
 
-        public PartBlock(string fp, string tag)
+        public PartBlock(string fp, string tag, string[] aborigines)
         {
-            if (String.IsNullOrEmpty(fp)) return;
+            if (string.IsNullOrEmpty(TagName)) TagName = tag;
+            if (string.IsNullOrEmpty(fp)) return;
             ImagePath = fp;
             if (InputStpi() is PartInfo partInfo)
                 if (partInfo.DefaltValues is PartBlock block)
+                {
                     CopyFrom(block);
+                    if (aborigines.Contains(block.TagName))
+                    {
+                        var dialog = GetDialog(
+                            $"デフォルト設定におけるタグ({block.TagName})は、リスト内で既に使われています。" +
+                            "\nデフォルト設定のタグを使いますか？" +
+                            $"\n（キャンセルした場合、タグは「{tag}」になります。）");
+                        if (dialog == DialogResult.Cancel)
+                            TagName = tag;
+                    }
+                }
+                    
             ImagePath = fp;
-            if(String.IsNullOrEmpty(TagName)) TagName = tag;
         }
 
         public PartBlock(PartBlock original)
@@ -122,10 +134,10 @@ namespace SinTachiePlugin.Parts
             string fp = ImagePath;
             string tag = TagName;
             string? path = MakeStpiPath(fp);
-            if (String.IsNullOrEmpty(path)) return;
+            if (string.IsNullOrEmpty(path)) return;
             if (InputStpi() is PartInfo partInfo)
                 if (partInfo.DefaltValues is PartBlock block)
-                    CopyFrom(block/*, ImagePathCopyMode.BySetter*/);
+                    CopyFrom(block);
             ImagePath = fp;
             Random random = new Random();
             int randomNumber = random.Next(0, 99);
@@ -134,6 +146,11 @@ namespace SinTachiePlugin.Parts
             ShowInformation($"デフォルト値を{str}しました。");
         }
 
+        private static JsonSerializerSettings GetJsonSetting =>
+            new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
 
         private PartInfo? InputStpi()
         {
@@ -148,7 +165,8 @@ namespace SinTachiePlugin.Parts
                     {
                         using (var sr = new StreamReader(stream))
                         {
-                            if (JsonConvert.DeserializeObject<PartInfo>(sr.ReadToEnd()) is PartInfo info)
+                            
+                            if (JsonConvert.DeserializeObject<PartInfo>(sr.ReadToEnd(), GetJsonSetting) is PartInfo info)
                             {
                                 return info;
                             }
@@ -177,11 +195,10 @@ namespace SinTachiePlugin.Parts
             if (MakeStpiPath(ImagePath) is string stpiPath)
             {
                 var path = ImagePath;
-                SetOnlyImagePth(String.Empty);
-                //ImagePath = string.Empty;
+                ImagePath = string.Empty;
                 try
                 {
-                    string stpi = JsonConvert.SerializeObject(partInfo, Formatting.Indented);
+                    string stpi = JsonConvert.SerializeObject(partInfo, Formatting.Indented, GetJsonSetting);
                     using (var sw = new StreamWriter(stpiPath, false, Encoding.UTF8))
                         sw.Write(stpi);
                 }
@@ -192,8 +209,7 @@ namespace SinTachiePlugin.Parts
                     ShowError("stpiファイルの出力時にエラーが発生しました。\n" + e.Message, clsName, mthName);
                     return false;
                 }
-                SetOnlyImagePth(path);
-                //ImagePath = path;
+                ImagePath = path;
                 return true;
             }
             return false;

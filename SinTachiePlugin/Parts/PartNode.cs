@@ -15,6 +15,9 @@ using SinTachiePlugin.Parts.LayerValueListController;
 using System.Windows.Controls;
 using Path = System.IO.Path;
 using SinTachiePlugin.LayerValueListController;
+using YukkuriMovieMaker.Plugin.Effects;
+using System.Windows.Media.Effects;
+using YukkuriMovieMaker.Player.Video;
 
 namespace SinTachiePlugin.Parts
 {
@@ -47,6 +50,9 @@ namespace SinTachiePlugin.Parts
         public double Scale { get; set; }
         public double Rotate { get; set; }
         public bool Mirror { get; set; }
+        public bool ScaleDependent { get; set; }
+        public bool OpacityDependent { get; set; }
+        public bool RotateDependent { get; set; }
         public double Cnt_X { get; set; }
         public double Cnt_Y { get; set; }
         public bool KeepPlace { get; set; }
@@ -59,9 +65,11 @@ namespace SinTachiePlugin.Parts
         //public double GBlurValue { get; set; }
         //public double DBlurValue { get; set; }
         //public double DBlurAngle { get; set; }
-        public bool ScaleDependent { get; set; }
-        public bool OpacityDependent { get; set; }
-        public bool RotateDependent { get; set; }
+        public ImmutableList<IVideoEffectProcessor> Processors { get; set; } = [];
+        public DrawDescription DrawDescription { get; set; } = new(
+                new Vector3(), new Vector2(), new Vector2(), new Vector3(), Matrix4x4.Identity,
+                new InterpolationMode(), 1.0, false, []
+                );
 
         public Vector2 Shift { get; set; }
         public float Opacity2 { get; set; }
@@ -97,6 +105,9 @@ namespace SinTachiePlugin.Parts
             Scale = origin.Scale;
             Rotate = origin.Rotate;
             Mirror = origin.Mirror;
+            ScaleDependent = origin.ScaleDependent;
+            OpacityDependent = origin.OpacityDependent;
+            RotateDependent = origin.RotateDependent;
             Cnt_X = origin.Cnt_X;
             Cnt_Y = origin.Cnt_Y;
             KeepPlace = origin.KeepPlace;
@@ -109,13 +120,11 @@ namespace SinTachiePlugin.Parts
             //GBlurValue = origin.GBlurValue;
             //DBlurValue = origin.DBlurValue;
             //DBlurAngle = origin.DBlurAngle;
-            ScaleDependent = origin.ScaleDependent;
-            OpacityDependent = origin.OpacityDependent;
-            RotateDependent = origin.RotateDependent;
+            Processors = origin.Processors;
             ParentPath = [.. origin.ParentPath];
         }
 
-        public PartNode(IGraphicsDevicesAndContext devices, PartBlock part, long length, long frame, int fps, double voiceVolume) : this(devices: devices)
+        public PartNode(IGraphicsDevicesAndContext devices, /*TimelineItemSourceDescription description,*/ PartBlock part, long length, long frame, int fps, double voiceVolume) : this(devices: devices)
         {
             this.devices = devices;
             BusNum = (int)part.BusNum.GetValue(frame, length, fps);
@@ -133,6 +142,9 @@ namespace SinTachiePlugin.Parts
             Scale = part.Scale.GetValue(frame, length, fps);
             Rotate = part.Rotate.GetValue(frame, length, fps);
             Mirror = (part.Mirror.GetValue(frame, length, fps) > 0.5);
+            ScaleDependent = part.ScaleDependent;
+            OpacityDependent = part.OpacityDependent;
+            RotateDependent = part.RotateDependent;
             Cnt_X = part.Cnt_X.GetValue(frame, length, fps);
             Cnt_Y = part.Cnt_Y.GetValue(frame, length, fps);
             KeepPlace = part.KeepPlace;
@@ -145,17 +157,28 @@ namespace SinTachiePlugin.Parts
             //GBlurValue = part.GBlurValue.GetValue(frame, length, fps);
             //DBlurValue = part.DBlurValue.GetValue(frame, length, fps);
             //DBlurAngle = part.DBlurAngle.GetValue(frame, length, fps);
-            ScaleDependent = part.ScaleDependent;
-            OpacityDependent = part.OpacityDependent;
-            RotateDependent = part.RotateDependent;
             layerTree = new LayerNode(ImagePath, devices);
             offset.SetInput(0, layerTree.GetSource(LayerValues, OuterLayerValueModes), true);
+            //Processors = part.Effects.Select(effect => effect.CreateVideoEffect(devices)).ToImmutableList();
+            //var tmpSource = offset.Output;
+            //var defRect = devices.DeviceContext.GetImageLocalBounds(tmpSource);
+            //TimelineSourceDescription description1 = new((int)(defRect.Left - defRect.Right), (int)(defRect.Bottom - defRect.Top), fps, (int)frame, (int)length, description.Usage);
+            //TimelineItemSourceDescription description2 = new(description1, (int)frame, (int)length, description.Layer);
+            //EffectDescription description3 = new(description2, DrawDescription, 0);
+            //int i = 0;
+            //foreach (var processor in Processors)
+            //{
+            //    processor.SetInput(tmpSource);
+            //    DrawDescription = processor.Update(description3);
+            //}
+            //source = tmpSource;
             source = offset.Output;
         }
 
         public bool Update(PartBlock part, long length, long frame, int fps, double voiceVolume)
         {
             //var busNum = part.GetBusNum(frame, length, fps);
+            var appear = part.Appear;
             var busNum = (int)part.BusNum.GetValue(frame, length, fps);
             var tagName = part.TagName;
             var parent = part.Parent;
@@ -163,7 +186,6 @@ namespace SinTachiePlugin.Parts
             var layerAnimationModes = part.LayerValues.Select(part => part.AnimationMode).ToList();
             var outerLayerValueModes = part.LayerValues.Select(part => part.OuterMode).ToList();
             var layerValues = part.LayerValues.Select(x => x.GetValue(length, frame, fps, voiceVolume)).ToList();
-            var appear = part.Appear;
             var blendMode = part.BlendMode;
             var x = part.X.GetValue(frame, length, fps);
             var y = part.Y.GetValue(frame, length, fps);
@@ -171,6 +193,9 @@ namespace SinTachiePlugin.Parts
             var scale = part.Scale.GetValue(frame, length, fps);
             var rotate = part.Rotate.GetValue(frame, length, fps);
             var mirror = (part.Mirror.GetValue(frame, length, fps) > 0.5);
+            var scaleDependent = part.ScaleDependent;
+            var opacityDependent = part.OpacityDependent;
+            var rotateDependent = part.RotateDependent;
             var cntX = part.Cnt_X.GetValue(frame, length, fps);
             var cntY = part.Cnt_Y.GetValue(frame, length, fps);
             var keepPlace = part.KeepPlace;
@@ -183,9 +208,8 @@ namespace SinTachiePlugin.Parts
             //var gBlurValue = part.GBlurValue.GetValue(frame, length, fps);
             //var dBlurValue = part.DBlurValue.GetValue(frame, length, fps);
             //var dBlurAngle = part.DBlurAngle.GetValue(frame, length, fps);
-            var scaleDependent = part.ScaleDependent;
-            var opacityDependent = part.OpacityDependent;
-            var rotateDependent = part.RotateDependent;
+
+            //var effects = part.Effects;
 
             bool isOld = false;
 
@@ -231,7 +255,6 @@ namespace SinTachiePlugin.Parts
                     source = offset.Output;
                 }
             }
-            
 
             if (BusNum != busNum || TagName != tagName || Parent != parent || appear != Appear || BlendMode != blendMode ||
                 X != x || Y != y || Opacity != opacity || Scale != scale || Rotate != rotate || Mirror != mirror ||

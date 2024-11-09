@@ -18,11 +18,6 @@ namespace SinTachiePlugin.ShapePludin
 {
     internal class ShapeParameterOfSinTachie(SharedDataStore? sharedData) : ShapeParameterBase(sharedData)
     {
-        //[Display(Name = "素材の場所", Description = "立ち絵画像を保存しているフォルダ\n（ここを変更するだけでは「描画順序」には反映されませんので、「ルート」にパスをコピペしてください。）")]
-        //[DirectorySelector(PropertyEditorSize = PropertyEditorSize.FullWidth)]
-        //public string Directory { get => directory; set => Set(ref directory, value); }
-        //string directory = string.Empty;
-
         [Display(Name = "描画順序", Description = "描画順序\n(アイテムを閉じると「ルート」が空になってしまうので、その都度「素材の場所」のパスをコピペして使ってください。)")]
         [PartsListControllerForShape(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public PartsOfShapeItem PartsAndRoot { get => partsAndRoot; set => Set(ref partsAndRoot, value); }
@@ -59,7 +54,7 @@ namespace SinTachiePlugin.ShapePludin
 
         protected override void SaveSharedData(SharedDataStore store)
         {
-            throw new NotImplementedException();
+            store.Save(new SharedData(this));
         }
 
         public class SharedData(ShapeParameterOfSinTachie parameter)
