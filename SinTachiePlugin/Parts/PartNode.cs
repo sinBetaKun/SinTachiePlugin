@@ -23,12 +23,9 @@ namespace SinTachiePlugin.Parts
 {
     public class PartNode : IDisposable
     {
-        //readonly Crop cropEffect;
         readonly AffineTransform2D offset;
         readonly AffineTransform2D transform;
         readonly Opacity opacityEffect;
-        //readonly GaussianBlur gblurEffect;
-        //readonly DirectionalBlur dblurEffect;
         readonly ID2D1Bitmap empty;
         private readonly IGraphicsDevicesAndContext devices;
         public LayerNode? layerTree;
@@ -58,14 +55,7 @@ namespace SinTachiePlugin.Parts
         public bool KeepPlace { get; set; }
         public double Exp_X { get; set; }
         public double Exp_Y { get; set; }
-        //public double Top { get; set; }
-        //public double Bottom { get; set; }
-        //public double Left { get; set; }
-        //public double Right { get; set; }
-        //public double GBlurValue { get; set; }
-        //public double DBlurValue { get; set; }
-        //public double DBlurAngle { get; set; }
-        public ImmutableList<IVideoEffectProcessor> Processors { get; set; } = [];
+        //public ImmutableList<IVideoEffectProcessor> Processors { get; set; } = [];
         public DrawDescription DrawDescription { get; set; } = new(
                 new Vector3(), new Vector2(), new Vector2(), new Vector3(), Matrix4x4.Identity,
                 new InterpolationMode(), 1.0, false, []
@@ -81,12 +71,9 @@ namespace SinTachiePlugin.Parts
         public PartNode(IGraphicsDevicesAndContext devices)
         {
             this.devices = devices;
-            //cropEffect = new Crop(devices.DeviceContext);
             offset = new AffineTransform2D(devices.DeviceContext);
             transform = new AffineTransform2D(devices.DeviceContext);
             opacityEffect = new Opacity(devices.DeviceContext);
-            //gblurEffect = new GaussianBlur(devices.DeviceContext);
-            //dblurEffect = new DirectionalBlur(devices.DeviceContext);
             empty = devices.DeviceContext.CreateEmptyBitmap();
         }
 
@@ -113,14 +100,7 @@ namespace SinTachiePlugin.Parts
             KeepPlace = origin.KeepPlace;
             Exp_X = origin.Exp_X;
             Exp_Y = origin.Exp_Y;
-            //Top = origin.Top;
-            //Bottom = origin.Bottom;
-            //Left = origin.Left;
-            //Right = origin.Right;
-            //GBlurValue = origin.GBlurValue;
-            //DBlurValue = origin.DBlurValue;
-            //DBlurAngle = origin.DBlurAngle;
-            Processors = origin.Processors;
+            //Processors = origin.Processors;
             ParentPath = [.. origin.ParentPath];
         }
 
@@ -150,13 +130,6 @@ namespace SinTachiePlugin.Parts
             KeepPlace = part.KeepPlace;
             Exp_X = part.Exp_X.GetValue(frame, length, fps);
             Exp_Y = part.Exp_Y.GetValue(frame, length, fps);
-            //Top = part.Top.GetValue(frame, length, fps);
-            //Bottom = part.Bottom.GetValue(frame, length, fps);
-            //Left = part.Left.GetValue(frame, length, fps);
-            //Right = part.Right.GetValue(frame, length, fps);
-            //GBlurValue = part.GBlurValue.GetValue(frame, length, fps);
-            //DBlurValue = part.DBlurValue.GetValue(frame, length, fps);
-            //DBlurAngle = part.DBlurAngle.GetValue(frame, length, fps);
             layerTree = new LayerNode(ImagePath, devices);
             offset.SetInput(0, layerTree.GetSource(LayerValues, OuterLayerValueModes), true);
             //Processors = part.Effects.Select(effect => effect.CreateVideoEffect(devices)).ToImmutableList();
@@ -201,13 +174,6 @@ namespace SinTachiePlugin.Parts
             var keepPlace = part.KeepPlace;
             var expX = part.Exp_X.GetValue(frame, length, fps);
             var expY = part.Exp_Y.GetValue(frame, length, fps);
-            //var top = part.Top.GetValue(frame, length, fps);
-            //var bottom = part.Bottom.GetValue(frame, length, fps);
-            //var left = part.Left.GetValue(frame, length, fps);
-            //var right = part.Right.GetValue(frame, length, fps);
-            //var gBlurValue = part.GBlurValue.GetValue(frame, length, fps);
-            //var dBlurValue = part.DBlurValue.GetValue(frame, length, fps);
-            //var dBlurAngle = part.DBlurAngle.GetValue(frame, length, fps);
 
             //var effects = part.Effects;
 
@@ -259,8 +225,6 @@ namespace SinTachiePlugin.Parts
             if (BusNum != busNum || TagName != tagName || Parent != parent || appear != Appear || BlendMode != blendMode ||
                 X != x || Y != y || Opacity != opacity || Scale != scale || Rotate != rotate || Mirror != mirror ||
                 Cnt_X != cntX || Cnt_Y != cntY || keepPlace != KeepPlace || Exp_X != expX || Exp_Y != expY ||
-                //Top != top || Bottom != bottom || Left != left || Right != right 
-                //|| GBlurValue != gBlurValue || DBlurValue != dBlurValue || DBlurAngle != dBlurAngle ||
                 ScaleDependent != scaleDependent || OpacityDependent != opacityDependent || RotateDependent != rotateDependent)
             {
                 isOld = true;
@@ -280,13 +244,6 @@ namespace SinTachiePlugin.Parts
                 KeepPlace = keepPlace;
                 Exp_X = expX;
                 Exp_Y = expY;
-                //Top = top;
-                //Bottom = bottom;
-                //Left = left;
-                //Right = right;
-                //GBlurValue = gBlurValue;
-                //DBlurValue = dBlurValue;
-                //DBlurAngle = dBlurAngle;
                 TagName = tagName;
                 Parent = parent;
                 ScaleDependent = scaleDependent;
@@ -308,11 +265,8 @@ namespace SinTachiePlugin.Parts
             ID2D1Image? output = source;
 
             // リセット
-            //dblurEffect.SetInput(0, null, true);
-            //gblurEffect.SetInput(0, null, true);
             opacityEffect.SetInput(0, null, true);
             transform.SetInput(0, null, true);
-            //cropEffect.SetInput(0, null, true);
 
             // 依存関係から最終的な描画位置などを計算する。
             double x = 0, y = 0, scale = 1, opacity = 1, rotate = 0;
@@ -337,20 +291,6 @@ namespace SinTachiePlugin.Parts
             Scale2 = (float)scale;
             Rotate2 = (float)(RotateDependent ? (rotate * Math.PI / 180) : 0);
 
-            // 四角形切り抜きエフェクト
-            /*if (Left != 0.0 || Top != 0.0 || Right != 0.0 || Bottom != 0.0)
-            {
-                var defRect = devices.DeviceContext.GetImageLocalBounds(output);
-                var defVect = new Vector4(defRect.Left, defRect.Top, defRect.Right, defRect.Bottom);
-                var X = (float)(defVect.X + Left);
-                var Y = (float)(defVect.Y + Top);
-                var Z = (float)(defVect.Z - Right);
-                var W = (float)(defVect.W - Bottom);
-                cropEffect.Rectangle = new Vector4(X, Y, Z, W);
-                cropEffect.SetInput(0, output, true);
-                output = cropEffect.Output;
-            }*/
-
             // アフィン変換(インスタンスOutputを固定するために，このエフェクトは無条件に間に挟む)
             var result = (Mirror) ? new Matrix3x2(-1, 0, 0, 1, 2 * (float)Cnt_X, 0) : Matrix3x2.Identity;
             float expX = (float)(Exp_X / 100.0);
@@ -364,7 +304,6 @@ namespace SinTachiePlugin.Parts
                 result *= Matrix3x2.CreateRotation(Rotate2);
             if (Rotate != 0.0)
                 result *= Matrix3x2.CreateRotation((float)rotate4, new Vector2(cx, cy));
-            //MessageBox.Show($"TagName={TagName}\nRotate2={Rotate2}");
             transform.TransformMatrix = result;
             transform.SetInput(0, output, true);
             output = transform.Output;
@@ -377,23 +316,6 @@ namespace SinTachiePlugin.Parts
                 output = opacityEffect.Output;
             }
 
-            // ぼかしエフェクト
-            //if (GBlurValue != 0.0)
-            //{
-            //    gblurEffect.StandardDeviation = (float)GBlurValue;
-            //    gblurEffect.SetInput(0, output, true);
-            //    output = gblurEffect.Output;
-            //}
-
-            // 方向ブラーエフェクト
-            //if (DBlurValue != 0.0)
-            //{
-            //    dblurEffect.StandardDeviation = (float)DBlurValue;
-            //    dblurEffect.Angle = (float)(-DBlurAngle - rotate);
-            //    dblurEffect.SetInput(0, output, true);
-            //    output = dblurEffect.Output;
-            //}
-
             // 出力イメージ
             Output = output;
         }
@@ -402,20 +324,11 @@ namespace SinTachiePlugin.Parts
         {
             Output?.Dispose(); // EffectからgetしたOutputは必ずDisposeする必要がある。Effect側では開放されない。
 
-            //dblurEffect.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
-            //dblurEffect.Dispose();
-
-            //gblurEffect.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
-            //gblurEffect.Dispose();
-
             opacityEffect.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
             opacityEffect.Dispose();
 
             transform.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
             transform.Dispose();
-
-            //cropEffect.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
-            //cropEffect.Dispose();
 
             source?.Dispose();
             offset.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。

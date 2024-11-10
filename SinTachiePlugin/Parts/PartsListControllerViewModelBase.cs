@@ -94,12 +94,13 @@ namespace SinTachiePlugin.Parts
         private static readonly string TagOfIndependent = "(無所属)";
         bool independentExist = false;
 
+        private bool RootUnexist = false;
+
         public ActionCommand AddCommand { get; }
         public ActionCommand RemoveCommand { get; }
         public ActionCommand DuplicationCommand { get; }
         public ActionCommand MoveUpCommand { get; }
         public ActionCommand MoveDownCommand { get; }
-        //public ActionCommand RelodeImageCommand { get; }
         public ActionCommand WriteDefaultCommand { get; }
         public ActionCommand DeleteDefaultCommand { get; }
         public ActionCommand ReloadDefaultCommand { get; }
@@ -116,9 +117,10 @@ namespace SinTachiePlugin.Parts
                 _ =>
                 {
                     UpdatePopupListSource();
-                    if(PopupListSource.Length < 1)
+                    if(PopupListSource.Length < 1 || RootUnexist)
                     {
-                        var dialog = SinTachieDialog.GetDialog("素材の場所にパーツが見つかりませんでした。\n画像未指定のパーツブロックを追加しますか？");
+                        var intro = RootUnexist ? "素材の場所のパスが無効です。" : "素材の場所にパーツが見つかりませんでした。";
+                        var dialog = SinTachieDialog.GetDialog($"{intro}\n画像未指定のパーツブロックを追加しますか？");
                         if(dialog == DialogResult.OK)
                         {
                             var tmpSelectedIndex = SelectedIndex;
@@ -336,9 +338,10 @@ namespace SinTachiePlugin.Parts
                 }
                 PopupListSource = [.. newSource];
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                SinTachieDialog.ShowWarning($"素材の場所のパスが無効です。\nエラー内容：{e.Message}");
+                RootUnexist = true;
+                //SinTachieDialog.ShowWarning($"素材の場所のパスが無効です。\nエラー内容：{e.Message}");
             }
         }
 
