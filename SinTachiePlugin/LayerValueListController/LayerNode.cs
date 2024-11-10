@@ -25,7 +25,7 @@ namespace SinTachiePlugin.LayerValueListController
         public ID2D1Image? Output;
         readonly ID2D1Bitmap empty;
         IImageFileSource? source;
-        private AffineTransform2D trans;
+        private readonly AffineTransform2D centeringEffect;
         public int? Index { get; set; } = null;
         public int Depth { get; set; } = -1;
         public List<LayerNode> Children { get; set; } = [];
@@ -33,7 +33,7 @@ namespace SinTachiePlugin.LayerValueListController
         public LayerNode(IGraphicsDevicesAndContext devices)
         {
             this.devices = devices;
-            trans = new AffineTransform2D(devices.DeviceContext);
+            centeringEffect = new AffineTransform2D(devices.DeviceContext);
             empty = devices.DeviceContext.CreateEmptyBitmap();
         }
 
@@ -89,7 +89,7 @@ namespace SinTachiePlugin.LayerValueListController
             while (numsOfIndexs.Length > 0)
             {
                 var targetLength = numsOfIndexs.First();
-                var kvs = layerNumsDictionary.Where(preNode => preNode.Value.Length == targetLength);
+                var kvs = layerNumsDictionary.Where(preNode => preNode.Value.Length == targetLength && preNode.Value.Length > 0);
 
                 foreach (var kv in kvs)
                 {
@@ -97,9 +97,9 @@ namespace SinTachiePlugin.LayerValueListController
                     tmp.source = ImageFileSourceFactory.Create(devices, Path.Combine(dirName, kv.Key));
                     if (tmp.source != null)
                     {
-                        tmp.trans.SetInput(0, tmp.source.Output, true);
-                        tmp.trans.TransformMatrix = Matrix3x2.CreateTranslation(-tmp.source.Output.Size.Width / 2, -tmp.source.Output.Size.Height / 2);
-                        tmp.Output = tmp.trans.Output;
+                        tmp.centeringEffect.SetInput(0, tmp.source.Output, true);
+                        tmp.centeringEffect.TransformMatrix = Matrix3x2.CreateTranslation(-tmp.source.Output.Size.Width / 2, -tmp.source.Output.Size.Height / 2);
+                        tmp.Output = tmp.centeringEffect.Output;
                     }
                     AddLeaf(tmp, kv.Value);
                 }
@@ -109,9 +109,9 @@ namespace SinTachiePlugin.LayerValueListController
             source = ImageFileSourceFactory.Create(devices, root);
             if (source != null)
             {
-                trans.SetInput(0, source.Output, true);
-                trans.TransformMatrix = Matrix3x2.CreateTranslation(-source.Output.Size.Width / 2, -source.Output.Size.Height / 2);
-                Output = trans.Output;
+                centeringEffect.SetInput(0, source.Output, true);
+                centeringEffect.TransformMatrix = Matrix3x2.CreateTranslation(-source.Output.Size.Width / 2, -source.Output.Size.Height / 2);
+                Output = centeringEffect.Output;
             }
         }
 
@@ -121,9 +121,9 @@ namespace SinTachiePlugin.LayerValueListController
             if (len < 1)
             {
                 node.Depth = 0;
-                //string clsName = GetType().Name;
-                //string? mthName = MethodBase.GetCurrentMethod()?.Name;
-                //SinTachieDialog.ShowError("インデックスが正しく指定されていないリーフをLayerNodeに足そうとしました。ごめんなさい。", clsName, mthName);
+                string clsName = GetType().Name;
+                string? mthName = MethodBase.GetCurrentMethod()?.Name;
+                SinTachieDialog.ShowError("インデックスが正しく指定されていないリーフをLayerNodeに足そうとしました。ごめんなさい。", clsName, mthName);
                 return;
             }
             var tmp = this;
@@ -249,8 +249,8 @@ namespace SinTachiePlugin.LayerValueListController
         public void Dispose()
         {
             Output?.Dispose();
-            trans.SetInput(0, null, true);
-            trans.Dispose();
+            centeringEffect.SetInput(0, null, true);
+            centeringEffect.Dispose();
             source?.Dispose();
             empty?.Dispose();
             foreach (var child in Children) child.Dispose();
