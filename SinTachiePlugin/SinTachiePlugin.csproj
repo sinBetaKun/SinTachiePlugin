@@ -6,20 +6,13 @@
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
-		<FileVersion>1.0.3.0</FileVersion>
+		<FileVersion>1.0.3.3</FileVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 	  <DebugType>none</DebugType>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <Compile Remove="Effects\**" />
-	  <EmbeddedResource Remove="Effects\**" />
-	  <None Remove="Effects\**" />
-	  <Page Remove="Effects\**" />
-	</ItemGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
