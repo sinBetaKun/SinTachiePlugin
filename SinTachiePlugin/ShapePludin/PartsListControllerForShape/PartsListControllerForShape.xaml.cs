@@ -58,5 +58,13 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             vm?.CopyToOtherItems();
             EndEdit?.Invoke(this, e);
         }
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.SelectedTreeViewItem = e.NewValue; // ViewModelに設定
+            }
+        }
     }
 }

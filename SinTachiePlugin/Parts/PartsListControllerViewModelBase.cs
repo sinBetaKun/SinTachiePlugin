@@ -30,10 +30,10 @@ namespace SinTachiePlugin.Parts
             get => popupIsOpen;
             set
             {
-                if (!value)
-                {
-                    SelectedAddingPartIndex = -1;
-                }
+                //if (!value)
+                //{
+                //    SelectedAddingPartIndex = -1;
+                //}
                 Set(ref popupIsOpen, value);
             }
         }
@@ -48,48 +48,101 @@ namespace SinTachiePlugin.Parts
             set
             {
                 Set(ref root, value);
-                UpdatePopupListSource();
+                //UpdatePopupListSource();
             }
         }
         string root = string.Empty;
 
-        public string[] PopupListSource { get => popupListSource; set => Set(ref popupListSource, value); }
-        string[] popupListSource = [];
+        //public string[] PopupListSource { get => popupListSource; set => Set(ref popupListSource, value); }
+        //string[] popupListSource = [];
+
+        public PartNameTreeNode PartNameTree { get; set; } = new();
+        public object SelectedTreeViewItem
+        {
+            get => _selectedTreeViewItem;
+            set
+            {
+                _selectedTreeViewItem = value;
+                if (value is PartNameTreeNode newSelected)
+                {
+                    try
+                    {
+                        if (!newSelected.Children.Any() && !AddingNow)
+                        {
+                            AddingNow = true;
+                            string partImagePath = newSelected.FullName;
+                            string? dn = Path.GetDirectoryName(partImagePath);
+                            if (dn == null) return;
+                            DirectoryInfo di = new(dn);
+                            if (!di.Exists) return;
+                            var tmpSelectedIndex = SelectedIndex;
+                            BeginEdit?.Invoke(this, EventArgs.Empty);
+                            bool independentSelected = dn == Root;
+                            string? dn2 = Path.GetDirectoryName(dn);
+                            if (dn2 == null) return;
+                            DirectoryInfo di2 = new(dn2);
+                            if (!di2.Exists) return;
+                            var SelectedAddingPart = di2.Name;
+                            string tag = independentSelected ? TagOfIndependent : dn2;
+                            var tags = from part in Parts select part.TagName;
+                            if (tags.Contains(tag))
+                            {
+                                int sideNum = 1;
+                                while (tags.Contains($"{tag}({sideNum})")) sideNum++;
+                                tag += $"({sideNum})";
+                            }
+                            Parts = Parts.Insert(tmpSelectedIndex + 1, new PartBlock(partImagePath, tag, tags.ToArray()));
+                            SetProparties();
+                            EndEdit?.Invoke(this, EventArgs.Empty);
+                            SelectedIndex = tmpSelectedIndex + 1;
+                            PopupIsOpen = false;
+                            AddingNow = false;
+                        }
+                        Set(ref _selectedTreeViewItem, value);
+                    }
+                    catch (Exception)
+                    {
+                        SinTachieDialog.ShowWarning("パーツ追加時にエラーが発生しました");
+                    }
+                } 
+            }
+        }
+        private object _selectedTreeViewItem = new PartNameTreeNode();
 
         bool AddingNow = false;
 
-        public int SelectedAddingPartIndex
-        {
-            get => selectedAddingPartIndex;
-            set
-            {
-                if (value > -1 && !AddingNow)
-                {
-                    AddingNow = true;
-                    var SelectedAddingPart = PopupListSource[value];
-                    var tmpSelectedIndex = SelectedIndex;
-                    BeginEdit?.Invoke(this, EventArgs.Empty);
-                    bool independentSelected = independentExist && (value == 0);
-                    string partImagePath = FindFirstImageOfPart(independentSelected ? string.Empty : SelectedAddingPart);
-                    string tag = independentSelected ? TagOfIndependent : SelectedAddingPart;
-                    var tags = from part in Parts select part.TagName;
-                    if (tags.Contains(tag))
-                    {
-                        int sideNum = 1;
-                        while (tags.Contains($"{tag}({sideNum})")) sideNum++;
-                        tag += $"({sideNum})";
-                    }
-                    Parts = Parts.Insert(tmpSelectedIndex + 1, new PartBlock(partImagePath, tag, tags.ToArray()));
-                    SetProparties();
-                    EndEdit?.Invoke(this, EventArgs.Empty);
-                    SelectedIndex = tmpSelectedIndex + 1;
-                    PopupIsOpen = false;
-                    AddingNow = false;
-                }
-                Set(ref selectedAddingPartIndex, value);
-            }
-        }
-        int selectedAddingPartIndex = -1;
+        //public int SelectedAddingPartIndex
+        //{
+        //    get => selectedAddingPartIndex;
+        //    set
+        //    {
+        //        if (value > -1 && !AddingNow)
+        //        {
+        //            AddingNow = true;
+        //            var SelectedAddingPart = PopupListSource[value];
+        //            var tmpSelectedIndex = SelectedIndex;
+        //            BeginEdit?.Invoke(this, EventArgs.Empty);
+        //            bool independentSelected = independentExist && (value == 0);
+        //            string partImagePath = FindFirstImageOfPart(independentSelected ? string.Empty : SelectedAddingPart);
+        //            string tag = independentSelected ? TagOfIndependent : SelectedAddingPart;
+        //            var tags = from part in Parts select part.TagName;
+        //            if (tags.Contains(tag))
+        //            {
+        //                int sideNum = 1;
+        //                while (tags.Contains($"{tag}({sideNum})")) sideNum++;
+        //                tag += $"({sideNum})";
+        //            }
+        //            Parts = Parts.Insert(tmpSelectedIndex + 1, new PartBlock(partImagePath, tag, tags.ToArray()));
+        //            SetProparties();
+        //            EndEdit?.Invoke(this, EventArgs.Empty);
+        //            SelectedIndex = tmpSelectedIndex + 1;
+        //            PopupIsOpen = false;
+        //            AddingNow = false;
+        //        }
+        //        Set(ref selectedAddingPartIndex, value);
+        //    }
+        //}
+        //int selectedAddingPartIndex = -1;
 
         private static readonly string TagOfIndependent = "(無所属)";
         bool independentExist = false;
@@ -116,8 +169,18 @@ namespace SinTachiePlugin.Parts
                 _ => true,
                 _ =>
                 {
-                    UpdatePopupListSource();
-                    if(PopupListSource.Length < 1 || RootUnexist)
+                    RootUnexist = !Path.Exists(Root);
+                    if (RootUnexist)
+                    {
+                        PartNameTree = new();
+                    }
+                    else
+                    {
+                        DirectoryInfo di = new(Root);
+                        PartNameTree = new(di);
+                    }
+
+                    if(string.IsNullOrEmpty(PartNameTree.FullName) || RootUnexist)
                     {
                         var intro = RootUnexist ? "素材の場所のパスが無効です。" : "素材の場所にパーツが見つかりませんでした。";
                         var dialog = SinTachieDialog.GetDialog($"{intro}\n画像未指定のパーツブロックを追加しますか？");
@@ -281,7 +344,7 @@ namespace SinTachiePlugin.Parts
         private string FindFirstImageOfPart(string partName)
         {
             string directory = Path.Combine(Root, partName);
-            DirectoryInfo di = new DirectoryInfo(directory);
+            DirectoryInfo di = new(directory);
             FileInfo[] fiAlls = di.GetFiles();
             var files = from x in fiAlls
                         where FileSettings.Default.FileExtensions.GetFileType(x.FullName) == FileType.画像
@@ -306,44 +369,43 @@ namespace SinTachiePlugin.Parts
                 command.RaiseCanExecuteChanged();
         }
 
-        void UpdatePopupListSource()
-        {
-            if (string.IsNullOrEmpty(Root))
-            {
-                PopupListSource = [];
-                return;
-            }
+        //void UpdatePopupListSource()
+        //{
+        //    if (string.IsNullOrEmpty(Root))
+        //    {
+        //        PopupListSource = [];
+        //        return;
+        //    }
 
-            try
-            {
-                DirectoryInfo di = new(Root);
-                if(FindFirstImageOfPart(string.Empty) != string.Empty)
-                {
-                    independentExist = true;
-                }
-                FileInfo[] independent = di.GetFiles();
-                DirectoryInfo[] diOptions = di.GetDirectories("*", SearchOption.AllDirectories);
-                List<string> newSource = independentExist ? [TagOfIndependent] : [];
-                foreach (DirectoryInfo d in diOptions)
-                {
-                    string[] str = d.FullName.Split(Root + "\\");
-                    if (str.Length != 2)
-                    {
-                        string clsName = GetType().Name;
-                        string? mthName = MethodBase.GetCurrentMethod()?.Name;
-                        SinTachieDialog.ShowError("パーツ候補の作成に失敗しました。", clsName, mthName);
-                        return;
-                    }
-                    newSource.Add(str[1]);
-                }
-                PopupListSource = [.. newSource];
-            }
-            catch (Exception)
-            {
-                RootUnexist = true;
-                //SinTachieDialog.ShowWarning($"素材の場所のパスが無効です。\nエラー内容：{e.Message}");
-            }
-        }
+        //    try
+        //    {
+        //        DirectoryInfo di = new(Root);
+        //        if(FindFirstImageOfPart(string.Empty) != string.Empty)
+        //        {
+        //            independentExist = true;
+        //        }
+        //        FileInfo[] independent = di.GetFiles();
+        //        DirectoryInfo[] diOptions = di.GetDirectories("*", SearchOption.AllDirectories);
+        //        List<string> newSource = independentExist ? [TagOfIndependent] : [];
+        //        foreach (DirectoryInfo d in diOptions)
+        //        {
+        //            string[] str = d.FullName.Split(Root + "\\");
+        //            if (str.Length != 2)
+        //            {
+        //                string clsName = GetType().Name;
+        //                string? mthName = MethodBase.GetCurrentMethod()?.Name;
+        //                SinTachieDialog.ShowError("パーツ候補の作成に失敗しました。", clsName, mthName);
+        //                return;
+        //            }
+        //            newSource.Add(str[1]);
+        //        }
+        //        PopupListSource = [.. newSource];
+        //    }
+        //    catch (Exception)
+        //    {
+        //        RootUnexist = true;
+        //    }
+        //}
 
         public void CopyToOtherItems()
         {

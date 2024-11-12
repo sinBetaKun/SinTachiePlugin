@@ -59,7 +59,16 @@
                     <Button Grid.Row="4" Content="▼" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ下のパーツと入れ替えます。"/>
                 </Grid>
                 <Popup IsOpen="{Binding PopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" >
+                    <TreeView Panel.ZIndex="100" ItemsSource ="{Binding Path=PartNameTree}" SelectedItemChanged="TreeView_SelectedItemChanged">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <TextBlock Text="{Binding Name}" />
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                    <!--
                     <ListBox ItemsSource ="{Binding Path=PopupListSource}" SelectedIndex="{Binding Path=SelectedAddingPartIndex, Mode=TwoWay}"/>
+                    -->
                 </Popup>
             </Grid>
         </Grid>
