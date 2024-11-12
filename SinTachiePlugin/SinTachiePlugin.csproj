@@ -40,6 +40,9 @@
 	  <Reference Include="YukkuriMovieMaker.Plugin.Community">
 	    <HintPath>..\..\..\..\YukkuriMovieMaker4\YukkuriMovieMaker.Plugin.Community.dll</HintPath>
 	  </Reference>
+	  <Reference Include="YukkuriMovieMaker.Plugin.Tachie.AnimationTachie">
+	    <HintPath>..\..\..\..\YukkuriMovieMaker4\YukkuriMovieMaker.Plugin.Tachie.AnimationTachie.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 
