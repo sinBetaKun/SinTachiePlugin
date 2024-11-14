@@ -20,28 +20,28 @@
 
 	<ItemGroup>
 	  <Reference Include="SharpGen.Runtime">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker4\SharpGen.Runtime.dll</HintPath>
+	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\SharpGen.Runtime.dll</HintPath>
 	  </Reference>
 	  <Reference Include="Vortice.Direct2D1">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker4\Vortice.Direct2D1.dll</HintPath>
+	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\Vortice.Direct2D1.dll</HintPath>
 	  </Reference>
 	  <Reference Include="Vortice.DirectX">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker4\Vortice.DirectX.dll</HintPath>
+	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\Vortice.DirectX.dll</HintPath>
 	  </Reference>
 	  <Reference Include="Vortice.Mathematics">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker4\Vortice.Mathematics.dll</HintPath>
+	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\Vortice.Mathematics.dll</HintPath>
 	  </Reference>
 	  <Reference Include="YukkuriMovieMaker.Controls">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker4\YukkuriMovieMaker.Controls.dll</HintPath>
+	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\YukkuriMovieMaker.Controls.dll</HintPath>
 	  </Reference>
 	  <Reference Include="YukkuriMovieMaker.Plugin">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker4\YukkuriMovieMaker.Plugin.dll</HintPath>
+	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\YukkuriMovieMaker.Plugin.dll</HintPath>
 	  </Reference>
 	  <Reference Include="YukkuriMovieMaker.Plugin.Community">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker4\YukkuriMovieMaker.Plugin.Community.dll</HintPath>
+	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\YukkuriMovieMaker.Plugin.Community.dll</HintPath>
 	  </Reference>
 	  <Reference Include="YukkuriMovieMaker.Plugin.Tachie.AnimationTachie">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker4\YukkuriMovieMaker.Plugin.Tachie.AnimationTachie.dll</HintPath>
+	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\YukkuriMovieMaker.Plugin.Tachie.AnimationTachie.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 
@@ -62,7 +62,7 @@
   </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="mkdir &quot;C:\Users\shinm\Desktop\YukkuriMovieMaker4\user\plugin\$(ProjectName)&quot; &gt; NUL 2&gt;&amp;1&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;C:\Users\shinm\Desktop\YukkuriMovieMaker4\user\plugin\$(ProjectName)\&quot;" />
+		<Exec Command="mkdir &quot;C:\Users\shinm\Desktop\YukkuriMovieMaker_v4\user\plugin\$(ProjectName)&quot; &gt; NUL 2&gt;&amp;1&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;C:\Users\shinm\Desktop\YukkuriMovieMaker_v4\user\plugin\$(ProjectName)\&quot;" />
 	</Target>
 
 </Project>

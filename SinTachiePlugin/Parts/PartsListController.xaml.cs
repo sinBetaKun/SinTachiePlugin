@@ -63,6 +63,19 @@ namespace SinTachiePlugin.Parts
             EndEdit?.Invoke(this, e);
         }
 
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var scrollViewer = sender as ScrollViewer;
+            if (scrollViewer != null)
+            {
+                if (e.Delta > 0)
+                    scrollViewer.LineUp();
+                else
+                    scrollViewer.LineDown();
+
+                e.Handled = true;
+            }
+        }
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (DataContext is PartsListControllerViewModel viewModel)

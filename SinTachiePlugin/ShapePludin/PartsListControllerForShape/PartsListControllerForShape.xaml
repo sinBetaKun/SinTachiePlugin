@@ -59,33 +59,22 @@
                     <Button Grid.Row="4" Content="▼" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ下のパーツと入れ替えます。"/>
                 </Grid>
                 <Popup IsOpen="{Binding PopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" >
-                    <TreeView Panel.ZIndex="100" ItemsSource ="{Binding Path=PartNameTree}" SelectedItemChanged="TreeView_SelectedItemChanged">
-                        <TreeView.ItemTemplate>
-                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                <TextBlock Text="{Binding Name}" />
-                            </HierarchicalDataTemplate>
-                        </TreeView.ItemTemplate>
-                    </TreeView>
-                    <!--
-                    <ListBox ItemsSource ="{Binding Path=PopupListSource}" SelectedIndex="{Binding Path=SelectedAddingPartIndex, Mode=TwoWay}"/>
-                    -->
+                    <ScrollViewer MaxHeight="300" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                        <TreeView Panel.ZIndex="100" ItemsSource ="{Binding PartNameTree}" SelectedItemChanged="TreeView_SelectedItemChanged">
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                    <TextBlock Text="{Binding Name}" />
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+                    </ScrollViewer>
                 </Popup>
             </Grid>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <!--<ColumnDefinition Width="100"/>-->
                 <ColumnDefinition Width="194"/>
             </Grid.ColumnDefinitions>
-            <!-- 
-            <Grid Grid.Column="0">
-                <Grid Margin="10,8,0,10">
-
-                    <Button  Margin="10,10,10,0" Command="{Binding RelodeImageCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="画像枠&#xa;リロード" ToolTip="ブロックの画像表示枠が突然空っぽになった時に押してみてください。"/>
-
-                </Grid>
-            </Grid>
- -->
             <Grid Grid.Column="0">
                 <Border BorderBrush="#FF3F3F3F" BorderThickness="2" Margin="0,8,0,0"/>
                 <Grid Margin="10,8,0,10">

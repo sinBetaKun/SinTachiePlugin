@@ -16,7 +16,7 @@ namespace SinTachiePlugin.Parts
 
         public string FullName { get; set; }
 
-        public IEnumerable<PartNameTreeNode> Children { get; set; } = [];
+        public List<PartNameTreeNode> Children { get; set; } = [];
 
         public PartNameTreeNode()
         {
@@ -40,18 +40,18 @@ namespace SinTachiePlugin.Parts
                     PartNameTreeNode preChild = new(subdi);
                     if (!string.IsNullOrEmpty(preChild.Name))
                     {
-                        Children = Children.Append(preChild);
+                        Children.Add(preChild);
                     }
                 }
-                var fis = from x in di.GetFiles()
-                          where FileSettings.Default.FileExtensions.GetFileType(x.FullName) == FileType.画像
-                          where !(from c in Path.GetFileName(x.FullName)
-                                  where c == '.'
-                                  select c).Skip(1).Any()
-                          select x;
-                Children = Children.Concat(fis.Select(fi => new PartNameTreeNode(fi)));
+                var fis = (from x in di.GetFiles()
+                           where FileSettings.Default.FileExtensions.GetFileType(x.FullName) == FileType.画像
+                           where !(from c in Path.GetFileName(x.FullName)
+                                   where c == '.'
+                                   select c).Skip(1).Any()
+                           select new PartNameTreeNode(x)).ToList();
+                Children.AddRange(fis);
 
-                if (Children.Any())
+                if (!Children.Any())
                 {
                     FullName = string.Empty;
                     Name = string.Empty;
