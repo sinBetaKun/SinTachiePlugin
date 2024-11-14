@@ -64,36 +64,25 @@ namespace SinTachiePlugin.Parts
             EndEdit?.Invoke(this, e);
         }
 
-        //private void ItemListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    var vm = DataContext as PartsListControllerViewModel;
-        //    if (vm.SelectedAddingPart != null)
-        //    {
-        //        if (String.IsNullOrWhiteSpace(vm.SelectedAddingPart))
-        //        {
-        //            SinTachieDialog.ShowWarning("「追加するパーツ」が選択されていないため、パーツを追加できません。");
-        //            return;
-        //        }
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var scrollViewer = sender as ScrollViewer;
+            if (scrollViewer != null)
+            {
+                if (e.Delta > 0)
+                    scrollViewer.LineUp();
+                else
+                    scrollViewer.LineDown();
 
-        //        var tmpSelectedIndex = vm.SelectedIndex;
-        //        BeginEdit?.Invoke(this, EventArgs.Empty);
-        //        string partImagePath = vm.FindFirstImageOfPart(vm.SelectedAddingPart);
-        //        string tag = vm.SelectedAddingPart;
-        //        var tags = from part in vm.Parts select part.TagName;
-        //        if (tags.Contains(tag))
-        //        {
-        //            int sideNum = 1;
-        //            while (tags.Contains($"{tag}({sideNum})")) sideNum++;
-        //            tag += $"({sideNum})";
-        //        }
-        //        vm.Parts = vm.Parts.Insert(tmpSelectedIndex + 1, new PartBlock(partImagePath, tag));
-        //        foreach (var property in vm.properties)
-        //            property.SetValue(vm.Parts);
-
-        //        vm.AddPopupOpen = false;
-        //        EndEdit?.Invoke(this, EventArgs.Empty);
-        //        vm.SelectedIndex = tmpSelectedIndex + 1;
-        //    }
-        //}
+                e.Handled = true;
+            }
+        }
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.SelectedTreeViewItem = e.NewValue; // ViewModelに設定
+            }
+        }
     }
 }

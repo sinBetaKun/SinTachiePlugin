@@ -7,53 +7,55 @@
              xmlns:c="clr-namespace:YukkuriMovieMaker.Controls;assembly=YukkuriMovieMaker.Controls"
              d:DataContext="{d:DesignInstance Type=local:PartBlock}"
              mc:Ignorable="d">
-    <Grid Background="#FF808080">
-        <StackPanel Margin="4,4,4,4" Orientation="Vertical">
-            <WrapPanel>
-                <Border BorderBrush="#FF3F3F3F" BorderThickness="2" VerticalAlignment="Center">
-                    <WrapPanel Margin="0,0,0,0" Orientation="Horizontal">
-                        <CheckBox Margin="2,3,5,0" VerticalAlignment="Top" Width="15" Height="15" HorizontalAlignment="Left"
-                                  IsChecked="{Binding Appear, Mode=TwoWay}" Unchecked="Update_CheckBox" Checked="Update_CheckBox"
-                                  ToolTip="描画するか否かを切り替えられます。"/>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="タグ" Margin="5,0,3,0" VerticalAlignment="Top" Foreground="Black" FontSize="15"/>
-                            <Border BorderBrush="#FF484848" Margin="3,0,10,0" Background="Black" BorderThickness="1" Height="20"
-                                    VerticalAlignment="Top">
-                                <TextBlock Text="{Binding TagName}" Margin="4,0,4,0" VerticalAlignment="Center" Foreground="White"
-                                           FontSize="16" ToolTip="パーツの名前です。他のパーツの親にしたいときに名前を付けましょう。"/>
-                            </Border>
+    <Grid>
+        <Border BorderBrush="#FF808080" BorderThickness="1">
+            <StackPanel Margin="4,4,4,4" Orientation="Vertical">
+                <WrapPanel>
+                    <Border BorderBrush="#FF808080" BorderThickness="2" VerticalAlignment="Center">
+                        <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
+                            <CheckBox Margin="2,3,5,0" VerticalAlignment="Top" Width="15" Height="15" HorizontalAlignment="Left"
+                          IsChecked="{Binding Appear, Mode=TwoWay}" Unchecked="Update_CheckBox" Checked="Update_CheckBox"
+                          ToolTip="描画するか否かを切り替えられます。"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="タグ" Margin="5,0,3,0" VerticalAlignment="Top" FontSize="15"/>
+                                <Border  Margin="3,0,10,0" Background="#60808080" BorderThickness="1" Height="20"
+                            VerticalAlignment="Top">
+                                    <TextBlock Text="{Binding TagName}" Margin="4,0,4,0" VerticalAlignment="Center"
+                                   FontSize="16" ToolTip="パーツの名前です。他のパーツの親にしたいときに名前を付けましょう。"/>
+                                </Border>
+                            </StackPanel>
                         </StackPanel>
-                    </WrapPanel>
-                </Border>
-                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
-                    <TextBlock Text="バス" Margin="0,0,0,0" VerticalAlignment="Top" Foreground="Black"/>
-                    <Border BorderBrush="#FF484848" Margin="5,0,0,0" Background="Black" BorderThickness="1" Height="16"
-                            VerticalAlignment="Top">
-                        <TextBlock Text="{Binding BusNum.Values[0].Value,StringFormat={}{0:F0}}"
-                                   Margin="4,0,4,0" VerticalAlignment="Center" Foreground="White"
-                                   ToolTip="パーツの描画優先度。数字が高い方が後の方で描画され、画像上では手前に映ります。&#xa;（表示される数値は、アイテム上で最初のフレームにおける数値です。）"/>
                     </Border>
-                </StackPanel>
-                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
-                    <TextBlock Text="親" VerticalAlignment="Top" Foreground="Black"/>
-                    <Border BorderBrush="#FF484848" Margin="5,0,0,0" Background="Black" BorderThickness="1" Height="16"
-                            VerticalAlignment="Top">
-                        <TextBlock Text="{Binding Parent}" Margin="4,0,4,0" VerticalAlignment="Center" Foreground="White"
-                                   ToolTip="タグ名が一致するパーツと動きを連動します。Blenderでいう親ボーンに相当します。"/>
-                    </Border>
-                </StackPanel>
-                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
-                    <TextBlock Text="備考" VerticalAlignment="Top" Foreground="Black"/>
-                    <Border BorderBrush="#FF484848" Margin="5,0,0,0" Background="Black" BorderThickness="1" Height="16"
-                            VerticalAlignment="Top">
-                        <TextBlock Text="{Binding Comment}" Margin="4,0,4,0" VerticalAlignment="Center" Foreground="White"
-                                   ToolTip="タグ名が一致するパーツと動きを連動します。Blenderでいう親ボーンに相当します。"/>
-                    </Border>
-                </StackPanel>
-            </WrapPanel>
-            <c:FileSelector x:Name="selector" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,4,0,0"
-                            Value="{Binding ImagePath}" ShowThumbnail="True" FileType="画像"
-                            BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
-        </StackPanel>
+                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock Text="バス" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                        <Border Margin="5,0,0,0" Background="#60808080" BorderThickness="1" Height="16"
+                    VerticalAlignment="Top">
+                            <TextBlock Text="{Binding BusNum.Values[0].Value,StringFormat={}{0:F0}}"
+                           Margin="4,0,4,0" VerticalAlignment="Center"
+                           ToolTip="パーツの描画優先度。数字が高い方が後の方で描画され、画像上では手前に映ります。&#xa;（表示される数値は、アイテム上で最初のフレームにおける数値です。）"/>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock Text="親" VerticalAlignment="Top"/>
+                        <Border Margin="5,0,0,0" Background="#60808080" BorderThickness="1" Height="16"
+                    VerticalAlignment="Top">
+                            <TextBlock Text="{Binding Parent}" Margin="4,0,4,0" VerticalAlignment="Center"
+                           ToolTip="タグ名が一致するパーツと動きを連動します。Blenderでいう親ボーンに相当します。"/>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock Text="備考" VerticalAlignment="Top"/>
+                        <Border Margin="5,0,0,0" Background="#60808080" BorderThickness="1" Height="16"
+                    VerticalAlignment="Top">
+                            <TextBlock Text="{Binding Comment}" Margin="4,0,4,0" VerticalAlignment="Center"
+                           ToolTip="タグ名が一致するパーツと動きを連動します。Blenderでいう親ボーンに相当します。"/>
+                        </Border>
+                    </StackPanel>
+                </WrapPanel>
+                <c:FileSelector x:Name="selector" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,4,0,0"
+                    Value="{Binding ImagePath}" ShowThumbnail="True" FileType="画像"
+                    BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

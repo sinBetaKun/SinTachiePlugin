@@ -26,19 +26,21 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Background="#FF808080">
-                            <StackPanel Margin="0,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
-                                <TextBlock Text="(" Margin="4,4,0,4" VerticalAlignment="Stretch" Foreground="Black" FontSize="12"/>
-                                <Border BorderBrush="#FF484848" Margin="4,2,0,2" Background="Black" BorderThickness="1" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Cerrar.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0" VerticalAlignment="Stretch" Foreground="White" FontSize="12" ToolTip="セラール（の最初の）値"/>
-                                </Border>
-                                <TextBlock Text="~" Margin="4,4,0,4" VerticalAlignment="Stretch" Foreground="Black" FontSize="12"/>
-                                <Border BorderBrush="#FF484848" Margin="4,2,0,2" Background="Black" BorderThickness="1" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Abrir.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0" VerticalAlignment="Stretch" Foreground="White" FontSize="12" ToolTip="アブリール（の最初の）値"/>
-                                </Border>
-                                <TextBlock Text=")" Margin="4,4,0,4" VerticalAlignment="Stretch" Foreground="Black" FontSize="12"/>
-                                <TextBlock Text="{Binding Comment}" Margin="10,4,0,4" VerticalAlignment="Stretch" Foreground="Black" FontSize="12"/>
-                            </StackPanel>
+                        <Grid>
+                            <Border BorderBrush="#FF808080" BorderThickness="1">
+                                <StackPanel Margin="0,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                                    <TextBlock Text="(" Margin="4,4,0,4" VerticalAlignment="Center" FontSize="12"/>
+                                    <Border Margin="4,4,0,4" Background="#80808080" BorderThickness="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Cerrar.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0" VerticalAlignment="Center" FontSize="12" ToolTip="セラール（の最初の）値"/>
+                                    </Border>
+                                    <TextBlock Text="~" Margin="4,4,0,4" VerticalAlignment="Center" FontSize="12"/>
+                                    <Border Margin="4,4,0,4" Background="#80808080" BorderThickness="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Abrir.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0" VerticalAlignment="Center" FontSize="12" ToolTip="アブリール（の最初の）値"/>
+                                    </Border>
+                                    <TextBlock Text=")" Margin="4,4,0,4" VerticalAlignment="Center" FontSize="12"/>
+                                    <TextBlock Text="{Binding Comment}" Margin="10,4,0,4" VerticalAlignment="Center" FontSize="12"/>
+                                </StackPanel>
+                            </Border>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
