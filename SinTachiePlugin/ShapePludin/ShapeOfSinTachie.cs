@@ -22,7 +22,7 @@ namespace SinTachiePlugin.ShapePludin
         public bool IsExoShapeSupported => false;
 
         public bool IsExoMaskSupported => false;
-
+        
         public IShapeParameter CreateShapeParameter(SharedDataStore? sharedData)
         {
             return new ShapeParameterOfSinTachie(sharedData);
