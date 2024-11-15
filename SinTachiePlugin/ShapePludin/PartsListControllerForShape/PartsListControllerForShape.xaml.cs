@@ -1,18 +1,6 @@
-﻿using SinTachiePlugin.Parts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using YukkuriMovieMaker.Commons;
 
 namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
@@ -61,9 +49,77 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (DataContext is PartsListControllerViewModel viewModel)
+            if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
                 viewModel.SelectedTreeViewItem = e.NewValue; // ViewModelに設定
+            }
+        }
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (sender is ScrollViewer scrollViewer)
+            {
+                if (e.Delta > 0)
+                    scrollViewer.LineUp();
+                else
+                    scrollViewer.LineDown();
+
+                e.Handled = true;
+            }
+        }
+        private void Scissors_Selected(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerForShapeViewModel viewModel)
+            {
+                viewModel.ScissorsFunc();
+            }
+        }
+
+        private void Copy_Selected(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerForShapeViewModel viewModel)
+            {
+                viewModel.CopyFunc();
+            }
+        }
+
+        private void Paste_Selected(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerForShapeViewModel viewModel)
+            {
+                viewModel.PasteFunc();
+            }
+        }
+
+        private void Duplication_Selected(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerForShapeViewModel viewModel)
+            {
+                viewModel.DuplicationFunc();
+            }
+        }
+
+        private void Remove_Selected(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerForShapeViewModel viewModel)
+            {
+                viewModel.RemoveFunc();
+            }
+        }
+
+        private void list_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (DataContext is PartsListControllerForShapeViewModel viewModel)
+            {
+                viewModel.EditPopupIsOpen = true;
+            }
+        }
+
+        private void PartBlockUI_RightMouseButtonUp(object sender, EventArgs e)
+        {
+            if (DataContext is PartsListControllerForShapeViewModel viewModel)
+            {
+                viewModel.EditPopupIsOpen = true;
             }
         }
     }

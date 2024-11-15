@@ -23,6 +23,7 @@ namespace SinTachiePlugin.Parts
     {
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
+        public event EventHandler? RightMouseButtonUp;
 
         public PartBlockUI()
         {
@@ -41,17 +42,19 @@ namespace SinTachiePlugin.Parts
         {
             //Part内のAnimationを変更した際にPartsを更新する
             //複数のアイテムを選択している場合にすべてのアイテムを更新するために必要
-            var vm = DataContext as PartsListControllerViewModel;
-            vm?.CopyToOtherItems();
+            var vm = DataContext as PartBlock;
             EndEdit?.Invoke(this, e);
         }
 
         private void Update_CheckBox(object sender, RoutedEventArgs e)
         {
             BeginEdit?.Invoke(this, e);
-            var vm = DataContext as PartsListControllerViewModel;
-            vm?.CopyToOtherItems();
             EndEdit?.Invoke(this, e);
+        }
+
+        private void Grid_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            RightMouseButtonUp?.Invoke(this, e);
         }
     }
 }

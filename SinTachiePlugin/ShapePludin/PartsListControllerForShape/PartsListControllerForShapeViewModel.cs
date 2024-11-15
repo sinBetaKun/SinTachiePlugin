@@ -32,5 +32,17 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             }
             Root = values.Root;
         }
+
+        public override void CopyToOtherItems()
+        {
+            //現在のアイテムの内容を他のアイテムにコピーする
+            var otherProperties = properties.Skip(1);
+            foreach (var property in otherProperties)
+                property.SetValue(new PartsOfShapeItem
+                {
+                    Parts = Parts.Select(x => new PartBlock(x)).ToImmutableList(),
+                    Root = Root,
+                });
+        }
     }
 }

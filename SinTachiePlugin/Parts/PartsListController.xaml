@@ -18,15 +18,25 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="26"/>
             </Grid.ColumnDefinitions>
-            <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Parts}" SelectedIndex="{Binding SelectedIndex}"
-                     Name="list" ScrollViewer.CanContentScroll="False"  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Parts}" SelectedIndex="{Binding SelectedPartIndex}"
+                     Name="list" ScrollViewer.CanContentScroll="False"  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     MouseRightButtonUp="list_MouseRightButtonUp">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <local:PartBlockUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
+                        <local:PartBlockUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit" RightMouseButtonUp="PartBlockUI_RightMouseButtonUp"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
 
+            <Popup IsOpen="{Binding EditPopupIsOpen}" Placement="MousePoint"  StaysOpen="False" Panel.ZIndex="100" >
+                <ListBox SelectedIndex="{Binding BottunIndex}">
+                    <ListBoxItem Content="切り取り" IsEnabled="{Binding ScissorsEnable}" Selected="Scissors_Selected"/>
+                    <ListBoxItem Content="コピー" IsEnabled="{Binding CopyEnable}" Selected="Copy_Selected"/>
+                    <ListBoxItem Content="貼り付け" IsEnabled="{Binding PasteEnable}" Selected="Paste_Selected"/>
+                    <ListBoxItem Content="複製" IsEnabled="{Binding DuplicationEnable}" Selected="Duplication_Selected"/>
+                    <ListBoxItem Content="削除" IsEnabled="{Binding RemoveEnable}" Selected="Remove_Selected"/>
+                </ListBox>
+            </Popup>
             <Grid Grid.Column="1">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -34,16 +44,14 @@
                         <RowDefinition Height="26"/>
                         <RowDefinition Height="26"/>
                         <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
                     </Grid.RowDefinitions>
                     <Button Grid.Row="0" Content="╋" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="「追加するパーツ」で選択している名前のパーツが追加されます。"/>
                     <Button Grid.Row="1" Content="━" Command="{Binding RemoveCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを取り除きます。"/>
-                    <Button Grid.Row="2" Content="複" Command="{Binding DuplicationCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを複製します。"/>
-                    <Button Grid.Row="3" Content="▲" Command="{Binding MoveUpCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ上のパーツと入れ替えます。"/>
-                    <Button Grid.Row="4" Content="▼" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ下のパーツと入れ替えます。"/>
+                    <Button Grid.Row="2" Content="▲" Command="{Binding MoveUpCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ上のパーツと入れ替えます。"/>
+                    <Button Grid.Row="3" Content="▼" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ下のパーツと入れ替えます。"/>
                 </Grid>
-                <Popup IsOpen="{Binding PopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" >
-                    <ScrollViewer MaxHeight="300" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                <Popup IsOpen="{Binding PartsPopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" >
+                    <ScrollViewer MaxHeight="300" MinWidth="100" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                         <TreeView Panel.ZIndex="100" ItemsSource ="{Binding PartNameTree}" SelectedItemChanged="TreeView_SelectedItemChanged">
                             <TreeView.ItemTemplate>
                                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
@@ -55,6 +63,7 @@
                 </Popup>
             </Grid>
         </Grid>
+        
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="194"/>
@@ -68,27 +77,26 @@
                         <RowDefinition Height="26"/>
                     </Grid.RowDefinitions>
 
-                        <!-- 選択されたブロックのデフォルト値を編集するエリア -->
-                        <Label Grid.Row="0" Content="デフォルト設定" HorizontalAlignment="Left" Margin="4,4,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
-                        <Grid Grid.Row="1" Margin="0,0,8,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Command="{Binding WriteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="保存" ToolTip="選択されているパーツが指定している画像ファイルに、現在のパーツパラメータ情報をデフォルトとして記録します。&#xa;(stpiファイルが生成されます。)"/>
-                            <Button Grid.Column="1" Command="{Binding DeleteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="削除" ToolTip="選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を取り消します。&#xa;(stpiファイル自体は削除されません。)"/>
-                            <Button Grid.Column="2" Command="{Binding ReloadDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="リロード" ToolTip="選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を読み取り、現在の全パラメータを自動編集します。"/>
-                        </Grid>
+                    <!-- 選択されたブロックのデフォルト値を編集するエリア -->
+                    <Label Grid.Row="0" Content="デフォルト設定" HorizontalAlignment="Left" Margin="4,4,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
+                    <Grid Grid.Row="1" Margin="0,0,8,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Command="{Binding WriteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="保存" ToolTip="選択されているパーツが指定している画像ファイルに、現在のパーツパラメータ情報をデフォルトとして記録します。&#xa;(stpiファイルが生成されます。)"/>
+                        <Button Grid.Column="1" Command="{Binding DeleteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="削除" ToolTip="選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を取り消します。&#xa;(stpiファイル自体は削除されません。)"/>
+                        <Button Grid.Column="2" Command="{Binding ReloadDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="リロード" ToolTip="選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を読み取り、現在の全パラメータを自動編集します。"/>
                     </Grid>
                 </Grid>
-            </WrapPanel>
+            </Grid>
         </Grid>
-        <c:PropertiesEditor 
+        <c:PropertiesEditor
             Grid.Row="2"
-            Target="{Binding ElementName=list,Path=SelectedValue}"
-            BeginEdit="PropertiesEditor_BeginEdit" 
-            EndEdit="PropertiesEditor_EndEdit">
+                Target="{Binding ElementName=list,Path=SelectedValue}"
+                BeginEdit="PropertiesEditor_BeginEdit" 
+                EndEdit="PropertiesEditor_EndEdit">
         </c:PropertiesEditor>
     </Grid>
 </UserControl>

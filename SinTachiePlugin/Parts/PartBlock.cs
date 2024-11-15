@@ -146,7 +146,7 @@ namespace SinTachiePlugin.Parts
             ShowInformation($"デフォルト値を{str}しました。");
         }
 
-        private static JsonSerializerSettings GetJsonSetting =>
+        public static JsonSerializerSettings GetJsonSetting =>
             new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.Auto

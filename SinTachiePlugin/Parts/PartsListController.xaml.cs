@@ -19,6 +19,12 @@ using UserControl = System.Windows.Controls.UserControl;
 using Path = System.IO.Path;
 using YukkuriMovieMaker.Controls;
 using System.Windows.Forms;
+using Clipboard = System.Windows.Clipboard;
+using Newtonsoft.Json;
+using System.Reflection;
+using System.Windows.Controls.Primitives;
+using Point = System.Windows.Point;
+using System.Reflection.Emit;
 
 namespace SinTachiePlugin.Parts
 {
@@ -82,6 +88,62 @@ namespace SinTachiePlugin.Parts
             if (DataContext is PartsListControllerViewModel viewModel)
             {
                 viewModel.SelectedTreeViewItem = e.NewValue; // ViewModelに設定
+            }
+        }
+
+        private void Scissors_Selected(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.ScissorsFunc();
+            }
+        }
+
+        private void Copy_Selected(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.CopyFunc();
+            }
+        }
+
+        private void Paste_Selected(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.PasteFunc();
+            }
+        }
+
+        private void Duplication_Selected(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.DuplicationFunc();
+            }
+        }
+
+        private void Remove_Selected(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.RemoveFunc();
+            }
+        }
+
+        private void list_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.EditPopupIsOpen = true;
+            }
+        }
+
+        private void PartBlockUI_RightMouseButtonUp(object sender, EventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.EditPopupIsOpen = true;
             }
         }
     }
