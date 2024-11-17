@@ -18,6 +18,6 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
         public ImmutableList<PartBlock> Parts { get => parts; set => Set(ref parts, value); }
         ImmutableList<PartBlock> parts = [];
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => Parts;
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [.. Parts];
     }
 }

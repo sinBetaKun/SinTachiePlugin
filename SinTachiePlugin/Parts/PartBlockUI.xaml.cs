@@ -23,7 +23,6 @@ namespace SinTachiePlugin.Parts
     {
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
-        public event EventHandler? RightMouseButtonUp;
 
         public PartBlockUI()
         {
@@ -50,11 +49,6 @@ namespace SinTachiePlugin.Parts
         {
             BeginEdit?.Invoke(this, e);
             EndEdit?.Invoke(this, e);
-        }
-
-        private void Grid_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            RightMouseButtonUp?.Invoke(this, e);
         }
     }
 }

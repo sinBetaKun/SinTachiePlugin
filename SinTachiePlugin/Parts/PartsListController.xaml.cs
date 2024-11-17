@@ -91,7 +91,7 @@ namespace SinTachiePlugin.Parts
             }
         }
 
-        private void Scissors_Selected(object sender, RoutedEventArgs e)
+        private void Scissors_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
@@ -99,7 +99,7 @@ namespace SinTachiePlugin.Parts
             }
         }
 
-        private void Copy_Selected(object sender, RoutedEventArgs e)
+        private void Copy_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
@@ -107,7 +107,7 @@ namespace SinTachiePlugin.Parts
             }
         }
 
-        private void Paste_Selected(object sender, RoutedEventArgs e)
+        private void Paste_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
@@ -115,7 +115,7 @@ namespace SinTachiePlugin.Parts
             }
         }
 
-        private void Duplication_Selected(object sender, RoutedEventArgs e)
+        private void Duplication_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
@@ -123,27 +123,11 @@ namespace SinTachiePlugin.Parts
             }
         }
 
-        private void Remove_Selected(object sender, RoutedEventArgs e)
+        private void Remove_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
                 viewModel.RemoveFunc();
-            }
-        }
-
-        private void list_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (DataContext is PartsListControllerViewModel viewModel)
-            {
-                viewModel.EditPopupIsOpen = true;
-            }
-        }
-
-        private void PartBlockUI_RightMouseButtonUp(object sender, EventArgs e)
-        {
-            if (DataContext is PartsListControllerViewModel viewModel)
-            {
-                viewModel.EditPopupIsOpen = true;
             }
         }
     }

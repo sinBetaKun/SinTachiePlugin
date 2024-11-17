@@ -1,4 +1,5 @@
-﻿using SinTachiePlugin.Informations;
+﻿using Newtonsoft.Json;
+using SinTachiePlugin.Informations;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -19,6 +20,7 @@ namespace SinTachiePlugin.Parts
     {
         readonly INotifyPropertyChanged item;
         protected readonly ItemProperty[] properties;
+        static PartBlock? clipedBlock = null;
 
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
@@ -34,97 +36,83 @@ namespace SinTachiePlugin.Parts
             get => selectedPartIndex;
             set
             {
-                ScissorsEnable
-                    = CopyEnable
-                    = DuplicationEnable
-                    = RemoveEnable
-                    = value > -1;
+                SomeBlockSelected = value > -1;
                 Set(ref selectedPartIndex, value);
             }
         }
         int selectedPartIndex = -1;
 
-        public bool EditPopupIsOpen { get => modePopupIsOpen; set => Set(ref modePopupIsOpen, value); }
-        bool modePopupIsOpen = false;
-
-        public PartBlock? ClipedBlock
-        {
-            get => clipedBlock;
-            set
-            {
-                PasteEnable = value != null;
-                Set(ref clipedBlock, value);
-            }
-        }
-        PartBlock? clipedBlock = null;
-
-        public int BottunIndex { get => bottunIndex; set => Set(ref bottunIndex, value); }
-        int bottunIndex = -1;
-
-        public bool ScissorsEnable { get => scissorsEnable; set => Set(ref scissorsEnable, value); }
-        bool scissorsEnable = false;
         public void ScissorsFunc()
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            ClipedBlock = new(Parts[SelectedPartIndex]);
-            EditPopupIsOpen = false;
-            BottunIndex = -1;
+            CopyFunc();
             RemovePartBlock();
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
-        public bool CopyEnable { get => copyEnable; set => Set(ref copyEnable, value); }
-        bool copyEnable = false;
         public void CopyFunc()
         {
-            ClipedBlock = new(Parts[SelectedPartIndex]);
-            EditPopupIsOpen = false;
-            BottunIndex = -1;
+            //string json = JsonConvert.SerializeObject(Parts[SelectedPartIndex]);
+            //Clipboard.SetText(json);
+            clipedBlock = new(Parts[SelectedPartIndex]);
         }
+
+        public bool SomeBlockSelected { get => someBlockSelected; set=>Set(ref someBlockSelected, value); }
+        bool someBlockSelected = false;
 
         public bool PasteEnable { get => pasteEnable; set => Set(ref pasteEnable, value); }
         bool pasteEnable = false;
         public void PasteFunc()
         {
+            if(clipedBlock == null)
+            {
+                string className = GetType().Name;
+                string? mthName = MethodBase.GetCurrentMethod()?.Name;
+                SinTachieDialog.ShowError("疑似クリップボードにnullが代入されている状態での貼り付け処理は、本来なら不可能な処理です。",
+                    className, mthName);
+                return;
+            }
+
             var tmpSelectedIndex = SelectedPartIndex;
             BeginEdit?.Invoke(this, EventArgs.Empty);
             if (tmpSelectedIndex < 0)
             {
-                Parts = Parts.Add(new PartBlock(ClipedBlock));
+                Parts = Parts.Add(new PartBlock(clipedBlock));
                 SelectedPartIndex = Parts.Count - 1;
             }
             else
             {
-                Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(ClipedBlock));
+                Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(clipedBlock));
                 SelectedPartIndex = tmpSelectedIndex;
             }
             SetProparties();
-            EditPopupIsOpen = false;
-            BottunIndex = -1;
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
-        public bool DuplicationEnable { get => duplicationEnable; set => Set(ref duplicationEnable, value); }
-        bool duplicationEnable = false;
         public void DuplicationFunc()
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
             DuplicationPartBlock();
-            EditPopupIsOpen = false;
-            BottunIndex = -1;
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
-        public bool RemoveEnable { get => removeEnable; set => Set(ref removeEnable, value); }
-        bool removeEnable = false;
         public void RemoveFunc()
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
             RemovePartBlock();
-            EditPopupIsOpen = false;
-            BottunIndex = -1;
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
+
+        public bool ContextMenuIsOpen
+        {
+            get => contextMeneIsOpen;
+            set
+            {
+                PasteEnable = clipedBlock != null;
+                Set(ref contextMeneIsOpen, value);
+            }
+        }
+        bool contextMeneIsOpen = false;
 
         public string Root
         {
@@ -364,6 +352,27 @@ namespace SinTachiePlugin.Parts
 
             UpdateProperties();
         }
+
+        //private PartBlock? GetPartBlockFromClipBoard()
+        //{
+        //    try
+        //    {
+        //        if (Clipboard.ContainsText())
+        //        {
+        //            string json = Clipboard.GetText();
+        //            if (JsonConvert.DeserializeObject<PartBlock>(json, PartBlock.GetJsonSetting) is PartBlock block)
+        //            {
+        //                return block;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        //string? mthName = MethodBase.GetCurrentMethod()?.Name;
+        //        //SinTachieDialog.ShowError("クリップボードからのPartBlock取得に失敗しました。", className, mthName);
+        //    }
+        //    return null;
+        //}
 
         private void RemovePartBlock()
         {

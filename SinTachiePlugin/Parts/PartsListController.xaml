@@ -19,24 +19,22 @@
                 <ColumnDefinition Width="26"/>
             </Grid.ColumnDefinitions>
             <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Parts}" SelectedIndex="{Binding SelectedPartIndex}"
-                     Name="list" ScrollViewer.CanContentScroll="False"  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     MouseRightButtonUp="list_MouseRightButtonUp">
+                     Name="list" ScrollViewer.CanContentScroll="False"  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <local:PartBlockUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit" RightMouseButtonUp="PartBlockUI_RightMouseButtonUp"/>
+                        <local:PartBlockUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu IsOpen="{Binding ContextMenuIsOpen}">
+                        <MenuItem Header="切り取り" IsEnabled="{Binding SomeBlockSelected}" Click ="Scissors_Clicked"/>
+                        <MenuItem Header="コピー" IsEnabled="{Binding SomeBlockSelected}" Click="Copy_Clicked"/>
+                        <MenuItem Header="貼り付け" IsEnabled="{Binding PasteEnable}" Click="Paste_Clicked"/>
+                        <MenuItem Header="複製" IsEnabled="{Binding SomeBlockSelected}" Click="Duplication_Clicked"/>
+                        <MenuItem Header="削除" IsEnabled="{Binding SomeBlockSelected}" Click="Remove_Clicked"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
             </ListBox>
-
-            <Popup IsOpen="{Binding EditPopupIsOpen}" Placement="MousePoint"  StaysOpen="False" Panel.ZIndex="100" >
-                <ListBox SelectedIndex="{Binding BottunIndex}">
-                    <ListBoxItem Content="切り取り" IsEnabled="{Binding ScissorsEnable}" Selected="Scissors_Selected"/>
-                    <ListBoxItem Content="コピー" IsEnabled="{Binding CopyEnable}" Selected="Copy_Selected"/>
-                    <ListBoxItem Content="貼り付け" IsEnabled="{Binding PasteEnable}" Selected="Paste_Selected"/>
-                    <ListBoxItem Content="複製" IsEnabled="{Binding DuplicationEnable}" Selected="Duplication_Selected"/>
-                    <ListBoxItem Content="削除" IsEnabled="{Binding RemoveEnable}" Selected="Remove_Selected"/>
-                </ListBox>
-            </Popup>
             <Grid Grid.Column="1">
                 <Grid>
                     <Grid.RowDefinitions>

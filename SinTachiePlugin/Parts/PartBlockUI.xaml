@@ -7,7 +7,7 @@
              xmlns:c="clr-namespace:YukkuriMovieMaker.Controls;assembly=YukkuriMovieMaker.Controls"
              d:DataContext="{d:DesignInstance Type=local:PartBlock}"
              mc:Ignorable="d">
-    <Grid MouseRightButtonUp="Grid_MouseRightButtonUp">
+    <Grid>
         <Border BorderBrush="#FF808080" BorderThickness="1">
             <StackPanel Margin="4,4,4,4" Orientation="Vertical">
                 <WrapPanel>

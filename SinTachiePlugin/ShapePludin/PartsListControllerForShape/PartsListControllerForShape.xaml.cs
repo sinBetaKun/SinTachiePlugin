@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using SinTachiePlugin.Parts;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using YukkuriMovieMaker.Commons;
@@ -67,7 +68,8 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
                 e.Handled = true;
             }
         }
-        private void Scissors_Selected(object sender, RoutedEventArgs e)
+
+        private void Scissors_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
@@ -75,7 +77,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             }
         }
 
-        private void Copy_Selected(object sender, RoutedEventArgs e)
+        private void Copy_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
@@ -83,7 +85,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             }
         }
 
-        private void Paste_Selected(object sender, RoutedEventArgs e)
+        private void Paste_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
@@ -91,7 +93,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             }
         }
 
-        private void Duplication_Selected(object sender, RoutedEventArgs e)
+        private void Duplication_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
@@ -99,27 +101,11 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             }
         }
 
-        private void Remove_Selected(object sender, RoutedEventArgs e)
+        private void Remove_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
                 viewModel.RemoveFunc();
-            }
-        }
-
-        private void list_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (DataContext is PartsListControllerForShapeViewModel viewModel)
-            {
-                viewModel.EditPopupIsOpen = true;
-            }
-        }
-
-        private void PartBlockUI_RightMouseButtonUp(object sender, EventArgs e)
-        {
-            if (DataContext is PartsListControllerForShapeViewModel viewModel)
-            {
-                viewModel.EditPopupIsOpen = true;
             }
         }
     }

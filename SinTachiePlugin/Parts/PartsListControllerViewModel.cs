@@ -21,7 +21,7 @@ using YukkuriMovieMaker.Settings;
 
 namespace SinTachiePlugin.Parts
 {
-    public class PartsListControllerViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
+    public partial class PartsListControllerViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
     {
         public SinTachieCharacterParameter? CharacterParameter
         {
