@@ -10,7 +10,7 @@
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance Type={x:Type local:PartsListControllerForShapeViewModel}}">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="26"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="210"/>
             <RowDefinition Height="70"/>
             <RowDefinition Height="auto"/>
@@ -23,26 +23,30 @@
             <Border Grid.Column="0" BorderBrush="#FF484848" Margin="2,0,0,0" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <TextBlock Text="素材の場所" Margin="2,2,2,2" HorizontalAlignment="Left"/>
             </Border>
-            <c:DirectorySelector  Margin="2,0,0,0" Grid.Column="1" Value="{Binding Root, Mode=TwoWay}" BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
+            <c:DirectorySelector  Margin="2,0,0,0" Grid.Column="1" Value="{Binding Root, Mode=TwoWay}" BeginEdit="PropertiesEditor_BeginEdit"  EndEdit="PropertiesEditor_EndEdit"/>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="26"/>
             </Grid.ColumnDefinitions>
-            <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Path=Parts}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" Name="list" ScrollViewer.CanContentScroll="False">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Height" Value="60"/>
-                    </Style>
-                </ListBox.ItemContainerStyle>
+            <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Path=Parts}" SelectedIndex="{Binding SelectedPartIndex, Mode=TwoWay}"
+                     Name="list" ScrollViewer.CanContentScroll="False">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <local1:PartBlockUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
+                        <local1:PartBlockUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="DirectorySelector_EndEdit"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu  IsOpen="{Binding ContextMenuIsOpen}">
+                        <MenuItem Header="切り取り" IsEnabled="{Binding SomeBlockSelected}" Click ="Scissors_Clicked"/>
+                        <MenuItem Header="コピー" IsEnabled="{Binding SomeBlockSelected}" Click="Copy_Clicked"/>
+                        <MenuItem Header="貼り付け" IsEnabled="{Binding PasteEnable}" Click="Paste_Clicked"/>
+                        <MenuItem Header="複製" IsEnabled="{Binding SomeBlockSelected}" Click="Duplication_Clicked"/>
+                        <MenuItem Header="削除" IsEnabled="{Binding SomeBlockSelected}" Click="Remove_Clicked"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
             </ListBox>
-
             <Grid Grid.Column="1">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -50,16 +54,14 @@
                         <RowDefinition Height="26"/>
                         <RowDefinition Height="26"/>
                         <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
                     </Grid.RowDefinitions>
                     <Button Grid.Row="0" Content="╋" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="「追加するパーツ」で選択している名前のパーツが追加されます。"/>
                     <Button Grid.Row="1" Content="━" Command="{Binding RemoveCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを取り除きます。"/>
-                    <Button Grid.Row="2" Content="複" Command="{Binding DuplicationCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを複製します。"/>
-                    <Button Grid.Row="3" Content="▲" Command="{Binding MoveUpCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ上のパーツと入れ替えます。"/>
-                    <Button Grid.Row="4" Content="▼" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ下のパーツと入れ替えます。"/>
+                    <Button Grid.Row="2" Content="▲" Command="{Binding MoveUpCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ上のパーツと入れ替えます。"/>
+                    <Button Grid.Row="3" Content="▼" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ下のパーツと入れ替えます。"/>
                 </Grid>
-                <Popup IsOpen="{Binding PopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" >
-                    <ScrollViewer MaxHeight="300" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                <Popup IsOpen="{Binding PartsPopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" >
+                    <ScrollViewer MaxHeight="300" MinWidth="100" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                         <TreeView Panel.ZIndex="100" ItemsSource ="{Binding PartNameTree}" SelectedItemChanged="TreeView_SelectedItemChanged">
                             <TreeView.ItemTemplate>
                                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
@@ -83,21 +85,20 @@
                         <RowDefinition Height="26"/>
                     </Grid.RowDefinitions>
 
-                        <!-- 選択されたブロックのデフォルト値を編集するエリア -->
-                        <Label Grid.Row="0" Content="デフォルト設定" HorizontalAlignment="Left" Margin="4,4,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
-                        <Grid Grid.Row="1" Margin="0,0,8,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Command="{Binding WriteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="保存" ToolTip="選択されているパーツが指定している画像ファイルに、現在のパーツパラメータ情報をデフォルトとして記録します。&#xa;(stpiファイルが生成されます。)"/>
-                            <Button Grid.Column="1" Command="{Binding DeleteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="削除" ToolTip="選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を取り消します。&#xa;(stpiファイル自体は削除されません。)"/>
-                            <Button Grid.Column="2" Command="{Binding ReloadDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="リロード" ToolTip="選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を読み取り、現在の全パラメータを自動編集します。"/>
-                        </Grid>
+                    <!-- 選択されたブロックのデフォルト値を編集するエリア -->
+                    <Label Grid.Row="0" Content="デフォルト設定" HorizontalAlignment="Left" Margin="4,4,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
+                    <Grid Grid.Row="1" Margin="0,0,8,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Command="{Binding WriteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="保存" ToolTip="選択されているパーツが指定している画像ファイルに、現在のパーツパラメータ情報をデフォルトとして記録します。&#xa;(stpiファイルが生成されます。)"/>
+                        <Button Grid.Column="1" Command="{Binding DeleteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="削除" ToolTip="選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を取り消します。&#xa;(stpiファイル自体は削除されません。)"/>
+                        <Button Grid.Column="2" Command="{Binding ReloadDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="リロード" ToolTip="選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を読み取り、現在の全パラメータを自動編集します。"/>
                     </Grid>
                 </Grid>
-            </WrapPanel>
+            </Grid>
         </Grid>
         <c:PropertiesEditor 
             Grid.Row="3"

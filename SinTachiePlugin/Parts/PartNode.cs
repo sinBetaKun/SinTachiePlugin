@@ -56,10 +56,10 @@ namespace SinTachiePlugin.Parts
         public double Exp_X { get; set; }
         public double Exp_Y { get; set; }
         //public ImmutableList<IVideoEffectProcessor> Processors { get; set; } = [];
-        public DrawDescription DrawDescription { get; set; } = new(
-                new Vector3(), new Vector2(), new Vector2(), new Vector3(), Matrix4x4.Identity,
-                new InterpolationMode(), 1.0, false, []
-                );
+        //public DrawDescription DrawDescription { get; set; } = new(
+        //        new Vector3(), new Vector2(), new Vector2(), new Vector3(), Matrix4x4.Identity,
+        //        new InterpolationMode(), 1.0, false, []
+        //        );
 
         public Vector2 Shift { get; set; }
         public float Opacity2 { get; set; }

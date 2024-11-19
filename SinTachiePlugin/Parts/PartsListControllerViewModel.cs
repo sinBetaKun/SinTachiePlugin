@@ -21,7 +21,7 @@ using YukkuriMovieMaker.Settings;
 
 namespace SinTachiePlugin.Parts
 {
-    public class PartsListControllerViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
+    public partial class PartsListControllerViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
     {
         public SinTachieCharacterParameter? CharacterParameter
         {
@@ -45,10 +45,18 @@ namespace SinTachiePlugin.Parts
         }
         SinTachieCharacterParameter? characterParameter;
       
-        protected override void SetProparties()
+        public override void SetProperties()
         {
             foreach (var property in properties)
                 property.SetValue(Parts);
+        }
+
+        public override void CopyToOtherItems()
+        {
+            //現在のアイテムの内容を他のアイテムにコピーする
+            var otherProperties = properties.Skip(1);
+            foreach (var property in otherProperties)
+                property.SetValue(Parts.Select(x => new PartBlock(x)).ToImmutableList());
         }
 
         private void CharacterParameterChanged(object sender, PropertyChangedEventArgs e)

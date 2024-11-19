@@ -15,9 +15,9 @@ using YukkuriMovieMaker.Settings;
 
 namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
 {
-    public class PartsListControllerForShapeViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
+    public partial class PartsListControllerForShapeViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
     {
-        protected override void SetProparties()
+        public override void SetProperties()
         {
             foreach (var property in properties)
                 property.SetValue(new PartsOfShapeItem() { Root = Root, Parts = Parts });
@@ -31,6 +31,28 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
                 Parts = [.. values.Parts];
             }
             Root = values.Root;
+        }
+
+        public override void CopyToOtherItems()
+        {
+            //現在のアイテムの内容を他のアイテムにコピーする
+            var otherProperties = properties.Skip(1);
+            for (int i = 0; i < properties.Count(); i++)
+            {
+                var property = properties[i];
+                if (i is 0)
+                {
+                    property.SetValue(new PartsOfShapeItem() { Root = Root, Parts = Parts });
+                }
+                else
+                {
+                    property.SetValue(new PartsOfShapeItem
+                    {
+                        Parts = Parts.Select(x => new PartBlock(x)).ToImmutableList(),
+                        Root = Root,
+                    });
+                }
+            }
         }
     }
 }

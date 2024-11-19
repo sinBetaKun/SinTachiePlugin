@@ -1,10 +1,12 @@
-﻿using SinTachiePlugin.Informations;
+﻿using Newtonsoft.Json;
+using SinTachiePlugin.Informations;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +19,8 @@ namespace SinTachiePlugin.Parts
     public abstract class PartsListControllerViewModelBase : Bindable, INotifyPropertyChanged, IPropertyEditorControl, IDisposable
     {
         readonly INotifyPropertyChanged item;
-        protected readonly ItemProperty[] properties;
+        readonly ItemProperty[] properties;
+        static PartBlock? clipedBlock = null;
 
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
@@ -25,22 +28,91 @@ namespace SinTachiePlugin.Parts
         public ImmutableList<PartBlock> Parts { get => parts; set => Set(ref parts, value); }
         ImmutableList<PartBlock> parts = [];
 
-        public bool PopupIsOpen
+        public bool PartsPopupIsOpen { get => partsPopupIsOpen; set => Set(ref partsPopupIsOpen, value); }
+        bool partsPopupIsOpen = false;
+
+        public int SelectedPartIndex
         {
-            get => popupIsOpen;
+            get => selectedPartIndex;
             set
             {
-                //if (!value)
-                //{
-                //    SelectedAddingPartIndex = -1;
-                //}
-                Set(ref popupIsOpen, value);
+                SomeBlockSelected = value > -1;
+                Set(ref selectedPartIndex, value);
             }
         }
-        bool popupIsOpen = false;
+        int selectedPartIndex = -1;
 
-        public int SelectedIndex { get => selectedIndex; set => Set(ref selectedIndex, value); }
-        int selectedIndex = -1;
+        public void ScissorsFunc()
+        {
+            BeginEdit?.Invoke(this, EventArgs.Empty);
+            CopyFunc();
+            RemovePartBlock();
+            EndEdit?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void CopyFunc()
+        {
+            //string json = JsonConvert.SerializeObject(Parts[SelectedPartIndex]);
+            //Clipboard.SetText(json);
+            clipedBlock = new(Parts[SelectedPartIndex]);
+        }
+
+        public bool SomeBlockSelected { get => someBlockSelected; set=>Set(ref someBlockSelected, value); }
+        bool someBlockSelected = false;
+
+        public bool PasteEnable { get => pasteEnable; set => Set(ref pasteEnable, value); }
+        bool pasteEnable = false;
+        public void PasteFunc()
+        {
+            if(clipedBlock == null)
+            {
+                string className = GetType().Name;
+                string? mthName = MethodBase.GetCurrentMethod()?.Name;
+                SinTachieDialog.ShowError("疑似クリップボードにnullが代入されている状態での貼り付け処理は、本来なら不可能な処理です。",
+                    className, mthName);
+                return;
+            }
+
+            var tmpSelectedIndex = SelectedPartIndex;
+            BeginEdit?.Invoke(this, EventArgs.Empty);
+            if (tmpSelectedIndex < 0)
+            {
+                Parts = Parts.Add(new PartBlock(clipedBlock));
+                SelectedPartIndex = Parts.Count - 1;
+            }
+            else
+            {
+                Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(clipedBlock));
+                SelectedPartIndex = tmpSelectedIndex;
+            }
+            SetProperties();
+            EndEdit?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void DuplicationFunc()
+        {
+            BeginEdit?.Invoke(this, EventArgs.Empty);
+            DuplicationPartBlock();
+            EndEdit?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void RemoveFunc()
+        {
+            BeginEdit?.Invoke(this, EventArgs.Empty);
+            RemovePartBlock();
+            EndEdit?.Invoke(this, EventArgs.Empty);
+        }
+
+        public bool ContextMenuIsOpen
+        {
+            get => contextMeneIsOpen;
+            set
+            {
+                PasteEnable = clipedBlock != null;
+                Set(ref contextMeneIsOpen, value);
+            }
+        }
+        bool contextMeneIsOpen = false;
 
         public string Root
         {
@@ -61,7 +133,7 @@ namespace SinTachiePlugin.Parts
                 {
                     try
                     {
-                        if (!newSelected.Children.Any() && !AddingNow)
+                        if (newSelected.Children.Count == 0 && !AddingNow)
                         {
                             AddingNow = true;
                             string partImagePath = newSelected.FullName;
@@ -87,21 +159,22 @@ namespace SinTachiePlugin.Parts
                                 tag += $"({sideNum})";
                             }
                             int tmpSelectedIndex;
-                            if (SelectedIndex < 0)
+                            BeginEdit?.Invoke(this, EventArgs.Empty);
+                            if (SelectedPartIndex < 0)
                             {
                                 tmpSelectedIndex = Parts.Count;
                                 Parts = Parts.Add(new PartBlock(partImagePath, tag, tags.ToArray()));
-                                SetProparties();
+                                SetProperties();
                             }
                             else
                             {
-                                tmpSelectedIndex = SelectedIndex;
+                                tmpSelectedIndex = SelectedPartIndex;
                                 Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(partImagePath, tag, tags.ToArray()));
-                                SetProparties();
+                                SetProperties();
                             }
                             EndEdit?.Invoke(this, EventArgs.Empty);
-                            SelectedIndex = tmpSelectedIndex;
-                            PopupIsOpen = false;
+                            SelectedPartIndex = tmpSelectedIndex;
+                            PartsPopupIsOpen = false;
                             AddingNow = false;
                         }
                         Set(ref _selectedTreeViewItem, value);
@@ -124,7 +197,6 @@ namespace SinTachiePlugin.Parts
 
         public ActionCommand AddCommand { get; }
         public ActionCommand RemoveCommand { get; }
-        public ActionCommand DuplicationCommand { get; }
         public ActionCommand MoveUpCommand { get; }
         public ActionCommand MoveDownCommand { get; }
         public ActionCommand WriteDefaultCommand { get; }
@@ -159,7 +231,7 @@ namespace SinTachiePlugin.Parts
                         var dialog = SinTachieDialog.GetDialog($"{intro}\n画像未指定のパーツブロックを追加しますか？");
                         if(dialog == DialogResult.OK)
                         {
-                            var tmpSelectedIndex = SelectedIndex;
+                            var tmpSelectedIndex = SelectedPartIndex;
                             BeginEdit?.Invoke(this, EventArgs.Empty);
                             string tag = "[Untitled]";
                             var tags = from part in Parts select part.TagName;
@@ -169,76 +241,68 @@ namespace SinTachiePlugin.Parts
                                 while (tags.Contains($"{tag}({sideNum})")) sideNum++;
                                 tag += $"({sideNum})";
                             }
-                            Parts = Parts.Insert(tmpSelectedIndex + 1, new PartBlock("", tag, tags.ToArray()));
-                            SetProparties();
+                            if(tmpSelectedIndex < 0)
+                            {
+                                Parts = Parts.Add(new PartBlock("", tag, tags.ToArray()));
+                                SelectedPartIndex = Parts.Count - 1;
+                            }
+                            else
+                            {
+                                Parts = Parts.Insert(tmpSelectedIndex, new PartBlock("", tag, tags.ToArray()));
+                                SelectedPartIndex = tmpSelectedIndex;
+                            }
+                            SetProperties();
                             EndEdit?.Invoke(this, EventArgs.Empty);
-                            SelectedIndex = tmpSelectedIndex + 1;
-                            PopupIsOpen = false;
+                            PartsPopupIsOpen = false;
                         }
                         return;
                     }
-                    PopupIsOpen = true;
+                    PartsPopupIsOpen = true;
                 });
 
             RemoveCommand = new ActionCommand(
-                _ => parts.Count > 0 && SelectedIndex > -1,
+                _ => parts.Count > 0 && SelectedPartIndex > -1,
                 _ =>
                 {
-                    var tmpSelectedIndex = SelectedIndex;
                     BeginEdit?.Invoke(this, EventArgs.Empty);
-                    Parts = Parts.RemoveAt(tmpSelectedIndex);
-                    SetProparties();
+                    RemovePartBlock();
                     EndEdit?.Invoke(this, EventArgs.Empty);
-                    if (parts.Count > 0) SelectedIndex = Math.Min(tmpSelectedIndex, parts.Count - 1);
-                });
-
-            DuplicationCommand = new ActionCommand(
-                _ => SelectedIndex > -1,
-                _ =>
-                {
-                    var tmpSelectedIndex = SelectedIndex;
-                    BeginEdit?.Invoke(this, EventArgs.Empty);
-                    var copied = new PartBlock(Parts[SelectedIndex]);
-                    Parts = Parts.Insert(tmpSelectedIndex + 1, copied);
-                    SetProparties();
-                    EndEdit?.Invoke(this, EventArgs.Empty);
-                    SelectedIndex = tmpSelectedIndex + 1;
                 });
 
             MoveUpCommand = new ActionCommand(
-                _ => SelectedIndex > 0,
+                _ => SelectedPartIndex > 0,
                 _ =>
                 {
-                    var tmpSelectedIndex = SelectedIndex;
+                    var tmpSelectedIndex = SelectedPartIndex;
                     BeginEdit?.Invoke(this, EventArgs.Empty);
-                    var clone = Parts[SelectedIndex];
+                    var clone = Parts[SelectedPartIndex];
                     Parts = Parts.RemoveAt(tmpSelectedIndex);
                     Parts = Parts.Insert(tmpSelectedIndex - 1, clone);
-                    SetProparties();
+                    SetProperties();
                     EndEdit?.Invoke(this, EventArgs.Empty);
-                    SelectedIndex = tmpSelectedIndex - 1;
+                    SelectedPartIndex = tmpSelectedIndex - 1;
                 });
 
             MoveDownCommand = new ActionCommand(
-                _ => SelectedIndex < parts.Count - 1 && SelectedIndex > -1,
+                _ => SelectedPartIndex < parts.Count - 1 && SelectedPartIndex > -1,
                 _ =>
                 {
-                    var tmpSelectedIndex = SelectedIndex;
+                    var tmpSelectedIndex = SelectedPartIndex;
                     BeginEdit?.Invoke(this, EventArgs.Empty);
-                    var clone = parts[SelectedIndex];
+                    var clone = parts[SelectedPartIndex];
                     Parts = Parts.RemoveAt(tmpSelectedIndex);
                     Parts = Parts.Insert(tmpSelectedIndex + 1, clone);
-                    SetProparties();
+                    SetProperties();
                     EndEdit?.Invoke(this, EventArgs.Empty);
-                    SelectedIndex = tmpSelectedIndex + 1;
+                    SelectedPartIndex = tmpSelectedIndex + 1;
                 });
 
             WriteDefaultCommand = new ActionCommand(
-                _ => SelectedIndex > -1,
+                _ => SelectedPartIndex > -1,
                 _ =>
                 {
                     BeginEdit?.Invoke(this, EventArgs.Empty);
-                    var selected = Parts[SelectedIndex];
+                    var selected = Parts[SelectedPartIndex];
                     if (selected == null)
                     {
                         string clsName = GetType().Name;
@@ -251,11 +315,11 @@ namespace SinTachiePlugin.Parts
                 });
 
             DeleteDefaultCommand = new ActionCommand(
-                _ => SelectedIndex > -1,
+                _ => SelectedPartIndex > -1,
                 _ =>
                 {
                     BeginEdit?.Invoke(this, EventArgs.Empty);
-                    var selected = Parts[SelectedIndex];
+                    var selected = Parts[SelectedPartIndex];
                     if (selected == null)
                     {
                         string clsName = GetType().Name;
@@ -268,11 +332,11 @@ namespace SinTachiePlugin.Parts
                 });
 
             ReloadDefaultCommand = new ActionCommand(
-                _ => SelectedIndex > -1,
+                _ => SelectedPartIndex > -1,
                 _ =>
                 {
                     BeginEdit?.Invoke(this, EventArgs.Empty);
-                    var selected = Parts[SelectedIndex];
+                    var selected = Parts[SelectedPartIndex];
                     if (selected == null)
                     {
                         string clsName = GetType().Name;
@@ -280,15 +344,63 @@ namespace SinTachiePlugin.Parts
                         SinTachieDialog.ShowError("選択されたブロックを取得できません。", clsName, mthName);
                         return;
                     }
-                    SetProparties();
+                    SetProperties();
                     selected.ReloadDefault();
                     EndEdit?.Invoke(this, EventArgs.Empty);
                 });
 
+
             UpdateProperties();
         }
 
-        protected abstract void SetProparties();
+        //private PartBlock? GetPartBlockFromClipBoard()
+        //{
+        //    try
+        //    {
+        //        if (Clipboard.ContainsText())
+        //        {
+        //            string json = Clipboard.GetText();
+        //            if (JsonConvert.DeserializeObject<PartBlock>(json, PartBlock.GetJsonSetting) is PartBlock block)
+        //            {
+        //                return block;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        //string? mthName = MethodBase.GetCurrentMethod()?.Name;
+        //        //SinTachieDialog.ShowError("クリップボードからのPartBlock取得に失敗しました。", className, mthName);
+        //    }
+        //    return null;
+        //}
+
+        private void RemovePartBlock()
+        {
+            var tmpSelectedIndex = SelectedPartIndex;
+            Parts = Parts.RemoveAt(tmpSelectedIndex);
+            SetProperties();
+            if (Parts.Count > 0) SelectedPartIndex = Math.Min(tmpSelectedIndex, Parts.Count - 1);
+            else SelectedPartIndex = -1;
+        }
+
+        private void DuplicationPartBlock()
+        {
+            var tmpSelectedIndex = SelectedPartIndex;
+            var copied = new PartBlock(Parts[SelectedPartIndex]);
+            if (tmpSelectedIndex < 0)
+            {
+                Parts = Parts.Add(new PartBlock(copied));
+                SelectedPartIndex = Parts.Count - 1;
+            }
+            else
+            {
+                Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(copied));
+                SelectedPartIndex = tmpSelectedIndex;
+            }
+            SetProperties();
+        }
+
+        public abstract void SetProperties();
 
         private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
@@ -302,18 +414,12 @@ namespace SinTachiePlugin.Parts
         {
             UpdateParts();
 
-            var commands = new[] { AddCommand, RemoveCommand, DuplicationCommand, MoveUpCommand, MoveDownCommand, ReloadDefaultCommand };
+            var commands = new[] { AddCommand, RemoveCommand, MoveUpCommand, MoveDownCommand, ReloadDefaultCommand };
             foreach (var command in commands)
                 command.RaiseCanExecuteChanged();
         }
 
-        public void CopyToOtherItems()
-        {
-            //現在のアイテムの内容を他のアイテムにコピーする
-            var otherProperties = properties.Skip(1);
-            foreach (var property in otherProperties)
-                property.SetValue(Parts.Select(x => new PartBlock(x)).ToImmutableList());
-        }
+        public abstract void CopyToOtherItems();
 
         public void Dispose()
         {

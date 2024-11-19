@@ -12,7 +12,6 @@ using System.Windows;
 using System.Windows.Shapes;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Path = System.IO.Path;
 
 namespace SinTachiePlugin.Parts
@@ -146,8 +145,8 @@ namespace SinTachiePlugin.Parts
             ShowInformation($"デフォルト値を{str}しました。");
         }
 
-        private static JsonSerializerSettings GetJsonSetting =>
-            new JsonSerializerSettings
+        public static JsonSerializerSettings GetJsonSetting =>
+            new()
             {
                 TypeNameHandling = TypeNameHandling.Auto
             };
@@ -165,7 +164,7 @@ namespace SinTachiePlugin.Parts
                     {
                         using (var sr = new StreamReader(stream))
                         {
-                            
+
                             if (JsonConvert.DeserializeObject<PartInfo>(sr.ReadToEnd(), GetJsonSetting) is PartInfo info)
                             {
                                 return info;
