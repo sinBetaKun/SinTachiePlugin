@@ -19,7 +19,7 @@ namespace SinTachiePlugin.Parts
     public abstract class PartsListControllerViewModelBase : Bindable, INotifyPropertyChanged, IPropertyEditorControl, IDisposable
     {
         readonly INotifyPropertyChanged item;
-        protected readonly ItemProperty[] properties;
+        readonly ItemProperty[] properties;
         static PartBlock? clipedBlock = null;
 
         public event EventHandler? BeginEdit;
@@ -85,7 +85,7 @@ namespace SinTachiePlugin.Parts
                 Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(clipedBlock));
                 SelectedPartIndex = tmpSelectedIndex;
             }
-            SetProparties();
+            SetProperties();
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
@@ -164,13 +164,13 @@ namespace SinTachiePlugin.Parts
                             {
                                 tmpSelectedIndex = Parts.Count;
                                 Parts = Parts.Add(new PartBlock(partImagePath, tag, tags.ToArray()));
-                                SetProparties();
+                                SetProperties();
                             }
                             else
                             {
                                 tmpSelectedIndex = SelectedPartIndex;
                                 Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(partImagePath, tag, tags.ToArray()));
-                                SetProparties();
+                                SetProperties();
                             }
                             EndEdit?.Invoke(this, EventArgs.Empty);
                             SelectedPartIndex = tmpSelectedIndex;
@@ -251,7 +251,7 @@ namespace SinTachiePlugin.Parts
                                 Parts = Parts.Insert(tmpSelectedIndex, new PartBlock("", tag, tags.ToArray()));
                                 SelectedPartIndex = tmpSelectedIndex;
                             }
-                            SetProparties();
+                            SetProperties();
                             EndEdit?.Invoke(this, EventArgs.Empty);
                             PartsPopupIsOpen = false;
                         }
@@ -278,7 +278,7 @@ namespace SinTachiePlugin.Parts
                     var clone = Parts[SelectedPartIndex];
                     Parts = Parts.RemoveAt(tmpSelectedIndex);
                     Parts = Parts.Insert(tmpSelectedIndex - 1, clone);
-                    SetProparties();
+                    SetProperties();
                     EndEdit?.Invoke(this, EventArgs.Empty);
                     SelectedPartIndex = tmpSelectedIndex - 1;
                 });
@@ -292,7 +292,7 @@ namespace SinTachiePlugin.Parts
                     var clone = parts[SelectedPartIndex];
                     Parts = Parts.RemoveAt(tmpSelectedIndex);
                     Parts = Parts.Insert(tmpSelectedIndex + 1, clone);
-                    SetProparties();
+                    SetProperties();
                     EndEdit?.Invoke(this, EventArgs.Empty);
                     SelectedPartIndex = tmpSelectedIndex + 1;
                 });
@@ -344,7 +344,7 @@ namespace SinTachiePlugin.Parts
                         SinTachieDialog.ShowError("選択されたブロックを取得できません。", clsName, mthName);
                         return;
                     }
-                    SetProparties();
+                    SetProperties();
                     selected.ReloadDefault();
                     EndEdit?.Invoke(this, EventArgs.Empty);
                 });
@@ -378,7 +378,7 @@ namespace SinTachiePlugin.Parts
         {
             var tmpSelectedIndex = SelectedPartIndex;
             Parts = Parts.RemoveAt(tmpSelectedIndex);
-            SetProparties();
+            SetProperties();
             if (Parts.Count > 0) SelectedPartIndex = Math.Min(tmpSelectedIndex, Parts.Count - 1);
             else SelectedPartIndex = -1;
         }
@@ -397,10 +397,10 @@ namespace SinTachiePlugin.Parts
                 Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(copied));
                 SelectedPartIndex = tmpSelectedIndex;
             }
-            SetProparties();
+            SetProperties();
         }
 
-        protected abstract void SetProparties();
+        public abstract void SetProperties();
 
         private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {

@@ -45,7 +45,7 @@ namespace SinTachiePlugin.Parts
         }
         SinTachieCharacterParameter? characterParameter;
       
-        protected override void SetProparties()
+        public override void SetProperties()
         {
             foreach (var property in properties)
                 property.SetValue(Parts);

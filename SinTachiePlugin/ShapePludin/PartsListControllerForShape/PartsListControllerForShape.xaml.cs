@@ -108,5 +108,12 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
                 viewModel.RemoveFunc();
             }
         }
+
+        private void DirectorySelector_EndEdit(object sender, EventArgs e)
+        {
+            var vm = DataContext as PartsListControllerForShapeViewModel;
+            vm?.SetProperties();
+            EndEdit?.Invoke(this, e);
+        }
     }
 }
