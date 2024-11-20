@@ -14,7 +14,7 @@
                     <Border BorderBrush="#FF808080" BorderThickness="2" VerticalAlignment="Center">
                         <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
                             <CheckBox Margin="2,3,5,0" VerticalAlignment="Top" Width="15" Height="15" HorizontalAlignment="Left"
-                          IsChecked="{Binding Appear, Mode=TwoWay}" Unchecked="Update_CheckBox" Checked="Update_CheckBox"
+                          IsChecked="{Binding Appear, Mode=OneWay}" Unchecked="Update_CheckBox" Checked="Update_CheckBox"
                           ToolTip="描画するか否かを切り替えられます。"/>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="タグ" Margin="5,0,3,0" VerticalAlignment="Top" FontSize="15"/>

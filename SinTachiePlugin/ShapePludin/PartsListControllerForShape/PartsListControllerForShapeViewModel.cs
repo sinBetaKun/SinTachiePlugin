@@ -19,8 +19,15 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
     {
         public override void SetProperties()
         {
-            foreach (var property in properties)
-                property.SetValue(new PartsOfShapeItem() { Root = Root, Parts = Parts });
+            for (int i = 0; i < properties.Count(); i++)
+            {
+                var property = properties[i];
+                property.SetValue(new PartsOfShapeItem
+                {
+                    Parts = Parts.Select(x => new PartBlock(x)).ToImmutableList(),
+                    Root = Root,
+                });
+            }
         }
 
         protected override void UpdateParts()
@@ -37,7 +44,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
         {
             //現在のアイテムの内容を他のアイテムにコピーする
             var otherProperties = properties.Skip(1);
-            for (int i = 0; i < properties.Count(); i++)
+            for (int i = 0; i < otherProperties.Count(); i++)
             {
                 var property = properties[i];
                 if (i is 0)

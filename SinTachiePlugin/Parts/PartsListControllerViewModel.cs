@@ -48,7 +48,7 @@ namespace SinTachiePlugin.Parts
         public override void SetProperties()
         {
             foreach (var property in properties)
-                property.SetValue(Parts);
+                property.SetValue(Parts.Select(x => new PartBlock(x)).ToImmutableList());
         }
 
         public override void CopyToOtherItems()

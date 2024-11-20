@@ -47,8 +47,18 @@ namespace SinTachiePlugin.Parts
 
         private void Update_CheckBox(object sender, RoutedEventArgs e)
         {
-            BeginEdit?.Invoke(this, e);
-            EndEdit?.Invoke(this, e);
+            if(DataContext is PartBlock vm && sender is System.Windows.Controls.CheckBox checkBox)
+            {
+                if(checkBox.IsChecked is bool isChecked)
+                {
+                    if(vm.Appear != isChecked)
+                    {
+                        BeginEdit?.Invoke(this, e);
+                        vm.Appear = isChecked;
+                        EndEdit?.Invoke(this, e);
+                    }
+                }
+            }
         }
     }
 }

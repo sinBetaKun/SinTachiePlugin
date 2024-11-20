@@ -79,7 +79,6 @@ namespace SinTachiePlugin.Parts
             set
             {
                 Set(ref imagePath, value);
-                //SetImageSource(value);
             }
         }
         string imagePath = string.Empty;
@@ -160,38 +159,6 @@ namespace SinTachiePlugin.Parts
         [AnimationSlider("F1", "%", 0, 200)]
         public Animation Exp_Y { get; } = new Animation(100, 0, 5000);
 
-        //[Display(GroupName = "パーツ個別エフェクト", Name = "")]
-        //[VideoEffectSelector(PropertyEditorSize = PropertyEditorSize.FullWidth)]
-        //public ImmutableList<IVideoEffect> Effects { get => effects; set => Set(ref effects, value); }
-        //ImmutableList<IVideoEffect> effects = [];
-        //[Display(GroupName = "クリッピング", Name = "上")]
-        //[AnimationSlider("F1", "px", 0, 500)]
-        //public Animation Top { get; } = new Animation(0, 0, 10000);
-
-        //[Display(GroupName = "クリッピング", Name = "下")]
-        //[AnimationSlider("F1", "px", 0, 500)]
-        //public Animation Bottom { get; } = new Animation(0, 0, 10000);
-
-        //[Display(GroupName = "クリッピング", Name = "左")]
-        //[AnimationSlider("F1", "px", 0, 500)]
-        //public Animation Left { get; } = new Animation(0, 0, 10000);
-
-        //[Display(GroupName = "クリッピング", Name = "右")]
-        //[AnimationSlider("F1", "px", 0, 500)]
-        //public Animation Right { get; } = new Animation(0, 0, 10000);
-
-        //[Display(GroupName = "ぼかし", Name = "ぼかし度")]
-        //[AnimationSlider("F1", "px", 0, 50)]
-        //public Animation GBlurValue { get; } = new Animation(0, 0, 250);
-
-        //[Display(GroupName = "方向ブラー", Name = "ぼかし度")]
-        //[AnimationSlider("F1", "", 0, 50)]
-        //public Animation DBlurValue { get; } = new Animation(0, 0, 250);
-
-        //[Display(GroupName = "方向ブラー", Name = "角度")]
-        //[AnimationSlider("F1", "°", -360, 360)]
-        //public Animation DBlurAngle { get; } = new Animation(0, -36000, 36000, 360);
-
         public void CopyFrom(ControlledParamsOfPart original)
         {
             Appear = original.Appear;
@@ -226,6 +193,6 @@ namespace SinTachiePlugin.Parts
             RotateDependent = original.RotateDependent;
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [BusNum, ..LayerValues, X, Y, Opacity, Scale, Rotate, Mirror, Cnt_X, Cnt_Y, Exp_X, Exp_Y/*, ..Effects, Top, Bottom, Left, Right, GBlurValue, DBlurValue, DBlurAngle*/];
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [BusNum, ..LayerValues, X, Y, Opacity, Scale, Rotate, Mirror, Cnt_X, Cnt_Y, Exp_X, Exp_Y/*, ..Effects*/];
     }
 }
