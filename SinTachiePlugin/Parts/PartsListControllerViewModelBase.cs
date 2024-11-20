@@ -19,7 +19,7 @@ namespace SinTachiePlugin.Parts
     public abstract class PartsListControllerViewModelBase : Bindable, INotifyPropertyChanged, IPropertyEditorControl, IDisposable
     {
         readonly INotifyPropertyChanged item;
-        readonly ItemProperty[] properties;
+        protected readonly ItemProperty[] properties;
         static PartBlock? clipedBlock = null;
 
         public event EventHandler? BeginEdit;
@@ -52,8 +52,6 @@ namespace SinTachiePlugin.Parts
 
         public void CopyFunc()
         {
-            //string json = JsonConvert.SerializeObject(Parts[SelectedPartIndex]);
-            //Clipboard.SetText(json);
             clipedBlock = new(Parts[SelectedPartIndex]);
         }
 
@@ -133,9 +131,8 @@ namespace SinTachiePlugin.Parts
                 {
                     try
                     {
-                        if (newSelected.Children.Count == 0 && !AddingNow)
+                        if (newSelected.Children.Count == 0)
                         {
-                            AddingNow = true;
                             string partImagePath = newSelected.FullName;
                             string? dn = Path.GetDirectoryName(partImagePath);
                             if (dn == null) throw new Exception("選択されたファイルからディレクトリのパスを取得できませんでした。");
@@ -175,7 +172,6 @@ namespace SinTachiePlugin.Parts
                             EndEdit?.Invoke(this, EventArgs.Empty);
                             SelectedPartIndex = tmpSelectedIndex;
                             PartsPopupIsOpen = false;
-                            AddingNow = false;
                         }
                         Set(ref _selectedTreeViewItem, value);
                     }
@@ -188,8 +184,6 @@ namespace SinTachiePlugin.Parts
             }
         }
         private object _selectedTreeViewItem = new PartNameTreeNode();
-
-        bool AddingNow = false;
 
         private static readonly string TagOfIndependent = "(無所属)";
 
@@ -337,6 +331,7 @@ namespace SinTachiePlugin.Parts
                 {
                     BeginEdit?.Invoke(this, EventArgs.Empty);
                     var selected = Parts[SelectedPartIndex];
+                    var tmpSelectedPartIndex = SelectedPartIndex;
                     if (selected == null)
                     {
                         string clsName = GetType().Name;
@@ -344,35 +339,15 @@ namespace SinTachiePlugin.Parts
                         SinTachieDialog.ShowError("選択されたブロックを取得できません。", clsName, mthName);
                         return;
                     }
-                    SetProperties();
                     selected.ReloadDefault();
+                    SetProperties();
+                    SelectedPartIndex = tmpSelectedPartIndex;
                     EndEdit?.Invoke(this, EventArgs.Empty);
                 });
 
 
             UpdateProperties();
         }
-
-        //private PartBlock? GetPartBlockFromClipBoard()
-        //{
-        //    try
-        //    {
-        //        if (Clipboard.ContainsText())
-        //        {
-        //            string json = Clipboard.GetText();
-        //            if (JsonConvert.DeserializeObject<PartBlock>(json, PartBlock.GetJsonSetting) is PartBlock block)
-        //            {
-        //                return block;
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        //string? mthName = MethodBase.GetCurrentMethod()?.Name;
-        //        //SinTachieDialog.ShowError("クリップボードからのPartBlock取得に失敗しました。", className, mthName);
-        //    }
-        //    return null;
-        //}
 
         private void RemovePartBlock()
         {
