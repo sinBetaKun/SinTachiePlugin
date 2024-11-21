@@ -95,15 +95,14 @@ namespace SinTachiePlugin.Parts
             if (tmpSelectedIndex < 0)
             {
                 Parts = Parts.Add(new PartBlock(clipedBlock));
-                SetProperties();
-                SelectedPartIndex = Parts.Count - 1;
+                tmpSelectedIndex = Parts.Count - 1;
             }
             else
             {
                 Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(clipedBlock));
-                SetProperties();
-                SelectedPartIndex = tmpSelectedIndex;
             }
+            SetProperties();
+            SelectedPartIndex = tmpSelectedIndex;
 
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
@@ -114,7 +113,11 @@ namespace SinTachiePlugin.Parts
         public void DuplicationFunc()
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            DuplicationPartBlock();
+            var tmpSelectedIndex = SelectedPartIndex;
+            var copied = new PartBlock(Parts[SelectedPartIndex]);
+            Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(copied));
+            SetProperties();
+            SelectedPartIndex = tmpSelectedIndex + 1;
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
@@ -402,24 +405,6 @@ namespace SinTachiePlugin.Parts
             SetProperties();
             if (Parts.Count > 0) SelectedPartIndex = Math.Min(tmpSelectedIndex, Parts.Count - 1);
             else SelectedPartIndex = -1;
-        }
-
-        private void DuplicationPartBlock()
-        {
-            var tmpSelectedIndex = SelectedPartIndex;
-            var copied = new PartBlock(Parts[SelectedPartIndex]);
-            if (tmpSelectedIndex < 0)
-            {
-                Parts = Parts.Add(new PartBlock(copied));
-                SetProperties();
-                SelectedPartIndex = Parts.Count - 1;
-            }
-            else
-            {
-                Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(copied));
-                SetProperties();
-                SelectedPartIndex = tmpSelectedIndex;
-            }
         }
 
         public abstract void SetProperties();
