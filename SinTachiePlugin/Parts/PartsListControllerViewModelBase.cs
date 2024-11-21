@@ -25,12 +25,15 @@ namespace SinTachiePlugin.Parts
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
 
+        /// <summary>
+        /// パーツブロックのリストの内容
+        /// </summary>
         public ImmutableList<PartBlock> Parts { get => parts; set => Set(ref parts, value); }
         ImmutableList<PartBlock> parts = [];
 
-        public bool PartsPopupIsOpen { get => partsPopupIsOpen; set => Set(ref partsPopupIsOpen, value); }
-        bool partsPopupIsOpen = false;
-
+        /// <summary>
+        /// リストで選択されているパーツブロックのインデックス
+        /// </summary>
         public int SelectedPartIndex
         {
             get => selectedPartIndex;
@@ -42,6 +45,15 @@ namespace SinTachiePlugin.Parts
         }
         int selectedPartIndex = -1;
 
+        /// <summary>
+        /// リスト内のいずれかのパーツブロックが選択されている状態か否か
+        /// </summary>
+        public bool SomeBlockSelected { get => someBlockSelected; set => Set(ref someBlockSelected, value); }
+        bool someBlockSelected = false;
+
+        /// <summary>
+        /// 右クリックメニューで「切り取り」を選択したときの処理
+        /// </summary>
         public void ScissorsFunc()
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
@@ -50,16 +62,23 @@ namespace SinTachiePlugin.Parts
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 右クリックメニューで「コピー」を選択したときの処理
+        /// </summary>
         public void CopyFunc()
         {
             clipedBlock = new(Parts[SelectedPartIndex]);
         }
 
-        public bool SomeBlockSelected { get => someBlockSelected; set=>Set(ref someBlockSelected, value); }
-        bool someBlockSelected = false;
-
+        /// <summary>
+        /// 右クリックメニューで「貼り付け」が選択可能か否か
+        /// </summary>
         public bool PasteEnable { get => pasteEnable; set => Set(ref pasteEnable, value); }
         bool pasteEnable = false;
+
+        /// <summary>
+        /// 右クリックメニューで「貼り付け」を選択したときの処理
+        /// </summary>
         public void PasteFunc()
         {
             if(clipedBlock == null)
@@ -76,17 +95,22 @@ namespace SinTachiePlugin.Parts
             if (tmpSelectedIndex < 0)
             {
                 Parts = Parts.Add(new PartBlock(clipedBlock));
+                SetProperties();
                 SelectedPartIndex = Parts.Count - 1;
             }
             else
             {
                 Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(clipedBlock));
+                SetProperties();
                 SelectedPartIndex = tmpSelectedIndex;
             }
-            SetProperties();
+
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 右クリックメニューで「複製」を選択したときの処理
+        /// </summary>
         public void DuplicationFunc()
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
@@ -94,6 +118,9 @@ namespace SinTachiePlugin.Parts
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 右クリックメニューで「削除」を選択したときの処理
+        /// </summary>
         public void RemoveFunc()
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
@@ -101,6 +128,9 @@ namespace SinTachiePlugin.Parts
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 右クリックメニューが開かれている状態か否か
+        /// </summary>
         public bool ContextMenuIsOpen
         {
             get => contextMeneIsOpen;
@@ -112,6 +142,9 @@ namespace SinTachiePlugin.Parts
         }
         bool contextMeneIsOpen = false;
 
+        /// <summary>
+        /// DirectorySelector「素材の場所」のパス
+        /// </summary>
         public string Root
         {
             get => root;
@@ -119,8 +152,21 @@ namespace SinTachiePlugin.Parts
         }
         string root = string.Empty;
 
+        /// <summary>
+        /// パーツ選択ツリーの内容
+        /// </summary>
         public List<PartNameTreeNode> PartNameTree { get => partNameTreeNode; set => Set(ref partNameTreeNode, value); }
         List<PartNameTreeNode> partNameTreeNode = [];
+
+        /// <summary>
+        /// パーツ選択ツリーが表示されているか否か
+        /// </summary>
+        public bool PartsPopupIsOpen { get => partsPopupIsOpen; set => Set(ref partsPopupIsOpen, value); }
+        bool partsPopupIsOpen = false;
+
+        /// <summary>
+        /// パーツ選択ツリーの選択されている項目
+        /// </summary>
         public object SelectedTreeViewItem
         {
             get => _selectedTreeViewItem;
@@ -365,14 +411,15 @@ namespace SinTachiePlugin.Parts
             if (tmpSelectedIndex < 0)
             {
                 Parts = Parts.Add(new PartBlock(copied));
+                SetProperties();
                 SelectedPartIndex = Parts.Count - 1;
             }
             else
             {
                 Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(copied));
+                SetProperties();
                 SelectedPartIndex = tmpSelectedIndex;
             }
-            SetProperties();
         }
 
         public abstract void SetProperties();
