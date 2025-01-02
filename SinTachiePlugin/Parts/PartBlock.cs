@@ -145,12 +145,6 @@ namespace SinTachiePlugin.Parts
             ShowInformation($"デフォルト値を{str}しました。");
         }
 
-        public static JsonSerializerSettings GetJsonSetting =>
-            new()
-            {
-                TypeNameHandling = TypeNameHandling.Auto
-            };
-
         private PartInfo? InputStpi()
         {
             if(MakeStpiPath(ImagePath) is string stpiPath)

@@ -46,6 +46,39 @@ namespace SinTachiePlugin.Parts
         public IEnumerable<ExoItem> CreateExoItems(int FPS, IEnumerable<TachieItemExoDescription> tachieItemDescriptions, IEnumerable<TachieFaceItemExoDescription> faceItemDescriptions, IEnumerable<TachieVoiceItemExoDescription> voiceDescriptions)
         {
             return [];
+            /*if (!tachieItemDescriptions.Any())
+            {
+                yield break;
+            }
+
+            ITachieItemParameter itemParameter = tachieItemDescriptions.First().ItemParameter;
+            if (!(itemParameter is SinTachieItemParameter ip) || faceItemDescriptions == null || !faceItemDescriptions.Any())
+            {
+                yield break;
+            }
+
+            string characterName = tachieItemDescriptions.First().CharacterName;
+            foreach (TachieVoiceItemExoDescription voiceDescription in voiceDescriptions)
+            {
+                ExoItem clone = voiceDescription.ExoItem.GetClone();
+                clone.SubLayer = 2;
+                clone.Filters.AddRange(
+                [
+                "_name=テキスト\r\ntext=" + GetStringForExo(characterName + " / 口パク") + "\r\n",
+                $"_name=アニメーション効果\r\nname=口パク@動く立ち絵\r\nparam=file=\"{voiceDescription?.VoiceFilePath?.Replace("\\", "\\\\")}\";\r\n",
+                "_name=標準描画\r\nX=0.0\r\nY=0.0\r\nZ=0.0\r\n拡大率=100.00\r\n透明度=100.0\r\n回転=0.00\r\nblend=0\r\n"
+                ]);
+                yield return clone;
+            }*/
+        }
+
+        private static string GetStringForExo(string text)
+        {
+            return string.Concat(text.Select(delegate (char c)
+            {
+                byte[] bytes = BitConverter.GetBytes(c);
+                return $"{bytes[0]:x2}{bytes[1]:x2}";
+            }).Concat(Enumerable.Repeat("0000", 1024 - text.Length)));
         }
 
         /// <summary>

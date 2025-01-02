@@ -25,6 +25,8 @@ using YukkuriMovieMaker.Controls;
 using System.Windows.Media.Effects;
 using YukkuriMovieMaker.Plugin.Effects;
 using System.Xml.Linq;
+using SinTachiePlugin.Parts.Controller;
+using SinTachiePlugin.LayerValueListController.Controller;
 
 namespace SinTachiePlugin.Parts
 {
@@ -101,6 +103,10 @@ namespace SinTachiePlugin.Parts
         [AnimationSlider("F1", "px", -500, 500)]
         public Animation Y { get; } = new Animation(0, -10000, 10000);
 
+        [Display(GroupName = "描画", Name = "Z")]
+        [AnimationSlider("F1", "px", -500, 500)]
+        public Animation Z { get; } = new Animation(0, -10000, 10000);
+
         [Display(GroupName = "描画", Name = "不透明度")]
         [AnimationSlider("F1", "%", 0, 100)]
         public Animation Opacity { get; } = new Animation(100, 0, 100);
@@ -123,20 +129,30 @@ namespace SinTachiePlugin.Parts
 
         BlendSTP blendMode = BlendSTP.SourceOver;
 
-        [Display(GroupName = "描画", Name = "拡大率依存", Description = "拡大率依存")]
+        [Display(GroupName = "値の依存", Name = "X/Y/Z", Description = "X/Y/Z")]
+        [ToggleSlider]
+        public bool XYZDependent { get => xyzDependent; set => Set(ref xyzDependent, value); }
+        bool xyzDependent = true;
+
+        [Display(GroupName = "値の依存", Name = "拡大率", Description = "拡大率")]
         [ToggleSlider]
         public bool ScaleDependent { get => scaleDependent; set => Set(ref scaleDependent, value); }
         bool scaleDependent = true;
 
-        [Display(GroupName = "描画", Name = "不透明度依存", Description = "不透明度依存")]
+        [Display(GroupName = "値の依存", Name = "不透明度", Description = "不透明度")]
         [ToggleSlider]
         public bool OpacityDependent { get => opacityDependent; set => Set(ref opacityDependent, value); }
         bool opacityDependent = true;
 
-        [Display(GroupName = "描画", Name = "回転角依存", Description = "回転角依存")]
+        [Display(GroupName = "値の依存", Name = "回転角", Description = "回転角")]
         [ToggleSlider]
         public bool RotateDependent { get => rotateDependent; set => Set(ref rotateDependent, value); }
         bool rotateDependent = true;
+
+        [Display(GroupName = "値の依存", Name = "左右反転", Description = "左右反転")]
+        [ToggleSlider]
+        public bool MirrorDependent { get => mirrorDependent; set => Set(ref mirrorDependent, value); }
+        bool mirrorDependent = true;
 
         [Display(GroupName = "中心位置", Name = "X")]
         [AnimationSlider("F1", "px", -500, 500)]
@@ -159,6 +175,46 @@ namespace SinTachiePlugin.Parts
         [AnimationSlider("F1", "%", 0, 200)]
         public Animation Exp_Y { get; } = new Animation(100, 0, 5000);
 
+        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "X/Y/Z", Description = "X/Y/Z")]
+        [ToggleSlider]
+        public bool EffectXYZDependent { get => effectXYZDependent; set => Set(ref effectXYZDependent, value); }
+        bool effectXYZDependent = true;
+
+        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "拡大率", Description = "拡大率")]
+        [ToggleSlider]
+        public bool EffectZoomDependent { get => effectZoomDependent; set => Set(ref effectZoomDependent, value); }
+        bool effectZoomDependent = true;
+
+        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "不透明度", Description = "不透明度")]
+        [ToggleSlider]
+        public bool EffectOpacityDependent { get => effectOpacityDependent; set => Set(ref effectOpacityDependent, value); }
+        bool effectOpacityDependent = true;
+
+        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "回転角", Description = "回転角")]
+        [ToggleSlider]
+        public bool EffectRotateDependent { get => effectRotateDependent; set => Set(ref effectRotateDependent, value); }
+        bool effectRotateDependent = true;
+
+        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "左右反転", Description = "左右反転")]
+        [ToggleSlider]
+        public bool EffectMirrorDependent { get => effectMirrorDependent; set => Set(ref effectMirrorDependent, value); }
+        bool effectMirrorDependent = true;
+
+        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "カメラ", Description = "カメラ")]
+        [ToggleSlider]
+        public bool EffectCameraDependent { get => effectCameraDependent; set => Set(ref effectCameraDependent, value); }
+        bool effectCameraDependent = true;
+
+        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "非遅延エフェクト", Description = "非遅延エフェクト")]
+        [ToggleSlider]
+        public bool EffectUnlazyDependent { get => effectUnlazyDependent; set => Set(ref effectUnlazyDependent, value); }
+        bool effectUnlazyDependent = true;
+
+        [Display(GroupName = "パーツ個別エフェクト", Name = "")]
+        [VideoEffectSelector(PropertyEditorSize = PropertyEditorSize.FullWidth)]
+        public ImmutableList<IVideoEffect> Effects { get => effects; set => Set(ref effects, value); }
+        ImmutableList<IVideoEffect> effects = [];
+
         public void CopyFrom(ControlledParamsOfPart original)
         {
             Appear = original.Appear;
@@ -171,6 +227,7 @@ namespace SinTachiePlugin.Parts
             LayerValues = original.LayerValues.Select(x => new LayerValue(x)).ToImmutableList();
             X.CopyFrom(original.X);
             Y.CopyFrom(original.Y);
+            Z.CopyFrom(original.Z);
             Opacity.CopyFrom(original.Opacity);
             Scale.CopyFrom(original.Scale);
             Rotate.CopyFrom(original.Rotate);
@@ -181,18 +238,43 @@ namespace SinTachiePlugin.Parts
             KeepPlace = original.KeepPlace;
             Exp_X.CopyFrom(original.Exp_X);
             Exp_Y.CopyFrom(original.Exp_Y);
-            //Top.CopyFrom(original.Top);
-            //Bottom.CopyFrom(original.Bottom);
-            //Left.CopyFrom(original.Left);
-            //Right.CopyFrom(original.Right);
-            //GBlurValue.CopyFrom(original.GBlurValue);
-            //DBlurValue.CopyFrom(original.DBlurValue);
-            //DBlurAngle.CopyFrom(original.DBlurAngle);
+            XYZDependent = original.XYZDependent;
             ScaleDependent = original.ScaleDependent;
             OpacityDependent = original.OpacityDependent;
             RotateDependent = original.RotateDependent;
+            MirrorDependent = original.MirrorDependent;
+            EffectXYZDependent = original.EffectXYZDependent;
+            EffectZoomDependent = original.EffectZoomDependent;
+            EffectOpacityDependent = original.EffectOpacityDependent;
+            EffectRotateDependent = original.EffectRotateDependent;
+            EffectMirrorDependent = original.EffectMirrorDependent;
+            EffectCameraDependent = original.EffectCameraDependent;
+            EffectUnlazyDependent = original.EffectUnlazyDependent;
+            try
+            {
+                string effectsStr = JsonConvert.SerializeObject(original.Effects, Newtonsoft.Json.Formatting.Indented, GetJsonSetting);
+                if (JsonConvert.DeserializeObject<IVideoEffect[]>(effectsStr, GetJsonSetting) is IVideoEffect[] effects)
+                {
+                    Effects = [.. effects];
+                }
+                else
+                {
+                    throw new Exception("Jsonで変換できないエフェクトを検知");
+                }
+            }
+            catch (Exception ex)
+            {
+                Effects = [];
+                ShowWarning(ex.Message);
+            }
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [BusNum, ..LayerValues, X, Y, Opacity, Scale, Rotate, Mirror, Cnt_X, Cnt_Y, Exp_X, Exp_Y/*, ..Effects*/];
+        public static JsonSerializerSettings GetJsonSetting =>
+            new()
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
+
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [BusNum, ..LayerValues, X, Y, Z, Opacity, Scale, Rotate, Mirror, Cnt_X, Cnt_Y, Exp_X, Exp_Y, .. Effects];
     }
 }

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YukkuriMovieMaker.Commons;
 
-namespace SinTachiePlugin.LayerValueListController
+namespace SinTachiePlugin.LayerValueListController.Controller
 {
     public class LayerValueListControllerViewModel : Bindable, INotifyPropertyChanged, IPropertyEditorControl, IDisposable
     {

@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SinTachiePlugin.LayerValueListController;
+using SinTachiePlugin.LayerValueListController.Controller;
 using SinTachiePlugin.Parts;
 using YukkuriMovieMaker.Commons;
 using UserControl = System.Windows.Controls.UserControl;

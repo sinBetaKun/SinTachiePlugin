@@ -13,7 +13,7 @@ using Binding = System.Windows.Data.Binding;
 using System.IO;
 using YukkuriMovieMaker.Views.Converters;
 
-namespace SinTachiePlugin.Parts
+namespace SinTachiePlugin.Parts.Controller
 {
     public class FileSelectorForPartOfSinTachieAttribute : FileSelectorAttribute
     {

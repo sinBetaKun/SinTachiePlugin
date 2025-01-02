@@ -1,340 +1,303 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using Vortice.Direct2D1.Effects;
+﻿using Vortice.Direct2D1.Effects;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
 using SinTachiePlugin.Enums;
 using System.Numerics;
 using System.Collections.Immutable;
-using YukkuriMovieMaker.Plugin;
-using SinTachiePlugin.Parts.LayerValueListController;
-using System.Windows.Controls;
-using Path = System.IO.Path;
-using SinTachiePlugin.LayerValueListController;
-using YukkuriMovieMaker.Plugin.Effects;
-using System.Windows.Media.Effects;
 using YukkuriMovieMaker.Player.Video;
+using Vortice.Mathematics;
 
 namespace SinTachiePlugin.Parts
 {
     public class PartNode : IDisposable
     {
-        readonly AffineTransform2D offset;
+        readonly IGraphicsDevicesAndContext devices;
+        readonly DisposeCollector disposer = new();
         readonly AffineTransform2D transform;
+        readonly Crop cropEffect;
+        readonly Transform3D renderEffect;
         readonly Opacity opacityEffect;
-        readonly ID2D1Bitmap empty;
-        private readonly IGraphicsDevicesAndContext devices;
-        public LayerNode? layerTree;
-        ID2D1Image? source;
         public ID2D1Image? Output;
+        readonly ID2D1Image renderOutput;
+        private bool disposedValue = false;
+        private DrawDescription drawDescription = new(
+            default, default, new Vector2(1f, 1f), default, Matrix4x4.Identity, InterpolationMode.Linear, 1.0, false, []);
+        private List<(PartNode, VideoEffectChainNode)> NodesAndChains = [];
 
-        public int BusNum { get; set; }
-        public string TagName { get; set; } = string.Empty;
-        public string Parent { get; set; } = string.Empty;
-        public string ImagePath { get; set; } = string.Empty;
-        public List<LayerAnimationMode> LayerAnimationModes { get; set; } = [];
-        public List<OuterLayerValueMode> OuterLayerValueModes { get; set; } = [];
-        public List<double> LayerValues { get; set; } = [];
-        public bool Appear { get; set; }
-        public BlendSTP BlendMode { get; set; }
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Opacity { get; set; }
-        public double Scale { get; set; }
-        public double Rotate { get; set; }
-        public bool Mirror { get; set; }
-        public bool ScaleDependent { get; set; }
-        public bool OpacityDependent { get; set; }
-        public bool RotateDependent { get; set; }
-        public double Cnt_X { get; set; }
-        public double Cnt_Y { get; set; }
-        public bool KeepPlace { get; set; }
-        public double Exp_X { get; set; }
-        public double Exp_Y { get; set; }
-        //public ImmutableList<IVideoEffectProcessor> Processors { get; set; } = [];
-        //public DrawDescription DrawDescription { get; set; } = new(
-        //        new Vector3(), new Vector2(), new Vector2(), new Vector3(), Matrix4x4.Identity,
-        //        new InterpolationMode(), 1.0, false, []
-        //        );
-
-        public Vector2 Shift { get; set; }
-        public float Opacity2 { get; set; }
-        public float Scale2 { get; set; }
-        public float Rotate2 { get; set; }
+        readonly ParamsOfPartNode Params;
+        public string TagName => Params.TagName;
+        public string Parent => Params.Parent;
+        public bool Appear => Params.Appear;
+        public BlendSTP BlendMode => Params.BlendMode;
 
         public ImmutableList<PartNode> ParentPath { get; set; } = [];
 
-        public PartNode(IGraphicsDevicesAndContext devices)
+        public PartNode(IGraphicsDevicesAndContext devices, PartBlock block, long length, long frame, int fps, double voiceVolume)
         {
             this.devices = devices;
-            offset = new AffineTransform2D(devices.DeviceContext);
             transform = new AffineTransform2D(devices.DeviceContext);
+            disposer.Collect(transform);
+
+            cropEffect = new Crop(devices.DeviceContext);
+            disposer.Collect(cropEffect);
+
+            renderEffect = new Transform3D(devices.DeviceContext);
+            disposer.Collect(renderEffect);
+
             opacityEffect = new Opacity(devices.DeviceContext);
-            empty = devices.DeviceContext.CreateEmptyBitmap();
+            disposer.Collect(opacityEffect);
+
+            using (var image = transform.Output)
+                cropEffect.SetInput(0, image, true);
+
+            using (var image = cropEffect.Output)
+                renderEffect.SetInput(0, image, true);
+
+            using (var image = renderEffect.Output)
+                opacityEffect.SetInput(0, image, true);
+
+            renderOutput = renderEffect.Output;
+            disposer.Collect(renderOutput);
+
+            Output = opacityEffect.Output;
+            disposer.Collect(Output);
+
+            Params = new(devices, block, length, frame, fps, voiceVolume);
+            disposer.Collect(Params);
         }
 
-        public PartNode(PartNode origin) : this(devices: origin.devices)
+        void Update_NodesAndChain()
         {
-            BusNum = origin.BusNum;
-            TagName = origin.TagName;
-            Parent = origin.Parent;
-            ImagePath = origin.ImagePath;
-            LayerValues = origin.LayerValues.Select(x => x).ToList();
-            Appear = origin.Appear;
-            BlendMode = origin.BlendMode;
-            X = origin.X;
-            Y = origin.Y;
-            Opacity = origin.Opacity;
-            Scale = origin.Scale;
-            Rotate = origin.Rotate;
-            Mirror = origin.Mirror;
-            ScaleDependent = origin.ScaleDependent;
-            OpacityDependent = origin.OpacityDependent;
-            RotateDependent = origin.RotateDependent;
-            Cnt_X = origin.Cnt_X;
-            Cnt_Y = origin.Cnt_Y;
-            KeepPlace = origin.KeepPlace;
-            Exp_X = origin.Exp_X;
-            Exp_Y = origin.Exp_Y;
-            //Processors = origin.Processors;
-            ParentPath = [.. origin.ParentPath];
-        }
-
-        public PartNode(IGraphicsDevicesAndContext devices, /*TimelineItemSourceDescription description,*/ PartBlock part, long length, long frame, int fps, double voiceVolume) : this(devices: devices)
-        {
-            this.devices = devices;
-            BusNum = (int)part.BusNum.GetValue(frame, length, fps);
-            TagName = part.TagName;
-            Parent = part.Parent;
-            ImagePath = part.ImagePath;
-            LayerAnimationModes = part.LayerValues.Select(part => part.AnimationMode).ToList();
-            OuterLayerValueModes = part.LayerValues.Select(part => part.OuterMode).ToList();
-            LayerValues = part.LayerValues.Select(x => x.GetValue(length, frame, fps, voiceVolume)).ToList();
-            Appear = part.Appear;
-            BlendMode = part.BlendMode;
-            X = part.X.GetValue(frame, length, fps);
-            Y = part.Y.GetValue(frame, length, fps);
-            Opacity = part.Opacity.GetValue(frame, length, fps);
-            Scale = part.Scale.GetValue(frame, length, fps);
-            Rotate = part.Rotate.GetValue(frame, length, fps);
-            Mirror = (part.Mirror.GetValue(frame, length, fps) > 0.5);
-            ScaleDependent = part.ScaleDependent;
-            OpacityDependent = part.OpacityDependent;
-            RotateDependent = part.RotateDependent;
-            Cnt_X = part.Cnt_X.GetValue(frame, length, fps);
-            Cnt_Y = part.Cnt_Y.GetValue(frame, length, fps);
-            KeepPlace = part.KeepPlace;
-            Exp_X = part.Exp_X.GetValue(frame, length, fps);
-            Exp_Y = part.Exp_Y.GetValue(frame, length, fps);
-            layerTree = new LayerNode(ImagePath, devices);
-            offset.SetInput(0, layerTree.GetSource(LayerValues, OuterLayerValueModes), true);
-            //Processors = part.Effects.Select(effect => effect.CreateVideoEffect(devices)).ToImmutableList();
-            //var tmpSource = offset.Output;
-            //var defRect = devices.DeviceContext.GetImageLocalBounds(tmpSource);
-            //TimelineSourceDescription description1 = new((int)(defRect.Left - defRect.Right), (int)(defRect.Bottom - defRect.Top), fps, (int)frame, (int)length, description.Usage);
-            //TimelineItemSourceDescription description2 = new(description1, (int)frame, (int)length, description.Layer);
-            //EffectDescription description3 = new(description2, DrawDescription, 0);
-            //int i = 0;
-            //foreach (var processor in Processors)
-            //{
-            //    processor.SetInput(tmpSource);
-            //    DrawDescription = processor.Update(description3);
-            //}
-            //source = tmpSource;
-            source = offset.Output;
-        }
-
-        public bool Update(PartBlock part, long length, long frame, int fps, double voiceVolume)
-        {
-            //var busNum = part.GetBusNum(frame, length, fps);
-            var appear = part.Appear;
-            var busNum = (int)part.BusNum.GetValue(frame, length, fps);
-            var tagName = part.TagName;
-            var parent = part.Parent;
-            var imagePath = part.ImagePath;
-            var layerAnimationModes = part.LayerValues.Select(part => part.AnimationMode).ToList();
-            var outerLayerValueModes = part.LayerValues.Select(part => part.OuterMode).ToList();
-            var layerValues = part.LayerValues.Select(x => x.GetValue(length, frame, fps, voiceVolume)).ToList();
-            var blendMode = part.BlendMode;
-            var x = part.X.GetValue(frame, length, fps);
-            var y = part.Y.GetValue(frame, length, fps);
-            var opacity = part.Opacity.GetValue(frame, length, fps);
-            var scale = part.Scale.GetValue(frame, length, fps);
-            var rotate = part.Rotate.GetValue(frame, length, fps);
-            var mirror = (part.Mirror.GetValue(frame, length, fps) > 0.5);
-            var scaleDependent = part.ScaleDependent;
-            var opacityDependent = part.OpacityDependent;
-            var rotateDependent = part.RotateDependent;
-            var cntX = part.Cnt_X.GetValue(frame, length, fps);
-            var cntY = part.Cnt_Y.GetValue(frame, length, fps);
-            var keepPlace = part.KeepPlace;
-            var expX = part.Exp_X.GetValue(frame, length, fps);
-            var expY = part.Exp_Y.GetValue(frame, length, fps);
-
-            //var effects = part.Effects;
-
-            bool isOld = false;
-
-
-            if (ImagePath != imagePath)
+            var disposedIndex = from i in from tuple in NodesAndChains
+                                          where ParentPath.IndexOf(tuple.Item1) < 0
+                                          select NodesAndChains.IndexOf(tuple)
+                                orderby i descending
+                                select i;
+            foreach (int index in disposedIndex)
             {
-                isOld = true;
-
-                ImagePath = imagePath;
-                LayerAnimationModes = layerAnimationModes;
-                OuterLayerValueModes = outerLayerValueModes;
-                LayerValues = layerValues;
-                offset.SetInput(0, null, true);
-                layerTree?.Dispose();
-                source?.Dispose();
-                layerTree = new LayerNode(ImagePath, devices);
-                offset.SetInput(0, layerTree.GetSource(LayerValues, OuterLayerValueModes), true);
-                source = offset.Output;
-            }
-            else
-            {
-                bool layerValuesIsEqual = LayerValues.Count == layerValues.Count;
-                if (layerValuesIsEqual)
-                {
-                    for (int i = 0; i < LayerValues.Count; i++)
-                        if (LayerAnimationModes[i] != layerAnimationModes[i] || OuterLayerValueModes[i] != outerLayerValueModes[i] || LayerValues[i] != layerValues[i])
-                        {
-                            layerValuesIsEqual = false;
-                            break;
-                        }
-                }
-                if (!layerValuesIsEqual)
-                {
-                    isOld = true;
-                    LayerAnimationModes = layerAnimationModes;
-                    OuterLayerValueModes = outerLayerValueModes;
-                    LayerValues = layerValues;
-                    offset.SetInput(0, null, true);
-                    source?.Dispose();
-                    if (layerTree is null)
-                        layerTree = new LayerNode(ImagePath, devices);
-                    offset.SetInput(0, layerTree.GetSource(LayerValues, OuterLayerValueModes), true);
-                    source = offset.Output;
-                }
+                var e_ep = NodesAndChains[index];
+                e_ep.Item2.Dispose();
+                NodesAndChains.RemoveAt(index);
             }
 
-            if (BusNum != busNum || TagName != tagName || Parent != parent || appear != Appear || BlendMode != blendMode ||
-                X != x || Y != y || Opacity != opacity || Scale != scale || Rotate != rotate || Mirror != mirror ||
-                Cnt_X != cntX || Cnt_Y != cntY || keepPlace != KeepPlace || Exp_X != expX || Exp_Y != expY ||
-                ScaleDependent != scaleDependent || OpacityDependent != opacityDependent || RotateDependent != rotateDependent)
-            {
-                isOld = true;
-                BusNum = busNum;
-                TagName = tagName;
-                Parent = parent;
-                Appear = appear;
-                BlendMode = blendMode;
-                X = x;
-                Y = y;
-                Opacity = opacity;
-                Scale = scale;
-                Rotate = rotate;
-                Mirror = mirror;
-                Cnt_X = cntX;
-                Cnt_Y = cntY;
-                KeepPlace = keepPlace;
-                Exp_X = expX;
-                Exp_Y = expY;
-                TagName = tagName;
-                Parent = parent;
-                ScaleDependent = scaleDependent;
-                OpacityDependent = opacityDependent;
-                RotateDependent = rotateDependent;
-            }
-
-            return isOld;
-        }
-
-        public void CommitOutput()
-        {
-            if (source == null)
-            {
-                Output = empty;
-                return;
-            }
-
-            ID2D1Image? output = source;
-
-            // リセット
-            opacityEffect.SetInput(0, null, true);
-            transform.SetInput(0, null, true);
-
-            // 依存関係から最終的な描画位置などを計算する。
-            double x = 0, y = 0, scale = 1, opacity = 1, rotate = 0;
+            List<PartNode> keeped = NodesAndChains.Select((e_ep) => e_ep.Item1).ToList();
+            List<(PartNode, VideoEffectChainNode)> newNodesAndChains = new(ParentPath.Count);
             foreach (var node in ParentPath)
             {
-                double x2 = node.X + (node.KeepPlace ? node.Cnt_X : 0), y2 = node.Y + (node.KeepPlace ? node.Cnt_Y : 0);
-                float rotate2 = (float)(rotate * Math.PI / 180);
-                x += scale * (x2 * Math.Cos(rotate2) - y2 * Math.Sin(rotate2));
-                y += scale * (x2 * Math.Sin(rotate2) + y2 * Math.Cos(rotate2));
-                opacity = ((node.OpacityDependent) ? opacity : 1) * node.Opacity / 100;
-                scale = ((node.ScaleDependent) ? scale : 1) * node.Scale / 100;
-                rotate = ((node.RotateDependent) ? rotate : 0) + node.Rotate;
+                int index = keeped.IndexOf(node);
+                newNodesAndChains.Add(index < 0 ? (node, new VideoEffectChainNode(devices, node.Params.Effects)) : NodesAndChains[index]);
             }
-            float rotate3 = (float)(rotate * Math.PI / 180);
-            double x3 = X - (KeepPlace ? 0 : Cnt_X), y3 = Y - (KeepPlace ? 0 : Cnt_Y);
-            x += scale * (x3 * Math.Cos(rotate3) - y3 * Math.Sin(rotate3));
-            y += scale * (x3 * Math.Sin(rotate3) + y3 * Math.Cos(rotate3));
-            opacity = (OpacityDependent ? opacity : 1) * Opacity / 100;
-            scale = (ScaleDependent ? scale : 1) * Scale / 100;
-            Shift = new Vector2((float)x, (float)y);
-            Opacity2 = (float)opacity;
-            Scale2 = (float)scale;
-            Rotate2 = (float)(RotateDependent ? (rotate * Math.PI / 180) : 0);
 
-            // アフィン変換(インスタンスOutputを固定するために，このエフェクトは無条件に間に挟む)
-            var result = (Mirror) ? new Matrix3x2(-1, 0, 0, 1, 2 * (float)Cnt_X, 0) : Matrix3x2.Identity;
-            float expX = (float)(Exp_X / 100.0);
-            float expY = (float)(Exp_Y / 100.0);
-            float rotate4 = (float)(Rotate * Math.PI / 180);
-            float cx = (float)(Cnt_X * Math.Cos(Rotate2) - Cnt_Y * Math.Sin(Rotate2));
-            float cy = (float)(Cnt_X * Math.Sin(Rotate2) + Cnt_Y * Math.Cos(Rotate2));
-            if (Scale2 != 1.0 || expX != 1.0 || expY != 1.0)
-                result *= Matrix3x2.CreateScale(Scale2 * expX, Scale2 * expY, new Vector2(cx, cy));
-            if (Rotate2 != 0.0)
-                result *= Matrix3x2.CreateRotation(Rotate2);
-            if (Rotate != 0.0)
-                result *= Matrix3x2.CreateRotation((float)rotate4, new Vector2(cx, cy));
-            transform.TransformMatrix = result;
-            transform.SetInput(0, output, true);
-            output = transform.Output;
+            NodesAndChains = newNodesAndChains;
+        }
 
-            // 不透明エフェクト
-            if (Opacity2 != 1.0)
+        public bool UpdateParams(PartBlock part, long length, long frame, int fps, double voiceVolume)
+        {
+            return Params.Update(devices, part, length, frame, fps, voiceVolume);
+        }
+
+        public void UpdateOutput(TimelineSourceDescription desc)
+        {
+            ID2D1Image input = Params.Output;
+            TimelineItemSourceDescription timeLineItemSourceDescription
+                = (desc is TachieSourceDescription tachieDesc)
+                ? new(desc, tachieDesc.ItemDuration.Frame, tachieDesc.ItemPosition.Frame, tachieDesc.Layer)
+                : new(desc, desc.TimelineDuration.Frame, desc.TimelineDuration.Frame, 0);
+
+            ID2D1Image input2 = input;
+
+            Update_NodesAndChain();
+            drawDescription = new(default, default, new Vector2(1f), default, Matrix4x4.Identity, InterpolationMode.Linear, 1.0, false, []);
+
+            Double3 draw = new(), draw2 = new(), rotate = new();
+            Double2 trigon = new();
+            Vector2 zoom = new(1f);
+            Matrix4x4 camera = Matrix4x4.Identity;
+            InterpolationMode zoomInterpolationMode = InterpolationMode.Linear;
+            double scale = 1.0, opacity = 1.0, rotate2, scale2;
+            bool xyzDependent, rotateDependent, scaleDependent, opacityDependent, mirrorDependent, mirror = false,
+                effectXYZDependent, effectRotateDependent, effectZoomDependent, effectOpacityDependent, effectMirrorDependent, effectCameraDependent, effectUnlazyDependent;
+
+            xyzDependent = rotateDependent = scaleDependent = opacityDependent = mirrorDependent
+                = effectXYZDependent = effectRotateDependent = effectZoomDependent = effectOpacityDependent = effectMirrorDependent = effectCameraDependent = effectUnlazyDependent
+                = true;
+            foreach (var tuple in NodesAndChains)
             {
-                opacityEffect.Value = Opacity2;
-                opacityEffect.SetInput(0, output, true);
-                output = opacityEffect.Output;
+                var node = tuple.Item1;
+                rotate2 = node.Params.Rotate * Math.PI / 180.0;
+                scale2 = node.Params.Scale / 100.0;
+
+                if (xyzDependent)
+                {
+                    trigon.X = Math.Cos(rotate2);
+                    trigon.Y = Math.Sin(rotate2);
+                    draw.X *= (scaleDependent ? scale2 : 1) * (node.Params.Mirror && mirrorDependent ? -1 : 1);
+                    draw.Y *= scaleDependent ? scale2 : 1;
+                    draw.Z *= scaleDependent ? scale2 : 1;
+                    draw2.X = trigon.X * draw.X + trigon.Y * draw.Y;
+                    draw2.Y = trigon.Y * draw.X + trigon.X * draw.Y;
+                    draw2.Z = draw.Z;
+
+                    draw.X = draw2.X + (node.Params.Draw.X + (node.Params.KeepPlace ? node.Params.Center.X : 0.0));
+                    draw.Y = draw2.Y + (node.Params.Draw.Y + (node.Params.KeepPlace ? node.Params.Center.Y : 0.0));
+                    draw.Z = draw2.Z + node.Params.Draw.Z;
+
+                    xyzDependent = node.Params.XYZDependent;
+                }
+
+                if (scaleDependent)
+                {
+                    scale *= scale2;
+                    zoom *= (float)scale2;
+                    scaleDependent = node.Params.ScaleDependent;
+                }
+
+                if (opacityDependent)
+                {
+                    opacity *= node.Params.Opacity / 100.0;
+                    scaleDependent = node.Params.OpacityDependent;
+                }
+
+                if (rotateDependent)
+                {
+                    rotate.Z += node.Params.Rotate;
+                    rotateDependent = node.Params.RotateDependent;
+                }
+
+                if (mirrorDependent)
+                {
+                    mirror ^= node.Params.Mirror;
+                    mirrorDependent = node.Params.MirrorDependent;
+                }
+
+                drawDescription = new DrawDescription(
+                    new Vector3((float)draw.X, (float)draw.Y, (float)draw.Z),
+                    default,
+                    new Vector2((float)(zoom.X * Params.ExpXY.X / 100.0), (float)(zoom.Y * Params.ExpXY.Y / 100.0)),
+                    new Vector3((float)rotate.X, (float)rotate.Y, (float)rotate.Z),
+                    camera,
+                    zoomInterpolationMode,
+                    opacity,
+                    mirror,
+                    []
+                    );
+
+                var chain = tuple.Item2;
+
+                chain.UpdateChain(node.Params.Effects);
+                drawDescription = chain.UpdateOutputAndDescription(input2, timeLineItemSourceDescription, drawDescription);
+
+                if (effectUnlazyDependent)
+                {
+                    input2 = chain.Output;
+                    effectUnlazyDependent = node.Params.EffectUnlazyDependent;
+                }
+
+                if (effectXYZDependent)
+                {
+                    draw.X = drawDescription.Draw.X;
+                    draw.Y = drawDescription.Draw.Y;
+                    draw.Z = drawDescription.Draw.Z;
+                    effectXYZDependent = node.Params.EffectXYZDependent;
+                }
+
+                if (effectRotateDependent)
+                {
+                    rotate.X = drawDescription.Rotation.X;
+                    rotate.Y = drawDescription.Rotation.Y;
+                    rotate.Z = drawDescription.Rotation.Z;
+                    effectRotateDependent = node.Params.EffectRotateDependent;
+                }
+
+                if (effectOpacityDependent)
+                {
+                    opacity = drawDescription.Opacity;
+                    effectOpacityDependent = node.Params.EffectOpacityDependent;
+                }
+
+                if (effectZoomDependent)
+                {
+                    zoom = drawDescription.Zoom;
+                    effectZoomDependent = node.Params.EffectZoomDependent;
+                }
+
+                if (effectCameraDependent)
+                {
+                    camera = drawDescription.Camera;
+                    effectCameraDependent = node.Params.EffectZoomDependent;
+                }
+
+                zoomInterpolationMode = drawDescription.ZoomInterpolationMode;
+
+                if (effectMirrorDependent)
+                {
+                    mirror = drawDescription.Invert;
+                    effectMirrorDependent = node.Params.EffectMirrorDependent;
+                }
             }
 
-            // 出力イメージ
-            Output = output;
+            transform.SetInput(0, input2, true);
+            Vector3 draw3 = drawDescription.Draw;
+            Vector2 centerPoint = drawDescription.CenterPoint;
+            AffineTransform2DInterpolationMode interPolationMode = drawDescription.ZoomInterpolationMode.ToTransform2D();
+            Transform3DInterpolationMode interPolationMode2 = drawDescription.ZoomInterpolationMode.ToTransform3D();
+            transform.InterPolationMode = interPolationMode;
+            transform.TransformMatrix = Matrix3x2.CreateTranslation(-1 * new Vector2((float)Params.Center.X, (float)Params.Center.Y)) * Matrix3x2.CreateScale(zoom.X, zoom.Y);
+            renderEffect.InterPolationMode = interPolationMode2;
+            renderEffect.TransformMatrix = (
+                mirror ? Matrix4x4.CreateScale(-1f, 1f, 1f, new Vector3(centerPoint, 0f)) : Matrix4x4.Identity)
+                * Matrix4x4.CreateRotationZ(MathF.PI * (float)rotate.Z / 180f)
+                * Matrix4x4.CreateRotationY(MathF.PI * -(float)rotate.Y / 180f)
+                * Matrix4x4.CreateRotationX(MathF.PI * -(float)rotate.X / 180f)
+                * Matrix4x4.CreateTranslation(draw3)
+                * camera
+                * new Matrix4x4(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, -0.001f, 0f, 0f, 0f, 1f);
+
+            Apply(devices.DeviceContext);
+            opacityEffect.Value = (float)drawDescription.Opacity;
+        }
+
+        void ClearEffectChain()
+        {
+            opacityEffect.SetInput(0, null, true);
+            renderEffect.SetInput(0, null, true);
+            cropEffect.SetInput(0, null, true);
+            transform.SetInput(0, null, true);
         }
 
         public void Dispose()
         {
-            Output?.Dispose(); // EffectからgetしたOutputは必ずDisposeする必要がある。Effect側では開放されない。
-
-            opacityEffect.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
-            opacityEffect.Dispose();
-
-            transform.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
-            transform.Dispose();
-
-            source?.Dispose();
-            offset.SetInput(0, null, true); // EffectのInputは必ずnullに戻す。
-            offset.Dispose();
-            layerTree?.Dispose(); // 読み込んだ画像を破棄
-            empty.Dispose();
+            if (!disposedValue)
+            {
+                NodesAndChains.ForEach(tuple => tuple.Item2.Dispose());
+                ClearEffectChain();
+                disposer.Dispose();
+                GC.SuppressFinalize(this);
+                disposedValue = true;
+            }
         }
+
+        #region SafeTransform3DHelper
+        const float D3D11_FTOI_INSTRUCTION_MAX_INPUT = 2.1474836E+09f;
+        const float D3D11_FTOI_INSTRUCTION_MIN_INPUT = -2.1474836E+09f;
+
+        void Apply(ID2D1DeviceContext deviceContext)
+        {
+            //transform3dエフェクトの出力画像1pxあたりの入力サイズが4096pxを超えるとエラーになる
+            //エラー時には出力サイズがD3D11_FTOI_INSTRUCTION_MAX_INPUTになるため、cropエフェクトを使用し入力サイズを4096pxに制限する
+
+            //一旦cropエフェクトの範囲を初期化する
+            cropEffect.Rectangle = new Vector4(float.MinValue, float.MinValue, float.MaxValue, float.MaxValue);
+            var renderBounds = deviceContext.GetImageLocalBounds(renderOutput);
+            if (renderBounds.Left == D3D11_FTOI_INSTRUCTION_MIN_INPUT
+                || renderBounds.Top == D3D11_FTOI_INSTRUCTION_MIN_INPUT
+                || renderBounds.Right == D3D11_FTOI_INSTRUCTION_MAX_INPUT
+                || renderBounds.Bottom == D3D11_FTOI_INSTRUCTION_MAX_INPUT)
+            {
+                //エラーの場合にのみ入力サイズを制限する
+                cropEffect.Rectangle = new Vector4(-2048, -2048, 2048, 2048);
+            }
+        }
+        #endregion
     }
 }

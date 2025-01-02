@@ -1,16 +1,9 @@
 ﻿using SinTachiePlugin.Enums;
 using SinTachiePlugin.Informations;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows;
 using Vortice.Direct2D1;
 using Vortice.Direct2D1.Effects;
 using YukkuriMovieMaker.Commons;
@@ -22,9 +15,12 @@ namespace SinTachiePlugin.LayerValueListController
     public class LayerNode : IDisposable
     {
         public IGraphicsDevicesAndContext devices;
-        public ID2D1Image? Output;
+        public ID2D1Image Output;
+        readonly DisposeCollector disposer = new();
         readonly ID2D1Bitmap empty;
         IImageFileSource? source;
+        bool wasEmpty = true;
+        bool disposedValue = false;
         private readonly AffineTransform2D centeringEffect;
         public int? Index { get; set; } = null;
         public int Depth { get; set; } = -1;
@@ -34,7 +30,12 @@ namespace SinTachiePlugin.LayerValueListController
         {
             this.devices = devices;
             centeringEffect = new AffineTransform2D(devices.DeviceContext);
+            disposer.Collect(centeringEffect);
             empty = devices.DeviceContext.CreateEmptyBitmap();
+            disposer.Collect(empty);
+            centeringEffect.SetInput(0, empty, true);
+            Output = centeringEffect.Output;
+            disposer.Collect(Output);
         }
 
         public LayerNode(string root, IGraphicsDevicesAndContext devices) : this(devices)
@@ -99,7 +100,7 @@ namespace SinTachiePlugin.LayerValueListController
                     {
                         tmp.centeringEffect.SetInput(0, tmp.source.Output, true);
                         tmp.centeringEffect.TransformMatrix = Matrix3x2.CreateTranslation(-tmp.source.Output.Size.Width / 2, -tmp.source.Output.Size.Height / 2);
-                        tmp.Output = tmp.centeringEffect.Output;
+                        tmp.wasEmpty = false;
                     }
                     AddLeaf(tmp, kv.Value);
                 }
@@ -109,9 +110,10 @@ namespace SinTachiePlugin.LayerValueListController
             source = ImageFileSourceFactory.Create(devices, root);
             if (source != null)
             {
+                disposer.Collect(source);
                 centeringEffect.SetInput(0, source.Output, true);
                 centeringEffect.TransformMatrix = Matrix3x2.CreateTranslation(-source.Output.Size.Width / 2, -source.Output.Size.Height / 2);
-                Output = centeringEffect.Output;
+                wasEmpty = false;
             }
         }
 
@@ -126,6 +128,7 @@ namespace SinTachiePlugin.LayerValueListController
                 SinTachieDialog.ShowError("インデックスが正しく指定されていないリーフをLayerNodeに足そうとしました。ごめんなさい。", clsName, mthName);
                 return;
             }
+            disposer.Collect(node);
             var tmp = this;
             for (int i = 0; i < len - 1; i++)
             {
@@ -206,15 +209,11 @@ namespace SinTachiePlugin.LayerValueListController
             return muchs.First();
         }
 
-        public ID2D1Image? GetSource(List<double> values, List<OuterLayerValueMode> outers)
+        public ID2D1Image GetSource(List<double> values, List<OuterLayerValueMode> outers)
         {
             if (Depth < 0)
             {
                 return empty;
-                //string clsName = GetType().Name;
-                //string? mthName = MethodBase.GetCurrentMethod()?.Name;
-                //SinTachieDialog.ShowError("無効なLayerNode", clsName, mthName);
-                //throw new Exception("無効なLayerNode");
             }
 
             if (values.Count() <= Depth)
@@ -246,14 +245,20 @@ namespace SinTachiePlugin.LayerValueListController
             return Output;
         }
 
+        void ClearEffectChain()
+        {
+            centeringEffect.SetInput(0, null, true);
+        }
+
         public void Dispose()
         {
-            Output?.Dispose();
-            centeringEffect.SetInput(0, null, true);
-            centeringEffect.Dispose();
-            source?.Dispose();
-            empty?.Dispose();
-            foreach (var child in Children) child.Dispose();
+            if (!disposedValue)
+            {
+                ClearEffectChain();
+                disposer.Dispose();
+                GC.SuppressFinalize(this);
+                disposedValue = true;
+            }
         }
     }
 }
