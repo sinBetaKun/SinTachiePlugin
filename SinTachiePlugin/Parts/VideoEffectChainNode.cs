@@ -8,6 +8,7 @@ using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Player.Video;
 using YukkuriMovieMaker.Plugin.Effects;
+using System.Windows.Controls;
 
 namespace SinTachiePlugin.Parts
 {
@@ -19,11 +20,11 @@ namespace SinTachiePlugin.Parts
         readonly DisposeCollector disposer = new();
         bool wasEmpty;
         bool disposedValue = false;
-        List<(IVideoEffect, IVideoEffectProcessor)> Chain;
+        List<(IVideoEffect, IVideoEffectProcessor, FrameAndLength)> Chain = [];
 
         public ID2D1Image Output;
 
-        public VideoEffectChainNode(IGraphicsDevicesAndContext devices, IEnumerable<IVideoEffect> effects)
+        public VideoEffectChainNode(IGraphicsDevicesAndContext devices, IEnumerable<IVideoEffect> effects, int frame, int length)
         {
             this.devices = devices;
             transform = new AffineTransform2D(devices.DeviceContext);
@@ -37,10 +38,10 @@ namespace SinTachiePlugin.Parts
 
             wasEmpty = false;
 
-            Chain = effects.Select(effect => (effect, effect.CreateVideoEffect(devices))).ToList();
+            Chain = effects.Select(effect => (effect, effect.CreateVideoEffect(devices), new FrameAndLength(frame, length))).ToList();
         }
 
-        public void UpdateChain(IEnumerable<IVideoEffect> effects)
+        public void UpdateChain(IEnumerable<IVideoEffect> effects, FrameAndLength fl)
         {
             var disposedIndex = from e_ep in Chain
                                 where !effects.Contains(e_ep.Item1)
@@ -49,25 +50,26 @@ namespace SinTachiePlugin.Parts
                                 select i;
             foreach (int index in disposedIndex)
             {
-                (IVideoEffect, IVideoEffectProcessor) tuple = Chain[index];
+                (IVideoEffect, IVideoEffectProcessor, FrameAndLength) tuple = Chain[index];
                 tuple.Item2.ClearInput();
                 tuple.Item2.Dispose();
                 Chain.RemoveAt(index);
             }
 
             List<IVideoEffect> keeped = Chain.Select((e_ep) => e_ep.Item1).ToList();
-            List<(IVideoEffect, IVideoEffectProcessor)> newChain = new(effects.Count());
+            List<(IVideoEffect, IVideoEffectProcessor, FrameAndLength)> newChain = new(effects.Count());
             foreach (var effect in effects)
             {
                 int index = keeped.IndexOf(effect);
-                newChain.Add(index < 0 ? (effect, effect.CreateVideoEffect(devices)) : Chain[index]);
+                newChain.Add(index < 0 ? (effect, effect.CreateVideoEffect(devices), fl) : Chain[index]);
             }
 
             Chain = newChain;
         }
 
-        public DrawDescription UpdateOutputAndDescription(ID2D1Image? input, TimelineItemSourceDescription timeLineItemSourceDescription, DrawDescription drawDescription)
+        public DrawDescription UpdateOutputAndDescription(ID2D1Image? input, TimelineSourceDescription timelineSourceDescription, DrawDescription drawDescription)
         {
+            TimelineItemSourceDescription timeLineItemSourceDescription;
             DrawDescription result = new(
                 drawDescription.Draw,
                 drawDescription.CenterPoint,
@@ -96,9 +98,12 @@ namespace SinTachiePlugin.Parts
                 if (tuple.Item1.IsEnabled)
                 {
                     IVideoEffectProcessor item = tuple.Item2;
+                    FrameAndLength fl = tuple.Item3;
                     item.SetInput(output);
+                    timeLineItemSourceDescription = new(timelineSourceDescription, fl.Frame, fl.Length, 0);
                     EffectDescription effectDescription = new(timeLineItemSourceDescription, result, 0);
                     result = item.Update(effectDescription);
+                    
                     output = item.Output;
                 }
             }

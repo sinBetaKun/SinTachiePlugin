@@ -96,11 +96,11 @@ namespace SinTachiePlugin.Parts
 
 
             List<PartBlock> partBlocks = ip.Parts.ToList();
-            List<long> lengthList = new(partBlocks.Count);
-            List<long> frameList = new(partBlocks.Count);
+            List<int> lengthList = new(partBlocks.Count);
+            List<int> frameList = new(partBlocks.Count);
             List<int> busNums = new(partBlocks.Count);
-            long lengthOfItem = description.ItemDuration.Frame;
-            long frameOfItem = description.ItemPosition.Frame;
+            int lengthOfItem = description.ItemDuration.Frame;
+            int frameOfItem = description.ItemPosition.Frame;
             int fps = description.FPS;
             double voiceVolume = description.VoiceVolume;
             if (voiceVolume < 0) voiceVolume = 0;
@@ -128,8 +128,8 @@ namespace SinTachiePlugin.Parts
                 {
                     if (fd.FaceParameter is SinTachieFaceParameter fp)
                     {
-                        long lengthOfFace = fd.ItemDuration.Frame;
-                        long frameOfFace = fd.ItemPosition.Frame;
+                        int lengthOfFace = fd.ItemDuration.Frame;
+                        int frameOfFace = fd.ItemPosition.Frame;
                         // 表情アイテムのパーツで立ち絵アイテムと名前が重複するパーツを上書き・補足する
                         var tagsOfFace = (from node in fp.Parts select node.TagName).ToList();
                         for (int i = 0; i < tagsOfFace.Count; i++)
@@ -179,8 +179,8 @@ namespace SinTachiePlugin.Parts
                 pos += count;
             }
 
-            List<long> sortedLengthList = new List<long>(numOfNodes);
-            List<long> sortedFrameList = new List<long>(numOfNodes);
+            List<int> sortedLengthList = new List<int>(numOfNodes);
+            List<int> sortedFrameList = new List<int>(numOfNodes);
             List<PartBlock> sortedPartBlocks = new List<PartBlock>(numOfNodes);
 
             for (int i = 0; i < numOfNodes; i++)

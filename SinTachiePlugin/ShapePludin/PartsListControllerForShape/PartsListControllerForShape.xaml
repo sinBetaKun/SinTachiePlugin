@@ -8,103 +8,139 @@
              xmlns:local1="clr-namespace:SinTachiePlugin.Parts"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance Type={x:Type local:PartsListControllerForShapeViewModel}}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="210"/>
-            <RowDefinition Height="70"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" BorderBrush="#FF484848" Margin="2,0,0,0" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <TextBlock Text="素材の場所" Margin="2,2,2,2" HorizontalAlignment="Left"/>
-            </Border>
-            <c:DirectorySelector  Margin="2,0,0,0" Grid.Column="1" Value="{Binding Root}" BeginEdit="PropertiesEditor_BeginEdit" EndEdit="DirectorySelector_EndEdit"/>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="26"/>
-            </Grid.ColumnDefinitions>
-            <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Path=Parts}" SelectedIndex="{Binding SelectedPartIndex, Mode=TwoWay}"
-                     Name="list" ScrollViewer.CanContentScroll="False">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <local1:PartBlockUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="DirectorySelector_EndEdit"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-                <ListBox.ContextMenu>
-                    <ContextMenu  IsOpen="{Binding ContextMenuIsOpen}">
-                        <MenuItem Header="切り取り" IsEnabled="{Binding SomeBlockSelected}" Click ="Scissors_Clicked"/>
-                        <MenuItem Header="コピー" IsEnabled="{Binding SomeBlockSelected}" Click="Copy_Clicked"/>
-                        <MenuItem Header="貼り付け" IsEnabled="{Binding PasteEnable}" Click="Paste_Clicked"/>
-                        <MenuItem Header="複製" IsEnabled="{Binding SomeBlockSelected}" Click="Duplication_Clicked"/>
-                        <MenuItem Header="削除" IsEnabled="{Binding SomeBlockSelected}" Click="Remove_Clicked"/>
-                    </ContextMenu>
-                </ListBox.ContextMenu>
-            </ListBox>
-            <Grid Grid.Column="1">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resource/MaterialIcons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel>
+        <Border Grid.Row="0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="2" Margin="4">
+            <StackPanel>
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                    </Grid.RowDefinitions>
-                    <Button Grid.Row="0" Content="╋" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="「追加するパーツ」で選択している名前のパーツが追加されます。"/>
-                    <Button Grid.Row="1" Content="━" Command="{Binding RemoveCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを取り除きます。"/>
-                    <Button Grid.Row="2" Content="▲" Command="{Binding MoveUpCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ上のパーツと入れ替えます。"/>
-                    <Button Grid.Row="3" Content="▼" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているパーツを一つ下のパーツと入れ替えます。"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <TextBlock Grid.Column="0" Text="描画順序" Margin="10,24,10,4" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                        <Border VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1" Margin="1,1,0,24" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1"
+                                    ToolTip="【STPバージョン】&#xa;本プラグインのバージョンです。">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Version}" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <WrapPanel Margin="1" Grid.Column="1" HorizontalAlignment="Right">
+                        <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1"
+                                ToolTip="【リストの高さ】&#xa;描画順序リストの高さを調整できます。&#xa;プラグイン内でこの値は共有されます。">
+                            <StackPanel Orientation="Horizontal" Margin="1">
+                                <Label Height="26" Content="{StaticResource ArrowExpandVertical}"/>
+                                <c:TextBoxSlider StringFormat="F0" Min="210" DefaultMin="210" Max="500" DefaultMax="500"
+                                                 VerticalAlignment="Center" Value="{Binding ListHeight}" Margin="0,0,4,0"
+                                                 Width="150"
+                                                 BeginEdit="PropertiesEditor_BeginEdit" EndEdit="HeightSlider_EndEdit"/>
+                            </StackPanel>
+                        </Border>
+                        <Grid Margin="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="2,0,0,0" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+                                <TextBlock Text="素材の場所" Margin="2,2,2,2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            </Border>
+                            <c:DirectorySelector Grid.Column="1" Margin="2,0,0,0" Value="{Binding Root}" MinWidth="100"
+                                                 BeginEdit="PropertiesEditor_BeginEdit" EndEdit="DirectorySelector_EndEdit"/>
+                        </Grid>
+                    </WrapPanel>
                 </Grid>
-                <Popup IsOpen="{Binding PartsPopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" >
-                    <ScrollViewer MaxHeight="300" MinWidth="100" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                        <TreeView Panel.ZIndex="100" ItemsSource ="{Binding PartNameTree}" SelectedItemChanged="TreeView_SelectedItemChanged">
-                            <TreeView.ItemTemplate>
-                                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                    <TextBlock Text="{Binding Name}" />
-                                </HierarchicalDataTemplate>
-                            </TreeView.ItemTemplate>
-                        </TreeView>
-                    </ScrollViewer>
-                </Popup>
-            </Grid>
-        </Grid>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="194"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Border BorderBrush="#FF3F3F3F" BorderThickness="2" Margin="0,8,0,0"/>
-                <Grid Margin="10,8,0,10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="26"/>
-                    </Grid.RowDefinitions>
+                <Grid Height="{Binding ListHeight}" Margin="4"
+                      ToolTip="【描画順序リスト】&#xa;新しくパーツを追加するときは&#xa;右側の「＋」を押してください。">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="26"/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch"
+                             ItemsSource="{Binding Parts}" SelectedIndex="{Binding SelectedPartIndex}"
+                             Name="list" ScrollViewer.CanContentScroll="False"  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <local1:PartBlockUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ContextMenu>
+                            <ContextMenu IsOpen="{Binding ContextMenuIsOpen}">
+                                <MenuItem Header="切り取り" IsEnabled="{Binding SomeBlockSelected}" Click ="Cut_Clicked" Icon="{StaticResource Cut}"
+                                          ToolTip="【切り取り】&#xa;選択されているパーツを取り除きます。&#xa;切り取られたパーツは『貼り付け』で再挿入できます。"/>
 
-                    <!-- 選択されたブロックのデフォルト値を編集するエリア -->
-                    <Label Grid.Row="0" Content="デフォルト設定" HorizontalAlignment="Left" Margin="4,4,0,0" VerticalAlignment="Top" Padding="0,0,0,0"/>
-                    <Grid Grid.Row="1" Margin="0,0,8,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Command="{Binding WriteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="保存" ToolTip="選択されているパーツが指定している画像ファイルに、現在のパーツパラメータ情報をデフォルトとして記録します。&#xa;(stpiファイルが生成されます。)"/>
-                        <Button Grid.Column="1" Command="{Binding DeleteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="削除" ToolTip="選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を取り消します。&#xa;(stpiファイル自体は削除されません。)"/>
-                        <Button Grid.Column="2" Command="{Binding ReloadDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" Content="リロード" ToolTip="選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を読み取り、現在の全パラメータを自動編集します。"/>
+                                <MenuItem Header="コピー" IsEnabled="{Binding SomeBlockSelected}" Click="Copy_Clicked" Icon="{StaticResource Copy}"
+                                          ToolTip="【コピー】&#xa;選択されているパーツをコピーします。&#xa;コピーされたパーツは『貼り付け』で新たなパーツとして挿入できます。"/>
+
+                                <MenuItem Header="貼り付け" IsEnabled="{Binding PasteEnable}" Click="Paste_Clicked" Icon="{StaticResource Paste}"
+                                          ToolTip="【貼り付け】&#xa;『切り取り』または『コピー』されたパーツを新たなパーツとして挿入できます。"/>
+
+                                <MenuItem Header="複製" IsEnabled="{Binding SomeBlockSelected}" Click="Duplication_Clicked" Icon="{StaticResource Duplicate}"
+                                          ToolTip="【複製】&#xa;選択されているパーツをひとつ下に複製します。"/>
+
+                                <Separator />
+
+                                <MenuItem Header="削除" IsEnabled="{Binding SomeBlockSelected}" Click="Remove_Clicked" Icon="{StaticResource Minus}"
+                                          ToolTip="【削除】&#xa;選択されているパーツを削除します。"/>
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                    </ListBox>
+                    <Grid Grid.Column="1">
+                        <StackPanel>
+                            <!-- ブロックの並びを編集するエリア -->
+                            <StackPanel ToolTip="【リスト編集ボタン群】&#xa;『パーツブロック』の選択状態によっては一部の操作ができません。">
+                                <Button Height="26" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
+                                        Content="{StaticResource Plus}" ToolTip="【パーツ追加】&#xa;パーツツリーから選択されたパーツを追加します。"/>
+
+                                <Button Height="26" Command="{Binding RemoveCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
+                                        Content="{StaticResource Minus}" ToolTip="【パーツ削除】&#xa;選択されているパーツを取り除きます。"/>
+
+                                <Button Height="26" Command="{Binding MoveUpCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
+                                        Content="{StaticResource Up}" ToolTip="【ひとつ上に移動】&#xa;選択されているパーツを一つ上のパーツと入れ替えます。"/>
+
+                                <Button Height="26" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
+                                        Content="{StaticResource Down}" ToolTip="【ひとつ下に移動】&#xa;選択されているパーツを一つ下のパーツと入れ替えます。"/>
+                            </StackPanel>
+
+                            <!-- 選択されたブロックのデフォルト値を編集するエリア -->
+                            <StackPanel Margin="0,16,0,0" 
+                                        ToolTip="【デフォルト設定編集ボタン群】&#xa;『パーツブロック』が選択されていない状態だと全ての操作ができません。">
+                                <Button Height="26" Command="{Binding WriteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
+                                        Content="{StaticResource Save-Plus}" ToolTip="【パーツデフォルト設定の保存／上書き】&#xa;選択されているパーツが指定している画像ファイルに、現在のパーツパラメータ情報をデフォルトとして記録します。&#xa;(stpiファイルが生成／上書きされます。)"/>
+
+                                <Button Height="26" Command="{Binding DeleteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
+                                        Content="{StaticResource Save-Minus}" ToolTip="【パーツデフォルト設定の削除】&#xa;選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を取り消します。&#xa;(stpiファイル自体は削除されません。)"/>
+
+                                <Button Height="26" Command="{Binding ReloadDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
+                                        Content="{StaticResource Reload}" ToolTip="【パーツデフォルト設定のリロード】&#xa;選択されているパーツが指定している画像ファイルに対応するデフォルトパラメータ情報を読み取り、現在の全パラメータを自動編集します。"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <Popup IsOpen="{Binding PartsPopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" >
+                            <ScrollViewer MaxHeight="300" MinWidth="100" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                                <TreeView Panel.ZIndex="100" ItemsSource ="{Binding PartNameTree}" SelectedItemChanged="TreeView_SelectedItemChanged">
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                            <TextBlock Text="{Binding Name}" />
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
+                            </ScrollViewer>
+                        </Popup>
                     </Grid>
                 </Grid>
-            </Grid>
-        </Grid>
-        <c:PropertiesEditor 
-            Grid.Row="3"
+            </StackPanel>
+        </Border>
+
+        <c:PropertiesEditor
+            Grid.Row="2"
             Target="{Binding ElementName=list,Path=SelectedValue}"
             BeginEdit="PropertiesEditor_BeginEdit" 
-            EndEdit="PropertiesEditor_EndEdit">
-        </c:PropertiesEditor>
-    </Grid>
+            EndEdit="PropertiesEditor_EndEdit"/>
+    </StackPanel>
 </UserControl>

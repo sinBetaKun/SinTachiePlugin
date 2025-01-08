@@ -19,10 +19,14 @@ namespace SinTachiePlugin.Parts
         readonly Opacity opacityEffect;
         public ID2D1Image? Output;
         readonly ID2D1Image renderOutput;
-        private bool disposedValue = false;
-        private DrawDescription drawDescription = new(
-            default, default, new Vector2(1f, 1f), default, Matrix4x4.Identity, InterpolationMode.Linear, 1.0, false, []);
-        private List<(PartNode, VideoEffectChainNode)> NodesAndChains = [];
+        bool disposedValue = false;
+        List<(PartNode, VideoEffectChainNode)> NodesAndChains = [];
+        int lastFrame;
+        int lastLength;
+        DrawDescription drawDescription = new(
+            default, default, new Vector2(1f, 1f), default,
+            Matrix4x4.Identity, InterpolationMode.Linear, 1.0, false, []);
+
 
         readonly ParamsOfPartNode Params;
         public string TagName => Params.TagName;
@@ -32,7 +36,7 @@ namespace SinTachiePlugin.Parts
 
         public ImmutableList<PartNode> ParentPath { get; set; } = [];
 
-        public PartNode(IGraphicsDevicesAndContext devices, PartBlock block, long length, long frame, int fps, double voiceVolume)
+        public PartNode(IGraphicsDevicesAndContext devices, PartBlock block, int length, int frame, int fps, double voiceVolume)
         {
             this.devices = devices;
             transform = new AffineTransform2D(devices.DeviceContext);
@@ -85,24 +89,22 @@ namespace SinTachiePlugin.Parts
             foreach (var node in ParentPath)
             {
                 int index = keeped.IndexOf(node);
-                newNodesAndChains.Add(index < 0 ? (node, new VideoEffectChainNode(devices, node.Params.Effects)) : NodesAndChains[index]);
+                newNodesAndChains.Add(index < 0 ? (node, new VideoEffectChainNode(devices, node.Params.Effects, node.lastFrame, node.lastLength)) : NodesAndChains[index]);
             }
 
             NodesAndChains = newNodesAndChains;
         }
 
-        public bool UpdateParams(PartBlock part, long length, long frame, int fps, double voiceVolume)
+        public bool UpdateParams(PartBlock part, int length, int frame, int fps, double voiceVolume)
         {
+            lastFrame = frame;
+            lastLength = length;
             return Params.Update(devices, part, length, frame, fps, voiceVolume);
         }
 
         public void UpdateOutput(TimelineSourceDescription desc)
         {
             ID2D1Image input = Params.Output;
-            TimelineItemSourceDescription timeLineItemSourceDescription
-                = (desc is TachieSourceDescription tachieDesc)
-                ? new(desc, tachieDesc.ItemDuration.Frame, tachieDesc.ItemPosition.Frame, tachieDesc.Layer)
-                : new(desc, desc.TimelineDuration.Frame, desc.TimelineDuration.Frame, 0);
 
             ID2D1Image input2 = input;
 
@@ -110,11 +112,10 @@ namespace SinTachiePlugin.Parts
             drawDescription = new(default, default, new Vector2(1f), default, Matrix4x4.Identity, InterpolationMode.Linear, 1.0, false, []);
 
             Double3 draw = new(), draw2 = new(), rotate = new();
-            Double2 trigon = new();
             Vector2 zoom = new(1f);
             Matrix4x4 camera = Matrix4x4.Identity;
             InterpolationMode zoomInterpolationMode = InterpolationMode.Linear;
-            double scale = 1.0, opacity = 1.0, rotate2, scale2;
+            double scale = 1.0, opacity = 1.0, rotate2, scale2, tmpCos = 0.0, tmpSin = 0.0;
             bool xyzDependent, rotateDependent, scaleDependent, opacityDependent, mirrorDependent, mirror = false,
                 effectXYZDependent, effectRotateDependent, effectZoomDependent, effectOpacityDependent, effectMirrorDependent, effectCameraDependent, effectUnlazyDependent;
 
@@ -129,13 +130,13 @@ namespace SinTachiePlugin.Parts
 
                 if (xyzDependent)
                 {
-                    trigon.X = Math.Cos(rotate2);
-                    trigon.Y = Math.Sin(rotate2);
+                    tmpCos = Math.Cos(rotate2);
+                    tmpSin = Math.Sin(rotate2);
                     draw.X *= (scaleDependent ? scale2 : 1) * (node.Params.Mirror && mirrorDependent ? -1 : 1);
                     draw.Y *= scaleDependent ? scale2 : 1;
                     draw.Z *= scaleDependent ? scale2 : 1;
-                    draw2.X = trigon.X * draw.X + trigon.Y * draw.Y;
-                    draw2.Y = trigon.Y * draw.X + trigon.X * draw.Y;
+                    draw2.X = tmpCos * draw.X - tmpSin * draw.Y;
+                    draw2.Y = tmpSin * draw.X + tmpCos * draw.Y;
                     draw2.Z = draw.Z;
 
                     draw.X = draw2.X + (node.Params.Draw.X + (node.Params.KeepPlace ? node.Params.Center.X : 0.0));
@@ -184,8 +185,8 @@ namespace SinTachiePlugin.Parts
 
                 var chain = tuple.Item2;
 
-                chain.UpdateChain(node.Params.Effects);
-                drawDescription = chain.UpdateOutputAndDescription(input2, timeLineItemSourceDescription, drawDescription);
+                chain.UpdateChain(node.Params.Effects, node.Params.FrameAndLength);
+                drawDescription = chain.UpdateOutputAndDescription(input2, desc, drawDescription);
 
                 if (effectUnlazyDependent)
                 {

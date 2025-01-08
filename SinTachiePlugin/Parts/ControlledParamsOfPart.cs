@@ -34,7 +34,7 @@ namespace SinTachiePlugin.Parts
     /// ユーザがコントローラーで編集できるパラメータをまとめたクラス。
     /// 何か新しくパラメータを追加したり、それらの管理システムを変更したいときは、このクラスを編集すること。
     /// </summary>
-    public partial class ControlledParamsOfPart : SinTachieDialog
+    public class ControlledParamsOfPart : SinTachieDialog
     {
         public bool Appear { get => appear; set => Set(ref appear, value); }
         bool appear = true;

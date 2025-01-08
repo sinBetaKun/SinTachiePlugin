@@ -1,30 +1,8 @@
-﻿using SinTachiePlugin.Informations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO;
 using YukkuriMovieMaker.Commons;
 using UserControl = System.Windows.Controls.UserControl;
-using Path = System.IO.Path;
-using YukkuriMovieMaker.Controls;
-using System.Windows.Forms;
-using Clipboard = System.Windows.Clipboard;
-using Newtonsoft.Json;
-using System.Reflection;
-using System.Windows.Controls.Primitives;
-using Point = System.Windows.Point;
-using System.Reflection.Emit;
 
 namespace SinTachiePlugin.Parts
 {
@@ -91,11 +69,11 @@ namespace SinTachiePlugin.Parts
             }
         }
 
-        private void Scissors_Clicked(object sender, RoutedEventArgs e)
+        private void Cut_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
-                viewModel.ScissorsFunc();
+                viewModel.CutFunc();
             }
         }
 
@@ -129,6 +107,13 @@ namespace SinTachiePlugin.Parts
             {
                 viewModel.RemoveFunc();
             }
+        }
+
+        private void HeightSlider_EndEdit(object sender, EventArgs e)
+        {
+            var vm = DataContext as PartsListControllerViewModel;
+            vm?.SetProperties();
+            EndEdit?.Invoke(this, e);
         }
     }
 }

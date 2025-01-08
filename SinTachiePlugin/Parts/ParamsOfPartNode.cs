@@ -18,6 +18,7 @@ namespace SinTachiePlugin.Parts
         readonly AffineTransform2D transform;
         public LayerNode LayerTree;
         public ID2D1Image Output;
+        public FrameAndLength FrameAndLength;
 
         bool disposedValue = false;
 
@@ -51,8 +52,9 @@ namespace SinTachiePlugin.Parts
         public bool EffectUnlazyDependent { get; set; }
         public ImmutableList<IVideoEffect> Effects { get; set; }
 
-        public ParamsOfPartNode(IGraphicsDevicesAndContext devices, PartBlock block, long length, long frame, int fps, double voiceVolume)
+        public ParamsOfPartNode(IGraphicsDevicesAndContext devices, PartBlock block, int length, int frame, int fps, double voiceVolume)
         {
+            FrameAndLength = new(frame, length);
             Appear = block.Appear;
             BlendMode = block.BlendMode;
             Draw = new(
@@ -105,7 +107,7 @@ namespace SinTachiePlugin.Parts
             disposer.Collect(Output);
         }
 
-        public bool Update(IGraphicsDevicesAndContext devices, PartBlock block, long length, long frame, int fps, double voiceVolume)
+        public bool Update(IGraphicsDevicesAndContext devices, PartBlock block, int length, int frame, int fps, double voiceVolume)
         {
             var appear = block.Appear;
             var blendMode = block.BlendMode;
@@ -197,6 +199,7 @@ namespace SinTachiePlugin.Parts
                 || EffectUnlazyDependent != effectUnlazyDependent
                 || effects.Count > 0 || effects.Count != Effects.Count)
             {
+                FrameAndLength.Update(frame, length);
                 Appear = appear;
                 BlendMode = blendMode;
                 Draw = draw;

@@ -25,6 +25,14 @@ namespace SinTachiePlugin.Parts
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
 
+        public int ListHeight
+        {
+            get => PluginInfo.PartsListHeight;
+            set => Set(ref PluginInfo.PartsListHeight, value);
+        }
+
+        public string Version => PluginInfo.Version;
+
         /// <summary>
         /// パーツブロックのリストの内容
         /// </summary>
@@ -39,7 +47,9 @@ namespace SinTachiePlugin.Parts
             get => selectedPartIndex;
             set
             {
+                if (selectedPartIndex > -1 && selectedPartIndex < Parts.Count) Parts[selectedPartIndex].Selected = false;
                 SomeBlockSelected = value > -1;
+                if (SomeBlockSelected) Parts[value].Selected = true;
                 Set(ref selectedPartIndex, value);
             }
         }
@@ -54,7 +64,7 @@ namespace SinTachiePlugin.Parts
         /// <summary>
         /// 右クリックメニューで「切り取り」を選択したときの処理
         /// </summary>
-        public void ScissorsFunc()
+        public void CutFunc()
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
             CopyFunc();

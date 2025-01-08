@@ -69,11 +69,11 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             }
         }
 
-        private void Scissors_Clicked(object sender, RoutedEventArgs e)
+        private void Cut_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
-                viewModel.ScissorsFunc();
+                viewModel.CutFunc();
             }
         }
 
@@ -112,6 +112,13 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
         private void DirectorySelector_EndEdit(object sender, EventArgs e)
         {
             var vm = DataContext as PartsListControllerForShapeViewModel;
+            vm?.SetProperties();
+            EndEdit?.Invoke(this, e);
+        }
+
+        private void HeightSlider_EndEdit(object sender, EventArgs e)
+        {
+            var vm = DataContext as PartsListControllerViewModel;
             vm?.SetProperties();
             EndEdit?.Invoke(this, e);
         }

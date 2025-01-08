@@ -35,6 +35,9 @@ namespace SinTachiePlugin.Parts
             return Path.Combine(dn, name + "." + PartInfo.Extension);
         }
 
+        [JsonIgnore]
+        public bool Selected { get => selected; set => Set(ref selected, value); }
+        bool selected = false;
         public PartBlock()
         {
 

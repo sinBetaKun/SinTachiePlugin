@@ -9,7 +9,7 @@ namespace SinTachiePlugin.Parts
 {
     internal class SinTachieItemParameter : TachieItemParameterBase
     {
-        [Display(Name = "描画順序", Description = "描画順序")]
+        [Display(Name = "", Description = "描画順序")]
         [PartsListController(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<PartBlock> Parts { get => parts; set => Set(ref parts, value); }
         ImmutableList<PartBlock> parts = [];
