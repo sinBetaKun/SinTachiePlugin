@@ -35,12 +35,12 @@ namespace SinTachiePlugin.LayerValueListController
 
         private void PartsEditor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (e.OldValue is PartsListControllerViewModel oldVm)
+            if (e.OldValue is LayerValueListControllerViewModel oldVm)
             {
                 oldVm.BeginEdit -= PropertiesEditor_BeginEdit;
                 oldVm.EndEdit -= PropertiesEditor_EndEdit;
             }   
-            if (e.NewValue is PartsListControllerViewModel newVm)
+            if (e.NewValue is LayerValueListControllerViewModel newVm)
             {
                 newVm.BeginEdit += PropertiesEditor_BeginEdit;
                 newVm.EndEdit += PropertiesEditor_EndEdit;

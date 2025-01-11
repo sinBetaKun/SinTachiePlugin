@@ -24,6 +24,9 @@ namespace SinTachiePlugin.ShapePludin
         int numOfNodes = -1;
         bool isFirst = true;
         List<PartNode> partNodes = [];
+        List<PartNode> independent = [];
+        List<PartNode> parents = [];
+        List<PartNode> children = [];
 
 
         ID2D1CommandList? commandList;
@@ -47,10 +50,6 @@ namespace SinTachiePlugin.ShapePludin
 
         public void Update(TimelineItemSourceDescription description)
         {
-            var frame = description.ItemPosition.Frame;
-            var length = description.ItemDuration.Frame;
-            var fps = description.FPS;
-
             if (updateValuesOfNodes(description))
             {
                 commandList?.Dispose();
@@ -134,9 +133,9 @@ namespace SinTachiePlugin.ShapePludin
 
         private void UpdateParentPaths()
         {
-            List<PartNode> independent = [];
-            List<PartNode> parents = [];
-            List<PartNode> children = [];
+            independent.Clear();
+            parents.Clear();
+            children.Clear();
 
             foreach (var partNode in partNodes)
             {
@@ -157,7 +156,7 @@ namespace SinTachiePlugin.ShapePludin
 
                     if (matched.Count() > 0)
                     {
-                        children[i].ParentPath = matched.First().ParentPath.Add(matched.First());
+                        children[i].ParentPath = children[i].ParentPath.AddRange(matched.First().ParentPath);
                         parents.Add(children[i]);
                         children.RemoveAt(i);
                     }
