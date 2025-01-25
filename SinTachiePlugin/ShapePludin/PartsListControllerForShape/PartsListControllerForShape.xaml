@@ -64,7 +64,7 @@
                     </Grid.ColumnDefinitions>
                     <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch"
                              ItemsSource="{Binding Parts}" SelectedIndex="{Binding SelectedPartIndex}"
-                             Name="list" ScrollViewer.CanContentScroll="False"  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                             Name="list" ScrollViewer.CanContentScroll="False"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Extended">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <local1:PartBlockUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
@@ -83,6 +83,14 @@
 
                                 <MenuItem Header="複製" IsEnabled="{Binding SomeBlockSelected}" Click="Duplication_Clicked" Icon="{StaticResource Duplicate}"
                                           ToolTip="【複製】&#xa;選択されているパーツをひとつ下に複製します。"/>
+
+                                <Separator />
+
+                                <MenuItem Header="全ブロックにチェック" IsEnabled="{Binding SomeBlockSelected}" Click ="CheckAll_Clicked" Icon="{StaticResource CheckAll}"
+                                          ToolTip="【全ブロックにチェック】"/>
+
+                                <MenuItem Header="選択中のブロックにのみチェック" IsEnabled="{Binding SomeBlockSelected}" Click ="CheckOnlyOne_Clicked" Icon="{StaticResource CheckOutline}"
+                                          ToolTip="【選択中のブロックにのみチェック】"/>
 
                                 <Separator />
 
@@ -138,6 +146,7 @@
         </Border>
 
         <c:PropertiesEditor
+            Name="propertiesEditor"
             Grid.Row="2"
             Target="{Binding ElementName=list,Path=SelectedValue}"
             BeginEdit="PropertiesEditor_BeginEdit" 

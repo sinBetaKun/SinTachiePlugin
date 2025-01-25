@@ -75,6 +75,7 @@ namespace SinTachiePlugin.Parts
             if (!Parts.SequenceEqual(values))
             {
                 Parts = [.. values];
+                Parts.ForEach(x => x.Selected = false);
             }
         }
     }

@@ -98,6 +98,7 @@ namespace SinTachiePlugin.LayerValueListController
                     tmp.source = ImageFileSourceFactory.Create(devices, Path.Combine(dirName, kv.Key));
                     if (tmp.source != null)
                     {
+                        tmp.disposer.Collect(tmp.source);
                         tmp.centeringEffect.SetInput(0, tmp.source.Output, true);
                         tmp.centeringEffect.TransformMatrix = Matrix3x2.CreateTranslation(-tmp.source.Output.Size.Width / 2, -tmp.source.Output.Size.Height / 2);
                         tmp.wasEmpty = false;

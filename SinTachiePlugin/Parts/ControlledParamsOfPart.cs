@@ -129,6 +129,12 @@ namespace SinTachiePlugin.Parts
 
         BlendSTP blendMode = BlendSTP.SourceOver;
 
+        [Display(GroupName = "描画", Name = "Z順描画")]
+        [EnumComboBox]
+        public ZSortMode ZSortMode { get => zSortMode; set { Set(ref zSortMode, value); } }
+
+        ZSortMode zSortMode = ZSortMode.BusScreen;
+
         [Display(GroupName = "値の依存", Name = "X/Y/Z", Description = "X/Y/Z")]
         [ToggleSlider]
         public bool XYZDependent { get => xyzDependent; set => Set(ref xyzDependent, value); }
@@ -233,6 +239,7 @@ namespace SinTachiePlugin.Parts
             Rotate.CopyFrom(original.Rotate);
             Mirror.CopyFrom(original.Mirror);
             BlendMode = original.BlendMode;
+            ZSortMode = original.ZSortMode;
             Cnt_X.CopyFrom(original.Cnt_X);
             Cnt_Y.CopyFrom(original.Cnt_Y);
             KeepPlace = original.KeepPlace;

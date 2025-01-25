@@ -9,7 +9,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
     /// <summary>
     /// PartsListControllerForShape.xaml の相互作用ロジック
     /// </summary>
-    public partial class PartsListControllerForShape : System.Windows.Controls.UserControl, IPropertyEditorControl
+    public partial class PartsListControllerForShape : System.Windows.Controls.UserControl, IPropertyEditorControl2
     {
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
@@ -73,7 +73,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
-                viewModel.CutFunc();
+                viewModel.CutFunc(GetSelecteds());
             }
         }
 
@@ -81,7 +81,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
-                viewModel.CopyFunc();
+                viewModel.CopyFunc(GetSelecteds());
             }
         }
 
@@ -97,7 +97,23 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
-                viewModel.DuplicationFunc();
+                viewModel.DuplicationFunc(GetSelecteds());
+            }
+        }
+
+        private void CheckAll_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerForShapeViewModel viewModel)
+            {
+                viewModel.CheckAll();
+            }
+        }
+
+        private void CheckOnlyOne_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerForShapeViewModel viewModel)
+            {
+                viewModel.CheckOnlyOne();
             }
         }
 
@@ -105,7 +121,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
-                viewModel.RemoveFunc();
+                viewModel.RemoveFunc(GetSelecteds());
             }
         }
 
@@ -121,6 +137,20 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             var vm = DataContext as PartsListControllerViewModel;
             vm?.SetProperties();
             EndEdit?.Invoke(this, e);
+        }
+
+        public void SetEditorInfo(IEditorInfo info)
+        {
+            propertiesEditor.SetEditorInfo(info);
+        }
+
+        private List<PartBlock> GetSelecteds()
+        {
+            List<(PartBlock, int) > selecteds = [];
+            foreach (var selected in list.SelectedItems)
+                if (selected is PartBlock block)
+                    selecteds.Add((block, list.Items.IndexOf(block)));
+            return selecteds.OrderBy(x => x.Item2).Select(x => x.Item1).ToList();
         }
     }
 }

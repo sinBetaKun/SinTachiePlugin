@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Input;
 using YukkuriMovieMaker.Commons;
 using UserControl = System.Windows.Controls.UserControl;
@@ -9,7 +10,7 @@ namespace SinTachiePlugin.Parts
     /// <summary>
     /// PartsListController.xaml の相互作用ロジック
     /// </summary>
-    public partial class PartsListController : UserControl, IPropertyEditorControl
+    public partial class PartsListController : UserControl, IPropertyEditorControl2
     {
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
@@ -61,6 +62,7 @@ namespace SinTachiePlugin.Parts
                 e.Handled = true;
             }
         }
+
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (DataContext is PartsListControllerViewModel viewModel)
@@ -73,7 +75,7 @@ namespace SinTachiePlugin.Parts
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
-                viewModel.CutFunc();
+                viewModel.CutFunc(GetSelecteds());
             }
         }
 
@@ -81,7 +83,7 @@ namespace SinTachiePlugin.Parts
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
-                viewModel.CopyFunc();
+                viewModel.CopyFunc(GetSelecteds());
             }
         }
 
@@ -97,7 +99,23 @@ namespace SinTachiePlugin.Parts
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
-                viewModel.DuplicationFunc();
+                viewModel.DuplicationFunc(GetSelecteds());
+            }
+        }
+
+        private void CheckAll_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.CheckAll();
+            }
+        }
+
+        private void CheckOnlyOne_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.CheckOnlyOne();
             }
         }
 
@@ -105,7 +123,7 @@ namespace SinTachiePlugin.Parts
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
-                viewModel.RemoveFunc();
+                viewModel.RemoveFunc(GetSelecteds());
             }
         }
 
@@ -114,6 +132,20 @@ namespace SinTachiePlugin.Parts
             var vm = DataContext as PartsListControllerViewModel;
             vm?.SetProperties();
             EndEdit?.Invoke(this, e);
+        }
+
+        public void SetEditorInfo(IEditorInfo info)
+        {
+            propertiesEditor.SetEditorInfo(info);
+        }
+
+        private List<PartBlock> GetSelecteds()
+        {
+            List<PartBlock> selecteds = [];
+            foreach (var selected in list.SelectedItems)
+                if (selected is PartBlock block)
+                    selecteds.Add(block);
+            return selecteds;
         }
     }
 }

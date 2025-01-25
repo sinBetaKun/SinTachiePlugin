@@ -11,18 +11,18 @@ namespace SinTachiePlugin.Parts
 {
     public class PartNode : IDisposable
     {
+        readonly public PartBlock block;
         readonly IGraphicsDevicesAndContext devices;
         readonly DisposeCollector disposer = new();
         readonly AffineTransform2D transform;
         readonly Crop cropEffect;
         readonly Transform3D renderEffect;
         readonly Opacity opacityEffect;
-        public ID2D1Image? Output;
+        readonly FrameAndLength lastFL = new();
         readonly ID2D1Image renderOutput;
+        public ID2D1Image? Output;
         bool disposedValue = false;
         List<(PartNode, VideoEffectChainNode)> NodesAndChains = [];
-        int lastFrame;
-        int lastLength;
         DrawDescription drawDescription = new(
             default, default, new Vector2(1f, 1f), default,
             Matrix4x4.Identity, InterpolationMode.Linear, 1.0, false, []);
@@ -33,12 +33,16 @@ namespace SinTachiePlugin.Parts
         public string Parent => Params.Parent;
         public bool Appear => Params.Appear;
         public BlendSTP BlendMode => Params.BlendMode;
+        public ZSortMode ZSortMode => Params.ZSortMode;
+        public int BusNum => Params.BusNum;
+        public float M43;
 
         public ImmutableList<PartNode> ParentPath { get; set; } = [];
 
-        public PartNode(IGraphicsDevicesAndContext devices, PartBlock block, int length, int frame, int fps, double voiceVolume)
+        public PartNode(IGraphicsDevicesAndContext devices, PartBlock block, FrameAndLength FL, int fps, double voiceVolume)
         {
             this.devices = devices;
+            this.block = block;
             transform = new AffineTransform2D(devices.DeviceContext);
             disposer.Collect(transform);
 
@@ -66,7 +70,7 @@ namespace SinTachiePlugin.Parts
             Output = opacityEffect.Output;
             disposer.Collect(Output);
 
-            Params = new(devices, block, length, frame, fps, voiceVolume);
+            Params = new(devices, block, FL, fps, voiceVolume);
             disposer.Collect(Params);
         }
 
@@ -89,17 +93,16 @@ namespace SinTachiePlugin.Parts
             foreach (var node in ParentPath)
             {
                 int index = keeped.IndexOf(node);
-                newNodesAndChains.Add(index < 0 ? (node, new VideoEffectChainNode(devices, node.Params.Effects, node.lastFrame, node.lastLength)) : NodesAndChains[index]);
+                newNodesAndChains.Add(index < 0 ? (node, new VideoEffectChainNode(devices, node.Params.Effects, node.lastFL)) : NodesAndChains[index]);
             }
 
             NodesAndChains = newNodesAndChains;
         }
 
-        public bool UpdateParams(PartBlock part, int length, int frame, int fps, double voiceVolume)
+        public bool UpdateParams(FrameAndLength fl, int fps, double voiceVolume)
         {
-            lastFrame = frame;
-            lastLength = length;
-            return Params.Update(devices, part, length, frame, fps, voiceVolume);
+            lastFL.CopyFrom(fl);
+            return Params.Update(devices, block, fl, fps, voiceVolume);
         }
 
         public void UpdateOutput(TimelineSourceDescription desc)
@@ -112,10 +115,11 @@ namespace SinTachiePlugin.Parts
             drawDescription = new(default, default, new Vector2(1f), default, Matrix4x4.Identity, InterpolationMode.Linear, 1.0, false, []);
 
             Double3 draw = new(), draw2 = new(), rotate = new();
+            (double cos, double sin) Trig = new();
             Vector2 zoom = new(1f);
             Matrix4x4 camera = Matrix4x4.Identity;
             InterpolationMode zoomInterpolationMode = InterpolationMode.Linear;
-            double scale = 1.0, opacity = 1.0, rotate2, scale2, tmpCos = 0.0, tmpSin = 0.0;
+            double scale = 1.0, opacity = 1.0, rotate2, scale2;
             bool xyzDependent, rotateDependent, scaleDependent, opacityDependent, mirrorDependent, mirror = false,
                 effectXYZDependent, effectRotateDependent, effectZoomDependent, effectOpacityDependent, effectMirrorDependent, effectCameraDependent, effectUnlazyDependent;
 
@@ -130,13 +134,13 @@ namespace SinTachiePlugin.Parts
 
                 if (xyzDependent)
                 {
-                    tmpCos = Math.Cos(rotate2);
-                    tmpSin = Math.Sin(rotate2);
+                    Trig.cos = Math.Cos(rotate2);
+                    Trig.sin = Math.Sin(rotate2);
                     draw.X *= (scaleDependent ? scale2 : 1) * (node.Params.Mirror && mirrorDependent ? -1 : 1);
                     draw.Y *= scaleDependent ? scale2 : 1;
                     draw.Z *= scaleDependent ? scale2 : 1;
-                    draw2.X = tmpCos * draw.X - tmpSin * draw.Y;
-                    draw2.Y = tmpSin * draw.X + tmpCos * draw.Y;
+                    draw2.X = Trig.cos * draw.X - Trig.sin * draw.Y;
+                    draw2.Y = Trig.sin * draw.X + Trig.cos * draw.Y;
                     draw2.Z = draw.Z;
 
                     draw.X = draw2.X + (node.Params.Draw.X + (node.Params.KeepPlace ? node.Params.Center.X : 0.0));
@@ -256,6 +260,7 @@ namespace SinTachiePlugin.Parts
 
             Apply(devices.DeviceContext);
             opacityEffect.Value = (float)drawDescription.Opacity;
+            M43 = renderEffect.TransformMatrix.M43;
         }
 
         void ClearEffectChain()

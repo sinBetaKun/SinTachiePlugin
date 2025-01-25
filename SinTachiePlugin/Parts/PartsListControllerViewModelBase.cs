@@ -16,14 +16,16 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SinTachiePlugin.Parts
 {
-    public abstract class PartsListControllerViewModelBase : Bindable, INotifyPropertyChanged, IPropertyEditorControl, IDisposable
+    public abstract class PartsListControllerViewModelBase : Bindable, INotifyPropertyChanged, IPropertyEditorControl2, IDisposable
     {
         readonly INotifyPropertyChanged item;
         protected readonly ItemProperty[] properties;
-        static PartBlock? clipedBlock = null;
+        static IList<PartBlock> clipedBlocks = [];
 
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
+
+        protected IEditorInfo editorInfo;
 
         public int ListHeight
         {
@@ -64,20 +66,20 @@ namespace SinTachiePlugin.Parts
         /// <summary>
         /// 右クリックメニューで「切り取り」を選択したときの処理
         /// </summary>
-        public void CutFunc()
+        public void CutFunc(IEnumerable<PartBlock> selecteds)
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            CopyFunc();
-            RemovePartBlock();
+            CopyFunc(selecteds);
+            RemovePartBlock(selecteds);
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
         /// 右クリックメニューで「コピー」を選択したときの処理
         /// </summary>
-        public void CopyFunc()
+        public void CopyFunc(IEnumerable<PartBlock> selecteds)
         {
-            clipedBlock = new(Parts[SelectedPartIndex]);
+            clipedBlocks = selecteds.Select(x => new PartBlock(x)).ToList();
         }
 
         /// <summary>
@@ -91,7 +93,7 @@ namespace SinTachiePlugin.Parts
         /// </summary>
         public void PasteFunc()
         {
-            if (clipedBlock == null)
+            if (clipedBlocks == null)
             {
                 string className = GetType().Name;
                 string? mthName = MethodBase.GetCurrentMethod()?.Name;
@@ -104,12 +106,12 @@ namespace SinTachiePlugin.Parts
             BeginEdit?.Invoke(this, EventArgs.Empty);
             if (tmpSelectedIndex < 0)
             {
-                Parts = Parts.Add(new PartBlock(clipedBlock));
+                Parts = Parts.AddRange(clipedBlocks.Select(x => new PartBlock(x)));
                 tmpSelectedIndex = Parts.Count - 1;
             }
             else
             {
-                Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(clipedBlock));
+                Parts = Parts.InsertRange(tmpSelectedIndex, clipedBlocks.Select(x => new PartBlock(x)));
             }
             SetProperties();
             SelectedPartIndex = tmpSelectedIndex;
@@ -120,12 +122,11 @@ namespace SinTachiePlugin.Parts
         /// <summary>
         /// 右クリックメニューで「複製」を選択したときの処理
         /// </summary>
-        public void DuplicationFunc()
+        public void DuplicationFunc(IEnumerable<PartBlock> selecteds)
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
             var tmpSelectedIndex = SelectedPartIndex;
-            var copied = new PartBlock(Parts[SelectedPartIndex]);
-            Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(copied));
+            Parts = Parts.InsertRange(tmpSelectedIndex, selecteds.Select(x => new PartBlock(x)));
             SetProperties();
             SelectedPartIndex = tmpSelectedIndex + 1;
             EndEdit?.Invoke(this, EventArgs.Empty);
@@ -134,10 +135,31 @@ namespace SinTachiePlugin.Parts
         /// <summary>
         /// 右クリックメニューで「削除」を選択したときの処理
         /// </summary>
-        public void RemoveFunc()
+        public void RemoveFunc(IEnumerable<PartBlock> selecteds)
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            RemovePartBlock();
+            RemovePartBlock(selecteds);
+            EndEdit?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 右クリックメニューで「全ブロックにチェック」を選択したときの処理
+        /// </summary>
+        public void CheckAll()
+        {
+            BeginEdit?.Invoke(this, EventArgs.Empty);
+            Parts.ForEach(i => i.Appear = true);
+            EndEdit?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 右クリックメニューで「選択中のブロックにのみチェック」を選択したときの処理
+        /// </summary>
+        public void CheckOnlyOne()
+        {
+            BeginEdit?.Invoke(this, EventArgs.Empty);
+            Parts.ForEach(i => i.Appear = false);
+            Parts[SelectedPartIndex].Appear = true;
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
@@ -149,7 +171,7 @@ namespace SinTachiePlugin.Parts
             get => contextMeneIsOpen;
             set
             {
-                PasteEnable = clipedBlock != null;
+                PasteEnable = clipedBlocks.Count > 0;
                 Set(ref contextMeneIsOpen, value);
             }
         }
@@ -417,6 +439,15 @@ namespace SinTachiePlugin.Parts
             else SelectedPartIndex = -1;
         }
 
+        private void RemovePartBlock(IEnumerable<PartBlock> selecteds)
+        {
+            var tmpSelectedIndex = SelectedPartIndex;
+            Parts = Parts.RemoveRange(selecteds);
+            SetProperties();
+            if (Parts.Count > 0) SelectedPartIndex = Math.Min(tmpSelectedIndex, Parts.Count - 1);
+            else SelectedPartIndex = -1;
+        }
+
         public abstract void SetProperties();
 
         private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -441,6 +472,11 @@ namespace SinTachiePlugin.Parts
         public void Dispose()
         {
             item.PropertyChanged -= Item_PropertyChanged;
+        }
+
+        public void SetEditorInfo(IEditorInfo info)
+        {
+            editorInfo = info;
         }
     }
 }

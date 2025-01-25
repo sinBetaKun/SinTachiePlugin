@@ -3,6 +3,7 @@ using SinTachiePlugin.LayerValueListController;
 using SinTachiePlugin.Parts.LayerValueListController;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Windows.Documents;
 using Vortice.Direct2D1;
 using Vortice.Direct2D1.Effects;
 using Vortice.Mathematics;
@@ -24,6 +25,8 @@ namespace SinTachiePlugin.Parts
 
         public bool Appear { get; set; }
         public BlendSTP BlendMode { get; set; }
+        public ZSortMode ZSortMode { get; set; }
+        public int BusNum { get; set; }
         public string TagName { get; set; } = string.Empty;
         public string Parent { get; set; } = string.Empty;
         public string ImagePath { get; set; } = string.Empty;
@@ -52,35 +55,27 @@ namespace SinTachiePlugin.Parts
         public bool EffectUnlazyDependent { get; set; }
         public ImmutableList<IVideoEffect> Effects { get; set; }
 
-        public ParamsOfPartNode(IGraphicsDevicesAndContext devices, PartBlock block, int length, int frame, int fps, double voiceVolume)
+        public ParamsOfPartNode(IGraphicsDevicesAndContext devices, PartBlock block, FrameAndLength fl, int fps, double voiceVolume)
         {
-            FrameAndLength = new(frame, length);
+            FrameAndLength = new(fl);
             Appear = block.Appear;
             BlendMode = block.BlendMode;
-            Draw = new(
-                block.X.GetValue(frame, length, fps),
-                block.Y.GetValue(frame, length, fps),
-                block.Z.GetValue(frame, length, fps)
-                );
-            Opacity = block.Opacity.GetValue(frame, length, fps);
-            Scale = block.Scale.GetValue(frame, length, fps);
-            Rotate = block.Rotate.GetValue(frame, length, fps);
-            Mirror = block.Mirror.GetValue(frame, length, fps) > 0.5;
-            Center = new(
-                block.Cnt_X.GetValue(frame, length, fps),
-                block.Cnt_Y.GetValue(frame, length, fps)
-                );
+            ZSortMode = block.ZSortMode;
+            BusNum = (int)fl.GetValue(block.BusNum, fps);
+            Draw = fl.GetDouble3(block.X, block.Y, block.Z, fps);
+            Opacity = fl.GetValue(block.Opacity, fps);
+            Scale = fl.GetValue(block.Scale, fps);
+            Rotate = fl.GetValue(block.Rotate, fps);
+            Mirror = fl.GetValue(block.Mirror, fps) > 0.5;
+            Center = fl.GetDouble2(block.Cnt_X, block.Cnt_Y, fps);
             KeepPlace = block.KeepPlace;
-            ExpXY = new(
-                block.Exp_X.GetValue(frame, length, fps),
-                block.Exp_Y.GetValue(frame, length, fps)
-                );
+            ExpXY = fl.GetDouble2(block.Exp_X, block.Exp_Y, fps);
             TagName = block.TagName;
             Parent = block.Parent;
             ImagePath = block.ImagePath;
             LayerAnimationModes = block.LayerValues.Select(part => part.AnimationMode).ToList();
             OuterLayerValueModes = block.LayerValues.Select(part => part.OuterMode).ToList();
-            LayerValues = block.LayerValues.Select(x => x.GetValue(length, frame, fps, voiceVolume)).ToList();
+            LayerValues = block.LayerValues.Select(x => x.GetValue(fl, fps, voiceVolume)).ToList();
             XYZDependent = block.XYZDependent;
             ScaleDependent = block.ScaleDependent;
             OpacityDependent = block.OpacityDependent;
@@ -107,34 +102,26 @@ namespace SinTachiePlugin.Parts
             disposer.Collect(Output);
         }
 
-        public bool Update(IGraphicsDevicesAndContext devices, PartBlock block, int length, int frame, int fps, double voiceVolume)
+        public bool Update(IGraphicsDevicesAndContext devices, PartBlock block, FrameAndLength fl, int fps, double voiceVolume)
         {
             var appear = block.Appear;
             var blendMode = block.BlendMode;
+            var zSortMode = block.ZSortMode;
+            var busNum = (int)block.BusNum.GetValue(fl.Frame, fl.Length, fps);
             var tagName = block.TagName;
             var imagePath = block.ImagePath;
             var layerAnimationModes = block.LayerValues.Select(part => part.AnimationMode).ToList();
             var outerLayerValueModes = block.LayerValues.Select(part => part.OuterMode).ToList();
-            var layerValues = block.LayerValues.Select(x => x.GetValue(length, frame, fps, voiceVolume)).ToList();
+            var layerValues = block.LayerValues.Select(x => x.GetValue(fl, fps, voiceVolume)).ToList();
             var parent = block.Parent;
-            var draw = new Double3(
-                block.X.GetValue(frame, length, fps),
-                block.Y.GetValue(frame, length, fps),
-                block.Z.GetValue(frame, length, fps)
-                );
-            var opacity = block.Opacity.GetValue(frame, length, fps);
-            var scale = block.Scale.GetValue(frame, length, fps);
-            var rotate = block.Rotate.GetValue(frame, length, fps);
-            var mirror = block.Mirror.GetValue(frame, length, fps) > 0.5;
-            var center = new Double2(
-                block.Cnt_X.GetValue(frame, length, fps),
-                block.Cnt_Y.GetValue(frame, length, fps)
-                );
+            var draw = fl.GetDouble3(block.X, block.Y, block.Z, fps);
+            var opacity = fl.GetValue(block.Opacity, fps);
+            var scale = fl.GetValue(block.Scale, fps);
+            var rotate = fl.GetValue(block.Rotate, fps);
+            var mirror = fl.GetValue(block.Mirror, fps) > 0.5;
+            var center = fl.GetDouble2(block.Cnt_X, block.Cnt_Y, fps);
             var keepPlace = block.KeepPlace;
-            var expXY = new Double2(
-                block.Exp_X.GetValue(frame, length, fps),
-                block.Exp_Y.GetValue(frame, length, fps)
-                );
+            var expXY = fl.GetDouble2(block.Exp_X, block.Exp_Y, fps);
             var xyzDependent = block.XYZDependent;
             var scaleDependent = block.ScaleDependent;
             var opacityDependent = block.OpacityDependent;
@@ -160,8 +147,10 @@ namespace SinTachiePlugin.Parts
                 OuterLayerValueModes = outerLayerValueModes;
                 LayerValues = layerValues;
                 transform.SetInput(0, null, true);
-                LayerTree.Dispose();
+                disposer.RemoveAndDispose(ref LayerTree);
+                //LayerTree.Dispose();
                 LayerTree = new LayerNode(ImagePath, devices);
+                disposer.Collect(LayerTree);
                 transform.SetInput(0, LayerTree.GetSource(LayerValues, OuterLayerValueModes), true);
             }
             else
@@ -188,7 +177,7 @@ namespace SinTachiePlugin.Parts
                 }
             }
 
-            if (Appear != appear || BlendMode != blendMode || Draw != draw || Scale != scale || Opacity != opacity || Rotate != rotate || Mirror != mirror
+            if (Appear != appear || BlendMode != blendMode || ZSortMode != zSortMode || BusNum != busNum || Draw != draw || Scale != scale || Opacity != opacity || Rotate != rotate || Mirror != mirror
                 || Center != center || KeepPlace != keepPlace || ExpXY != expXY || TagName != tagName || Parent != parent
 
                 || XYZDependent != xyzDependent || ScaleDependent != scaleDependent || OpacityDependent != opacityDependent
@@ -199,9 +188,11 @@ namespace SinTachiePlugin.Parts
                 || EffectUnlazyDependent != effectUnlazyDependent
                 || effects.Count > 0 || effects.Count != Effects.Count)
             {
-                FrameAndLength.Update(frame, length);
+                FrameAndLength.CopyFrom(fl);
                 Appear = appear;
                 BlendMode = blendMode;
+                ZSortMode = zSortMode;
+                BusNum = busNum;
                 Draw = draw;
                 Opacity = opacity;
                 Scale = scale;

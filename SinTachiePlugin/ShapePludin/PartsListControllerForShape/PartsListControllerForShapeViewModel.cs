@@ -36,6 +36,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             if (!Parts.SequenceEqual(values.Parts))
             {
                 Parts = [.. values.Parts];
+                Parts.ForEach(x => x.Selected = false);
             }
             Root = values.Root;
         }

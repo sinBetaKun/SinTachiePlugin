@@ -38,9 +38,9 @@ namespace SinTachiePlugin.Parts
         [JsonIgnore]
         public bool Selected { get => selected; set => Set(ref selected, value); }
         bool selected = false;
+
         public PartBlock()
         {
-
         }
 
         public PartBlock(string fp, string tag, string[] aborigines)

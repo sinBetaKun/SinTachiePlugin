@@ -2,6 +2,7 @@
 using SinTachiePlugin.Informations;
 using SinTachiePlugin.LayerValueListController.Extra;
 using SinTachiePlugin.LayerValueListController.Extra.Parameter;
+using SinTachiePlugin.Parts;
 using SinTachiePlugin.Parts.LayerValueListController;
 using System;
 using System.Collections.Generic;
@@ -64,14 +65,14 @@ namespace SinTachiePlugin.LayerValueListController
             Comment = block.Comment;
         }
 
-        public double GetValue(long len, long frame, int fps, double voiceVolume)
+        public double GetValue(FrameAndLength fl, int fps, double voiceVolume)
         {
-            double cerrar = Cerrar.GetValue(frame, len, fps);
-            double abrir = Abrir.GetValue(frame, len, fps);
+            double cerrar = Cerrar.GetValue(fl.Frame, fl.Length, fps);
+            double abrir = Abrir.GetValue(fl.Frame, fl.Length, fps);
             double num;
             string clsName = GetType().Name;
             string? mthName = MethodBase.GetCurrentMethod()?.Name;
-            double extraValue = Extra.GetValue(frame, len, fps);
+            double extraValue = Extra.GetValue(fl.Frame, fl.Length, fps);
             switch (AnimationMode)
             {
                 case LayerAnimationMode.CerrarPlusAbrir:
