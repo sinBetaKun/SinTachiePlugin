@@ -22,7 +22,7 @@ namespace SinTachiePlugin.Parts
         readonly ID2D1Image renderOutput;
         public ID2D1Image? Output;
         bool disposedValue = false;
-        List<(PartNode, VideoEffectChainNode)> NodesAndChains = [];
+        List<(PartNode node, VideoEffectChainNode chain)> NodesAndChains = [];
         DrawDescription drawDescription = new(
             default, default, new Vector2(1f, 1f), default,
             Matrix4x4.Identity, InterpolationMode.Linear, 1.0, false, []);
@@ -77,18 +77,18 @@ namespace SinTachiePlugin.Parts
         void Update_NodesAndChain()
         {
             var disposedIndex = from i in from tuple in NodesAndChains
-                                          where ParentPath.IndexOf(tuple.Item1) < 0
+                                          where ParentPath.IndexOf(tuple.node) < 0
                                           select NodesAndChains.IndexOf(tuple)
                                 orderby i descending
                                 select i;
             foreach (int index in disposedIndex)
             {
                 var e_ep = NodesAndChains[index];
-                e_ep.Item2.Dispose();
+                e_ep.chain.Dispose();
                 NodesAndChains.RemoveAt(index);
             }
 
-            List<PartNode> keeped = NodesAndChains.Select((e_ep) => e_ep.Item1).ToList();
+            List<PartNode> keeped = NodesAndChains.Select((e_ep) => e_ep.node).ToList();
             List<(PartNode, VideoEffectChainNode)> newNodesAndChains = new(ParentPath.Count);
             foreach (var node in ParentPath)
             {
@@ -128,7 +128,7 @@ namespace SinTachiePlugin.Parts
                 = true;
             foreach (var tuple in NodesAndChains)
             {
-                var node = tuple.Item1;
+                var node = tuple.node;
                 rotate2 = node.Params.Rotate * Math.PI / 180.0;
                 scale2 = node.Params.Scale / 100.0;
 
@@ -187,7 +187,7 @@ namespace SinTachiePlugin.Parts
                     []
                     );
 
-                var chain = tuple.Item2;
+                var chain = tuple.chain;
 
                 chain.UpdateChain(node.Params.Effects, node.Params.FrameAndLength);
                 drawDescription = chain.UpdateOutputAndDescription(input2, desc, drawDescription);
@@ -275,7 +275,7 @@ namespace SinTachiePlugin.Parts
         {
             if (!disposedValue)
             {
-                NodesAndChains.ForEach(tuple => tuple.Item2.Dispose());
+                NodesAndChains.ForEach(tuple => tuple.chain.Dispose());
                 ClearEffectChain();
                 disposer.Dispose();
                 GC.SuppressFinalize(this);

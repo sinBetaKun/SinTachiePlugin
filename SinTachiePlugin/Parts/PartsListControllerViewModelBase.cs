@@ -25,7 +25,7 @@ namespace SinTachiePlugin.Parts
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
 
-        protected IEditorInfo editorInfo;
+        //protected IEditorInfo editorInfo;
 
         public int ListHeight
         {
@@ -476,7 +476,7 @@ namespace SinTachiePlugin.Parts
 
         public void SetEditorInfo(IEditorInfo info)
         {
-            editorInfo = info;
+            //editorInfo = info;
         }
     }
 }
