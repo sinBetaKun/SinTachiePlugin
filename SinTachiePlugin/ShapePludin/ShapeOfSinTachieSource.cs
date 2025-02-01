@@ -1,13 +1,5 @@
-﻿using SinTachiePlugin.Enums;
-using SinTachiePlugin.Parts;
+﻿using SinTachiePlugin.Parts;
 using SinTachiePlugin.TachiePlugin;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Player.Video;

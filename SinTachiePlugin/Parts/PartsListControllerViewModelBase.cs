@@ -1,18 +1,9 @@
-﻿using Newtonsoft.Json;
-using SinTachiePlugin.Informations;
-using System;
-using System.Collections.Generic;
+﻿using SinTachiePlugin.Informations;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Net.Sockets;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using YukkuriMovieMaker.Commons;
-using YukkuriMovieMaker.Settings;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SinTachiePlugin.Parts
 {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Windows.Controls;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Controls;
 using YukkuriMovieMaker.Plugin.Tachie;
 

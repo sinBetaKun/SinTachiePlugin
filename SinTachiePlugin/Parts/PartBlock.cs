@@ -1,17 +1,7 @@
 ﻿using Newtonsoft.Json;
-using SinTachiePlugin.Informations;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.Intrinsics.Arm;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Shapes;
-using Vortice.Direct2D1;
-using YukkuriMovieMaker.Commons;
 using Path = System.IO.Path;
 
 namespace SinTachiePlugin.Parts

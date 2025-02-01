@@ -3,7 +3,6 @@ using SinTachiePlugin.Informations;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
-using System.Windows;
 using Vortice.Direct2D1;
 using Vortice.Direct2D1.Effects;
 using YukkuriMovieMaker.Commons;

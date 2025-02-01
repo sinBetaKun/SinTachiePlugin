@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vortice.Mathematics;
+﻿using Vortice.Mathematics;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Player.Video;
 
@@ -17,7 +12,7 @@ namespace SinTachiePlugin.Parts
         public FrameAndLength()
         {
         }
-
+        
         public FrameAndLength(TimelineItemSourceDescription description)
         {
             Frame = description.ItemPosition.Frame;

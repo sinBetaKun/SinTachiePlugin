@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vortice.Direct2D1.Effects;
+﻿using Vortice.Direct2D1.Effects;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Player.Video;
 using YukkuriMovieMaker.Plugin.Effects;
-using System.Windows.Controls;
 
 namespace SinTachiePlugin.Parts
 {

@@ -2,14 +2,11 @@
 using SinTachiePlugin.LayerValueListController;
 using SinTachiePlugin.Parts.LayerValueListController;
 using System.Collections.Immutable;
-using System.Numerics;
-using System.Windows.Documents;
 using Vortice.Direct2D1;
 using Vortice.Direct2D1.Effects;
 using Vortice.Mathematics;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Plugin.Effects;
-using Size = System.Drawing.Size;
 
 namespace SinTachiePlugin.Parts
 {

@@ -1,12 +1,6 @@
 ﻿using SinTachiePlugin.LayerValueListController.Extra;
 using SinTachiePlugin.LayerValueListController.Extra.Parameter;
 using SinTachiePlugin.Parts.LayerValueListController;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YukkuriMovieMaker.Plugin.Community.Effect.Video.ZoomPixel.Size;
 
 namespace SinTachiePlugin.LayerValueListController
 {

@@ -1,5 +1,4 @@
-﻿using SinTachiePlugin.Parts;
-using SinTachiePlugin.Parts.Controller;
+﻿using SinTachiePlugin.Parts.Controller;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;

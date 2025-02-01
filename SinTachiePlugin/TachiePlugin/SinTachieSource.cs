@@ -2,17 +2,7 @@ using Vortice.Direct2D1.Effects;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Plugin.Tachie;
-using SinTachiePlugin.Enums;
-using System.Windows.Controls;
-using System.Collections.Generic;
-using SinTachiePlugin.Informations;
 using YukkuriMovieMaker.Player.Video;
-using System.Reflection.PortableExecutable;
-using FrameTime = YukkuriMovieMaker.Commons.FrameTime;
-using Windows.Win32.UI.Input.KeyboardAndMouse;
-using System.Windows.Documents;
-using System;
-using System.Xml.Linq;
 using SinTachiePlugin.TachiePlugin;
 
 namespace SinTachiePlugin.Parts

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SinTachiePlugin.Informations
+﻿namespace SinTachiePlugin.Informations
 {
     /// <summary>
     /// このプラグインそのものの情報を記載したクラス

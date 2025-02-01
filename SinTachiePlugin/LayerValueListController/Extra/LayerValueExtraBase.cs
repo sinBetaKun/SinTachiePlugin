@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YukkuriMovieMaker.Commons;
-using YukkuriMovieMaker.Project;
+﻿using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.LayerValueListController.Extra
 {
