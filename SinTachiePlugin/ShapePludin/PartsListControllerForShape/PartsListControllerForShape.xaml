@@ -129,7 +129,7 @@
                                         Content="{StaticResource Reload}" ToolTip="【パーツデフォルト設定のリロード】&#xa;選択されているパーツが指定している画像ファイルに対応するデフォルトパラメータ情報を読み取り、現在の全パラメータを自動編集します。"/>
                             </StackPanel>
                         </StackPanel>
-                        <Popup IsOpen="{Binding PartsPopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" >
+                        <Popup IsOpen="{Binding PartsPopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" ToolTip="">
                             <ScrollViewer MaxHeight="300" MinWidth="100" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                                 <TreeView Panel.ZIndex="100" ItemsSource ="{Binding PartNameTree}" SelectedItemChanged="TreeView_SelectedItemChanged">
                                     <TreeView.ItemTemplate>
