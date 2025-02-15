@@ -15,10 +15,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	</ItemGroup>
-
-	<ItemGroup>
+	  <Reference Include="Newtonsoft.Json">
+	    <HintPath>$(YMM4DirPath)Newtonsoft.Json.dll</HintPath>
+	  </Reference>
 	  <Reference Include="SharpGen.Runtime">
 	    <HintPath>$(YMM4DirPath)SharpGen.Runtime.dll</HintPath>
 	  </Reference>
