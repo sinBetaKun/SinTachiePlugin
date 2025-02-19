@@ -82,7 +82,7 @@ namespace SinTachiePlugin.Parts
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
-                viewModel.CopyFunc(GetSelecteds());
+                PartsListControllerViewModelBase.CopyFunc(GetSelecteds());
             }
         }
 
@@ -138,7 +138,7 @@ namespace SinTachiePlugin.Parts
             propertiesEditor.SetEditorInfo(info);
         }
 
-        private List<PartBlock> GetSelecteds()
+        public List<PartBlock> GetSelecteds()
         {
             List<PartBlock> selecteds = [];
             foreach (var selected in list.SelectedItems)

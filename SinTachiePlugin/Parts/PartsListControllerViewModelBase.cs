@@ -1,7 +1,9 @@
-﻿using SinTachiePlugin.Informations;
+﻿using Newtonsoft.Json;
+using SinTachiePlugin.Informations;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using YukkuriMovieMaker.Commons;
 
@@ -11,12 +13,10 @@ namespace SinTachiePlugin.Parts
     {
         readonly INotifyPropertyChanged item;
         protected readonly ItemProperty[] properties;
-        static IList<PartBlock> clipedBlocks = [];
+        static string clipedBlocks = "";
 
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
-
-        //protected IEditorInfo editorInfo;
 
         public int ListHeight
         {
@@ -68,9 +68,9 @@ namespace SinTachiePlugin.Parts
         /// <summary>
         /// 右クリックメニューで「コピー」を選択したときの処理
         /// </summary>
-        public void CopyFunc(IEnumerable<PartBlock> selecteds)
+        public static void CopyFunc(IEnumerable<PartBlock> selecteds)
         {
-            clipedBlocks = selecteds.Select(x => new PartBlock(x)).ToList();
+            clipedBlocks = ConvertBlocks2Json(selecteds);
         }
 
         /// <summary>
@@ -95,18 +95,20 @@ namespace SinTachiePlugin.Parts
 
             var tmpSelectedIndex = SelectedPartIndex;
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            if (tmpSelectedIndex < 0)
+            if (GetBlocksFromJson(clipedBlocks) is PartBlock[] parts)
             {
-                Parts = Parts.AddRange(clipedBlocks.Select(x => new PartBlock(x)));
-                tmpSelectedIndex = Parts.Count - 1;
+                if (tmpSelectedIndex < 0)
+                {
+                    Parts = Parts.AddRange(parts);
+                    tmpSelectedIndex = Parts.Count - 1;
+                }
+                else
+                {
+                    Parts = Parts.InsertRange(tmpSelectedIndex, parts);
+                }
+                SetProperties();
+                SelectedPartIndex = tmpSelectedIndex;
             }
-            else
-            {
-                Parts = Parts.InsertRange(tmpSelectedIndex, clipedBlocks.Select(x => new PartBlock(x)));
-            }
-            SetProperties();
-            SelectedPartIndex = tmpSelectedIndex;
-
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
@@ -117,9 +119,13 @@ namespace SinTachiePlugin.Parts
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
             var tmpSelectedIndex = SelectedPartIndex;
-            Parts = Parts.InsertRange(tmpSelectedIndex, selecteds.Select(x => new PartBlock(x)));
-            SetProperties();
-            SelectedPartIndex = tmpSelectedIndex + 1;
+            var jsonOfSelecteds = ConvertBlocks2Json(selecteds);
+            if (GetBlocksFromJson(jsonOfSelecteds) is PartBlock[] parts)
+            {
+                Parts = Parts.InsertRange(tmpSelectedIndex, parts);
+                SetProperties();
+                SelectedPartIndex = tmpSelectedIndex + 1;
+            }
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
@@ -155,6 +161,29 @@ namespace SinTachiePlugin.Parts
         }
 
         /// <summary>
+        /// JSONデータからPartBlock[]を取得するメソッド
+        /// </summary>
+        /// <returns></returns>
+        private PartBlock[]? GetBlocksFromJson(string json)
+        {
+            if (JsonConvert.DeserializeObject<PartBlock[]>(json, PartBlock.GetJsonSetting) is PartBlock[] parts)
+            {
+                return parts;
+            }
+            else
+            {
+                string message = $"JSONデータからパーツブロック配列を取得できませんでした。";
+                string clsName = GetType().Name;
+                string? mthName = MethodBase.GetCurrentMethod()?.Name;
+                SinTachieDialog.ShowError(message, clsName, mthName);
+                return null;
+            }
+        }
+
+        private static string ConvertBlocks2Json(IEnumerable<PartBlock> blocks) =>
+            JsonConvert.SerializeObject(blocks, Formatting.Indented, PartBlock.GetJsonSetting);
+
+        /// <summary>
         /// 右クリックメニューが開かれている状態か否か
         /// </summary>
         public bool ContextMenuIsOpen
@@ -162,7 +191,7 @@ namespace SinTachiePlugin.Parts
             get => contextMeneIsOpen;
             set
             {
-                PasteEnable = clipedBlocks.Count > 0;
+                PasteEnable = JsonConvert.DeserializeObject<PartBlock[]>(clipedBlocks, PartBlock.GetJsonSetting) is not null;
                 Set(ref contextMeneIsOpen, value);
             }
         }
@@ -467,7 +496,6 @@ namespace SinTachiePlugin.Parts
 
         public void SetEditorInfo(IEditorInfo info)
         {
-            //editorInfo = info;
         }
     }
 }

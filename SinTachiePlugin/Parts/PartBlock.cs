@@ -6,7 +6,7 @@ using Path = System.IO.Path;
 
 namespace SinTachiePlugin.Parts
 {
-    public partial class PartBlock : ControlledParamsOfPart
+    public class PartBlock : ControlledParamsOfPart
     {
         static string? MakeStpiPath(string path)
         {

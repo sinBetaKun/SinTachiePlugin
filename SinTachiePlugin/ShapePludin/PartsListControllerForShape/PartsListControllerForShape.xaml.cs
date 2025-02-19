@@ -81,7 +81,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
-                viewModel.CopyFunc(GetSelecteds());
+                PartsListControllerViewModelBase.CopyFunc(GetSelecteds());
             }
         }
 
