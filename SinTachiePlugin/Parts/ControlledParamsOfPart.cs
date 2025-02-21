@@ -122,15 +122,15 @@ namespace SinTachiePlugin.Parts
         public bool XYZDependent { get => xyzDependent; set => Set(ref xyzDependent, value); }
         bool xyzDependent = true;
 
-        [Display(GroupName = "値の依存", Name = "拡大率", Description = "拡大率")]
-        [ToggleSlider]
-        public bool ScaleDependent { get => scaleDependent; set => Set(ref scaleDependent, value); }
-        bool scaleDependent = true;
-
         [Display(GroupName = "値の依存", Name = "不透明度", Description = "不透明度")]
         [ToggleSlider]
         public bool OpacityDependent { get => opacityDependent; set => Set(ref opacityDependent, value); }
         bool opacityDependent = true;
+
+        [Display(GroupName = "値の依存", Name = "拡大率", Description = "拡大率")]
+        [ToggleSlider]
+        public bool ScaleDependent { get => scaleDependent; set => Set(ref scaleDependent, value); }
+        bool scaleDependent = true;
 
         [Display(GroupName = "値の依存", Name = "回転角", Description = "回転角")]
         [ToggleSlider]
@@ -168,15 +168,15 @@ namespace SinTachiePlugin.Parts
         public bool EffectXYZDependent { get => effectXYZDependent; set => Set(ref effectXYZDependent, value); }
         bool effectXYZDependent = true;
 
-        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "拡大率", Description = "拡大率")]
-        [ToggleSlider]
-        public bool EffectZoomDependent { get => effectZoomDependent; set => Set(ref effectZoomDependent, value); }
-        bool effectZoomDependent = true;
-
         [Display(GroupName = "パーツ個別エフェクトの依存", Name = "不透明度", Description = "不透明度")]
         [ToggleSlider]
         public bool EffectOpacityDependent { get => effectOpacityDependent; set => Set(ref effectOpacityDependent, value); }
         bool effectOpacityDependent = true;
+
+        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "拡大率", Description = "拡大率")]
+        [ToggleSlider]
+        public bool EffectZoomDependent { get => effectZoomDependent; set => Set(ref effectZoomDependent, value); }
+        bool effectZoomDependent = true;
 
         [Display(GroupName = "パーツ個別エフェクトの依存", Name = "回転角", Description = "回転角")]
         [ToggleSlider]
