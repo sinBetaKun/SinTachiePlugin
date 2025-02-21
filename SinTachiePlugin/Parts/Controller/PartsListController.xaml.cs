@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using SinTachiePlugin.Informations;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using YukkuriMovieMaker.Commons;
@@ -106,7 +107,17 @@ namespace SinTachiePlugin.Parts
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
-                viewModel.CheckAll();
+                if (viewModel.Parts.Count < 1)
+                {
+                    SinTachieDialog.ShowInformation("ブロックが１つもありません。");
+                    return;
+                }
+                if (viewModel.Parts.Where(part => !part.Appear).Any())
+                {
+                    viewModel.CheckAll();
+                    return;
+                }
+                SinTachieDialog.ShowInformation("非表示のブロックが１つもありません。");
             }
         }
 
@@ -114,7 +125,7 @@ namespace SinTachiePlugin.Parts
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
-                viewModel.CheckOnlyOne();
+                viewModel.CheckOnlySelected(GetSelecteds());
             }
         }
 

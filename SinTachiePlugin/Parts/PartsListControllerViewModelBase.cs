@@ -152,11 +152,11 @@ namespace SinTachiePlugin.Parts
         /// <summary>
         /// 右クリックメニューで「選択中のブロックにのみチェック」を選択したときの処理
         /// </summary>
-        public void CheckOnlyOne()
+        public void CheckOnlySelected(IEnumerable<PartBlock> selecteds)
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
             Parts.ForEach(i => i.Appear = false);
-            Parts[SelectedPartIndex].Appear = true;
+            foreach (var selected in selecteds) selected.Appear = true;
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
@@ -482,7 +482,8 @@ namespace SinTachiePlugin.Parts
         {
             UpdateParts();
 
-            var commands = new[] { AddCommand, RemoveCommand, MoveUpCommand, MoveDownCommand, ReloadDefaultCommand };
+            // ボタンの有効・無効を状況によって切り替える必要のあるコマンド
+            var commands = new[] { AddCommand, RemoveCommand, MoveUpCommand, MoveDownCommand, WriteDefaultCommand, DeleteDefaultCommand, ReloadDefaultCommand };
             foreach (var command in commands)
                 command.RaiseCanExecuteChanged();
         }

@@ -1,4 +1,5 @@
-﻿using SinTachiePlugin.Parts;
+﻿using SinTachiePlugin.Informations;
+using SinTachiePlugin.Parts;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -105,7 +106,17 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
-                viewModel.CheckAll();
+                if (viewModel.Parts.Count < 1)
+                {
+                    SinTachieDialog.ShowInformation("ブロックが１つもありません。");
+                    return;
+                }
+                if (viewModel.Parts.Where(part => !part.Appear).Any())
+                {
+                    viewModel.CheckAll();
+                    return;
+                }
+                SinTachieDialog.ShowInformation("非表示のブロックが１つもありません。");
             }
         }
 
@@ -113,7 +124,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
         {
             if (DataContext is PartsListControllerForShapeViewModel viewModel)
             {
-                viewModel.CheckOnlyOne();
+                viewModel.CheckOnlySelected(GetSelecteds());
             }
         }
 

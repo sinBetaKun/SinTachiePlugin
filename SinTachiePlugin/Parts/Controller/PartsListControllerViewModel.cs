@@ -4,7 +4,7 @@ using YukkuriMovieMaker.Commons;
 
 namespace SinTachiePlugin.Parts
 {
-    public partial class PartsListControllerViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
+    public class PartsListControllerViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
     {
         public SinTachieCharacterParameter? CharacterParameter
         {

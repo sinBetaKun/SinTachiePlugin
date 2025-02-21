@@ -74,7 +74,7 @@
 
                                 <Separator />
 
-                                <MenuItem Header="全ブロックにチェック" IsEnabled="{Binding SomeBlockSelected}" Click ="CheckAll_Clicked" Icon="{StaticResource CheckAll}"
+                                <MenuItem Header="全ブロックにチェック" Click ="CheckAll_Clicked" Icon="{StaticResource CheckAll}"
                                           ToolTip="【全ブロックにチェック】"/>
 
                                 <MenuItem Header="選択中のブロックにのみチェック" IsEnabled="{Binding SomeBlockSelected}" Click ="CheckOnlyOne_Clicked" Icon="{StaticResource CheckOutline}"

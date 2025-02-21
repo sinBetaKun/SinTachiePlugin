@@ -4,7 +4,7 @@ using YukkuriMovieMaker.Commons;
 
 namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
 {
-    public partial class PartsListControllerForShapeViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
+    public class PartsListControllerForShapeViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
     {
         public override void SetProperties()
         {
