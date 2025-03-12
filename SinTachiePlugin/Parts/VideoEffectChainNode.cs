@@ -6,14 +6,13 @@ using YukkuriMovieMaker.Plugin.Effects;
 
 namespace SinTachiePlugin.Parts
 {
-    internal class VideoEffectChainNode
+    internal class VideoEffectChainNode : IDisposable
     {
         readonly IGraphicsDevicesAndContext devices;
         readonly AffineTransform2D transform;
         readonly ID2D1Bitmap empty;
         readonly DisposeCollector disposer = new();
         bool wasEmpty;
-        bool disposedValue = false;
         List<(IVideoEffect effect, IVideoEffectProcessor proseccer, FrameAndLength fl)> Chain = [];
 
         public ID2D1Image Output;
@@ -55,7 +54,7 @@ namespace SinTachiePlugin.Parts
             foreach (var effect in effects)
             {
                 int index = keeped.IndexOf(effect);
-                newChain.Add(index < 0 ? (effect, effect.CreateVideoEffect(devices), fl) : Chain[index]);
+                newChain.Add(index < 0 ? (effect, effect.CreateVideoEffect(devices), fl) : Chain[index] with { fl = fl});
             }
 
             Chain = newChain;
@@ -95,7 +94,7 @@ namespace SinTachiePlugin.Parts
                     FrameAndLength fl = tuple.fl;
                     item.SetInput(output);
                     timeLineItemSourceDescription = new(timelineSourceDescription, fl.Frame, fl.Length, 0);
-                    EffectDescription effectDescription = new(timeLineItemSourceDescription, result, 0);
+                    EffectDescription effectDescription = new(timeLineItemSourceDescription, result, 0, 1);
                     result = item.Update(effectDescription);
                     
                     output = item.Output;
@@ -117,20 +116,36 @@ namespace SinTachiePlugin.Parts
             transform.SetInput(0, null, true);
         }
 
-        public void Dispose()
+        #region IDisposable
+        private bool disposedValue;
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
-                Chain.ForEach(i =>
+                if (disposing)
                 {
-                    i.proseccer.ClearInput();
-                    i.proseccer.Dispose();
-                });
-                ClearEffectChain();
-                disposer.Dispose();
-                GC.SuppressFinalize(this);
+                    // マネージド状態を破棄します (マネージド オブジェクト)
+                    Chain.ForEach(i =>
+                    {
+                        i.proseccer.ClearInput();
+                        i.proseccer.Dispose();
+                    });
+                    ClearEffectChain();
+                    disposer.Dispose();
+                }
+
+                // アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
+                // 大きなフィールドを null に設定します
                 disposedValue = true;
             }
         }
+
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

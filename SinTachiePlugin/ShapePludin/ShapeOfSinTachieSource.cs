@@ -1,4 +1,5 @@
-﻿using SinTachiePlugin.Parts;
+﻿using SinTachiePlugin.Enums;
+using SinTachiePlugin.Parts;
 using SinTachiePlugin.TachiePlugin;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
@@ -19,25 +20,29 @@ namespace SinTachiePlugin.ShapePludin
 
         public void Update(TimelineItemSourceDescription description)
         {
-            if (UpdateNodeListForShape(description))
+            UpdateCase updateCase = UpdateNodeListForShape(description);
+
+            if (updateCase != UpdateCase.None)
             {
-                commandList?.Dispose();
-
-                UpdateParentPaths();
-
-                UpdateOutputs(description);
-
-                SetCommandList();
+                if (updateCase.HasFlag(UpdateCase.BitmapParams))
+                {
+                    UpdateParentPaths();
+                    UpdateOutputs(description);
+                }
+                SetCommandList(updateCase);
             }
         }
 
-        private bool UpdateNodeListForShape(TimelineItemSourceDescription description)
+        private UpdateCase UpdateNodeListForShape(TimelineItemSourceDescription description)
         {
             FrameAndLength fl = new(description);
-            int fps = description.FPS;
-            List<(PartBlock block, FrameAndLength fl)> tupleList =
-                param.PartsAndRoot.Parts.Select(x => (x, fl)).ToList();
-            return UpdateNodeList(tupleList, fps, 0.0);
+            return UpdateNodeList(
+                [.. param.PartsAndRoot.Parts],
+                [.. Enumerable.Repeat(fl, param.PartsAndRoot.Parts.Count)],
+                param.PartsAndRoot.Parts.Count,
+                description.FPS,
+                0
+                );
         }
     }
 }

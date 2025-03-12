@@ -4,10 +4,11 @@ using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Player.Video;
 using System.Collections.Immutable;
+using System.Windows.Documents;
 
 namespace SinTachiePlugin.TachiePlugin
 {
-    internal abstract class SinTachieSourceBase
+    internal abstract class SinTachieSourceBase : IDisposable
     {
         protected readonly DisposeCollector disposer = new();
         protected IGraphicsDevicesAndContext devices;
@@ -16,14 +17,13 @@ namespace SinTachiePlugin.TachiePlugin
         readonly List<PartNode> independent = [];
         readonly List<PartNode> parents = [];
         readonly List<PartNode> children = [];
+        readonly List<PartNode> preDrawList = [];
+        readonly List<PartNode> drawlist = [];
 
         protected ID2D1CommandList? commandList = null;
-        protected List<PartNode> PartNodes = [];
         protected readonly ID2D1Bitmap empty;
 
         protected bool isFirst = true;
-        bool disposedValue = false;
-
         protected int numOfNodes = -1;
 
         public SinTachieSourceBase(IGraphicsDevicesAndContext devices)
@@ -33,28 +33,13 @@ namespace SinTachiePlugin.TachiePlugin
             disposer.Collect(empty);
         }
 
-        public void Dispose()
-        {
-            // 最後のUpdateで作成したCommandListを破棄
-            if (!disposedValue)
-            {
-                // パーツノードを破棄
-                foreach (var partnode in PartNodes)
-                    partnode.Dispose();
-                commandList?.Dispose();
-                disposer.Dispose();
-                GC.SuppressFinalize(this);
-                disposedValue = true;
-            }
-        }
-
         protected void UpdateParentPaths()
         {
             independent.Clear();
             parents.Clear();
             children.Clear();
 
-            foreach (var partNode in PartNodes)
+            foreach (var partNode in preDrawList)
             {
                 partNode.ParentPath = [partNode];
                 if (partNode.TagName == partNode.Parent) independent.Add(partNode);
@@ -72,7 +57,7 @@ namespace SinTachiePlugin.TachiePlugin
                                   where x.TagName == children[i].Parent
                                   select x;
 
-                    if (matched.Count() > 0)
+                    if (matched.Any())
                     {
                         children[i].ParentPath = children[i].ParentPath.AddRange(matched.First().ParentPath);
                         parents.Add(children[i]);
@@ -86,91 +71,238 @@ namespace SinTachiePlugin.TachiePlugin
             }
         }
 
-        protected bool UpdateNodeList(List<(PartBlock block, FrameAndLength fl)> tupleList, int fps, double voiceVolume)
+        protected UpdateCase UpdateNodeList(PartBlock[] blAr, FrameAndLength[] flAr, int arCount, int fps, double voiceVolume)
         {
-            List<PartNode> disposedNodes = [.. PartNodes];
+            // タグの重複がない整理後のパーツ
+            List<PartBlock> blLi = [];
+
+            // タグの重複がない整理後の FL
+            List<FrameAndLength> flLi = [];
+
+            // 名前が重複するパーツの整理
+            for (int i = 0; i < arCount; i++)
+            {
+                PartBlock block = blAr[i];
+                FrameAndLength fl = flAr[i];
+
+                // タグが空っぽのパーツは常に重複を許す。
+                if (!string.IsNullOrEmpty(block.TagName))
+                {
+                    int index = blLi.FindIndex(block2 => block2.TagName == block.TagName);
+                    if (index >= 0)
+                    {
+                        blLi[index] = block;
+                        flLi[index] = fl;
+                        continue;
+                    }
+                }
+
+                blLi.Add(block);
+                flLi.Add(fl);
+            }
+
+            // タグの重複がない整理後のパーツの数
+            int liCount = blLi.Count;
+
+            // Key: バス番号;   Value: バス内に存在するパーツ群
             Dictionary<int, List<PartNode>> BusNumDictionary = [];
-            bool isOld = isFirst;
-            foreach (var (block, fl) in tupleList)
+
+            if (isFirst)
+            {
+                // 最初にこのメソッドが実行される時
+
+                if (liCount > 0)
+                {
+                    // パーツが 1 つ以上あるとき
+
+                    for (int i = 0; i < liCount; i++)
+                    {
+                        PartNode newNode = new(devices, blLi[i], flLi[i], fps, voiceVolume);
+
+                        if (BusNumDictionary.TryGetValue(newNode.BusNum, out var nodes))
+                        {
+                            nodes.Add(newNode);
+                        }
+                        else
+                        {
+                            BusNumDictionary[newNode.BusNum] = [newNode];
+                        }
+                    }
+
+                    foreach (var busNum in BusNumDictionary.Keys.OrderBy(n => n))
+                    {
+                        preDrawList.AddRange(BusNumDictionary[busNum]);
+                    }
+                        
+                }
+
+                isFirst = false;
+                return UpdateCase.BitmapParams | UpdateCase.BlendMode;
+            }
+
+            if (preDrawList.Count > 0 && liCount == 0)
+            {
+                preDrawList.ForEach(node => node.Dispose());
+                preDrawList.Clear();
+                return UpdateCase.BlendMode;
+            }
+
+            UpdateCase updateCase = UpdateCase.None;
+            List<PartNode> disposedNodes = [.. preDrawList];
+
+            for (int i = 0; i < liCount; i++)
             {
                 PartNode newNode;
-                if (PartNodes.Find(x => x.block == block) is PartNode node)
+
+                if (preDrawList.Find(x => x.block == blLi[i]) is PartNode node)
                 {
                     disposedNodes.Remove(node);
-                    isOld |= node.UpdateParams(fl, fps, voiceVolume);
+                    updateCase |= node.UpdateParams(flLi[i], fps, voiceVolume);
                     newNode = node;
                 }
                 else
                 {
-                    newNode = new(devices, block, fl, fps, voiceVolume);
-                    isOld = true;
+                    newNode = new(devices, blLi[i], flLi[i], fps, voiceVolume);
+                    updateCase |= UpdateCase.BitmapParams;
                 }
-                if (BusNumDictionary.TryGetValue(newNode.BusNum, out var nodes)) nodes.Add(newNode);
-                else BusNumDictionary[newNode.BusNum] = [newNode];
+
+                if (BusNumDictionary.TryGetValue(newNode.BusNum, out var nodes))
+                {
+                    nodes.Add(newNode);
+                }
+                else
+                {
+                    BusNumDictionary[newNode.BusNum] = [newNode];
+                }
             }
+            
             if (disposedNodes.Count > 0)
             {
                 disposedNodes.ForEach(node => node.Dispose());
-                isOld = true;
             }
-            var sortedBusNums = BusNumDictionary.Keys.OrderBy(n => n);
+
             List<PartNode> newPartNodes = [];
-            foreach (var busNum in sortedBusNums)
+
+            foreach (int busNum in BusNumDictionary.Keys.OrderBy(n => n))
+            {
                 newPartNodes.AddRange(BusNumDictionary[busNum]);
-            if (!(isOld |= newPartNodes.Count != PartNodes.Count))
-                for (int i = 0; i < PartNodes.Count; i++)
-                    if (newPartNodes[i] != PartNodes[i])
+            }
+                
+
+            if (preDrawList.Count == liCount)
+            {
+                for (int i = 0; i < liCount; i++)
+                {
+                    if (preDrawList[i] != newPartNodes[i])
                     {
-                        isOld = true;
+                        updateCase |= UpdateCase.BlendMode;
                         break;
                     }
-            if (isOld) PartNodes = [.. newPartNodes];
-            isFirst = false;
-            return isOld;
+                }
+            }
+            else
+            {
+                updateCase |= UpdateCase.BlendMode;
+            }
+
+            if (updateCase != UpdateCase.None)
+            {
+                preDrawList.Clear();
+                preDrawList.AddRange(newPartNodes);
+            }
+
+            return updateCase;
         }
 
         protected void UpdateOutputs(TimelineItemSourceDescription description)
         {
-            IEnumerable<PartNode> sortedPartNodes = [.. PartNodes.OrderBy(node => node.ParentPath.Count)];
+            IEnumerable<PartNode> sortedPartNodes = [.. preDrawList.OrderBy(node => node.ParentPath.Count)];
             foreach (var cloneNode in sortedPartNodes)
+            {
                 cloneNode.UpdateOutput(description);
+            }   
         }
 
-        protected void SetCommandList()
+        protected void SetCommandList(UpdateCase updateCase)
         {
+            if (!(UpdateDrawList() || updateCase.HasFlag(UpdateCase.BlendMode))) return;
             commandList?.Dispose();
             commandList = devices.DeviceContext.CreateCommandList();
             ID2D1DeviceContext6 dc = devices.DeviceContext;
             dc.Target = commandList;
             dc.BeginDraw();
             dc.Clear(null);
-            if (PartNodes.Count == 0)
+            if (preDrawList.Count == 0)
             {
                 dc.DrawImage(empty, compositeMode: CompositeMode.SourceOver);
             }
             else
             {
-                var glb = PartNodes.Where(x => x.Appear).ToLookup(
-                    x => x.ZSortMode == ZSortMode.GlobalSpace && x.M43 != 0f ? x.M43 < 0f ? -1 : 1 : 0);
-                foreach (var partNode in glb[-1].OrderBy(x => x.M43))
+                foreach (var partNode in drawlist)
                     if (partNode.Output is ID2D1Image output)
                         DrawOrBlend(dc, partNode.BlendMode, output);
-
-                foreach (var bus in glb[0].ToLookup(x => x.BusNum))
-                {
-                    var sub = bus.ToLookup(x => x.ZSortMode != ZSortMode.Ignore && x.M43 != 0f ? x.M43 < 0f ? -1 : 1 : 0);
-                    foreach (var partNode in (ImmutableArray<PartNode>)[.. sub[-1], .. sub[0], .. sub[1]])
-                        if (partNode.Output is ID2D1Image output)
-                            DrawOrBlend(dc, partNode.BlendMode, output);
-                }
-
-                foreach (var partNode in glb[1].OrderBy(x => x.M43))
-                    if (partNode.Output is ID2D1Image output)
-                        DrawOrBlend(dc, partNode.BlendMode, output);
+                
             }
             dc.EndDraw();
             commandList.Close();//CommandListはEndDraw()の後に必ずClose()を呼んで閉じる必要がある
         }
+
+        private bool UpdateDrawList()
+        {
+            if (preDrawList.Count == 0)
+            {
+                if (this.drawlist.Count == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    this.drawlist.Clear();
+                    return true;
+                }
+            }
+
+            List<PartNode> drawlist = [];
+
+            var glb = preDrawList.Where(x => x.Appear).ToLookup(
+                x => x.ZSortMode == ZSortMode.GlobalSpace && x.M43 != 0f ? x.M43 < 0f ? -1 : 1 : 0);
+
+            foreach (var partNode in glb[-1].OrderBy(x => x.M43))
+                if (partNode.Output is ID2D1Image output)
+                    drawlist.Add(partNode);
+
+            foreach (var bus in glb[0].ToLookup(x => x.BusNum))
+            {
+                var sub = bus.ToLookup(x => x.ZSortMode != ZSortMode.Ignore && x.M43 != 0f ? x.M43 < 0f ? -1 : 1 : 0);
+                foreach (var partNode in (ImmutableArray<PartNode>)[.. sub[-1], .. sub[0], .. sub[1]])
+                    if (partNode.Output is ID2D1Image output)
+                        drawlist.Add(partNode);
+            }
+
+            foreach (var partNode in glb[1].OrderBy(x => x.M43))
+                if (partNode.Output is ID2D1Image output)
+                    drawlist.Add(partNode);
+
+            if (isFirst || preDrawList.Count != this.drawlist.Count)
+            {
+                this.drawlist.Clear();
+                this.drawlist.AddRange(drawlist);
+                return true;
+            }
+
+            for (var i = 0; i < this.drawlist.Count; i++)
+            {
+                if (this.drawlist[i] != drawlist[i])
+                {
+                    this.drawlist.Clear();
+                    this.drawlist.AddRange(drawlist);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
         static private void DrawOrBlend(ID2D1DeviceContext6 dc, BlendSTP blend, ID2D1Image output)
         {
@@ -312,11 +444,40 @@ namespace SinTachiePlugin.TachiePlugin
 
         protected void RemoveNodes(int count)
         {
-            while (PartNodes.Count > count)
+            while (preDrawList.Count > count)
             {
-                PartNodes[count].Dispose();
-                PartNodes.RemoveAt(count);
+                preDrawList[count].Dispose();
+                preDrawList.RemoveAt(count);
             }
         }
+
+        #region IDisposable
+        private bool disposedValue;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // マネージド状態を破棄します (マネージド オブジェクト)
+                    foreach (var partnode in preDrawList)
+                        partnode.Dispose();
+                    commandList?.Dispose();
+                    disposer.Dispose();
+                }
+
+                // アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
+                // 大きなフィールドを null に設定します
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

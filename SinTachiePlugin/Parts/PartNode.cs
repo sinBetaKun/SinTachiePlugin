@@ -21,7 +21,6 @@ namespace SinTachiePlugin.Parts
         readonly FrameAndLength lastFL = new();
         readonly ID2D1Image renderOutput;
         public ID2D1Image? Output;
-        bool disposedValue = false;
         List<(PartNode node, VideoEffectChainNode chain)> NodesAndChains = [];
         DrawDescription drawDescription = new(
             default, default, new Vector2(1f, 1f), default,
@@ -99,7 +98,7 @@ namespace SinTachiePlugin.Parts
             NodesAndChains = newNodesAndChains;
         }
 
-        public bool UpdateParams(FrameAndLength fl, int fps, double voiceVolume)
+        public UpdateCase UpdateParams(FrameAndLength fl, int fps, double voiceVolume)
         {
             lastFL.CopyFrom(fl);
             return Params.Update(devices, block, fl, fps, voiceVolume);
@@ -271,17 +270,33 @@ namespace SinTachiePlugin.Parts
             transform.SetInput(0, null, true);
         }
 
-        public void Dispose()
+        #region IDisposable
+        private bool disposedValue;
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
-                NodesAndChains.ForEach(tuple => tuple.chain.Dispose());
-                ClearEffectChain();
-                disposer.Dispose();
-                GC.SuppressFinalize(this);
+                if (disposing)
+                {
+                    // マネージド状態を破棄します (マネージド オブジェクト)
+                    NodesAndChains.ForEach(tuple => tuple.chain.Dispose());
+                    ClearEffectChain();
+                    disposer.Dispose();
+                }
+
+                // アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
+                // 大きなフィールドを null に設定します
                 disposedValue = true;
             }
         }
+
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
 
         #region SafeTransform3DHelper
         const float D3D11_FTOI_INSTRUCTION_MAX_INPUT = 2.1474836E+09f;

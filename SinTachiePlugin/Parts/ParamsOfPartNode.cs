@@ -18,8 +18,6 @@ namespace SinTachiePlugin.Parts
         public ID2D1Image Output;
         public FrameAndLength FrameAndLength;
 
-        bool disposedValue = false;
-
         public bool Appear { get; set; }
         public BlendSTP BlendMode { get; set; }
         public ZSortMode ZSortMode { get; set; }
@@ -99,8 +97,10 @@ namespace SinTachiePlugin.Parts
             disposer.Collect(Output);
         }
 
-        public bool Update(IGraphicsDevicesAndContext devices, PartBlock block, FrameAndLength fl, int fps, double voiceVolume)
+        public UpdateCase Update(IGraphicsDevicesAndContext devices, PartBlock block, FrameAndLength fl, int fps, double voiceVolume)
         {
+            FrameAndLength.CopyFrom(fl);
+
             var appear = block.Appear;
             var blendMode = block.BlendMode;
             var zSortMode = block.ZSortMode;
@@ -133,11 +133,11 @@ namespace SinTachiePlugin.Parts
             var effectUnlazyDependent = block.EffectUnlazyDependent;
             var effects = block.Effects;
 
-            bool isOld = false;
+            UpdateCase updateCase = UpdateCase.None;
 
             if (ImagePath != imagePath)
             {
-                isOld = true;
+                updateCase = UpdateCase.BitmapParams;
 
                 ImagePath = imagePath;
                 LayerAnimationModes = layerAnimationModes;
@@ -164,7 +164,7 @@ namespace SinTachiePlugin.Parts
                 }
                 if (!layerValuesIsEqual)
                 {
-                    isOld = true;
+                    updateCase = UpdateCase.BitmapParams;
                     LayerAnimationModes = layerAnimationModes;
                     OuterLayerValueModes = outerLayerValueModes;
                     LayerValues = layerValues;
@@ -174,7 +174,7 @@ namespace SinTachiePlugin.Parts
                 }
             }
 
-            if (Appear != appear || BlendMode != blendMode || ZSortMode != zSortMode || BusNum != busNum || Draw != draw || Scale != scale || Opacity != opacity || Rotate != rotate || Mirror != mirror
+            if (Appear != appear || ZSortMode != zSortMode || BusNum != busNum || Draw != draw || Scale != scale || Opacity != opacity || Rotate != rotate || Mirror != mirror
                 || Center != center || KeepPlace != keepPlace || ExpXY != expXY || TagName != tagName || Parent != parent
 
                 || XYZDependent != xyzDependent || ScaleDependent != scaleDependent || OpacityDependent != opacityDependent
@@ -185,9 +185,9 @@ namespace SinTachiePlugin.Parts
                 || EffectUnlazyDependent != effectUnlazyDependent
                 || effects.Count > 0 || effects.Count != Effects.Count)
             {
-                FrameAndLength.CopyFrom(fl);
+                updateCase = UpdateCase.BitmapParams;
+
                 Appear = appear;
-                BlendMode = blendMode;
                 ZSortMode = zSortMode;
                 BusNum = busNum;
                 Draw = draw;
@@ -212,9 +212,16 @@ namespace SinTachiePlugin.Parts
                 EffectCameraDependent = effectCameraDependent;
                 EffectUnlazyDependent = effectUnlazyDependent;
                 Effects = effects;
-                isOld = true;
             }
-            return isOld;
+
+            if (BlendMode != blendMode)
+            {
+                BlendMode = blendMode;
+                updateCase |= UpdateCase.BlendMode;
+                return updateCase;
+            }
+
+            return updateCase;
         }
 
         void ClearEffectChain()
@@ -222,15 +229,31 @@ namespace SinTachiePlugin.Parts
             transform.SetInput(0, null, true);
         }
 
-        public void Dispose()
+        #region IDisposable
+        private bool disposedValue;
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
-                ClearEffectChain();
-                disposer.Dispose();
-                GC.SuppressFinalize(this);
+                if (disposing)
+                {
+                    // マネージド状態を破棄します (マネージド オブジェクト)
+                    ClearEffectChain();
+                    disposer.Dispose();
+                }
+
+                // アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
+                // 大きなフィールドを null に設定します
                 disposedValue = true;
             }
         }
+
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

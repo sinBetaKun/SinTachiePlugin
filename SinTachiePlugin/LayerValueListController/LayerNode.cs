@@ -19,7 +19,6 @@ namespace SinTachiePlugin.LayerValueListController
         readonly ID2D1Bitmap empty;
         IImageFileSource? source;
         bool wasEmpty = true;
-        bool disposedValue = false;
         private readonly AffineTransform2D centeringEffect;
         public int? Index { get; set; } = null;
         public int Depth { get; set; } = -1;
@@ -43,7 +42,7 @@ namespace SinTachiePlugin.LayerValueListController
             if (!Path.Exists(root)) return;
 
             const YukkuriMovieMaker.Settings.FileType fileType = YukkuriMovieMaker.Settings.FileType.画像;
-            if (!(YukkuriMovieMaker.Settings.FileSettings.Default.FileExtensions.GetFileType(root) is fileType)) return;
+            if (YukkuriMovieMaker.Settings.FileSettings.Default.FileExtensions.GetFileType(root) is not fileType) return;
 
             var dirName = Path.GetDirectoryName(root);
             if (dirName == null) return;
@@ -81,7 +80,7 @@ namespace SinTachiePlugin.LayerValueListController
                             break;
                         }
                     }
-                    if (isLayer) layerNumsDictionary.Add(files[i], layerNumsList.ToArray());
+                    if (isLayer) layerNumsDictionary.Add(files[i], [.. layerNumsList]);
                 }
             }
             int[] numsOfIndexs = layerNumsDictionary.Values.Select(indexs => indexs.Length).ToArray();
@@ -94,25 +93,23 @@ namespace SinTachiePlugin.LayerValueListController
                 foreach (var kv in kvs)
                 {
                     var tmp = new LayerNode(devices);
-                    tmp.source = ImageFileSourceFactory.Create(devices, Path.Combine(dirName, kv.Key));
-                    if (tmp.source != null)
-                    {
-                        tmp.disposer.Collect(tmp.source);
-                        tmp.centeringEffect.SetInput(0, tmp.source.Output, true);
-                        tmp.centeringEffect.TransformMatrix = Matrix3x2.CreateTranslation(-tmp.source.Output.Size.Width / 2, -tmp.source.Output.Size.Height / 2);
-                        tmp.wasEmpty = false;
-                    }
+                    tmp.UpdateCenteringEffect(Path.Combine(dirName, kv.Key));
                     AddLeaf(tmp, kv.Value);
                 }
 
                 numsOfIndexs = numsOfIndexs.Where(numOfIndexs => numOfIndexs != targetLength).ToArray();
             }
-            source = ImageFileSourceFactory.Create(devices, root);
+            UpdateCenteringEffect(root);
+        }
+
+        void UpdateCenteringEffect(string path)
+        {
+            source = ImageFileSourceFactory.Create(devices, path);
             if (source != null)
             {
                 disposer.Collect(source);
                 centeringEffect.SetInput(0, source.Output, true);
-                centeringEffect.TransformMatrix = Matrix3x2.CreateTranslation(-source.Output.Size.Width / 2, -source.Output.Size.Height / 2);
+                centeringEffect.TransformMatrix = Matrix3x2.CreateTranslation(MathF.Round(-source.Output.Size.Width / 2), MathF.Round(-source.Output.Size.Height / 2));
                 wasEmpty = false;
             }
         }
@@ -250,15 +247,31 @@ namespace SinTachiePlugin.LayerValueListController
             centeringEffect.SetInput(0, null, true);
         }
 
-        public void Dispose()
+        #region IDisposable
+        private bool disposedValue;
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
-                ClearEffectChain();
-                disposer.Dispose();
-                GC.SuppressFinalize(this);
+                if (disposing)
+                {
+                    // マネージド状態を破棄します (マネージド オブジェクト)
+                    ClearEffectChain();
+                    disposer.Dispose();
+                }
+
+                // アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
+                // 大きなフィールドを null に設定します
                 disposedValue = true;
             }
         }
+
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }
