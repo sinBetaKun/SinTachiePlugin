@@ -5,9 +5,9 @@
     /// </summary>
     public class PluginInfo
     {
-        static public string Title => "sin型カスタムパーツ立ち絵";
+        static public string Title => Properties.Resources.PluginTitle;
 
-        static public string Version => "v1.1.0.0";
+        static public string Version => Properties.Resources.STPVersion;
 
         static public int PartsListHeight = 210;
     }

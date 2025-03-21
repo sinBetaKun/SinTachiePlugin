@@ -39,13 +39,32 @@ namespace SinTachiePlugin.TachiePlugin
             parents.Clear();
             children.Clear();
 
+            // 偽りの親をあぶりだす
+            HashSet<string> tags = preDrawList.Select(part => part.TagName).ToHashSet();
+            HashSet<string> falseParents = preDrawList.Select(part => part.Parent).Where(parent => !tags.Contains(parent)).ToHashSet();
+
+            // パーツの分類の準備
             foreach (var partNode in preDrawList)
             {
                 partNode.ParentPath = [partNode];
-                if (partNode.TagName == partNode.Parent) independent.Add(partNode);
-                else if (partNode.Parent == string.Empty) parents.Add(partNode);
-                else children.Add(partNode);
+
+                if (partNode.TagName == partNode.Parent)
+                {
+                    // 独立したパーツ
+                    independent.Add(partNode);
+                }
+                else if (string.IsNullOrEmpty(partNode.Parent) || falseParents.Contains(partNode.Parent))
+                {
+                    // 祖先になるパーツ
+                    parents.Add(partNode);
+                }
+                else
+                {
+                    // 子になるパーツ
+                    children.Add(partNode);
+                }
             }
+
             int numOfChildren = children.Count;
 
             while (numOfChildren > 0)
@@ -63,10 +82,14 @@ namespace SinTachiePlugin.TachiePlugin
                         parents.Add(children[i]);
                         children.RemoveAt(i);
                     }
-                    else i++;
+                    else
+                    {
+                        i++;
+                    }
                 }
 
                 if (numOfChildren == children.Count) break;
+
                 numOfChildren = children.Count;
             }
         }

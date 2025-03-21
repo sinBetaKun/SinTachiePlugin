@@ -136,7 +136,7 @@ namespace SinTachiePlugin.Parts
             int randomNumber = random.Next(0, 99);
             const int num = 5;
             string str = (randomNumber < num) ? " ☆アローリ☆ " : "リロード";
-            SinTachieDialog.ShowInformation($"デフォルト値を{str}しました。");
+            SinTachieDialog.ShowInformation($"「{tag}」\nデフォルト値を{str}しました。");
         }
 
         private PartInfo? InputStpi()

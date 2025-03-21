@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SinTachiePlugin.Properties {
+namespace SinTachiePlugin.LayerValueListController.Controller {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SinTachiePlugin.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SinTachiePlugin.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SinTachiePlugin.LayerValueListController.Controller.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,29 +61,56 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   素材の場所 に類似しているローカライズされた文字列を検索します。
+        ///   セラール（の最初の）値 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PlaceOfTachieSource {
+        public static string AbrirValueToolTip {
             get {
-                return ResourceManager.GetString("PlaceOfTachieSource", resourceCulture);
+                return ResourceManager.GetString("AbrirValueToolTip", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   sin型カスタムパーツ立ち絵 に類似しているローカライズされた文字列を検索します。
+        ///   レイヤー軸を一つ追加 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PluginTitle {
+        public static string AddButtonToolTip {
             get {
-                return ResourceManager.GetString("PluginTitle", resourceCulture);
+                return ResourceManager.GetString("AddButtonToolTip", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   v1.1.0.0 に類似しているローカライズされた文字列を検索します。
+        ///   アブリール（の最初の）値 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string STPVersion {
+        public static string CerrarValueToolTip {
             get {
-                return ResourceManager.GetString("STPVersion", resourceCulture);
+                return ResourceManager.GetString("CerrarValueToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   選択されているレイヤー軸を一つ下と入れ替える に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MoveDownButtonToolTip {
+            get {
+                return ResourceManager.GetString("MoveDownButtonToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   選択されているレイヤー軸を一つ上と入れ替える に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MoveUpButtonToolTip {
+            get {
+                return ResourceManager.GetString("MoveUpButtonToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   選択されているレイヤー軸を削除 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string RemoveButtonToolTip {
+            get {
+                return ResourceManager.GetString("RemoveButtonToolTip", resourceCulture);
             }
         }
     }

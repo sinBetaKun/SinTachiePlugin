@@ -83,7 +83,7 @@ namespace SinTachiePlugin.Parts
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
-                PartsListControllerViewModelBase.CopyFunc(GetSelecteds());
+                viewModel.CopyFunc(GetSelecteds());
             }
         }
 
@@ -137,6 +137,30 @@ namespace SinTachiePlugin.Parts
             }
         }
 
+        private void Up_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.MoveUpSelected(GetSelecteds());
+            }
+        }
+
+        private void Down_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.MoveDownSelected(GetSelecteds());
+            }
+        }
+
+        private void ReloadDefault_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.ReloadFunc(GetSelecteds());
+            }
+        }
+
         private void HeightSlider_EndEdit(object sender, EventArgs e)
         {
             var vm = DataContext as PartsListControllerViewModel;
@@ -156,6 +180,21 @@ namespace SinTachiePlugin.Parts
                 if (selected is PartBlock block)
                     selecteds.Add(block);
             return selecteds;
+        }
+
+        public void SetSelecteds(List<PartBlock> selecteds)
+        {
+            list.SelectedItems.Clear();
+            foreach (var selected in list.SelectedItems)
+                list.SelectedItems.Add(selected);
+        }
+
+        private void list_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DataContext is PartsListControllerViewModel viewModel)
+            {
+                viewModel.UpdateButtonEnables(GetSelecteds());
+            }
         }
     }
 }

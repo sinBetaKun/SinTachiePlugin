@@ -5,9 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SinTachiePlugin.Parts"
              xmlns:c="clr-namespace:YukkuriMovieMaker.Controls;assembly=YukkuriMovieMaker.Controls"
+             xmlns:properties="clr-namespace:SinTachiePlugin.Parts.Controller"
              d:DataContext="{d:DesignInstance Type=local:PartBlock}"
              mc:Ignorable="d">
-    <Grid Background="#0000" ToolTip="【パーツブロック】&#xa;パーツたちの内のひとつを表しています。&#xa;右クリックで特殊操作ができます。">
+    <Grid Background="#0000" ToolTip="{x:Static properties:Resources.PartBlockToolTip}">
         <Grid.Style>
             <Style TargetType="Grid">
                 <Setter Property="Margin" Value="6,0,0,0" />
@@ -25,7 +26,7 @@
                         <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
                             <CheckBox Margin="2,3,5,0" VerticalAlignment="Top" Width="15" Height="15" HorizontalAlignment="Left"
                                       IsChecked="{Binding Appear, Mode=OneWay}" Unchecked="Update_CheckBox" Checked="Update_CheckBox"
-                                      ToolTip="【表示／非表示】&#xa;描画するか否かを切り替えられます。">
+                                      ToolTip="{x:Static properties:Resources.PartBlockToolTip}">
 
                                 <CheckBox.Style>
                                     <Style TargetType="CheckBox">
@@ -54,9 +55,8 @@
                                         </Style.Triggers>
                                     </Style>
                                 </StackPanel.Style>
-                                <StackPanel Orientation="Horizontal"
-                                            ToolTip="【タグ】&#xa;パーツの名前です。&#xa;他のパーツの親にしたいときは名前を付けましょう。">
-                                    <TextBlock Text="タグ" Margin="5,0,3,0" VerticalAlignment="Top" FontSize="15"/>
+                                <StackPanel Orientation="Horizontal" ToolTip="{x:Static properties:Resources.TagPanelToolTip}">
+                                    <TextBlock Text="{x:Static properties:Resources.TagPanelText}" Margin="5,0,3,0" VerticalAlignment="Top" FontSize="15"/>
                                     <Border  Margin="3,0,10,0" BorderThickness="2" Height="20"
                                              VerticalAlignment="Top">
                                         <Border.Style>
@@ -79,8 +79,8 @@
                         </StackPanel>
                     </Border>
                     <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Orientation="Horizontal"
-                                ToolTip="【バス】&#xa;パーツの描画優先度。&#xa;数字が高い方が後の方で描画され、画像上では手前に映ります。&#xa;（表示される数値は、アイテム上で最初のフレームにおける数値です。）">
-                        <TextBlock Text="バス" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                                ToolTip="{x:Static properties:Resources.BusPanelToolTip}">
+                        <TextBlock Text="{x:Static properties:Resources.BusPanelText}" Margin="0,0,0,0" VerticalAlignment="Top"/>
                         <Border Margin="5,0,0,0" BorderThickness="2" Height="16"
                                 VerticalAlignment="Top">
                             <Border.Style>
@@ -100,7 +100,7 @@
                         </Border>
                     </StackPanel>
                     <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Orientation="Horizontal"
-                                ToolTip="【親】&#xa;タグ名が一致するパーツと動きを連動します。&#xa;Blenderでいう親ボーンに相当します。">
+                                ToolTip="{x:Static properties:Resources.ParentPanelToolTip}">
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <!-- デフォルトで表示 -->
@@ -116,7 +116,7 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        <TextBlock Text="親" VerticalAlignment="Top"/>
+                        <TextBlock Text="{x:Static properties:Resources.ParentPanelText}" VerticalAlignment="Top"/>
                         <Border Margin="5,0,0,0" BorderThickness="2" Height="16"
                                 VerticalAlignment="Top">
                             <Border.Style>
@@ -150,7 +150,7 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        <TextBlock Text="備考" VerticalAlignment="Top"/>
+                        <TextBlock Text="{x:Static properties:Resources.CommentPanelText}" VerticalAlignment="Top"/>
                         <Border Margin="5,0,0,0" BorderThickness="2" Height="16"
                                 VerticalAlignment="Top">
                             <Border.Style>
@@ -166,7 +166,7 @@
                                 </Style>
                             </Border.Style>
                             <TextBlock Text="{Binding Comment}" Margin="4,0,4,0" VerticalAlignment="Center"
-                                       ToolTip="【備考】&#xa;メモか何か書くと良いでしょう。"/>
+                                       ToolTip="{x:Static properties:Resources.CommentPanelToolTip}"/>
                         </Border>
                     </StackPanel>
                 </WrapPanel>

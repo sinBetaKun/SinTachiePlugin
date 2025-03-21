@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:SinTachiePlugin.ShapePludin.PartsListControllerForShape"
              xmlns:c="clr-namespace:YukkuriMovieMaker.Controls;assembly=YukkuriMovieMaker.Controls"
              xmlns:local1="clr-namespace:SinTachiePlugin.Parts"
+             xmlns:partCnt="clr-namespace:SinTachiePlugin.Parts.Controller"
+             xmlns:properties="clr-namespace:SinTachiePlugin.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance Type={x:Type local:PartsListControllerForShapeViewModel}}">
     <UserControl.Resources>
@@ -24,18 +26,19 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid>
-                        <TextBlock Grid.Column="0" Text="描画順序" Margin="10,24,10,4" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-                        <Border VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1" Margin="1,1,0,24" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1"
-                                    ToolTip="【STPバージョン】&#xa;本プラグインのバージョンです。">
+                        <TextBlock Grid.Column="0" Text="{x:Static partCnt:Resources.PartListControllerText}" Margin="10,24,10,4" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                        <Border VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1" Margin="1,1,0,24"
+                                BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1"
+                                ToolTip="{x:Static partCnt:Resources.STPVersionToolTip}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Version}" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{x:Static properties:Resources.STPVersion}" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Border>
                     </Grid>
                     <WrapPanel Margin="1" Grid.Column="1" HorizontalAlignment="Right">
-                        <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1"
-                                ToolTip="【リストの高さ】&#xa;描画順序リストの高さを調整できます。&#xa;プラグイン内でこの値は共有されます。">
-                            <StackPanel Orientation="Horizontal" Margin="1">
+                        <Border Margin="1" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1"
+                                ToolTip="{x:Static partCnt:Resources.HeightOfListSliderToolTip}">
+                            <StackPanel Orientation="Horizontal">
                                 <Label Height="26" Content="{StaticResource ArrowExpandVertical}"/>
                                 <c:TextBoxSlider StringFormat="F0" Min="210" DefaultMin="210" Max="500" DefaultMax="500"
                                                  VerticalAlignment="Center" Value="{Binding ListHeight}" Margin="0,0,4,0"
@@ -49,7 +52,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Border Grid.Column="0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="2,0,0,0" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Stretch">
-                                <TextBlock Text="素材の場所" Margin="2,2,2,2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static properties:Resources.PlaceOfTachieSource}" Margin="2,2,2,2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </Border>
                             <c:DirectorySelector Grid.Column="1" Margin="2,0,0,0" Value="{Binding Root}" MinWidth="100"
                                                  BeginEdit="PropertiesEditor_BeginEdit" EndEdit="DirectorySelector_EndEdit"/>
@@ -57,14 +60,14 @@
                     </WrapPanel>
                 </Grid>
                 <Grid Height="{Binding ListHeight}" Margin="4"
-                      ToolTip="【描画順序リスト】&#xa;新しくパーツを追加するときは&#xa;右側の「＋」を押してください。">
+                      ToolTip="{x:Static partCnt:Resources.PartListToolTip}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="26"/>
                     </Grid.ColumnDefinitions>
-                    <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch"
-                             ItemsSource="{Binding Parts}" SelectedIndex="{Binding SelectedPartIndex}"
-                             Name="list" ScrollViewer.CanContentScroll="False"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Extended">
+                    <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" SelectionChanged="list_SelectionChanged"
+                             ItemsSource="{Binding Parts}" SelectedIndex="{Binding SelectedPartIndex}" SelectionMode="Extended"
+                             Name="list" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <local1:PartBlockUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
@@ -72,61 +75,68 @@
                         </ListBox.ItemTemplate>
                         <ListBox.ContextMenu>
                             <ContextMenu IsOpen="{Binding ContextMenuIsOpen}">
-                                <MenuItem Header="切り取り" IsEnabled="{Binding SomeBlockSelected}" Click ="Cut_Clicked" Icon="{StaticResource Cut}"
-                                          ToolTip="【切り取り】&#xa;選択されているパーツを取り除きます。&#xa;切り取られたパーツは『貼り付け』で再挿入できます。"/>
+                                <MenuItem Header="{x:Static partCnt:Resources.ContextMenuCutHeader}" IsEnabled="{Binding SomeBlockSelected}"
+                                          Click ="Cut_Clicked" Icon="{StaticResource Cut}"
+                                          ToolTip="{x:Static partCnt:Resources.ContextMenuCutToolTip}"/>
 
-                                <MenuItem Header="コピー" IsEnabled="{Binding SomeBlockSelected}" Click="Copy_Clicked" Icon="{StaticResource Copy}"
-                                          ToolTip="【コピー】&#xa;選択されているパーツをコピーします。&#xa;コピーされたパーツは『貼り付け』で新たなパーツとして挿入できます。"/>
+                                <MenuItem Header="{x:Static partCnt:Resources.ContextMenuCopyHeader}" IsEnabled="{Binding SomeBlockSelected}"
+                                          Click="Copy_Clicked" Icon="{StaticResource Copy}"
+                                          ToolTip="{x:Static partCnt:Resources.ContextMenuCopyToolTip}"/>
 
-                                <MenuItem Header="貼り付け" IsEnabled="{Binding PasteEnable}" Click="Paste_Clicked" Icon="{StaticResource Paste}"
-                                          ToolTip="【貼り付け】&#xa;『切り取り』または『コピー』されたパーツを新たなパーツとして挿入できます。"/>
+                                <MenuItem Header="{x:Static partCnt:Resources.ContextMenuPasteHeader}" IsEnabled="{Binding PasteEnable}"
+                                          Click="Paste_Clicked" Icon="{StaticResource Paste}"
+                                          ToolTip="{x:Static partCnt:Resources.ContextMenuPasteToolTip}"/>
 
-                                <MenuItem Header="複製" IsEnabled="{Binding SomeBlockSelected}" Click="Duplication_Clicked" Icon="{StaticResource Duplicate}"
-                                          ToolTip="【複製】&#xa;選択されているパーツをひとつ下に複製します。"/>
-
-                                <Separator />
-
-                                <MenuItem Header="全ブロックにチェック" Click ="CheckAll_Clicked" Icon="{StaticResource CheckAll}"
-                                          ToolTip="【全ブロックにチェック】"/>
-
-                                <MenuItem Header="選択中のブロックにのみチェック" IsEnabled="{Binding SomeBlockSelected}" Click ="CheckOnlyOne_Clicked" Icon="{StaticResource CheckOutline}"
-                                          ToolTip="【選択中のブロックにのみチェック】"/>
+                                <MenuItem Header="{x:Static partCnt:Resources.ContextMenuDuplicationHeader}" IsEnabled="{Binding SomeBlockSelected}"
+                                          Click="Duplication_Clicked" Icon="{StaticResource Duplicate}"
+                                          ToolTip="{x:Static partCnt:Resources.ContextMenuDuplicationToolTip}"/>
 
                                 <Separator />
 
-                                <MenuItem Header="削除" IsEnabled="{Binding SomeBlockSelected}" Click="Remove_Clicked" Icon="{StaticResource Minus}"
-                                          ToolTip="【削除】&#xa;選択されているパーツを削除します。"/>
+                                <MenuItem Header="{x:Static partCnt:Resources.ContextMenuCheckAllHeader}"
+                                          Click ="CheckAll_Clicked" Icon="{StaticResource CheckAll}"
+                                          ToolTip="{x:Static partCnt:Resources.ContextMenuCheckAllToolTip}"/>
+
+                                <MenuItem Header="{x:Static partCnt:Resources.ContextMenuCheckOnlyOneHeader}" IsEnabled="{Binding SomeBlockSelected}"
+                                          Click ="CheckOnlyOne_Clicked" Icon="{StaticResource CheckOutline}"
+                                          ToolTip="{x:Static partCnt:Resources.ContextMenuCheckOnlyOneToolTip}"/>
+
+                                <Separator />
+
+                                <MenuItem Header="{x:Static partCnt:Resources.ContextMenuRemoveHeader}" IsEnabled="{Binding SomeBlockSelected}"
+                                          Click="Remove_Clicked" Icon="{StaticResource Minus}"
+                                          ToolTip="{x:Static partCnt:Resources.ContextMenuRemoveToolTip}"/>
                             </ContextMenu>
                         </ListBox.ContextMenu>
                     </ListBox>
                     <Grid Grid.Column="1">
                         <StackPanel>
                             <!-- ブロックの並びを編集するエリア -->
-                            <StackPanel ToolTip="【リスト編集ボタン群】&#xa;『パーツブロック』の選択状態によっては一部の操作ができません。">
-                                <Button Height="26" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
-                                        Content="{StaticResource Plus}" ToolTip="【パーツ追加】&#xa;パーツツリーから選択されたパーツを追加します。"/>
+                            <StackPanel ToolTip="{x:Static partCnt:Resources.EditListButtonsToolTip}">
+                                <Button Height="26" Command="{Binding AddCommand}" CommandParameter="{Binding UnMultiBlockSelected}"
+                                        Content="{StaticResource Plus}" ToolTip="{x:Static partCnt:Resources.EditListButtonAddToolTip}"/>
 
-                                <Button Height="26" Command="{Binding RemoveCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
-                                        Content="{StaticResource Minus}" ToolTip="【パーツ削除】&#xa;選択されているパーツを取り除きます。"/>
+                                <Button Height="26" Click="Remove_Clicked" IsEnabled="{Binding SomeBlockSelected}"
+                                        Content="{StaticResource Minus}" ToolTip="{x:Static partCnt:Resources.EditListButtonRemoveToolTip}"/>
 
-                                <Button Height="26" Command="{Binding MoveUpCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
-                                        Content="{StaticResource Up}" ToolTip="【ひとつ上に移動】&#xa;選択されているパーツを一つ上のパーツと入れ替えます。"/>
+                                <Button Height="26" Click="Up_Click" IsEnabled="{Binding CanMoveUp}"
+                                        Content="{StaticResource Up}" ToolTip="{x:Static partCnt:Resources.EditListButtonMoveUpToolTip}"/>
 
-                                <Button Height="26" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
-                                        Content="{StaticResource Down}" ToolTip="【ひとつ下に移動】&#xa;選択されているパーツを一つ下のパーツと入れ替えます。"/>
+                                <Button Height="26" Click="Down_Click" IsEnabled="{Binding CanMoveDown}"
+                                        Content="{StaticResource Down}" ToolTip="{x:Static partCnt:Resources.EditListButtonMoveDownToolTip}"/>
                             </StackPanel>
 
                             <!-- 選択されたブロックのデフォルト値を編集するエリア -->
                             <StackPanel Margin="0,16,0,0" 
-                                        ToolTip="【デフォルト設定編集ボタン群】&#xa;『パーツブロック』が選択されていない状態だと全ての操作ができません。">
-                                <Button Height="26" Command="{Binding WriteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
-                                        Content="{StaticResource Save-Plus}" ToolTip="【パーツデフォルト設定の保存／上書き】&#xa;選択されているパーツが指定している画像ファイルに、現在のパーツパラメータ情報をデフォルトとして記録します。&#xa;(stpiファイルが生成／上書きされます。)"/>
+                                        ToolTip="{x:Static partCnt:Resources.EditDefaultButtonsToolTip}">
+                                <Button Height="26" Command="{Binding WriteDefaultCommand}" CommandParameter="{Binding SingleBlockSelected}"
+                                        Content="{StaticResource Save-Plus}" ToolTip="{x:Static partCnt:Resources.EditDefaultButtonWriteToolTip}"/>
 
-                                <Button Height="26" Command="{Binding DeleteDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
-                                        Content="{StaticResource Save-Minus}" ToolTip="【パーツデフォルト設定の削除】&#xa;選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を取り消します。&#xa;(stpiファイル自体は削除されません。)"/>
+                                <Button Height="26" Command="{Binding DeleteDefaultCommand}" CommandParameter="{Binding SingleBlockSelected}"
+                                        Content="{StaticResource Save-Minus}" ToolTip="{x:Static partCnt:Resources.EditDefaultButtonRemoveToolTip}"/>
 
-                                <Button Height="26" Command="{Binding ReloadDefaultCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
-                                        Content="{StaticResource Reload}" ToolTip="【パーツデフォルト設定のリロード】&#xa;選択されているパーツが指定している画像ファイルに対応するデフォルトパラメータ情報を読み取り、現在の全パラメータを自動編集します。"/>
+                                <Button Height="26" Click="ReloadDefault_Clicked" IsEnabled="{Binding SomeBlockSelected}"
+                                        Content="{StaticResource Reload}" ToolTip="{x:Static partCnt:Resources.EditDefaultButtonReloadToolTip}"/>
                             </StackPanel>
                         </StackPanel>
                         <Popup IsOpen="{Binding PartsPopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" ToolTip="">

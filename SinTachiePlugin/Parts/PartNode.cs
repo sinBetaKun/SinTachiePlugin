@@ -118,7 +118,7 @@ namespace SinTachiePlugin.Parts
             Vector2 zoom = new(1f);
             Matrix4x4 camera = Matrix4x4.Identity;
             InterpolationMode zoomInterpolationMode = InterpolationMode.Linear;
-            double scale = 1.0, opacity = 1.0, rotate2, scale2;
+            double opacity = 1.0, rotate2, scale2;
             bool xyzDependent, rotateDependent, scaleDependent, opacityDependent, mirrorDependent, mirror = false,
                 effectXYZDependent, effectRotateDependent, effectZoomDependent, effectOpacityDependent, effectMirrorDependent, effectCameraDependent, effectUnlazyDependent;
 
@@ -151,7 +151,6 @@ namespace SinTachiePlugin.Parts
 
                 if (scaleDependent)
                 {
-                    scale *= scale2;
                     zoom *= (float)scale2;
                     scaleDependent = node.Params.ScaleDependent;
                 }
@@ -159,7 +158,7 @@ namespace SinTachiePlugin.Parts
                 if (opacityDependent)
                 {
                     opacity *= node.Params.Opacity / 100.0;
-                    scaleDependent = node.Params.OpacityDependent;
+                    opacityDependent = node.Params.OpacityDependent;
                 }
 
                 if (rotateDependent)

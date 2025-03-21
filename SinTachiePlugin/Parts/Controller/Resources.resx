@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppearCheckBoxToolTip" xml:space="preserve">
+    <value>【表示／非表示】
+描画するか否かを切り替えられます。</value>
+  </data>
+  <data name="BusPanelText" xml:space="preserve">
+    <value>バス</value>
+  </data>
+  <data name="BusPanelToolTip" xml:space="preserve">
+    <value>【バス】
+パーツの描画優先度。
+数字が高い方が後の方で描画され、画像上では手前に映ります。
+（表示される数値は、アイテム上で最初のフレームにおける数値です。）</value>
+  </data>
+  <data name="CommentPanelText" xml:space="preserve">
+    <value>備考</value>
+  </data>
+  <data name="CommentPanelToolTip" xml:space="preserve">
+    <value>【備考】
+メモか何か書くと良いでしょう。</value>
+  </data>
+  <data name="ContextMenuCheckAllToolTip" xml:space="preserve">
+    <value>【全ブロックにチェック】
+描画順序リスト内の全パーツブロックに
+チェックを入れます。</value>
+  </data>
+  <data name="ContextMenuCheckOnlyOneToolTip" xml:space="preserve">
+    <value>【全ブロックにチェック】
+選択されているパーツブロックだけに
+チェックを入れた状態にします。</value>
+  </data>
+  <data name="ContextMenuCheckAllHeader" xml:space="preserve">
+    <value>全ブロックにチェック</value>
+  </data>
+  <data name="ContextMenuCheckOnlyOneHeader" xml:space="preserve">
+    <value>選択中のブロックにのみチェック</value>
+  </data>
+  <data name="ContextMenuCopyHeader" xml:space="preserve">
+    <value>コピー</value>
+  </data>
+  <data name="ContextMenuRemoveHeader" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="ContextMenuCopyToolTip" xml:space="preserve">
+    <value>【コピー】
+選択されているパーツをコピーします。
+コピーされたパーツは『貼り付け』で新たなパーツとして挿入できます。</value>
+  </data>
+  <data name="ContextMenuRemoveToolTip" xml:space="preserve">
+    <value>【削除】
+選択されているパーツを削除します。</value>
+  </data>
+  <data name="ContextMenuCutHeader" xml:space="preserve">
+    <value>切り取り</value>
+  </data>
+  <data name="ContextMenuCutToolTip" xml:space="preserve">
+    <value>【切り取り】
+選択されているパーツを取り除きます。
+切り取られたパーツは『貼り付け』で再挿入できます。</value>
+  </data>
+  <data name="ContextMenuDuplicationHeader" xml:space="preserve">
+    <value>複製</value>
+  </data>
+  <data name="ContextMenuDuplicationToolTip" xml:space="preserve">
+    <value>【複製】
+選択されているパーツをひとつ下に複製します。</value>
+  </data>
+  <data name="ContextMenuPasteHeader" xml:space="preserve">
+    <value>貼り付け</value>
+  </data>
+  <data name="ContextMenuPasteToolTip" xml:space="preserve">
+    <value>【貼り付け】
+『切り取り』または『コピー』されたパーツを新たなパーツとして挿入できます。</value>
+  </data>
+  <data name="HeightOfListSliderToolTip" xml:space="preserve">
+    <value>【リストの高さ】
+描画順序リストの高さを調整できます。
+プラグイン内でこの値は共有されます。</value>
+  </data>
+  <data name="ParentPanelText" xml:space="preserve">
+    <value>親</value>
+  </data>
+  <data name="ParentPanelToolTip" xml:space="preserve">
+    <value>【親】
+タグ名が一致するパーツと動きを連動します。
+Blenderでいう親ボーンに相当します。</value>
+  </data>
+  <data name="PartBlockToolTip" xml:space="preserve">
+    <value>【パーツブロック】
+パーツたちの内のひとつを表しています。
+右クリックで特殊操作ができます。</value>
+  </data>
+  <data name="PartListControllerText" xml:space="preserve">
+    <value>描画順序</value>
+  </data>
+  <data name="PartListToolTip" xml:space="preserve">
+    <value>【描画順序リスト】
+新しくパーツを追加するときは
+右側の「＋」を押してください。</value>
+  </data>
+  <data name="STPVersionToolTip" xml:space="preserve">
+    <value>【STPバージョン】
+本プラグインのバージョンです。</value>
+  </data>
+  <data name="TagPanelText" xml:space="preserve">
+    <value>タグ</value>
+  </data>
+  <data name="TagPanelToolTip" xml:space="preserve">
+    <value>【タグ】
+パーツの名前です。
+他のパーツの親にしたいときは名前を付けましょう。</value>
+  </data>
+  <data name="EditListButtonsToolTip" xml:space="preserve">
+    <value>【リスト編集ボタン群】
+『パーツブロック』の選択状態によっては一部の操作ができません。</value>
+  </data>
+  <data name="EditListButtonAddToolTip" xml:space="preserve">
+    <value>【パーツ追加】
+パーツツリーから選択されたパーツを追加します。</value>
+  </data>
+  <data name="EditListButtonRemoveToolTip" xml:space="preserve">
+    <value>【パーツ削除】
+選択されているパーツを取り除きます。</value>
+  </data>
+  <data name="EditListButtonMoveUpToolTip" xml:space="preserve">
+    <value>【ひとつ上に移動】
+選択されているパーツを一つ上のパーツと入れ替えます。</value>
+  </data>
+  <data name="EditListButtonMoveDownToolTip" xml:space="preserve">
+    <value>【ひとつ下に移動】
+選択されているパーツを一つ下のパーツと入れ替えます。</value>
+  </data>
+  <data name="EditDefaultButtonsToolTip" xml:space="preserve">
+    <value>【デフォルト設定編集ボタン群】
+『パーツブロック』が１つだけ選択されている状態でないと
+全ての操作ができません。</value>
+  </data>
+  <data name="EditDefaultButtonWriteToolTip" xml:space="preserve">
+    <value>【パーツデフォルト設定の保存／上書き】
+選択されているパーツが指定している画像ファイルに、現在のパーツパラメータ情報をデフォルトとして記録します。
+(stpiファイルが生成／上書きされます。)</value>
+  </data>
+  <data name="EditDefaultButtonRemoveToolTip" xml:space="preserve">
+    <value>【パーツデフォルト設定の削除】
+選択されているパーツが指定している画像ファイルから、デフォルトのパラメータ情報を取り消します。
+(stpiファイル自体は削除されません。)</value>
+  </data>
+  <data name="EditDefaultButtonReloadToolTip" xml:space="preserve">
+    <value>【パーツデフォルト設定のリロード】
+選択されているパーツが指定している画像ファイルに対応するデフォルトパラメータ情報を読み取り、現在の全パラメータを自動編集します。</value>
+  </data>
+</root>

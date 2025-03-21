@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SinTachiePlugin.LayerValueListController.Controller"
              xmlns:c="clr-namespace:YukkuriMovieMaker.Controls;assembly=YukkuriMovieMaker.Controls"
+             xmlns:layerValCnt="clr-namespace:SinTachiePlugin.LayerValueListController.Controller"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance Type={x:Type local:LayerValueListControllerViewModel}}">
     <UserControl.Resources>
@@ -37,11 +38,15 @@
                             <Border BorderBrush="#FF808080" BorderThickness="1">
                                 <StackPanel Margin="0,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
                                     <Border Margin="4,4,0,4" Background="#80808080" BorderThickness="1" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Cerrar.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0" VerticalAlignment="Center" FontSize="12" ToolTip="セラール（の最初の）値"/>
+                                        <TextBlock Text="{Binding Cerrar.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0"
+                                                   VerticalAlignment="Center" FontSize="12"
+                                                   ToolTip="{x:Static layerValCnt:Resources.CerrarValueToolTip}"/>
                                     </Border>
                                     <TextBlock Text="~" Margin="4,4,0,4" VerticalAlignment="Center" FontSize="12"/>
                                     <Border Margin="4,4,0,4" Background="#80808080" BorderThickness="1" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Abrir.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0" VerticalAlignment="Center" FontSize="12" ToolTip="アブリール（の最初の）値"/>
+                                        <TextBlock Text="{Binding Abrir.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0"
+                                                   VerticalAlignment="Center" FontSize="12"
+                                                   ToolTip="{x:Static layerValCnt:Resources.AbrirValueToolTip}"/>
                                     </Border>
                                     <TextBlock Text="{Binding Comment}" Margin="10,4,0,4" VerticalAlignment="Center" FontSize="12"/>
                                 </StackPanel>
@@ -58,10 +63,18 @@
                     <RowDefinition Height="26"/>
                 </Grid.RowDefinitions>
 
-                <Button Grid.Row="0" Content="{StaticResource Plus}" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="レイヤー軸を一つ追加"/>
-                <Button Grid.Row="1" Content="{StaticResource Minus}" Command="{Binding RemoveCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているレイヤー軸を削除"/>
-                <Button Grid.Row="2" Content="{StaticResource Up}" Command="{Binding MoveUpCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているレイヤー軸を一つ上と入れ替える"/>
-                <Button Grid.Row="3" Content="{StaticResource Down}" Command="{Binding MoveDownCommand}" CommandParameter="{Binding ElementName=list,Path=SelectedIndex}" ToolTip="選択されているレイヤー軸を一つ下と入れ替える"/>
+                <Button Grid.Row="0" Content="{StaticResource Plus}" Command="{Binding AddCommand}"
+                        CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
+                        ToolTip="{x:Static layerValCnt:Resources.AddButtonToolTip}"/>
+                <Button Grid.Row="1" Content="{StaticResource Minus}" Command="{Binding RemoveCommand}"
+                        CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
+                        ToolTip="{x:Static layerValCnt:Resources.RemoveButtonToolTip}"/>
+                <Button Grid.Row="2" Content="{StaticResource Up}" Command="{Binding MoveUpCommand}"
+                        CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
+                        ToolTip="{x:Static  layerValCnt:Resources.MoveUpButtonToolTip}"/>
+                <Button Grid.Row="3" Content="{StaticResource Down}" Command="{Binding MoveDownCommand}"
+                        CommandParameter="{Binding ElementName=list,Path=SelectedIndex}"
+                        ToolTip="{x:Static layerValCnt:Resources.MoveDownButtonToolTip}"/>
             </Grid>
         </Grid>
         <c:PropertiesEditor 

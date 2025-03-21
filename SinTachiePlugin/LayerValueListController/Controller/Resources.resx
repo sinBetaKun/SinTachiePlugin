@@ -117,13 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PlaceOfTachieSource" xml:space="preserve">
-    <value>素材の場所</value>
+  <data name="AbrirValueToolTip" xml:space="preserve">
+    <value>セラール（の最初の）値</value>
   </data>
-  <data name="PluginTitle" xml:space="preserve">
-    <value>sin型カスタムパーツ立ち絵</value>
+  <data name="AddButtonToolTip" xml:space="preserve">
+    <value>レイヤー軸を一つ追加</value>
   </data>
-  <data name="STPVersion" xml:space="preserve">
-    <value>v1.1.0.0</value>
+  <data name="CerrarValueToolTip" xml:space="preserve">
+    <value>アブリール（の最初の）値</value>
+  </data>
+  <data name="MoveDownButtonToolTip" xml:space="preserve">
+    <value>選択されているレイヤー軸を一つ下と入れ替える</value>
+  </data>
+  <data name="MoveUpButtonToolTip" xml:space="preserve">
+    <value>選択されているレイヤー軸を一つ上と入れ替える</value>
+  </data>
+  <data name="RemoveButtonToolTip" xml:space="preserve">
+    <value>選択されているレイヤー軸を削除</value>
   </data>
 </root>
