@@ -7,15 +7,15 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter
 {
     public class PeriodicParameter : LayerValueExtraBase, IStartParameter, IIntervalParameter, ITransitionParameter
     {
-        [Display(Name = "開始", Description = "差分を動かし始めるタイミング")]
+        [Display(Name = nameof(Resources.ParamName_Start), Description = nameof(Resources.ParamDesc_Start), ResourceType = typeof(Resources))]
         [AnimationSlider("F2", "秒", 0, 10)]
         public Animation Start { get; } = new Animation(0, 0, 9999);
 
-        [Display(Name = "間隔", Description = "差分を動かす時間間隔（遷移は含まれない）")]
+        [Display(Name = nameof(Resources.ParamName_Interval), Description = nameof(Resources.ParamDesc_Interval), ResourceType = typeof(Resources))]
         [AnimationSlider("F2", "秒", 0, 10)]
         public Animation Interval { get; } = new Animation(0, 0, 9999);
 
-        [Display(Name = "遷移", Description = "差分を動かし始めてから終わるまでの時間")]
+        [Display(Name = nameof(Resources.ParamName_Transition), Description = nameof(Resources.ParamDesc_Transition), ResourceType = typeof(Resources))]
         [AnimationSlider("F2", "秒", 0, 10)]
         public Animation Transition { get; } = new Animation(0, 0, 9999);
 

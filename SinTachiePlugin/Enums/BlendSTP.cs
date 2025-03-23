@@ -4,71 +4,71 @@ namespace SinTachiePlugin.Enums
 {
     public enum BlendSTP
     {
-        [Display(Name = "普通", Description = "普通")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_SourceOver), ResourceType = typeof(Resources))]
         SourceOver,
-        [Display(Name = "ディザ合成", Description = "ディザ合成")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Dissolve), ResourceType = typeof(Resources))]
         Dissolve,
-        [Display(Name = "比較（暗）", Description = "比較（暗）")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Darken), ResourceType = typeof(Resources))]
         Darken,
-        [Display(Name = "乗算", Description = "乗算")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Multiply), ResourceType = typeof(Resources))]
         Multiply,
-        [Display(Name = "焼き込みカラー", Description = "焼き込みカラー")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_ColorBurn), ResourceType = typeof(Resources))]
         ColorBurn,
-        [Display(Name = "焼き込み（リニア）", Description = "焼き込み（リニア）")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_LinearBurn), ResourceType = typeof(Resources))]
         LinearBurn,
-        [Display(Name = "比較（明）", Description = "比較（明）")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Lighten), ResourceType = typeof(Resources))]
         Lighten,
-        [Display(Name = "スクリーン", Description = "スクリーン")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Screen), ResourceType = typeof(Resources))]
         Screen,
-        [Display(Name = "覆い焼きカラー", Description = "覆い焼きカラー")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_ColorDodge), ResourceType = typeof(Resources))]
         ColorDodge,
-        [Display(Name = "覆い焼き（リニア）-加算", Description = "覆い焼き（リニア）-加算")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_LinearDodge), ResourceType = typeof(Resources))]
         LinearDodge,
-        [Display(Name = "加算", Description = "加算")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Plus), ResourceType = typeof(Resources))]
         Plus,
-        [Display(Name = "オーバーレイ", Description = "オーバーレイ")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Overlay), ResourceType = typeof(Resources))]
         Overlay,
-        [Display(Name = "ソフトライト", Description = "ソフトライト")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_SoftLight), ResourceType = typeof(Resources))]
         SoftLight,
-        [Display(Name = "ハードライト", Description = "ハードライト")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_HardLight), ResourceType = typeof(Resources))]
         HardLight,
-        [Display(Name = "ビビッドライト", Description = "ビビッドライト")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_VividLight), ResourceType = typeof(Resources))]
         VividLight,
-        [Display(Name = "リニアライト", Description = "リニアライト")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_LinearLight), ResourceType = typeof(Resources))]
         LinearLight,
-        [Display(Name = "ピンライト", Description = "ピンライト")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_PinLight), ResourceType = typeof(Resources))]
         PinLight,
-        [Display(Name = "ハードミックス", Description = "ハードミックス")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_HardMix), ResourceType = typeof(Resources))]
         HardMix,
-        [Display(Name = "差分", Description = "差分")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Difference), ResourceType = typeof(Resources))]
         Difference,
-        [Display(Name = "除外", Description = "除外")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Exclusion), ResourceType = typeof(Resources))]
         Exclusion,
-        [Display(Name = "減算", Description = "減算")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Subtract), ResourceType = typeof(Resources))]
         Subtract,
-        [Display(Name = "除算", Description = "除算")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Division), ResourceType = typeof(Resources))]
         Division,
-        [Display(Name = "色相", Description = "色相")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Hue), ResourceType = typeof(Resources))]
         Hue,
-        [Display(Name = "彩度", Description = "彩度")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Saturation), ResourceType = typeof(Resources))]
         Saturation,
-        [Display(Name = "カラー", Description = "カラー")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Color), ResourceType = typeof(Resources))]
         Color,
-        [Display(Name = "輝度", Description = "輝度")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_Luminosity), ResourceType = typeof(Resources))]
         Luminosity,
-        [Display(Name = "カラー比較（明）", Description = "カラー比較（明）")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_LighterColor), ResourceType = typeof(Resources))]
         LighterColor,
-        [Display(Name = "背景", Description = "背景")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_DestinationOver), ResourceType = typeof(Resources))]
         DestinationOver,
-        [Display(Name = "カラー比較（暗）", Description = "カラー比較（暗）")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_DarkerColor), ResourceType = typeof(Resources))]
         DarkerColor,
-        [Display(Name = "削除", Description = "削除")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_DestinationOut), ResourceType = typeof(Resources))]
         DestinationOut,
-        [Display(Name = "背景でクリッピング", Description = "背景でクリッピング")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_SourceAtop), ResourceType = typeof(Resources))]
         SourceAtop,
-        [Display(Name = "重ならない部分のみ", Description = "重ならない部分のみ")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_XOR), ResourceType = typeof(Resources))]
         XOR,
-        [Display(Name = "反転マスク", Description = "反転マスク")]
+        [Display(Name = nameof(Resources.Value_BlendSTP_MaskInverseErt), ResourceType = typeof(Resources))]
         MaskInverseErt,
     }
 }

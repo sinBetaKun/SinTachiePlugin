@@ -1,0 +1,298 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Value_BlendSTP_SourceOver" xml:space="preserve">
+    <value>普通</value>
+  </data>
+  <data name="Value_BlendSTP_Dissolve" xml:space="preserve">
+    <value>ディザ合成</value>
+  </data>
+  <data name="Value_BlendSTP_LinearBurn" xml:space="preserve">
+    <value>焼き込み（リニア）</value>
+  </data>
+  <data name="Value_BlendSTP_DestinationOver" xml:space="preserve">
+    <value>背景</value>
+  </data>
+  <data name="Value_BlendSTP_DarkerColor" xml:space="preserve">
+    <value>カラー比較（暗）</value>
+  </data>
+  <data name="Value_BlendSTP_DestinationOut" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Value_BlendSTP_SourceAtop" xml:space="preserve">
+    <value>背景でクリッピング</value>
+  </data>
+  <data name="Value_BlendSTP_XOR" xml:space="preserve">
+    <value>重ならない部分のみ</value>
+  </data>
+  <data name="Value_BlendSTP_MaskInverseErt" xml:space="preserve">
+    <value>反転マスク</value>
+  </data>
+  <data name="Value_BlendSTP_Lighten" xml:space="preserve">
+    <value>比較（明）</value>
+  </data>
+  <data name="Value_BlendSTP_Screen" xml:space="preserve">
+    <value>スクリーン</value>
+  </data>
+  <data name="Value_BlendSTP_SoftLight" xml:space="preserve">
+    <value>ソフトライト</value>
+  </data>
+  <data name="Value_BlendSTP_HardLight" xml:space="preserve">
+    <value>ハードライト</value>
+  </data>
+  <data name="Value_BlendSTP_VividLight" xml:space="preserve">
+    <value>ビビッドライト</value>
+  </data>
+  <data name="Value_BlendSTP_LinearLight" xml:space="preserve">
+    <value>リニアライト</value>
+  </data>
+  <data name="Value_BlendSTP_PinLight" xml:space="preserve">
+    <value>ピンライト</value>
+  </data>
+  <data name="Value_BlendSTP_HardMix" xml:space="preserve">
+    <value>ハードミックス</value>
+  </data>
+  <data name="Value_BlendSTP_Difference" xml:space="preserve">
+    <value>差分</value>
+  </data>
+  <data name="Value_BlendSTP_Exclusion" xml:space="preserve">
+    <value>除外</value>
+  </data>
+  <data name="Value_BlendSTP_Subtract" xml:space="preserve">
+    <value>減算</value>
+  </data>
+  <data name="Value_BlendSTP_Division" xml:space="preserve">
+    <value>除算</value>
+  </data>
+  <data name="Value_BlendSTP_Hue" xml:space="preserve">
+    <value>色相</value>
+  </data>
+  <data name="Value_BlendSTP_Saturation" xml:space="preserve">
+    <value>彩度</value>
+  </data>
+  <data name="Value_BlendSTP_ColorDodge" xml:space="preserve">
+    <value>覆い焼きカラー</value>
+  </data>
+  <data name="Value_BlendSTP_LinearDodge" xml:space="preserve">
+    <value>覆い焼き（リニア）-加算</value>
+  </data>
+  <data name="Value_BlendSTP_Plus" xml:space="preserve">
+    <value>加算</value>
+  </data>
+  <data name="Value_BlendSTP_Overlay" xml:space="preserve">
+    <value>オーバーレイ</value>
+  </data>
+  <data name="Value_BlendSTP_Darken" xml:space="preserve">
+    <value>比較（暗）</value>
+  </data>
+  <data name="Value_BlendSTP_Multiply" xml:space="preserve">
+    <value>乗算</value>
+  </data>
+  <data name="Value_BlendSTP_LighterColor" xml:space="preserve">
+    <value>カラー比較（明）</value>
+  </data>
+  <data name="Value_BlendSTP_Color" xml:space="preserve">
+    <value>カラー</value>
+  </data>
+  <data name="Value_BlendSTP_Luminosity" xml:space="preserve">
+    <value>輝度</value>
+  </data>
+  <data name="Value_BlendSTP_ColorBurn" xml:space="preserve">
+    <value>焼き込みカラー</value>
+  </data>
+  <data name="Value_LyrAnmMd_CerrarPlusAbrir" xml:space="preserve">
+    <value>２数の和</value>
+  </data>
+  <data name="Desc_LyrAnmMd_CerrarPlusAbrir" xml:space="preserve">
+    <value>「セラール」と「アブリール」の値を足した結果でレイヤーを制御します。</value>
+  </data>
+  <data name="Value_LyrAnmMd_Sin" xml:space="preserve">
+    <value>sin</value>
+  </data>
+  <data name="Desc_LyrAnmMd_Sin" xml:space="preserve">
+    <value>「セラール」を振幅、「アブリール」を位相とするsin波でレイヤーを制御します。</value>
+  </data>
+  <data name="Value_LyrAnmMd_PeriodicShuttle" xml:space="preserve">
+    <value>周期的往復</value>
+  </data>
+  <data name="Desc_LyrAnmMd_PeriodicShuttle" xml:space="preserve">
+    <value>（セラール）～（アブリール）の範囲で「往復」と同じ動きを定期的にします。
+(セラール)の値と(アブリール)の値の間を周期的に往復します。</value>
+  </data>
+  <data name="Value_LyrAnmMd_PeriodicLoop" xml:space="preserve">
+    <value>周期的ループ</value>
+  </data>
+  <data name="Desc_LyrAnmMd_PeriodicLoop" xml:space="preserve">
+    <value>（セラール）～（アブリール）の範囲で「ループ」と同じ動きを定期的にします。
+(セラール)の値と(アブリール)の値の間を周期的に往復します。</value>
+  </data>
+  <data name="Value_LyrAnmMd_VoiceVolume" xml:space="preserve">
+    <value>口パク</value>
+  </data>
+  <data name="Value_OutLyrVlMd_Limit" xml:space="preserve">
+    <value>指定なし</value>
+  </data>
+  <data name="Value_ZSortMode_Ignore" xml:space="preserve">
+    <value>Z座標完全無視</value>
+  </data>
+  <data name="Desc_ZSortMode_Ignore" xml:space="preserve">
+    <value>Z座標が描画順序に一切影響しない。</value>
+  </data>
+  <data name="Value_ZSortMode_GlobalSpace" xml:space="preserve">
+    <value>グローバル空間内</value>
+  </data>
+  <data name="Desc_ZSortMode_GlobalSpace" xml:space="preserve">
+    <value>このモードに設定されているパーツ同士で描画順序を変える。</value>
+  </data>
+  <data name="Value_ZSortMode_BusScreen" xml:space="preserve">
+    <value>バススクリーン内</value>
+  </data>
+  <data name="Desc_ZSortMode_BusScreen" xml:space="preserve">
+    <value>このモードに設定されている同バス内のパーツ同士で描画順序を、あくまでバス内で変える。「バス順に表示」モードのパーツをバス内のZ座標を0として描画する。</value>
+  </data>
+  <data name="Desc_OutLyrVlMd_Limit" xml:space="preserve">
+    <value>0%~100%の範囲内でのみ変化
+0%以下の時はセラール、100%以上の時はアブリールの値になる。</value>
+  </data>
+  <data name="Value_OutLyrVlMd_Loop" xml:space="preserve">
+    <value>ループ</value>
+  </data>
+  <data name="Desc_OutLyrVlMd_Loop" xml:space="preserve">
+    <value>100%ごとに同じ動きを繰り返す。
+例) ..| -100%(ｾﾗｰﾙ) ⇄ -0.1%(ｱﾌﾞﾘｰﾙ) | 0%(ｾﾗｰﾙ) ⇄ 99.9%(ｱﾌﾞﾘｰﾙ) | 100%(ｾﾗｰﾙ) ⇄ 199.9%(ｱﾌﾞﾘｰﾙ) |..</value>
+  </data>
+  <data name="Value_OutLyrVlMd_Shuttle" xml:space="preserve">
+    <value>往復</value>
+  </data>
+  <data name="Desc_OutLyrVlMd_Shuttle" xml:space="preserve">
+    <value>100%ごとに実際の動きが反転する。
+例) ..⇄-200%(ｾﾗｰﾙ) ⇄ -100%(ｱﾌﾞﾘｰﾙ) ⇄ 0%(ｾﾗｰﾙ) ⇄ 100%(ｱﾌﾞﾘｰﾙ) ⇄ 200%(ｾﾗｰﾙ)⇄..</value>
+  </data>
+  <data name="Desc_LyrAnmMd_VoiceVolume" xml:space="preserve">
+    <value>（セラール）～（アブリール）の範囲で口パクします。
+口が閉じるときに(セラール)の値に、
+全開のときに(アブリール)の値になります。</value>
+  </data>
+  <data name="Value_LyrAnmMd_CerrarTimesAbrir" xml:space="preserve">
+    <value>２数の積</value>
+  </data>
+  <data name="Desc_LyrAnmMd_CerrarTimesAbrir" xml:space="preserve">
+    <value>「セラール」と「アブリール」の値を掛けた結果でレイヤーを制御します。</value>
+  </data>
+</root>

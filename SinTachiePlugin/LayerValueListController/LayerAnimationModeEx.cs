@@ -1,6 +1,6 @@
-﻿using SinTachiePlugin.LayerValueListController.Extra;
+﻿using SinTachiePlugin.Enums;
+using SinTachiePlugin.LayerValueListController.Extra;
 using SinTachiePlugin.LayerValueListController.Extra.Parameter;
-using SinTachiePlugin.Parts.LayerValueListController;
 
 namespace SinTachiePlugin.LayerValueListController
 {

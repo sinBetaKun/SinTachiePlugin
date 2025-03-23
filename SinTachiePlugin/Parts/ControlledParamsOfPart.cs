@@ -21,12 +21,12 @@ namespace SinTachiePlugin.Parts
         public bool Appear { get => appear; set => Set(ref appear, value); }
         bool appear = true;
 
-        [Display(GroupName = "ブロック情報", Name = "タグ")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_TagName), ResourceType = typeof(Resources))]
         [TextEditor(AcceptsReturn = true)]
         public string TagName { get => tagName; set => Set(ref tagName, value); }
         string tagName = string.Empty;
 
-        [Display(GroupName = "ブロック情報", Name = "親")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_Parent), ResourceType = typeof(Resources))]
         [TextEditor(AcceptsReturn = true)]
         public string Parent { get => parent; set => Set(ref parent, value); }
         string parent = string.Empty;
@@ -35,7 +35,7 @@ namespace SinTachiePlugin.Parts
         /// 描画時に現在の値を取得する際は GetBusNum を呼び出す。
         /// ここから直々に GetValue すると、Listbox の一要素の UI に変化が起きなくなってしまう。
         /// </summary>
-        [Display(GroupName = "ブロック情報", Name = "バス")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_BusNum), ResourceType = typeof(Resources))]
         [AnimationSlider("F0", "", -50, 50)]
         public Animation BusNum { get; } = new Animation(0, -1000, 1000);
 /*
@@ -55,7 +55,7 @@ namespace SinTachiePlugin.Parts
             return BusNumView;
         }*/
 
-        [Display(GroupName = "ブロック情報", Name = "画像")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_ImagePath), ResourceType = typeof(Resources))]
         [FileSelectorForPartOfSinTachie]
         public string ImagePath
         {
@@ -67,138 +67,138 @@ namespace SinTachiePlugin.Parts
         }
         string imagePath = string.Empty;
 
-        [Display(GroupName = "ブロック情報", Name = "備考")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_Comment), ResourceType = typeof(Resources))]
         [TextEditor(AcceptsReturn = true)]
         public string Comment { get => comment; set => Set(ref comment, value); }
         string comment = string.Empty;
 
-        [Display(GroupName = "ブロック情報", Name = "差分レイヤー")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_LayerValues), ResourceType = typeof(Resources))]
         [LayerValueListController(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<LayerValue> LayerValues { get => layerValue; set => Set(ref layerValue, value); }
         ImmutableList<LayerValue> layerValue = [];
 
-        [Display(GroupName = "描画", Name = "X")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_X), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "px", -500, 500)]
         public Animation X { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = "描画", Name = "Y")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Y), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "px", -500, 500)]
         public Animation Y { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = "描画", Name = "Z")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Z), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "px", -500, 500)]
         public Animation Z { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = "描画", Name = "不透明度")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Opacity), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "%", 0, 100)]
         public Animation Opacity { get; } = new Animation(100, 0, 100);
 
-        [Display(GroupName = "描画", Name = "拡大率")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Scale), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "%", 0, 200)]
         public Animation Scale { get; } = new Animation(100, 0, 5000);
 
-        [Display(GroupName = "描画", Name = "回転角")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Rotate), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "°", -360, 360)]
         public Animation Rotate { get; } = new Animation(0, -36000, 36000, 360);
 
-        [Display(GroupName = "描画", Name = "左右反転")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Mirror), ResourceType = typeof(Resources))]
         [AnimationSlider("F0", "", 0, 1)]
         public Animation Mirror { get; } = new Animation(0, 0, 1);
 
-        [Display(GroupName = "描画", Name = "合成モード")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Composition), ResourceType = typeof(Resources))]
         [EnumComboBox]
         public BlendSTP BlendMode { get => blendMode; set { Set(ref blendMode, value); } }
 
         BlendSTP blendMode = BlendSTP.SourceOver;
 
-        [Display(GroupName = "描画", Name = "Z順描画")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_ZOrder), ResourceType = typeof(Resources))]
         [EnumComboBox]
         public ZSortMode ZSortMode { get => zSortMode; set { Set(ref zSortMode, value); } }
 
         ZSortMode zSortMode = ZSortMode.BusScreen;
 
-        [Display(GroupName = "値の依存", Name = "X/Y/Z", Description = "X/Y/Z")]
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_XYZ), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool XYZDependent { get => xyzDependent; set => Set(ref xyzDependent, value); }
         bool xyzDependent = true;
 
-        [Display(GroupName = "値の依存", Name = "不透明度", Description = "不透明度")]
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_Opacity), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool OpacityDependent { get => opacityDependent; set => Set(ref opacityDependent, value); }
         bool opacityDependent = true;
 
-        [Display(GroupName = "値の依存", Name = "拡大率", Description = "拡大率")]
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_Scale), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool ScaleDependent { get => scaleDependent; set => Set(ref scaleDependent, value); }
         bool scaleDependent = true;
 
-        [Display(GroupName = "値の依存", Name = "回転角", Description = "回転角")]
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_Rotate), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool RotateDependent { get => rotateDependent; set => Set(ref rotateDependent, value); }
         bool rotateDependent = true;
 
-        [Display(GroupName = "値の依存", Name = "左右反転", Description = "左右反転")]
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_Mirror), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool MirrorDependent { get => mirrorDependent; set => Set(ref mirrorDependent, value); }
         bool mirrorDependent = true;
 
-        [Display(GroupName = "中心位置", Name = "X")]
+        [Display(GroupName = nameof(Resources.GroupeName_CenterPoint), Name = nameof(Resources.ParamName_X), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "px", -500, 500)]
         public Animation Cnt_X { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = "中心位置", Name = "Y")]
+        [Display(GroupName = nameof(Resources.GroupeName_CenterPoint), Name = nameof(Resources.ParamName_Y), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "px", -500, 500)]
         public Animation Cnt_Y { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = "中心位置", Name = "位置を保持")]
+        [Display(GroupName = nameof(Resources.GroupeName_CenterPoint), Name = nameof(Resources.ParamName_KeepPlace), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool KeepPlace { get => keepPlace; set => Set(ref keepPlace, value); }
         bool keepPlace = false;
 
-        [Display(GroupName = "サブ拡大率", Name = "横方向")]
+        [Display(GroupName = nameof(Resources.GroupeName_SubScale), Name = nameof(Resources.ParamName_Exp_X), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "%", 0, 200)]
         public Animation Exp_X { get; } = new Animation(100, 0, 5000);
 
-        [Display(GroupName = "サブ拡大率", Name = "縦方向")]
+        [Display(GroupName = nameof(Resources.GroupeName_SubScale), Name = nameof(Resources.ParamName_Exp_Y), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "%", 0, 200)]
         public Animation Exp_Y { get; } = new Animation(100, 0, 5000);
 
-        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "X/Y/Z", Description = "X/Y/Z")]
+        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_XYZ), Description = nameof(Resources.ParamDesc_EffectXYZDependent), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool EffectXYZDependent { get => effectXYZDependent; set => Set(ref effectXYZDependent, value); }
         bool effectXYZDependent = true;
 
-        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "不透明度", Description = "不透明度")]
+        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_Opacity), Description = nameof(Resources.ParamDesc_EffectOpacityDependent), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool EffectOpacityDependent { get => effectOpacityDependent; set => Set(ref effectOpacityDependent, value); }
         bool effectOpacityDependent = true;
 
-        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "拡大率", Description = "拡大率")]
+        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_Scale), Description = nameof(Resources.ParamDesc_EffectZoomDependent), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool EffectZoomDependent { get => effectZoomDependent; set => Set(ref effectZoomDependent, value); }
         bool effectZoomDependent = true;
 
-        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "回転角", Description = "回転角")]
+        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_Rotate), Description = nameof(Resources.ParamDesc_EffectRotateDependent), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool EffectRotateDependent { get => effectRotateDependent; set => Set(ref effectRotateDependent, value); }
         bool effectRotateDependent = true;
 
-        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "左右反転", Description = "左右反転")]
+        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_Mirror), Description = nameof(Resources.ParamDesc_EffectMirrorDependent), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool EffectMirrorDependent { get => effectMirrorDependent; set => Set(ref effectMirrorDependent, value); }
         bool effectMirrorDependent = true;
 
-        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "カメラ", Description = "カメラ")]
+        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_Camera), Description = nameof(Resources.ParamDesc_EffectCameraDependent), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool EffectCameraDependent { get => effectCameraDependent; set => Set(ref effectCameraDependent, value); }
         bool effectCameraDependent = true;
 
-        [Display(GroupName = "パーツ個別エフェクトの依存", Name = "非遅延エフェクト", Description = "非遅延エフェクト")]
+        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_EffectUnlazyDependent), Description = nameof(Resources.ParamDesc_EffectUnlazyDependent), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool EffectUnlazyDependent { get => effectUnlazyDependent; set => Set(ref effectUnlazyDependent, value); }
         bool effectUnlazyDependent = true;
 
-        [Display(GroupName = "パーツ個別エフェクト", Name = "")]
+        [Display(GroupName = nameof(Resources.GroupeName_PartEffect))]
         [VideoEffectSelector(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<IVideoEffect> Effects { get => effects; set => Set(ref effects, value); }
         ImmutableList<IVideoEffect> effects = [];
@@ -248,7 +248,7 @@ namespace SinTachiePlugin.Parts
                 }
                 else
                 {
-                    throw new Exception("Jsonで変換できないエフェクトを検知");
+                    throw new Exception(Resources.ErrorLog_DeserializeVideoEffects);
                 }
             }
             catch (Exception ex)

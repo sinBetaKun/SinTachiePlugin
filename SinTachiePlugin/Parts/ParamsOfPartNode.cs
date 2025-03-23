@@ -1,6 +1,5 @@
 ﻿using SinTachiePlugin.Enums;
 using SinTachiePlugin.LayerValueListController;
-using SinTachiePlugin.Parts.LayerValueListController;
 using System.Collections.Immutable;
 using Vortice.Direct2D1;
 using Vortice.Direct2D1.Effects;

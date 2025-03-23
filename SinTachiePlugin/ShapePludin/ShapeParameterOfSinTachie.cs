@@ -12,7 +12,7 @@ namespace SinTachiePlugin.ShapePludin
 {
     internal class ShapeParameterOfSinTachie(SharedDataStore? sharedData) : ShapeParameterBase(sharedData)
     {
-        [Display(Name = "")]
+        [Display]
         [PartsListControllerForShape(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public PartsOfShapeItem PartsAndRoot { get => partsAndRoot; set => Set(ref partsAndRoot, value); }
         PartsOfShapeItem partsAndRoot = new();

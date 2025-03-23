@@ -8,7 +8,7 @@ namespace SinTachiePlugin.Parts
 {
     internal class SinTachieFaceParameter : TachieFaceParameterBase
     {
-        [Display(Name = "", Description = "描画順序")]
+        [Display]
         [PartsListController(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<PartBlock> Parts { get => parts; set => Set(ref parts, value); }
         ImmutableList<PartBlock> parts = [];
