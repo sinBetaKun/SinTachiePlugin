@@ -176,7 +176,7 @@ namespace SinTachiePlugin.Parts
                 drawDescription = new DrawDescription(
                     new Vector3((float)draw.X, (float)draw.Y, (float)draw.Z),
                     default,
-                    new Vector2((float)(zoom.X * Params.ExpXY.X / 100.0), (float)(zoom.Y * Params.ExpXY.Y / 100.0)),
+                    zoom,
                     new Vector3((float)rotate.X, (float)rotate.Y, (float)rotate.Z),
                     camera,
                     zoomInterpolationMode,
@@ -245,7 +245,9 @@ namespace SinTachiePlugin.Parts
             AffineTransform2DInterpolationMode interPolationMode = drawDescription.ZoomInterpolationMode.ToTransform2D();
             Transform3DInterpolationMode interPolationMode2 = drawDescription.ZoomInterpolationMode.ToTransform3D();
             transform.InterPolationMode = interPolationMode;
-            transform.TransformMatrix = Matrix3x2.CreateTranslation(-1 * new Vector2((float)Params.Center.X, (float)Params.Center.Y)) * Matrix3x2.CreateScale(zoom.X, zoom.Y);
+            transform.TransformMatrix =
+                Matrix3x2.CreateTranslation(-1 * new Vector2((float)Params.Center.X, (float)Params.Center.Y))
+                * Matrix3x2.CreateScale((float)(zoom.X * Params.ExpXY.X / 100.0), (float)(zoom.Y * Params.ExpXY.Y / 100.0));
             renderEffect.InterPolationMode = interPolationMode2;
             renderEffect.TransformMatrix = (
                 mirror ? Matrix4x4.CreateScale(-1f, 1f, 1f, new Vector3(centerPoint, 0f)) : Matrix4x4.Identity)
