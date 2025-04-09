@@ -70,6 +70,15 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter {
         }
         
         /// <summary>
+        ///   セリフがないときの口の開き具合 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ParamDesc_NoVoiceValue {
+            get {
+                return ResourceManager.GetString("ParamDesc_NoVoiceValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   差分を動かし始めるタイミング に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ParamDesc_Start {
@@ -93,6 +102,15 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter {
         public static string ParamName_Interval {
             get {
                 return ResourceManager.GetString("ParamName_Interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   セリフない時 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ParamName_NoVoiceValue {
+            get {
+                return ResourceManager.GetString("ParamName_NoVoiceValue", resourceCulture);
             }
         }
         
