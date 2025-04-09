@@ -18,7 +18,6 @@ namespace SinTachiePlugin.LayerValueListController
         readonly DisposeCollector disposer = new();
         readonly ID2D1Bitmap empty;
         IImageFileSource? source;
-        bool wasEmpty = true;
         private readonly AffineTransform2D centeringEffect;
         public int? Index { get; set; } = null;
         public int Depth { get; set; } = -1;
@@ -110,7 +109,6 @@ namespace SinTachiePlugin.LayerValueListController
                 disposer.Collect(source);
                 centeringEffect.SetInput(0, source.Output, true);
                 centeringEffect.TransformMatrix = Matrix3x2.CreateTranslation(MathF.Round(-source.Output.Size.Width / 2), MathF.Round(-source.Output.Size.Height / 2));
-                wasEmpty = false;
             }
         }
 

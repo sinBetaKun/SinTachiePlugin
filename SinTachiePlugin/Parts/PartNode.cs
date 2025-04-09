@@ -54,9 +54,6 @@ namespace SinTachiePlugin.Parts
             opacityEffect = new Opacity(devices.DeviceContext);
             disposer.Collect(opacityEffect);
 
-            using (var image = transform.Output)
-                cropEffect.SetInput(0, image, true);
-
             using (var image = cropEffect.Output)
                 renderEffect.SetInput(0, image, true);
 
@@ -108,7 +105,8 @@ namespace SinTachiePlugin.Parts
         {
             ID2D1Image input = Params.Output;
 
-            ID2D1Image input2 = input;
+            transform.SetInput(0, input, true);
+            ID2D1Image input2 = transform.Output;
 
             Update_NodesAndChain();
             drawDescription = new(default, default, new Vector2(1f), default, Matrix4x4.Identity, InterpolationMode.Linear, 1.0, false, []);
@@ -239,7 +237,7 @@ namespace SinTachiePlugin.Parts
                 }
             }
 
-            transform.SetInput(0, input2, true);
+            cropEffect.SetInput(0, input2, true);
             Vector3 draw3 = drawDescription.Draw;
             Vector2 centerPoint = drawDescription.CenterPoint;
             AffineTransform2DInterpolationMode interPolationMode = drawDescription.ZoomInterpolationMode.ToTransform2D();
