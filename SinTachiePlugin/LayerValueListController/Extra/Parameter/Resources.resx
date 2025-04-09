@@ -120,9 +120,6 @@
   <data name="ParamName_Interval" xml:space="preserve">
     <value>間隔</value>
   </data>
-  <data name="ParamName_NoVoiceValue" xml:space="preserve">
-    <value>セリフない時</value>
-  </data>
   <data name="ParamDesc_Interval" xml:space="preserve">
     <value>差分を切り替える時間間隔（遷移は含まれない）</value>
   </data>
@@ -137,8 +134,5 @@
   </data>
   <data name="ParamDesc_Transition" xml:space="preserve">
     <value>差分を切り替え始めてから終わるまでの時間</value>
-  </data>
-  <data name="ParamDesc_NoVoiceValue" xml:space="preserve">
-    <value>セリフがないときの口の開き具合</value>
   </data>
 </root>
