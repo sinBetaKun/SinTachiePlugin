@@ -30,7 +30,7 @@ namespace SinTachiePlugin.LayerValueListController
         [AnimationSlider("F1", "%", -150, 150)]
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 
-        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), AutoGenerateField = true)]
+        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), AutoGenerateField = true, ResourceType = typeof(Resources))]
         public LayerValueExtraBase Extra { get => extra; set => Set(ref extra, value); }
         LayerValueExtraBase extra = new NoExtra();
 
@@ -74,7 +74,7 @@ namespace SinTachiePlugin.LayerValueListController
                     num = cerrar * Math.Sin(abrir / 100 * 2 * Math.PI);
                     break;
                 case LayerAnimationMode.VoiceVolume:
-                    num = cerrar + voiceVolume * (abrir - cerrar);
+                    num = (voiceVolume < 0) ? extraValue : cerrar + voiceVolume * (abrir - cerrar);
                     break;
                 case LayerAnimationMode.PeriodicShuttle:
                     extraValue = (0.5 - extraValue) * (extraValue <= 0.5 ? 2 : -2);
