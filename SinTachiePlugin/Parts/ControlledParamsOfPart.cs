@@ -198,7 +198,7 @@ namespace SinTachiePlugin.Parts
         public bool EffectUnlazyDependent { get => effectUnlazyDependent; set => Set(ref effectUnlazyDependent, value); }
         bool effectUnlazyDependent = true;
 
-        [Display(GroupName = nameof(Resources.GroupeName_PartEffect))]
+        [Display(GroupName = nameof(Resources.GroupeName_PartEffect), ResourceType = typeof(Resources))]
         [VideoEffectSelector(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<IVideoEffect> Effects { get => effects; set => Set(ref effects, value); }
         ImmutableList<IVideoEffect> effects = [];
