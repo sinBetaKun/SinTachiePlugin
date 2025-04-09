@@ -63,9 +63,8 @@ namespace SinTachiePlugin.Parts
             // fps を取得
             int fps = description.FPS;
 
-            // 再生位置における声の大きさ（セリフアイテムがないときは -1 が渡されるので、強制的に 0 にしています。）
+            // 再生位置における声の大きさ（セリフアイテムがないときは -1 が渡される）
             double voiceVolume = description.VoiceVolume;
-            if (voiceVolume < 0) voiceVolume = 0;
 
             // 立ち絵アイテム上の再生位置とアイテムの長さを description から取得
             FrameAndLength initialFL = new(description);
