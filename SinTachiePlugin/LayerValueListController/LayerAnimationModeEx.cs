@@ -14,7 +14,7 @@ namespace SinTachiePlugin.LayerValueListController
                 LayerAnimationMode.CerrarPlusAbrir => new NoExtra(store),
                 LayerAnimationMode.CerrarTimesAbrir => new NoExtra(store),
                 LayerAnimationMode.Sin => new NoExtra(store),
-                LayerAnimationMode.VoiceVolume => new NoExtra(store),
+                LayerAnimationMode.VoiceVolume => new VoiceVolumeParameter(store),
                 LayerAnimationMode.PeriodicShuttle => new PeriodicParameter(store),
                 LayerAnimationMode.PeriodicLoop => new PeriodicParameter(store),
                 _ => throw new ArgumentOutOfRangeException(nameof(mode)),
