@@ -13,7 +13,7 @@ namespace SinTachiePlugin.Parts
     {
         readonly DisposeCollector disposer = new();
         readonly AffineTransform2D transform;
-        public LayerNode LayerTree;
+        public LayerNodeManager LayerTree;
         public ID2D1Image Output;
         public FrameAndLength FrameAndLength;
 
@@ -84,13 +84,14 @@ namespace SinTachiePlugin.Parts
             EffectUnlazyDependent = block.EffectUnlazyDependent;
             Effects = block.Effects;
 
-            LayerTree = new LayerNode(ImagePath, devices);
+            LayerTree = new(ImagePath, devices);
             disposer.Collect(LayerTree);
 
             transform = new(devices.DeviceContext);
             disposer.Collect(transform);
 
-            transform.SetInput(0, LayerTree.GetSource(LayerValues, OuterLayerValueModes), true);
+            LayerTree.UpdateSource(LayerValues, OuterLayerValueModes);
+            transform.SetInput(0, LayerTree.Output, true);
 
             Output = transform.Output;
             disposer.Collect(Output);
@@ -143,11 +144,9 @@ namespace SinTachiePlugin.Parts
                 OuterLayerValueModes = outerLayerValueModes;
                 LayerValues = layerValues;
                 transform.SetInput(0, null, true);
-                disposer.RemoveAndDispose(ref LayerTree);
-                //LayerTree.Dispose();
-                LayerTree = new LayerNode(ImagePath, devices);
-                disposer.Collect(LayerTree);
-                transform.SetInput(0, LayerTree.GetSource(LayerValues, OuterLayerValueModes), true);
+                LayerTree.ChangeImageFile(ImagePath);
+                LayerTree.UpdateSource(LayerValues, OuterLayerValueModes);
+                transform.SetInput(0, LayerTree.Output, true);
             }
             else
             {
@@ -168,8 +167,9 @@ namespace SinTachiePlugin.Parts
                     OuterLayerValueModes = outerLayerValueModes;
                     LayerValues = layerValues;
                     transform.SetInput(0, null, true);
-                    //LayerTree ??= new LayerNode(ImagePath, devices);
-                    transform.SetInput(0, LayerTree.GetSource(LayerValues, OuterLayerValueModes), true);
+                    LayerTree.ChangeImageFile(ImagePath);
+                    LayerTree.UpdateSource(LayerValues, OuterLayerValueModes);
+                    transform.SetInput(0, LayerTree.Output, true);
                 }
             }
 
