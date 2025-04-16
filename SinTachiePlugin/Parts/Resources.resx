@@ -139,7 +139,7 @@
     <value>中心位置</value>
   </data>
   <data name="ParamName_TagName" xml:space="preserve">
-    <value>バス</value>
+    <value>タグ</value>
   </data>
   <data name="ParamName_EffectUnlazyDependent" xml:space="preserve">
     <value>非遅延エフェクト</value>
@@ -199,7 +199,7 @@
     <value>差分レイヤー</value>
   </data>
   <data name="ParamName_BusNum" xml:space="preserve">
-    <value>タグ</value>
+    <value>バス</value>
   </data>
   <data name="ParamDesc_EffectXYZDependent" xml:space="preserve">
     <value>親のエフェクトによる X/Y/Z 移動を有効にします。</value>

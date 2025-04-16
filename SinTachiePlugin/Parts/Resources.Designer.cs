@@ -196,7 +196,7 @@ namespace SinTachiePlugin.Parts {
         }
         
         /// <summary>
-        ///   タグ に類似しているローカライズされた文字列を検索します。
+        ///   バス に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ParamName_BusNum {
             get {
@@ -331,7 +331,7 @@ namespace SinTachiePlugin.Parts {
         }
         
         /// <summary>
-        ///   バス に類似しているローカライズされた文字列を検索します。
+        ///   タグ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ParamName_TagName {
             get {
