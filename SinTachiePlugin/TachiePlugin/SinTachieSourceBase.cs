@@ -69,7 +69,6 @@ namespace SinTachiePlugin.TachiePlugin
 
             while (numOfChildren > 0)
             {
-
                 for (int i = 0; i < children.Count;)
                 {
                     var matched = from x in parents
