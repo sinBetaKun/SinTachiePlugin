@@ -31,29 +31,9 @@ namespace SinTachiePlugin.Parts
         public string Parent { get => parent; set => Set(ref parent, value); }
         string parent = string.Empty;
 
-        /// <summary>
-        /// 描画時に現在の値を取得する際は GetBusNum を呼び出す。
-        /// ここから直々に GetValue すると、Listbox の一要素の UI に変化が起きなくなってしまう。
-        /// </summary>
         [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_BusNum), ResourceType = typeof(Resources))]
         [AnimationSlider("F0", "", -50, 50)]
         public Animation BusNum { get; } = new Animation(0, -1000, 1000);
-/*
-        /// <summary>
-        /// Listbox の一要素の UI を変化させて、ユーザに見やすくしたいんじゃ。
-        /// </summary>
-        [JsonIgnore]
-        public int BusNumView { get => busNumView; set => Set(ref busNumView, value); }
-        int busNumView = 0;
-
-        /// <summary>
-        /// BusNum の現在の値を取得する際はこちらを呼び出す
-        /// </summary>
-        public int GetBusNum(long frame, long length, int fps)
-        {
-            BusNumView = (int)BusNum.GetValue(frame, length, fps);
-            return BusNumView;
-        }*/
 
         [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_ImagePath), ResourceType = typeof(Resources))]
         [FileSelectorForPartOfSinTachie]
