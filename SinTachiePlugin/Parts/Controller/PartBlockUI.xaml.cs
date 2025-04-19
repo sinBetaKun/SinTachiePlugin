@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
 using YukkuriMovieMaker.Commons;
+using YukkuriMovieMaker.Controls;
 
 namespace SinTachiePlugin.Parts
 {
@@ -20,9 +21,10 @@ namespace SinTachiePlugin.Parts
         public PartBlockUI()
         {
             InitializeComponent();
-            selector.ListupFilter = (x) => !(from c in Path.GetFileName(x)
-                                             where c == '.'
-                                             select c).Skip(1).Any();
+            selector.ListupFilter = (x) => (!(from c in Path.GetFileName(x)
+                                              where c == '.'
+                                              select c).Skip(1).Any())
+                                              && (Path.GetDirectoryName(x) == Path.GetDirectoryName(selector.Value));
         }
 
         private void PropertiesEditor_BeginEdit(object? sender, EventArgs e)

@@ -11,7 +11,7 @@ namespace SinTachiePlugin.Parts.Controller
 {
     public class FileSelectorForPartOfSinTachieAttribute : FileSelectorAttribute
     {
-        public FileSelectorForPartOfSinTachieAttribute() : base(FileGroupType.ImageItem)
+        public FileSelectorForPartOfSinTachieAttribute() : base(FileGroupType.TachieParts)
         {
 
         }
@@ -29,13 +29,16 @@ namespace SinTachiePlugin.Parts.Controller
         public override void SetBindings(FrameworkElement control, ItemProperty[] itemProperties)
         {
             FileSelector fileSelector = (FileSelector)control;
-            fileSelector.FileGroup = FileGroup;
-            fileSelector.FileType = FileType;
+
+            fileSelector.FileGroup = FileGroupType.TachieParts;
+            fileSelector.FileType = FileType.画像;
             fileSelector.ShowThumbnail = true;
-            fileSelector.ListupFilter = (x) => !(from c in Path.GetFileName(x)
+            fileSelector.ListupFilter = (x) => (!(from c in Path.GetFileName(x)
                                                  where c == '.'
-                                                 select c).Skip(1).Any();
-            if (!string.IsNullOrEmpty(CustomFilterName) && !string.IsNullOrEmpty(CustomFilterValue))
+                                                 select c).Skip(1).Any())
+                                                 && (Path.GetDirectoryName(x) == Path.GetDirectoryName(fileSelector.Value));
+
+            if ((!string.IsNullOrEmpty(CustomFilterName)) && (!string.IsNullOrEmpty(CustomFilterValue)))
             {
                 fileSelector.Filter = CustomFilterValue;
                 fileSelector.FilterName = GetCustomFilterName();

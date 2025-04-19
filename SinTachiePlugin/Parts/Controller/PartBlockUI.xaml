@@ -171,7 +171,7 @@
                     </StackPanel>
                 </WrapPanel>
                 <c:FileSelector x:Name="selector" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,4,0,0"
-                                Value="{Binding ImagePath}" ShowThumbnail="True" FileType="画像"
+                                Value="{Binding ImagePath}" ShowThumbnail="True" FileType="画像" FileGroup="TachieParts"
                                 BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
             </StackPanel>
         </Border>
