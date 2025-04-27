@@ -10,17 +10,18 @@ using YukkuriMovieMaker.Plugin;
 
 namespace SinTachiePlugin.LayerValueListController
 {
-    public class LayerNode : IDisposable
+    public class LayerNode
     {
-        readonly IImageFileSource? source;
+        readonly string path = string.Empty;
         public int? Index { get; set; } = null;
         public int Depth { get; set; } = -1;
         public List<LayerNode> Children { get; set; } = [];
 
         public LayerNode() { }
+
         public LayerNode(string path, IGraphicsDevicesAndContext devices)
         {
-            source = ImageFileSourceFactory.Create(devices, path);
+            this.path = path;
         }
         internal LayerNode? GetChildByIndex(int? index)
         {
@@ -38,7 +39,7 @@ namespace SinTachiePlugin.LayerValueListController
             return muchs.First();
         }
 
-        public IImageFileSource? GetSource(List<double> values, List<OuterLayerValueMode> outers)
+        public string? GetValue(List<double> values, List<OuterLayerValueMode> outers)
         {
             if (Depth < 0)
             {
@@ -47,7 +48,7 @@ namespace SinTachiePlugin.LayerValueListController
 
             if (values.Count() <= Depth)
             {
-                return source;
+                return path;
             }
             
             if (values[Depth] < 0 || 1 < values[Depth])
@@ -58,48 +59,22 @@ namespace SinTachiePlugin.LayerValueListController
                 throw new Exception($"無効な差分指定({values[Depth]})");
             }
 
-            IImageFileSource? output;
+            string? ret;
             int num = outers[Depth] == OuterLayerValueMode.Loop && values[Depth] < 1 ? 1 : 0;
 
             if ((from child in Children select child.Index).Contains(null))
             {
                 int layerIndex = (int)(values[Depth] * (Children.Count - 1 + num));
-                output = Children[layerIndex].GetSource(values, outers);
+                ret = Children[layerIndex].GetValue(values, outers);
             }
             else
             {
                 int layerIndex = (int)(values[Depth] * (Children.Count + num));
-                if (layerIndex == Children.Count) return source;
-                output = Children[layerIndex].GetSource(values, outers);
+                if (layerIndex == Children.Count) return path;
+                ret = Children[layerIndex].GetValue(values, outers);
             }
 
-            return output ?? source;
+            return ret ?? path;
         }
-
-        #region IDisposable
-        private bool disposedValue;
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // マネージド状態を破棄します (マネージド オブジェクト)
-                    source?.Dispose();
-                }
-
-                // アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
-                // 大きなフィールドを null に設定します
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
     }
 }

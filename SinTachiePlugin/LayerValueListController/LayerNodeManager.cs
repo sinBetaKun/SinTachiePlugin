@@ -21,9 +21,11 @@ namespace SinTachiePlugin.LayerValueListController
         readonly ID2D1Bitmap empty;
         private readonly AffineTransform2D centeringEffect;
         private LayerNode root;
-        bool isEmpty = true;
-        int width = 0;
-        int height = 0;
+        private IImageFileSource? source;
+        private string nowPath = string.Empty;
+        private bool isEmpty = true;
+        private int width = 0;
+        private int height = 0;
         
         public LayerNodeManager(string path, IGraphicsDevicesAndContext devices)
         {
@@ -47,7 +49,6 @@ namespace SinTachiePlugin.LayerValueListController
             {
                 // パスが空文字列の場合
                 root = new();
-                disposer.Collect(root);
                 return;
             }
 
@@ -55,7 +56,6 @@ namespace SinTachiePlugin.LayerValueListController
             {
                 // 指定されたパスを持つファイルがない場合
                 root = new();
-                disposer.Collect(root);
                 return;
             }
 
@@ -64,7 +64,6 @@ namespace SinTachiePlugin.LayerValueListController
             {
                 Depth = 0
             };
-            disposer.Collect(root);
 
             if (FileSettings.Default.FileExtensions.GetFileType(path) is not FileType.画像)
             {
@@ -170,7 +169,6 @@ namespace SinTachiePlugin.LayerValueListController
         }
         public void ChangeImageFile(string path)
         {
-            root.Dispose();
             SetRoot(path);
         }
         void AddLeaf(LayerNode node, int?[] indexs)
@@ -184,8 +182,6 @@ namespace SinTachiePlugin.LayerValueListController
                 SinTachieDialog.ShowError("インデックスが正しく指定されていないリーフをLayerNodeManagerに足そうとしました。ごめんなさい。", clsName, mthName);
                 return;
             }
-
-            disposer.Collect(node);
 
             LayerNode tmp = root;
 
@@ -272,18 +268,31 @@ namespace SinTachiePlugin.LayerValueListController
         {
             if (root is not null)
             {
-                if (root.GetSource(values, outers) is IImageFileSource source)
+                if (root.GetValue(values, outers) is string path)
                 {
-                    centeringEffect.SetInput(0, source.Output, true);
-                    isEmpty = false;
-                    SizeI size = source.Output.PixelSize;
-                    if (width != size.Width || height != size.Height)
+                    if (nowPath != path)
                     {
-                        width = size.Width;
-                        height = size.Height;
-                        centeringEffect.TransformMatrix = Matrix3x2.CreateTranslation(-width / 2, -height / 2);
+                        nowPath = path;
+                        source?.Dispose();
+                        source = ImageFileSourceFactory.Create(devices, path);
+                        if(source is not null)
+                        {
+                            centeringEffect.SetInput(0, source.Output, true);
+                            isEmpty = false;
+                            SizeI size = source.Output.PixelSize;
+                            if (width != size.Width || height != size.Height)
+                            {
+                                width = size.Width;
+                                height = size.Height;
+                                centeringEffect.TransformMatrix = Matrix3x2.CreateTranslation(-width / 2, -height / 2);
+                            }
+                            return;
+                        }
                     }
-                    return;
+                    else
+                    {
+                        return;
+                    }
                 }
             }
 
@@ -311,6 +320,7 @@ namespace SinTachiePlugin.LayerValueListController
                 {
                     // マネージド状態を破棄します (マネージド オブジェクト)
                     ClearEffectChain();
+                    source?.Dispose();
                     disposer.Dispose();
                 }
 

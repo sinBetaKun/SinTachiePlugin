@@ -167,7 +167,6 @@ namespace SinTachiePlugin.Parts
                     OuterLayerValueModes = outerLayerValueModes;
                     LayerValues = layerValues;
                     transform.SetInput(0, null, true);
-                    LayerTree.ChangeImageFile(ImagePath);
                     LayerTree.UpdateSource(LayerValues, OuterLayerValueModes);
                     transform.SetInput(0, LayerTree.Output, true);
                 }
