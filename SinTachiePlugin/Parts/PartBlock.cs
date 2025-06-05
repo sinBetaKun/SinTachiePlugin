@@ -45,7 +45,7 @@ namespace SinTachiePlugin.Parts
                     CopyFrom(block);
                     if (aborigines.Contains(block.TagName))
                     {
-                        var dialog = SinTachieDialog.GetDialog(
+                        var dialog = SinTachieDialog.GetYESorNO(
                             $"デフォルト設定におけるタグ({block.TagName})は、リスト内で既に使われています。" +
                             "\nデフォルト設定のタグを使いますか？" +
                             $"\n（キャンセルした場合、タグは「{tag}」になります。）");
@@ -77,7 +77,7 @@ namespace SinTachiePlugin.Parts
             {
                 if (info.DefaltValues != null)
                 {
-                    var anwer = SinTachieDialog.GetDialog(
+                    var anwer = SinTachieDialog.GetOKorCancel(
                         $"{PartInfo.Extension}ファイルにデフォルト値が設定されています。" +
                         $"\n設定を上書きしますか？"
                         );
@@ -112,7 +112,7 @@ namespace SinTachiePlugin.Parts
                     "デフォルト値はまだ設定されていません。");
                 return;
             }
-            DialogResult dialogResult = SinTachieDialog.GetDialog(
+            DialogResult dialogResult = SinTachieDialog.GetOKorCancel(
                 $"デフォルト値を削除しますか？\n（{PartInfo.Extension}ファイルは削除されません。）");
             if (dialogResult == DialogResult.OK)
             {

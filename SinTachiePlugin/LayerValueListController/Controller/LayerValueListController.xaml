@@ -34,24 +34,7 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
-                            <Border BorderBrush="#FF808080" BorderThickness="1">
-                                <StackPanel Margin="0,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
-                                    <Border Margin="4,4,0,4" Background="#80808080" BorderThickness="1" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Cerrar.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0"
-                                                   VerticalAlignment="Center" FontSize="12"
-                                                   ToolTip="{x:Static layerValCnt:Resources.CerrarValueToolTip}"/>
-                                    </Border>
-                                    <TextBlock Text="~" Margin="4,4,0,4" VerticalAlignment="Center" FontSize="12"/>
-                                    <Border Margin="4,4,0,4" Background="#80808080" BorderThickness="1" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Abrir.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0"
-                                                   VerticalAlignment="Center" FontSize="12"
-                                                   ToolTip="{x:Static layerValCnt:Resources.AbrirValueToolTip}"/>
-                                    </Border>
-                                    <TextBlock Text="{Binding Comment}" Margin="10,4,0,4" VerticalAlignment="Center" FontSize="12"/>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
+                        <local:LayerValueUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -78,10 +61,11 @@
             </Grid>
         </Grid>
         <c:PropertiesEditor 
-        Grid.Row="1"
-        Target="{Binding ElementName=list,Path=SelectedValue}"
-        BeginEdit="PropertiesEditor_BeginEdit" 
-        EndEdit="PropertiesEditor_EndEdit">
+            Name="propertiesEditor"
+            Grid.Row="1"
+            Target="{Binding ElementName=list,Path=SelectedValue}"
+            BeginEdit="PropertiesEditor_BeginEdit" 
+            EndEdit="PropertiesEditor_EndEdit">
         </c:PropertiesEditor>
     </Grid>
 </UserControl>

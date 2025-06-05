@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using SinTachiePlugin.LayerValueListController.Controller;
 using YukkuriMovieMaker.Commons;
+using YukkuriMovieMaker.Controls;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace SinTachiePlugin.LayerValueListController
@@ -8,7 +9,7 @@ namespace SinTachiePlugin.LayerValueListController
     /// <summary>
     /// LayerValueListController.xaml の相互作用ロジック
     /// </summary>
-    public partial class LayerValueListController : UserControl, IPropertyEditorControl
+    public partial class LayerValueListController : UserControl, IPropertyEditorControl2
     {
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
@@ -45,6 +46,11 @@ namespace SinTachiePlugin.LayerValueListController
             var vm = DataContext as LayerValueListControllerViewModel;
             vm?.CopyToOtherItems();
             EndEdit?.Invoke(this, e);
+        }
+
+        public void SetEditorInfo(IEditorInfo info)
+        {
+            propertiesEditor.SetEditorInfo(info);
         }
     }
 }

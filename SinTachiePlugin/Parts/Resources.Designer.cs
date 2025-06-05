@@ -61,6 +61,15 @@ namespace SinTachiePlugin.Parts {
         }
         
         /// <summary>
+        ///   複製元とは別のタグを持たせますか？ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DuplicateWarning {
+            get {
+                return ResourceManager.GetString("DuplicateWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Jsonデータ内に変換できないエフェクトを検知しました。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ErrorLog_DeserializeVideoEffects {
@@ -97,15 +106,6 @@ namespace SinTachiePlugin.Parts {
         }
         
         /// <summary>
-        ///   パーツ個別エフェクトの依存 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string GroupeName_EffectDependent {
-            get {
-                return ResourceManager.GetString("GroupeName_EffectDependent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   パーツ個別エフェクト に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string GroupeName_PartEffect {
@@ -135,63 +135,18 @@ namespace SinTachiePlugin.Parts {
         /// <summary>
         ///   親のエフェクトによるカメラ移動を有効にします。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string ParamDesc_EffectCameraDependent {
+        public static string ParamDesc_CameraDependent {
             get {
-                return ResourceManager.GetString("ParamDesc_EffectCameraDependent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   親のエフェクトによる左右反転を有効にします。 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ParamDesc_EffectMirrorDependent {
-            get {
-                return ResourceManager.GetString("ParamDesc_EffectMirrorDependent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   親のエフェクトによる不透明度の変化を有効にします。 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ParamDesc_EffectOpacityDependent {
-            get {
-                return ResourceManager.GetString("ParamDesc_EffectOpacityDependent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   親のエフェクトによる回転を有効にします。 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ParamDesc_EffectRotateDependent {
-            get {
-                return ResourceManager.GetString("ParamDesc_EffectRotateDependent", resourceCulture);
+                return ResourceManager.GetString("ParamDesc_CameraDependent", resourceCulture);
             }
         }
         
         /// <summary>
         ///   親のエフェクトによる非遅延エフェクトを有効にします。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string ParamDesc_EffectUnlazyDependent {
+        public static string ParamDesc_UnlazyEffectDependent {
             get {
-                return ResourceManager.GetString("ParamDesc_EffectUnlazyDependent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   親のエフェクトによる X/Y/Z 移動を有効にします。 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ParamDesc_EffectXYZDependent {
-            get {
-                return ResourceManager.GetString("ParamDesc_EffectXYZDependent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   親のエフェクトによる拡大率の変化を有効にします。 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ParamDesc_EffectZoomDependent {
-            get {
-                return ResourceManager.GetString("ParamDesc_EffectZoomDependent", resourceCulture);
+                return ResourceManager.GetString("ParamDesc_UnlazyEffectDependent", resourceCulture);
             }
         }
         
@@ -228,15 +183,6 @@ namespace SinTachiePlugin.Parts {
         public static string ParamName_Composition {
             get {
                 return ResourceManager.GetString("ParamName_Composition", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   非遅延エフェクト に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ParamName_EffectUnlazyDependent {
-            get {
-                return ResourceManager.GetString("ParamName_EffectUnlazyDependent", resourceCulture);
             }
         }
         
@@ -340,6 +286,15 @@ namespace SinTachiePlugin.Parts {
         }
         
         /// <summary>
+        ///   非遅延エフェクト に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ParamName_UnlazyEffectDependent {
+            get {
+                return ResourceManager.GetString("ParamName_UnlazyEffectDependent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   X に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ParamName_X {
@@ -381,6 +336,17 @@ namespace SinTachiePlugin.Parts {
         public static string ParamName_ZOrder {
             get {
                 return ResourceManager.GetString("ParamName_ZOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   同じタグを持つパーツが存在します。
+        ///パーツに別のタグを持たせますか？
+        ///タグ： に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SameTagWarning {
+            get {
+                return ResourceManager.GetString("SameTagWarning", resourceCulture);
             }
         }
     }

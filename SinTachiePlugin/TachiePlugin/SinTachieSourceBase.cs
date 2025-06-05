@@ -305,7 +305,7 @@ namespace SinTachiePlugin.TachiePlugin
                 if (partNode.Output is ID2D1Image output)
                     drawlist.Add(partNode);
 
-            if (isFirst || preDrawList.Count != this.drawlist.Count)
+            if (isFirst || drawlist.Count != this.drawlist.Count)
             {
                 this.drawlist.Clear();
                 this.drawlist.AddRange(drawlist);

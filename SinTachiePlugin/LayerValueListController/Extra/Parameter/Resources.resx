@@ -118,27 +118,27 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ParamName_Interval" xml:space="preserve">
-    <value>Interval</value>
+    <value>間隔</value>
   </data>
   <data name="ParamName_NoVoiceValue" xml:space="preserve">
     <value>セリフない時</value>
   </data>
   <data name="ParamDesc_Interval" xml:space="preserve">
-    <value>Time interval for switching differences (transitions not included)</value>
+    <value>差分を切り替える時間間隔（遷移は含まれない）</value>
   </data>
   <data name="ParamName_Start" xml:space="preserve">
-    <value>Start</value>
+    <value>開始</value>
   </data>
   <data name="ParamDesc_Start" xml:space="preserve">
-    <value>Timing to start moving differences</value>
+    <value>差分を動かし始めるタイミング</value>
   </data>
   <data name="ParamName_Transition" xml:space="preserve">
-    <value>Transition</value>
+    <value>遷移</value>
   </data>
   <data name="ParamDesc_Transition" xml:space="preserve">
-    <value>Time from starting to finish switching differences</value>
+    <value>差分を切り替え始めてから終わるまでの時間</value>
   </data>
   <data name="ParamDesc_NoVoiceValue" xml:space="preserve">
-    <value>Mouth opening level when there's no dialogue</value>
+    <value>セリフがないときの口の開き具合</value>
   </data>
 </root>

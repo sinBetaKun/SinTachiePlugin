@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Windows.Devices.PointOfService;
 using YukkuriMovieMaker.Commons;
 
 namespace SinTachiePlugin.Parts
@@ -119,6 +120,66 @@ namespace SinTachiePlugin.Parts
         public bool PasteEnable { get => pasteEnable; set => Set(ref pasteEnable, value); }
         bool pasteEnable = false;
 
+        string GetNewTag(PartBlock block)
+        {
+            string ret = block.TagName;
+            int count = 0;
+
+            while (true)
+            {
+                bool ok = true;
+                foreach (var part in parts)
+                {
+                    if (part.TagName == ret)
+                    {
+                        ok = false;
+                        break;
+                    }
+                }
+                
+                if (ok)
+                {
+                    if (count != 0)
+                    {
+                        if (SinTachieDialog.GetYESorNO(Resources.SameTagWarning + block.TagName) == DialogResult.Yes)
+                        {
+                            return ret;
+                        }
+                    }
+
+                    return block.TagName;
+                }
+
+                ret = block.TagName + $"({++count})";
+            }
+        }
+
+        string GetNewTagD(PartBlock block)
+        {
+            string ret = block.TagName + "(1)";
+            int count = 1;
+
+            while (true)
+            {
+                bool ok = true;
+                foreach (var part in parts)
+                {
+                    if (part.TagName == ret)
+                    {
+                        ok = false;
+                        break;
+                    }
+                }
+                
+                if (ok)
+                {
+                    return ret;
+                }
+
+                ret = block.TagName + $"({++count})";
+            }
+        }
+
         /// <summary>
         /// 右クリックメニューで「貼り付け」を選択したときの処理
         /// </summary>
@@ -137,14 +198,26 @@ namespace SinTachiePlugin.Parts
             {
                 var tmpSelectedIndex = SelectedPartIndex;
                 BeginEdit?.Invoke(this, EventArgs.Empty);
+
                 if (tmpSelectedIndex < 0)
                 {
-                    Parts = Parts.AddRange(parts);
+                    foreach (PartBlock part in parts)
+                    {
+                        part.TagName = GetNewTag(part);
+                        Parts = Parts.Add(part);
+                    }
+
                     tmpSelectedIndex = Parts.Count - 1;
                 }
                 else
                 {
-                    Parts = Parts.InsertRange(tmpSelectedIndex, parts);
+                    int index = tmpSelectedIndex;
+
+                    foreach (PartBlock part in parts)
+                    {
+                        part.TagName = GetNewTag(part);
+                        Parts = Parts.Insert(index++, part);
+                    }
                 }
                 SetProperties();
                 EndEdit?.Invoke(this, EventArgs.Empty);
@@ -166,21 +239,39 @@ namespace SinTachiePlugin.Parts
                 int[] indexs = [.. selecteds.Select(i => Parts.IndexOf(i)).OrderBy(i => i)];
                 List<PartBlock> parts = [.. Parts];
                 int shift = 1;
+                bool denySameTag = SinTachieDialog.GetYESorNO(Resources.DuplicateWarning) == DialogResult.Yes;
 
-                for (int i = 0; i < tmp.Length - 1; i++)
+                if (denySameTag)
                 {
-                    parts.Insert(indexs[i] + shift++, tmp[i]);
-                }
-
-                int lastIndex = indexs.Last();
-
-                if (lastIndex + 1 < Parts.Count)
-                {
-                    parts.Insert(lastIndex + shift, tmp.Last());
+                    for (int i = 0; i < tmp.Length - 1; i++)
+                    {
+                        tmp[i].TagName = GetNewTagD(tmp[i]);
+                        parts.Insert(indexs[i] + shift++, tmp[i]);
+                    }
                 }
                 else
                 {
-                    parts.Add(tmp.Last());
+                    for (int i = 0; i < tmp.Length - 1; i++)
+                    {
+                        parts.Insert(indexs[i] + shift++, tmp[i]);
+                    }
+                }
+
+                int lastIndex = indexs.Last();
+                PartBlock lastBlock = tmp.Last();
+
+                if (denySameTag)
+                {
+                    lastBlock.TagName = GetNewTagD(lastBlock);
+                }
+
+                if (lastIndex + 1 < Parts.Count)
+                {
+                    parts.Insert(lastIndex + shift, lastBlock);
+                }
+                else
+                {
+                    parts.Add(lastBlock);
                 }
 
                 BeginEdit?.Invoke(this, EventArgs.Empty);
@@ -190,6 +281,7 @@ namespace SinTachiePlugin.Parts
                 SelectedPartIndex = tmpSelectedIndex + 1;
                 return tmp;
             }
+
             return [.. selecteds];
         }
 
@@ -258,7 +350,7 @@ namespace SinTachiePlugin.Parts
             var tmpSelectedIndex = SelectedPartIndex;
             BeginEdit?.Invoke(this, EventArgs.Empty);
             List<PartBlock> parts = [.. Parts];
-            PartBlock[] tmp = [.. selecteds.OrderBy(Parts.IndexOf)];
+            PartBlock[] tmp = [.. selecteds.OrderBy(part => -Parts.IndexOf(part))];
 
             for (int i = 0; i < tmp.Length - 1; i++)
             {
@@ -292,7 +384,7 @@ namespace SinTachiePlugin.Parts
         /// </summary>
         public void ReloadFunc(IEnumerable<PartBlock> selecteds)
         {
-            //var tmpSelectedPartIndex = SelectedPartIndex;
+            var tmpSelectedPartIndex = SelectedPartIndex;
             BeginEdit?.Invoke(this, EventArgs.Empty);
             foreach (var selected in selecteds)
             {
@@ -300,7 +392,7 @@ namespace SinTachiePlugin.Parts
             }
             SetProperties();
             EndEdit?.Invoke(this, EventArgs.Empty);
-            //SelectedPartIndex = tmpSelectedPartIndex;
+            SelectedPartIndex = tmpSelectedPartIndex;
         }
 
         /// <summary>
@@ -465,7 +557,7 @@ namespace SinTachiePlugin.Parts
                     if (PartNameTree.Count == 0 || RootUnexist)
                     {
                         var intro = RootUnexist ? "素材の場所のパスが無効です。" : "素材の場所にパーツが見つかりませんでした。";
-                        var dialog = SinTachieDialog.GetDialog($"{intro}\n画像未指定のパーツブロックを追加しますか？");
+                        var dialog = SinTachieDialog.GetOKorCancel($"{intro}\n画像未指定のパーツブロックを追加しますか？");
                         if (dialog == DialogResult.OK)
                         {
                             var tmpSelectedIndex = SelectedPartIndex;

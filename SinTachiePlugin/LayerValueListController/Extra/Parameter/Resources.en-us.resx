@@ -117,102 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GroupeName_BlockInfo" xml:space="preserve">
-    <value>ブロック情報</value>
+  <data name="ParamName_Interval" xml:space="preserve">
+    <value>Interval</value>
   </data>
-  <data name="GroupeName_Drawing" xml:space="preserve">
-    <value>描画</value>
+  <data name="ParamName_NoVoiceValue" xml:space="preserve">
+    <value />
   </data>
-  <data name="GroupeName_PartEffect" xml:space="preserve">
-    <value>パーツ個別エフェクト</value>
+  <data name="ParamDesc_Interval" xml:space="preserve">
+    <value>Time interval for switching differences (transitions not included)</value>
   </data>
-  <data name="GroupeName_SubScale" xml:space="preserve">
-    <value>サブ拡大率</value>
+  <data name="ParamName_Start" xml:space="preserve">
+    <value>Start</value>
   </data>
-  <data name="GroupeName_ValueDependent" xml:space="preserve">
-    <value>値の依存</value>
+  <data name="ParamDesc_Start" xml:space="preserve">
+    <value>差分を動かし始めるタイミング</value>
   </data>
-  <data name="GroupeName_CenterPoint" xml:space="preserve">
-    <value>中心位置</value>
+  <data name="ParamName_Transition" xml:space="preserve">
+    <value>Transition</value>
   </data>
-  <data name="ParamName_TagName" xml:space="preserve">
-    <value>タグ</value>
+  <data name="ParamDesc_Transition" xml:space="preserve">
+    <value>差分を切り替え始めてから終わるまでの時間</value>
   </data>
-  <data name="ParamName_UnlazyEffectDependent" xml:space="preserve">
-    <value>非遅延エフェクト</value>
-  </data>
-  <data name="ParamName_X" xml:space="preserve">
-    <value>X</value>
-  </data>
-  <data name="ParamName_Z" xml:space="preserve">
-    <value>Z</value>
-  </data>
-  <data name="ParamName_ZOrder" xml:space="preserve">
-    <value>Z順描画</value>
-  </data>
-  <data name="ParamName_KeepPlace" xml:space="preserve">
-    <value>位置を保持</value>
-  </data>
-  <data name="ParamName_XYZ" xml:space="preserve">
-    <value>X/Y/Z</value>
-  </data>
-  <data name="ParamName_Opacity" xml:space="preserve">
-    <value>不透明度</value>
-  </data>
-  <data name="ParamName_Rotate" xml:space="preserve">
-    <value>回転角</value>
-  </data>
-  <data name="ParamName_Scale" xml:space="preserve">
-    <value>拡大率</value>
-  </data>
-  <data name="ParamName_Mirror" xml:space="preserve">
-    <value>左右反転</value>
-  </data>
-  <data name="ParamName_Composition" xml:space="preserve">
-    <value>合成モード</value>
-  </data>
-  <data name="ParamName_Y" xml:space="preserve">
-    <value>Y</value>
-  </data>
-  <data name="ParamName_Exp_X" xml:space="preserve">
-    <value>横方向</value>
-  </data>
-  <data name="ParamName_Exp_Y" xml:space="preserve">
-    <value>縦方向</value>
-  </data>
-  <data name="ParamName_Comment" xml:space="preserve">
-    <value>備考</value>
-  </data>
-  <data name="ParamName_Camera" xml:space="preserve">
-    <value>カメラ</value>
-  </data>
-  <data name="ParamName_Parent" xml:space="preserve">
-    <value>親</value>
-  </data>
-  <data name="ParamName_ImagePath" xml:space="preserve">
-    <value>画像</value>
-  </data>
-  <data name="ParamName_LayerValues" xml:space="preserve">
-    <value>差分レイヤー</value>
-  </data>
-  <data name="ParamName_BusNum" xml:space="preserve">
-    <value>バス</value>
-  </data>
-  <data name="ParamDesc_UnlazyEffectDependent" xml:space="preserve">
-    <value>親のエフェクトによる非遅延エフェクトを有効にします。</value>
-  </data>
-  <data name="ParamDesc_CameraDependent" xml:space="preserve">
-    <value>親のエフェクトによるカメラ移動を有効にします。</value>
-  </data>
-  <data name="ErrorLog_DeserializeVideoEffects" xml:space="preserve">
-    <value>Jsonデータ内に変換できないエフェクトを検知しました。</value>
-  </data>
-  <data name="SameTagWarning" xml:space="preserve">
-    <value>同じタグを持つパーツが存在します。
-パーツに別のタグを持たせますか？
-タグ：</value>
-  </data>
-  <data name="DuplicateWarning" xml:space="preserve">
-    <value>複製元とは別のタグを持たせますか？</value>
+  <data name="ParamDesc_NoVoiceValue" xml:space="preserve">
+    <value>Mouth opening level when there's no dialogue</value>
   </data>
 </root>

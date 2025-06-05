@@ -9,16 +9,32 @@ namespace SinTachiePlugin.Informations
     public class SinTachieDialog : Animatable
     {
         /// <summary>
-        /// 質問をダイアログを出し、回答を返す
+        /// 質問をダイアログを出し、回答を返す(OK or Cancel)
         /// </summary>
         /// <param name="message">質問内容</param>
-        /// <returns></returns>
-        static public DialogResult GetDialog(string message)
+        /// <returns>OK or Cancel</returns>
+        static public DialogResult GetOKorCancel(string message)
         {
             return MessageBox.Show(
                         message,
                         PluginInfo.Title,
                         MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button1
+                        );
+        }
+
+        /// <summary>
+        /// 質問をダイアログを出し、回答を返す(Yes or No)
+        /// </summary>
+        /// <param name="message">質問内容</param>
+        /// <returns>Yes or No</returns>
+        static public DialogResult GetYESorNO(string message)
+        {
+            return MessageBox.Show(
+                        message,
+                        PluginInfo.Title,
+                        MessageBoxButtons.YesNo,
                         MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1
                         );

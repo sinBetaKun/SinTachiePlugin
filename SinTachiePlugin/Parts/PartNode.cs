@@ -80,7 +80,6 @@ namespace SinTachiePlugin.Parts
             {
                 var (node, chain) = NodesAndChains[index];
                 chain.Dispose();
-                node.Dispose();
                 NodesAndChains.RemoveAt(index);
             }
 
@@ -111,136 +110,158 @@ namespace SinTachiePlugin.Parts
             Update_NodesAndChain();
             drawDescription = new(default, default, new Vector2(1f), default, Matrix4x4.Identity, InterpolationMode.Linear, 1.0, false, []);
 
-            Vector3 draw = new(), draw2;
+            Vector3 draw = new();
             Vector2 zoom = new(1f);
             Matrix4x4 camera = Matrix4x4.Identity, rotateM = Matrix4x4.Identity;
             InterpolationMode zoomInterpolationMode = InterpolationMode.Linear;
-            double opacity = 1.0, scale2;
-            bool xyzDependent, rotateDependent, scaleDependent, opacityDependent, mirrorDependent, mirror = false, mirror2,
-                effectXYZDependent, effectRotateDependent, effectZoomDependent, effectOpacityDependent, effectMirrorDependent, effectCameraDependent, effectUnlazyDependent;
+            double opacity = 1.0;
+            bool xyzDependent, rotateDependent, scaleDependent, opacityDependent, mirrorDependent, mirror = false,
+                cameraDependent, unlazyEffectDependent;
 
             xyzDependent = rotateDependent = scaleDependent = opacityDependent = mirrorDependent
-                = effectXYZDependent = effectRotateDependent = effectZoomDependent = effectOpacityDependent
-                = effectMirrorDependent = effectCameraDependent = effectUnlazyDependent
+                = cameraDependent = unlazyEffectDependent
                 = true;
+
+            Vector3[] draws = new Vector3[NodesAndChains.Count];
+            Vector2[] zooms = new Vector2[NodesAndChains.Count];
+            Vector3[] rotates = new Vector3[NodesAndChains.Count];
+            bool[] mirrors = new bool[NodesAndChains.Count];
+            bool[] scaleDependents = new bool[NodesAndChains.Count];
+            bool[] rotateDependents = new bool[NodesAndChains.Count];
+            bool[] mirrorDependents = new bool[NodesAndChains.Count];
+            int len = 0;
 
             foreach (var tuple in NodesAndChains)
             {
                 var node = tuple.node;
-                scale2 = node.Params.Scale / 100.0;
-                draw2 = xyzDependent
-                    ? new Vector3(
+
+                drawDescription = new DrawDescription(
+                     new Vector3(
                         (float)(node.Params.Draw.X + (node.Params.KeepPlace ? node.Params.Center.X : 0.0)),
                         (float)(node.Params.Draw.Y + (node.Params.KeepPlace ? node.Params.Center.Y : 0.0)),
                         (float)node.Params.Draw.Z
-                        )
-                    : new Vector3();
-                xyzDependent = node.Params.XYZDependent;
-
-                mirror2 = mirrorDependent && node.Params.Mirror;
-                mirrorDependent = node.Params.MirrorDependent;
-
-                drawDescription = new DrawDescription(
-                    draw2,
+                        ),
                     default,
-                    new Vector2((float)scale2),
-                    new Vector3(0, 0, rotateDependent ? (float)node.Params.Rotate : 0),
+                    new Vector2((float)(node.Params.Scale / 100.0)),
+                    new Vector3(0, 0, (float)node.Params.Rotate),
                     Matrix4x4.Identity,
                     zoomInterpolationMode,
                     node.Params.Opacity / 100.0,
-                    mirror2,
+                    node.Params.Mirror,
                     []
                     );
-
-                rotateDependent = node.Params.RotateDependent;
 
                 var chain = tuple.chain;
 
                 chain.UpdateChain(node.Params.Effects, node.Params.FrameAndLength);
                 drawDescription = chain.UpdateOutputAndDescription(input2, desc, drawDescription);
 
-                if (effectUnlazyDependent)
+                if (unlazyEffectDependent)
                 {
                     input2 = chain.Output;
-                    effectUnlazyDependent = node.Params.EffectUnlazyDependent;
+                    unlazyEffectDependent = node.Params.UnlazyEffectDependent;
                 }
 
-                if (effectXYZDependent)
+                if (xyzDependent)
                 {
-                    Matrix4x4 m = Matrix4x4.CreateTranslation(draw)
-                        * (scaleDependent ? Matrix4x4.CreateScale((float)scale2) : Matrix4x4.Identity)
-                        * (mirror2 ? Matrix4x4.CreateScale(-1f, 1f, 1f) : Matrix4x4.Identity)
-                        * Matrix4x4.CreateRotationZ(MathF.PI * drawDescription.Rotation.Z / 180f)
-                        * Matrix4x4.CreateRotationY(MathF.PI * -drawDescription.Rotation.Y / 180f)
-                        * Matrix4x4.CreateRotationX(MathF.PI * -drawDescription.Rotation.X / 180f);
-
-                    draw.X = m.M41;
-                    draw.Y = m.M42;
-                    draw.Z = m.M43;
-                    draw += drawDescription.Draw;
-                }
-                else
-                {
-                    draw = draw2;
+                    draws[len] = drawDescription.Draw;
+                    zooms[len] = drawDescription.Zoom;
+                    rotates[len] = drawDescription.Rotation;
+                    mirrors[len] = drawDescription.Invert;
+                    scaleDependents[len] = node.Params.ScaleDependent;
+                    rotateDependents[len] = node.Params.RotateDependent;
+                    mirrorDependents[len] = node.Params.MirrorDependent;
+                    len++;
+                    
+                    xyzDependent = node.Params.XYZDependent;
                 }
 
-                effectXYZDependent = node.Params.EffectXYZDependent;
-
-                if (scaleDependent)
-                {
-                    zoom *= (float)scale2;
-                }
-
-                scaleDependent = node.Params.ScaleDependent;
-
-                if (opacityDependent)
-                {
-                    opacity *= node.Params.Opacity / 100.0;
-                }
-                
-                opacityDependent = node.Params.OpacityDependent;
-
-                if (effectRotateDependent)
+                if (rotateDependent)
                 {
                     rotateM *=
                         Matrix4x4.CreateRotationZ(MathF.PI * drawDescription.Rotation.Z / 180f)
                         * Matrix4x4.CreateRotationY(MathF.PI * -drawDescription.Rotation.Y / 180f)
                         * Matrix4x4.CreateRotationX(MathF.PI * -drawDescription.Rotation.X / 180f);
 
-                    effectRotateDependent = node.Params.EffectRotateDependent;
+                    rotateDependent = node.Params.RotateDependent;
                 }
 
-                if (effectOpacityDependent)
+                if (opacityDependent)
                 {
-                    opacity = drawDescription.Opacity;
-                    effectOpacityDependent = node.Params.EffectOpacityDependent;
+                    opacity *= drawDescription.Opacity;
+                    opacityDependent = node.Params.OpacityDependent;
                 }
                 
-                if (effectZoomDependent)
+                if (scaleDependent)
                 {
                     zoom *= drawDescription.Zoom;
-                    effectZoomDependent = node.Params.EffectZoomDependent;
+                    scaleDependent = node.Params.ScaleDependent;
                 }
 
-                if (effectCameraDependent)
+                if (cameraDependent)
                 {
                     camera *= drawDescription.Camera;
-                    effectCameraDependent = node.Params.EffectZoomDependent;
+                    cameraDependent = node.Params.CameraDependent;
                 }
 
                 zoomInterpolationMode = drawDescription.ZoomInterpolationMode;
 
-                if (effectMirrorDependent)
+                if (mirrorDependent)
                 {
                     mirror ^= drawDescription.Invert;
-                    effectMirrorDependent = node.Params.EffectMirrorDependent;
+                    mirrorDependent = node.Params.MirrorDependent;
+                }
+            }
+
+            Matrix4x4 zoomM = Matrix4x4.Identity;
+            Matrix4x4 rottM = Matrix4x4.Identity;
+            bool mirror2 = false;
+
+            for (int i = len - 1; i >= 0; i--)
+            {
+                Matrix4x4 m =
+                    Matrix4x4.CreateTranslation(draws[i])
+                    * zoomM
+                    * (mirror2 ? Matrix4x4.CreateScale(-1f, 1f, 1f) : Matrix4x4.Identity)
+                    * rottM;
+
+                draw.X += m.M41;
+                draw.Y += m.M42;
+                draw.Z += m.M43;
+
+                if (scaleDependents[i])
+                {
+                    zoomM *= Matrix4x4.CreateScale(new Vector3(zooms[i], 0));
                 }
                 else
                 {
-                    mirror ^= node.Params.Mirror;
+                    zoomM = Matrix4x4.CreateScale(new Vector3(zooms[i], 0));
                 }
 
+                if (mirrorDependents[i])
+                {
+                    mirror2 ^= mirrors[i];
+                }
+                else
+                {
+                    mirror2 = mirrors[i];
+                }
+
+                Matrix4x4 rm = Matrix4x4.CreateRotationZ(MathF.PI * rotates[i].Z / 180f)
+                    * Matrix4x4.CreateRotationY(MathF.PI * -rotates[i].Y / 180f)
+                    * Matrix4x4.CreateRotationX(MathF.PI * -rotates[i].X / 180f);
+
+                if (rotateDependents[i])
+                {
+                    rottM *= rm;
+                }
+                else
+                {
+                    rottM = rm;
+                }
             }
+
+            
 
             cropEffect.SetInput(0, input2, true);
             Vector2 centerPoint = drawDescription.CenterPoint;
@@ -259,7 +280,7 @@ namespace SinTachiePlugin.Parts
                 * new Matrix4x4(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, -0.001f, 0f, 0f, 0f, 1f);
 
             Apply(devices.DeviceContext);
-            opacityEffect.Value = (float)drawDescription.Opacity;
+            opacityEffect.Value = (float)opacity;
             M43 = renderEffect.TransformMatrix.M43;
         }
 

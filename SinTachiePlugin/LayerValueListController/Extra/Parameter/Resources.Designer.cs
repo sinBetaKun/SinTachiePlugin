@@ -61,7 +61,7 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter {
         }
         
         /// <summary>
-        ///   Time interval for switching differences (transitions not included) に類似しているローカライズされた文字列を検索します。
+        ///   差分を切り替える時間間隔（遷移は含まれない） に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ParamDesc_Interval {
             get {
@@ -70,7 +70,7 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter {
         }
         
         /// <summary>
-        ///   Mouth opening level when there&apos;s no dialogue に類似しているローカライズされた文字列を検索します。
+        ///   セリフがないときの口の開き具合 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ParamDesc_NoVoiceValue {
             get {
@@ -79,7 +79,7 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter {
         }
         
         /// <summary>
-        ///   Timing to start moving differences に類似しているローカライズされた文字列を検索します。
+        ///   差分を動かし始めるタイミング に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ParamDesc_Start {
             get {
@@ -88,7 +88,7 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter {
         }
         
         /// <summary>
-        ///   Time from starting to finish switching differences に類似しているローカライズされた文字列を検索します。
+        ///   差分を切り替え始めてから終わるまでの時間 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ParamDesc_Transition {
             get {
@@ -97,7 +97,7 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter {
         }
         
         /// <summary>
-        ///   Interval に類似しているローカライズされた文字列を検索します。
+        ///   間隔 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ParamName_Interval {
             get {
@@ -115,7 +115,7 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter {
         }
         
         /// <summary>
-        ///   Start に類似しているローカライズされた文字列を検索します。
+        ///   開始 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ParamName_Start {
             get {
@@ -124,7 +124,7 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter {
         }
         
         /// <summary>
-        ///   Transition に類似しているローカライズされた文字列を検索します。
+        ///   遷移 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ParamName_Transition {
             get {

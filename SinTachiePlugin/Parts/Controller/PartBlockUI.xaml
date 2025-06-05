@@ -5,10 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SinTachiePlugin.Parts"
              xmlns:c="clr-namespace:YukkuriMovieMaker.Controls;assembly=YukkuriMovieMaker.Controls"
-             xmlns:properties="clr-namespace:SinTachiePlugin.Parts.Controller"
+             xmlns:res="clr-namespace:SinTachiePlugin.Parts.Controller"
              d:DataContext="{d:DesignInstance Type=local:PartBlock}"
              mc:Ignorable="d">
-    <Grid Background="#0000" ToolTip="{x:Static properties:Resources.PartBlockToolTip}">
+    <Grid Background="#0000" ToolTip="{x:Static res:Resources.PartBlockToolTip}">
         <Grid.Style>
             <Style TargetType="Grid">
                 <Setter Property="Margin" Value="6,0,0,0" />
@@ -26,7 +26,7 @@
                         <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
                             <CheckBox Margin="2,3,5,0" VerticalAlignment="Top" Width="15" Height="15" HorizontalAlignment="Left"
                                       IsChecked="{Binding Appear, Mode=OneWay}" Unchecked="Update_CheckBox" Checked="Update_CheckBox"
-                                      ToolTip="{x:Static properties:Resources.PartBlockToolTip}">
+                                      ToolTip="{x:Static res:Resources.PartBlockToolTip}">
 
                                 <CheckBox.Style>
                                     <Style TargetType="CheckBox">
@@ -55,8 +55,8 @@
                                         </Style.Triggers>
                                     </Style>
                                 </StackPanel.Style>
-                                <StackPanel Orientation="Horizontal" ToolTip="{x:Static properties:Resources.TagPanelToolTip}">
-                                    <TextBlock Text="{x:Static properties:Resources.TagPanelText}" Margin="5,0,3,0" VerticalAlignment="Top" FontSize="15"/>
+                                <StackPanel Orientation="Horizontal" ToolTip="{x:Static res:Resources.TagPanelToolTip}">
+                                    <TextBlock Text="{x:Static res:Resources.TagPanelText}" Margin="5,0,3,0" VerticalAlignment="Top" FontSize="15"/>
                                     <Border  Margin="3,0,10,0" BorderThickness="2" Height="20"
                                              VerticalAlignment="Top">
                                         <Border.Style>
@@ -79,8 +79,8 @@
                         </StackPanel>
                     </Border>
                     <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Orientation="Horizontal"
-                                ToolTip="{x:Static properties:Resources.BusPanelToolTip}">
-                        <TextBlock Text="{x:Static properties:Resources.BusPanelText}" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                                ToolTip="{x:Static res:Resources.BusPanelToolTip}">
+                        <TextBlock Text="{x:Static res:Resources.BusPanelText}" Margin="0,0,0,0" VerticalAlignment="Top"/>
                         <Border Margin="5,0,0,0" BorderThickness="2" Height="16"
                                 VerticalAlignment="Top">
                             <Border.Style>
@@ -100,7 +100,7 @@
                         </Border>
                     </StackPanel>
                     <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Orientation="Horizontal"
-                                ToolTip="{x:Static properties:Resources.ParentPanelToolTip}">
+                                ToolTip="{x:Static res:Resources.ParentPanelToolTip}">
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <!-- デフォルトで表示 -->
@@ -116,7 +116,7 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        <TextBlock Text="{x:Static properties:Resources.ParentPanelText}" VerticalAlignment="Top"/>
+                        <TextBlock Text="{x:Static res:Resources.ParentPanelText}" VerticalAlignment="Top"/>
                         <Border Margin="5,0,0,0" BorderThickness="2" Height="16"
                                 VerticalAlignment="Top">
                             <Border.Style>
@@ -150,7 +150,7 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        <TextBlock Text="{x:Static properties:Resources.CommentPanelText}" VerticalAlignment="Top"/>
+                        <TextBlock Text="{x:Static res:Resources.CommentPanelText}" VerticalAlignment="Top"/>
                         <Border Margin="5,0,0,0" BorderThickness="2" Height="16"
                                 VerticalAlignment="Top">
                             <Border.Style>
@@ -166,7 +166,7 @@
                                 </Style>
                             </Border.Style>
                             <TextBlock Text="{Binding Comment}" Margin="4,0,4,0" VerticalAlignment="Center"
-                                       ToolTip="{x:Static properties:Resources.CommentPanelToolTip}"/>
+                                       ToolTip="{x:Static res:Resources.CommentPanelToolTip}"/>
                         </Border>
                     </StackPanel>
                 </WrapPanel>

@@ -1,4 +1,5 @@
-﻿using SinTachiePlugin.Enums;
+﻿using Newtonsoft.Json;
+using SinTachiePlugin.Enums;
 using SinTachiePlugin.Informations;
 using SinTachiePlugin.LayerValueListController.Extra;
 using SinTachiePlugin.LayerValueListController.Extra.Parameter;
@@ -38,6 +39,10 @@ namespace SinTachiePlugin.LayerValueListController
         [TextEditor(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public string Comment { get => comment; set => Set(ref comment, value); }
         string comment = string.Empty;
+
+        [JsonIgnore]
+        public bool Selected { get => selected; set => Set(ref selected, value); }
+        bool selected = false;
 
         public LayerValue()
         {

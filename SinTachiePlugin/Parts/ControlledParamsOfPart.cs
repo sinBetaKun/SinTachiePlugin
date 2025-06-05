@@ -122,6 +122,16 @@ namespace SinTachiePlugin.Parts
         public bool MirrorDependent { get => mirrorDependent; set => Set(ref mirrorDependent, value); }
         bool mirrorDependent = true;
 
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_Camera), Description = nameof(Resources.ParamDesc_CameraDependent), ResourceType = typeof(Resources))]
+        [ToggleSlider]
+        public bool CameraDependent { get => cameraDependent; set => Set(ref cameraDependent, value); }
+        bool cameraDependent = true;
+
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_UnlazyEffectDependent), Description = nameof(Resources.ParamDesc_UnlazyEffectDependent), ResourceType = typeof(Resources))]
+        [ToggleSlider]
+        public bool UnlazyEffectDependent { get => unlazyEffectDependent; set => Set(ref unlazyEffectDependent, value); }
+        bool unlazyEffectDependent = true;
+
         [Display(GroupName = nameof(Resources.GroupeName_CenterPoint), Name = nameof(Resources.ParamName_X), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "px", -500, 500)]
         public Animation Cnt_X { get; } = new Animation(0, -10000, 10000);
@@ -142,41 +152,6 @@ namespace SinTachiePlugin.Parts
         [Display(GroupName = nameof(Resources.GroupeName_SubScale), Name = nameof(Resources.ParamName_Exp_Y), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "%", 0, 200)]
         public Animation Exp_Y { get; } = new Animation(100, 0, 5000);
-
-        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_XYZ), Description = nameof(Resources.ParamDesc_EffectXYZDependent), ResourceType = typeof(Resources))]
-        [ToggleSlider]
-        public bool EffectXYZDependent { get => effectXYZDependent; set => Set(ref effectXYZDependent, value); }
-        bool effectXYZDependent = true;
-
-        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_Opacity), Description = nameof(Resources.ParamDesc_EffectOpacityDependent), ResourceType = typeof(Resources))]
-        [ToggleSlider]
-        public bool EffectOpacityDependent { get => effectOpacityDependent; set => Set(ref effectOpacityDependent, value); }
-        bool effectOpacityDependent = true;
-
-        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_Scale), Description = nameof(Resources.ParamDesc_EffectZoomDependent), ResourceType = typeof(Resources))]
-        [ToggleSlider]
-        public bool EffectZoomDependent { get => effectZoomDependent; set => Set(ref effectZoomDependent, value); }
-        bool effectZoomDependent = true;
-
-        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_Rotate), Description = nameof(Resources.ParamDesc_EffectRotateDependent), ResourceType = typeof(Resources))]
-        [ToggleSlider]
-        public bool EffectRotateDependent { get => effectRotateDependent; set => Set(ref effectRotateDependent, value); }
-        bool effectRotateDependent = true;
-
-        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_Mirror), Description = nameof(Resources.ParamDesc_EffectMirrorDependent), ResourceType = typeof(Resources))]
-        [ToggleSlider]
-        public bool EffectMirrorDependent { get => effectMirrorDependent; set => Set(ref effectMirrorDependent, value); }
-        bool effectMirrorDependent = true;
-
-        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_Camera), Description = nameof(Resources.ParamDesc_EffectCameraDependent), ResourceType = typeof(Resources))]
-        [ToggleSlider]
-        public bool EffectCameraDependent { get => effectCameraDependent; set => Set(ref effectCameraDependent, value); }
-        bool effectCameraDependent = true;
-
-        [Display(GroupName = nameof(Resources.GroupeName_EffectDependent), Name = nameof(Resources.ParamName_EffectUnlazyDependent), Description = nameof(Resources.ParamDesc_EffectUnlazyDependent), ResourceType = typeof(Resources))]
-        [ToggleSlider]
-        public bool EffectUnlazyDependent { get => effectUnlazyDependent; set => Set(ref effectUnlazyDependent, value); }
-        bool effectUnlazyDependent = true;
 
         [Display(GroupName = nameof(Resources.GroupeName_PartEffect), ResourceType = typeof(Resources))]
         [VideoEffectSelector(PropertyEditorSize = PropertyEditorSize.FullWidth)]
@@ -212,13 +187,8 @@ namespace SinTachiePlugin.Parts
             OpacityDependent = original.OpacityDependent;
             RotateDependent = original.RotateDependent;
             MirrorDependent = original.MirrorDependent;
-            EffectXYZDependent = original.EffectXYZDependent;
-            EffectZoomDependent = original.EffectZoomDependent;
-            EffectOpacityDependent = original.EffectOpacityDependent;
-            EffectRotateDependent = original.EffectRotateDependent;
-            EffectMirrorDependent = original.EffectMirrorDependent;
-            EffectCameraDependent = original.EffectCameraDependent;
-            EffectUnlazyDependent = original.EffectUnlazyDependent;
+            CameraDependent = original.CameraDependent;
+            UnlazyEffectDependent = original.UnlazyEffectDependent;
             try
             {
                 string effectsStr = JsonConvert.SerializeObject(original.Effects, Newtonsoft.Json.Formatting.Indented, GetJsonSetting);

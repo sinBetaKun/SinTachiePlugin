@@ -40,13 +40,8 @@ namespace SinTachiePlugin.Parts
         public bool OpacityDependent { get; set; }
         public bool RotateDependent { get; set; }
         public bool MirrorDependent { get; set; }
-        public bool EffectXYZDependent { get; set; }
-        public bool EffectZoomDependent { get; set; }
-        public bool EffectOpacityDependent { get; set; }
-        public bool EffectRotateDependent { get; set; }
-        public bool EffectMirrorDependent { get; set; }
-        public bool EffectCameraDependent { get; set; }
-        public bool EffectUnlazyDependent { get; set; }
+        public bool CameraDependent { get; set; }
+        public bool UnlazyEffectDependent { get; set; }
         public ImmutableList<IVideoEffect> Effects { get; set; }
 
         public ParamsOfPartNode(IGraphicsDevicesAndContext devices, PartBlock block, FrameAndLength fl, int fps, double voiceVolume)
@@ -75,13 +70,8 @@ namespace SinTachiePlugin.Parts
             OpacityDependent = block.OpacityDependent;
             RotateDependent = block.RotateDependent;
             MirrorDependent = block.MirrorDependent;
-            EffectXYZDependent = block.EffectXYZDependent;
-            EffectZoomDependent = block.EffectZoomDependent;
-            EffectOpacityDependent = block.EffectOpacityDependent;
-            EffectRotateDependent = block.EffectRotateDependent;
-            EffectMirrorDependent = block.EffectMirrorDependent;
-            EffectCameraDependent = block.EffectCameraDependent;
-            EffectUnlazyDependent = block.EffectUnlazyDependent;
+            CameraDependent = block.CameraDependent;
+            UnlazyEffectDependent = block.UnlazyEffectDependent;
             Effects = block.Effects;
 
             LayerTree = new(ImagePath, devices);
@@ -124,13 +114,8 @@ namespace SinTachiePlugin.Parts
             var opacityDependent = block.OpacityDependent;
             var rotateDependent = block.RotateDependent;
             var mirrorDependent = block.MirrorDependent;
-            var effectXYZDependent = block.EffectXYZDependent;
-            var effectScaleDependent = block.EffectZoomDependent;
-            var effectRotateDependent = block.EffectRotateDependent;
-            var effectOpacityDependent = block.EffectOpacityDependent;
-            var effectCameraDependent = block.EffectCameraDependent;
-            var effectMirrorDependent = block.EffectMirrorDependent;
-            var effectUnlazyDependent = block.EffectUnlazyDependent;
+            var cameraDependent = block.CameraDependent;
+            var unlazyEffectDependent = block.UnlazyEffectDependent;
             var effects = block.Effects;
 
             UpdateCase updateCase = UpdateCase.None;
@@ -176,11 +161,8 @@ namespace SinTachiePlugin.Parts
                 || Center != center || KeepPlace != keepPlace || ExpXY != expXY || TagName != tagName || Parent != parent
 
                 || XYZDependent != xyzDependent || ScaleDependent != scaleDependent || OpacityDependent != opacityDependent
-                || RotateDependent != rotateDependent || MirrorDependent != mirrorDependent
-
-                || EffectXYZDependent != effectXYZDependent || EffectZoomDependent != effectScaleDependent || EffectRotateDependent != effectRotateDependent
-                || EffectOpacityDependent != effectOpacityDependent || EffectMirrorDependent != effectMirrorDependent || EffectCameraDependent != effectCameraDependent
-                || EffectUnlazyDependent != effectUnlazyDependent
+                || RotateDependent != rotateDependent || MirrorDependent != mirrorDependent || CameraDependent != cameraDependent
+                || UnlazyEffectDependent != unlazyEffectDependent
                 || effects.Count > 0 || effects.Count != Effects.Count)
             {
                 updateCase = UpdateCase.BitmapParams;
@@ -203,12 +185,8 @@ namespace SinTachiePlugin.Parts
                 OpacityDependent = opacityDependent;
                 RotateDependent = rotateDependent;
                 MirrorDependent = mirrorDependent;
-                EffectXYZDependent = effectXYZDependent;
-                EffectZoomDependent = effectScaleDependent;
-                EffectOpacityDependent = effectOpacityDependent;
-                EffectMirrorDependent = effectMirrorDependent;
-                EffectCameraDependent = effectCameraDependent;
-                EffectUnlazyDependent = effectUnlazyDependent;
+                CameraDependent = cameraDependent;
+                UnlazyEffectDependent = unlazyEffectDependent;
                 Effects = effects;
             }
 
