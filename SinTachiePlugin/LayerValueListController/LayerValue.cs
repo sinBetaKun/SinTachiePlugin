@@ -61,12 +61,10 @@ namespace SinTachiePlugin.LayerValueListController
 
         public double GetValue(FrameAndLength fl, int fps, double voiceVolume)
         {
-            double cerrar = Cerrar.GetValue(fl.Frame, fl.Length, fps);
-            double abrir = Abrir.GetValue(fl.Frame, fl.Length, fps);
+            double cerrar = fl.GetValue(Cerrar, fps);
+            double abrir = fl.GetValue(Abrir, fps);
             double num;
-            string clsName = GetType().Name;
-            string? mthName = MethodBase.GetCurrentMethod()?.Name;
-            double extraValue = Extra.GetValue(fl.Frame, fl.Length, fps);
+            double extraValue = Extra.GetValue(fl, fps);
             switch (AnimationMode)
             {
                 case LayerAnimationMode.CerrarPlusAbrir:
@@ -90,7 +88,7 @@ namespace SinTachiePlugin.LayerValueListController
                     break;
                 default:
                     string message = "存在しないタイプの制御モードが指定されました。" + $"\n(AnimationMode = {AnimationMode})";
-                    SinTachieDialog.ShowError(message, clsName, mthName);
+                    SinTachieDialog.ShowError(new Exception(message));
                     throw new Exception($"[{PluginInfo.Title}]{message}");
             }
 
@@ -99,14 +97,14 @@ namespace SinTachiePlugin.LayerValueListController
                 case OuterLayerValueMode.Limit:
                     return num < 0 ? 0 : num > 100 ? 1 : num / 100;
                 case OuterLayerValueMode.Shuttle:
-                    while (num < 0) num += 200;
-                    return (num <= 100 ? num : 200 - num) / 100;
+                    if ((num %= 200) < 0) num += 200;
+                    return num / 100;
                 case OuterLayerValueMode.Loop:
-                    while (num < 0) num += 100;
-                    return num % 100 / 100;
+                    if ((num %= 100) < 0) num += 100;
+                    return num / 100;
                 default:
                     string message = "存在しないタイプの範囲外変換モードが指定されました。" + $"\n(OuterMode = {OuterMode})";
-                    SinTachieDialog.ShowError(message, clsName, mthName);
+                    SinTachieDialog.ShowError(new Exception(message));
                     throw new Exception($"[{PluginInfo.Title}]{message}");
             }
         }

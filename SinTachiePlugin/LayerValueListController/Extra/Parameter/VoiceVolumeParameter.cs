@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SinTachiePlugin.Parts;
+using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
 using YukkuriMovieMaker.Project;
@@ -18,9 +19,9 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter
         /// <param name="length"></param>
         /// <param name="fps"></param>
         /// <returns>0から1までのdouble</returns>
-        public override double GetValue(long frame, long length, int fps)
+        public override double GetValue(FrameAndLength fl, int fps)
         {
-            return NoVoiceValue.GetValue(frame, length, fps);
+            return fl.GetValue(NoVoiceValue, fps);
         }
 
         public VoiceVolumeParameter()

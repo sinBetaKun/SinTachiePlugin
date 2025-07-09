@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SinTachiePlugin.Parts;
+using System.ComponentModel.DataAnnotations;
+using System.Windows.Controls;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
 using YukkuriMovieMaker.Project;
@@ -26,16 +28,16 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter
         /// <param name="length"></param>
         /// <param name="fps"></param>
         /// <returns>0から1までのdouble</returns>
-        public override double GetValue(long frame, long length, int fps)
+        public override double GetValue(FrameAndLength fl, int fps)
         {
-            double start = Start.GetValue(frame, length, fps);
-            double time = frame / (double)fps - start;
+            double start = Start.GetValue(fl.Frame, fl.Length, fps);
+            double time = fl.Frame / (double)fps - start;
 
             if (time < 0)
                 return 1.0;
 
-            double interval = Interval.GetValue(frame, length, fps);
-            double transition = Transition.GetValue(frame, length, fps);
+            double interval = fl.GetValue(Interval, fps);
+            double transition = fl.GetValue(Transition, fps);
 
             double time2 = time % (transition + interval);
 

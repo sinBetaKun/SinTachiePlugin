@@ -191,9 +191,7 @@ namespace SinTachiePlugin.Parts
                 }
                 catch (Exception e)
                 {
-                    string clsName = GetType().Name;
-                    string? mthName = MethodBase.GetCurrentMethod()?.Name;
-                    SinTachieDialog.ShowError("stpiファイルの出力時にエラーが発生しました。\n" + e.Message, clsName, mthName);
+                    SinTachieDialog.ShowError(new("stpiファイルの出力時にエラーが発生しました。\n" + e.Message));
                     return false;
                 }
                 ImagePath = path;

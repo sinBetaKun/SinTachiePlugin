@@ -60,7 +60,7 @@ namespace SinTachiePlugin.LayerValueListController
             }
 
             // ルートノードを作成
-            root = new(path, devices)
+            root = new(path)
             {
                 Depth = 0
             };
@@ -162,24 +162,24 @@ namespace SinTachiePlugin.LayerValueListController
 
                 foreach (var kv in kvs)
                 {
-                    var tmp = new LayerNode(Path.Combine(dirName, kv.Key), devices);
+                    var tmp = new LayerNode(Path.Combine(dirName, kv.Key));
                     AddLeaf(tmp, kv.Value);
                 }
             }
         }
+
         public void ChangeImageFile(string path)
         {
             SetRoot(path);
         }
+
         void AddLeaf(LayerNode node, int?[] indexs)
         {
             var len = indexs.Length;
             if (len < 1)
             {
                 node.Depth = 0;
-                string clsName = GetType().Name;
-                string? mthName = MethodBase.GetCurrentMethod()?.Name;
-                SinTachieDialog.ShowError("インデックスが正しく指定されていないリーフをLayerNodeManagerに足そうとしました。ごめんなさい。", clsName, mthName);
+                SinTachieDialog.ShowError(new("インデックスが正しく指定されていないリーフをLayerNodeManagerに足そうとしました。ごめんなさい。"));
                 return;
             }
 

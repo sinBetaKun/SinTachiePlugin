@@ -1,4 +1,5 @@
-﻿using YukkuriMovieMaker.Project;
+﻿using SinTachiePlugin.Parts;
+using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.LayerValueListController.Extra
 {
@@ -12,7 +13,7 @@ namespace SinTachiePlugin.LayerValueListController.Extra
         {
         }
 
-        public abstract double GetValue(long frame, long length, int fps);
+        public abstract double GetValue(FrameAndLength fl, int fps);
         public abstract void CopyFrom(LayerValueExtraBase? origin);
     }
 }

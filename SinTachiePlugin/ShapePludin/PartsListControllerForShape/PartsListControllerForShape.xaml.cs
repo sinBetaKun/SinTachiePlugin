@@ -49,14 +49,6 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             EndEdit?.Invoke(this, e);
         }
 
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            if (DataContext is PartsListControllerForShapeViewModel viewModel)
-            {
-                viewModel.SelectedTreeViewItem = e.NewValue; // ViewModelに設定
-            }
-        }
-
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (sender is ScrollViewer scrollViewer)
@@ -67,6 +59,14 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
                     scrollViewer.LineDown();
 
                 e.Handled = true;
+            }
+        }
+
+        private void Add_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartsListControllerForShapeViewModel viewModel)
+            {
+                viewModel.AddPart(PartNameTree2);
             }
         }
 

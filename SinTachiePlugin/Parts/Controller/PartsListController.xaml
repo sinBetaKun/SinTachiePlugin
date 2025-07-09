@@ -100,7 +100,7 @@
                         <StackPanel>
                             <!-- ブロックの並びを編集するエリア -->
                             <StackPanel ToolTip="{x:Static partCnt:Resources.EditListButtonsToolTip}">
-                                <Button Height="26" Command="{Binding AddCommand}" CommandParameter="{Binding UnMultiBlockSelected}"
+                                <Button Height="26" Click="Add_Clicked" IsEnabled="{Binding UnMultiBlockSelected}"
                                         Content="{StaticResource Plus}" ToolTip="{x:Static partCnt:Resources.EditListButtonAddToolTip}"/>
 
                                 <Button Height="26" Click="Remove_Clicked" IsEnabled="{Binding SomeBlockSelected}"
@@ -128,13 +128,7 @@
                         </StackPanel>
                         <Popup IsOpen="{Binding PartsPopupIsOpen}" Placement="Left" StaysOpen="False" VerticalAlignment="Top" ToolTip="">
                             <ScrollViewer MaxHeight="300" MinWidth="100" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                                <TreeView Panel.ZIndex="100" ItemsSource ="{Binding PartNameTree}" SelectedItemChanged="TreeView_SelectedItemChanged">
-                                    <TreeView.ItemTemplate>
-                                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                            <TextBlock Text="{Binding Name}" />
-                                        </HierarchicalDataTemplate>
-                                    </TreeView.ItemTemplate>
-                                </TreeView>
+                                <TreeView x:Name="PartNameTree2" Panel.ZIndex="100"/>
                             </ScrollViewer>
                         </Popup>
                     </Grid>

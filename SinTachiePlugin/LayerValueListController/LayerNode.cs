@@ -19,10 +19,11 @@ namespace SinTachiePlugin.LayerValueListController
 
         public LayerNode() { }
 
-        public LayerNode(string path, IGraphicsDevicesAndContext devices)
+        public LayerNode(string path)
         {
             this.path = path;
         }
+
         internal LayerNode? GetChildByIndex(int? index)
         {
             var muchs = from node in Children
@@ -31,9 +32,7 @@ namespace SinTachiePlugin.LayerValueListController
             if (!muchs.Any()) return null;
             if (muchs.Count() > 1)
             {
-                string clsName = GetType().Name;
-                string? mthName = MethodBase.GetCurrentMethod()?.Name;
-                SinTachieDialog.ShowError("インデックスが重複しているLayerNode2を検出しました。", clsName, mthName);
+                SinTachieDialog.ShowError(new Exception("インデックスが重複しているLayerNode2を検出しました。"));
                 throw new Exception("インデックスが重複しているLayerNode2を検出しました。");
             }
             return muchs.First();
@@ -46,35 +45,59 @@ namespace SinTachiePlugin.LayerValueListController
                 return null;
             }
 
-            if (values.Count() <= Depth)
+            if (values.Count <= Depth)
             {
                 return path;
             }
-            
-            if (values[Depth] < 0 || 1 < values[Depth])
-            {
-                string clsName = GetType().Name;
-                string? mthName = MethodBase.GetCurrentMethod()?.Name;
-                SinTachieDialog.ShowError($"無効な差分指定({values[Depth]})", clsName, mthName);
-                throw new Exception($"無効な差分指定({values[Depth]})");
-            }
 
-            string? ret;
-            int num = outers[Depth] == OuterLayerValueMode.Loop && values[Depth] < 1 ? 1 : 0;
-
-            if ((from child in Children select child.Index).Contains(null))
+            try
             {
-                int layerIndex = (int)(values[Depth] * (Children.Count - 1 + num));
-                ret = Children[layerIndex].GetValue(values, outers);
-            }
-            else
-            {
-                int layerIndex = (int)(values[Depth] * (Children.Count + num));
-                if (layerIndex == Children.Count) return path;
-                ret = Children[layerIndex].GetValue(values, outers);
-            }
+                if (values[Depth] < 0 || 2 <= values[Depth])
+                {
+                    throw new Exception($"無効な差分指定({values[Depth]})");
+                }
 
-            return ret ?? path;
+                string? ret;
+                int num, num2;
+                double value;
+
+                if (values[Depth] > 1)
+                {
+                    if (outers[Depth] != OuterLayerValueMode.Shuttle)
+                    {
+                        throw new Exception($"無効な差分指定({values[Depth]} (OuterLayerValueMode:Shuttle))");
+                    }
+
+                    value = 2 - values[Depth];
+                    num = 0;
+                    num2 = 1;
+                }
+                else
+                {
+                    value = values[Depth];
+                    num = outers[Depth] == OuterLayerValueMode.Loop ? 1 : 0;
+                    num2 = 0;
+                }
+
+                if (Children.Any(child => child.Index == null))
+                {
+                    int layerIndex = (int)(value * (Children.Count - 1 + num)) + num2;
+                    ret = Children[layerIndex].GetValue(values, outers);
+                }
+                else
+                {
+                    int layerIndex = (int)(value * (Children.Count + num)) + num2;
+                    if (layerIndex == Children.Count) return path;
+                    ret = Children[layerIndex].GetValue(values, outers);
+                }
+
+                return ret ?? path;
+            }
+            catch (Exception ex)
+            {
+                SinTachieDialog.ShowError(ex);
+                throw new(ex.Message);
+            }
         }
     }
 }

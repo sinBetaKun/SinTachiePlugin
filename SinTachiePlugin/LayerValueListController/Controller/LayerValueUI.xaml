@@ -39,7 +39,24 @@
                    VerticalAlignment="Center" FontSize="12"
                    ToolTip="{x:Static layerValCnt:Resources.CerrarValueToolTip}"/>
                 </Border>
-                <TextBlock Text="~" Margin="4,4,0,4" VerticalAlignment="Center" FontSize="12"/>
+                <TextBlock Margin="4,4,0,4" VerticalAlignment="Center" FontSize="12">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="~"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AnimationMode}" Value="CerrarPlusAbrir">
+                                    <Setter Property="Text" Value="+"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding AnimationMode}" Value="CerrarTimesAbrir">
+                                    <Setter Property="Text" Value="*"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding AnimationMode}" Value="Sin">
+                                    <Setter Property="Text" Value=","/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
                 <Border Margin="4,4,0,4" BorderThickness="2" VerticalAlignment="Center">
                     <Border.Style>
                         <Style TargetType="Border">

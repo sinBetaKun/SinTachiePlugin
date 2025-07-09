@@ -1,4 +1,5 @@
 ﻿using SinTachiePlugin.Informations;
+using SinTachiePlugin.ShapePludin.PartsListControllerForShape;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -63,11 +64,11 @@ namespace SinTachiePlugin.Parts
             }
         }
 
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void Add_Clicked(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartsListControllerViewModel viewModel)
             {
-                viewModel.SelectedTreeViewItem = e.NewValue; // ViewModelに設定
+                viewModel.AddPart(PartNameTree2);
             }
         }
 

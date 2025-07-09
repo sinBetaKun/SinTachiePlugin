@@ -73,7 +73,7 @@ namespace SinTachiePlugin.Informations
         /// エラー表示する
         /// </summary>
         /// <param name="cont">内容</param>
-        static public void ShowError(string cont , string? className, string? methodName)
+        static public void ShowError(Exception ex)
         {
             var result = MessageBox.Show(
                             "エラーが発生しました。" +
@@ -81,11 +81,10 @@ namespace SinTachiePlugin.Informations
                             "\n（「はい(Y)」を押すとリンク先をブラウザで開きます。）" +
                             "\nエラー内容" +
                             "\n---" +
-                            "\n" + cont +
+                            "\n" + ex.Message +
                             "\n---" +
-                            "\nエラー発生箇所" +
-                            "\n\tクラス：" + (className ?? "(情報なし)") +
-                            "\n\tメソッド：" + (methodName ?? "(情報なし)"),
+                            "\nエラー発生箇所:\n" +
+                            ex.StackTrace,
                             PluginInfo.Title,
                             MessageBoxButtons.YesNo,
                             MessageBoxIcon.Error

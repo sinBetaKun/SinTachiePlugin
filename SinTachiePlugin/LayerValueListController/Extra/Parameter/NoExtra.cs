@@ -1,4 +1,5 @@
-﻿using YukkuriMovieMaker.Commons;
+﻿using SinTachiePlugin.Parts;
+using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.LayerValueListController.Extra.Parameter
@@ -18,7 +19,7 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter
             return;
         }
 
-        public override double GetValue(long frame, long length, int fps)
+        public override double GetValue(FrameAndLength fl, int fps)
         {
             return 1.0;
         }
