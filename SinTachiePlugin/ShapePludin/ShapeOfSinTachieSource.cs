@@ -13,6 +13,8 @@ namespace SinTachiePlugin.ShapePludin
 
         public ID2D1Image Output => commandList ?? throw new InvalidOperationException("commandList is null");
 
+        bool isFirst2 = true;
+
         public ShapeOfSinTachieSource(IGraphicsDevicesAndContext devices, ShapeParameterOfSinTachie param) : base(devices)
         {
             this.param = param;
@@ -20,17 +22,22 @@ namespace SinTachiePlugin.ShapePludin
 
         public void Update(TimelineItemSourceDescription description)
         {
-            UpdateCase updateCase = UpdateNodeListForShape(description);
-
-            if (updateCase != UpdateCase.None)
+            for (int i = 0; i < (isFirst2 ? 2 : 1); i++)
             {
-                if (updateCase.HasFlag(UpdateCase.BitmapParams))
+                UpdateCase updateCase = UpdateNodeListForShape(description);
+
+                if (updateCase != UpdateCase.None)
                 {
-                    UpdateParentPaths();
-                    UpdateOutputs(description);
+                    if (updateCase.HasFlag(UpdateCase.BitmapParams))
+                    {
+                        UpdateParentPaths();
+                        UpdateOutputs(description);
+                    }
+                    SetCommandList(updateCase);
                 }
-                SetCommandList(updateCase);
             }
+
+            isFirst2 = false;
         }
 
         private UpdateCase UpdateNodeListForShape(TimelineItemSourceDescription description)

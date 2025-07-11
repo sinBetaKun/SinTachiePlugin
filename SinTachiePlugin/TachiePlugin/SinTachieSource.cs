@@ -16,6 +16,8 @@ namespace SinTachiePlugin.Parts
         readonly AffineTransform2D transformEffect;
         readonly ID2D1Image output;
 
+        bool isFirst2 = true;
+
         public SinTachieSource(IGraphicsDevicesAndContext devices) : base(devices)
         {
             transformEffect = new(devices.DeviceContext);
@@ -30,19 +32,24 @@ namespace SinTachiePlugin.Parts
         /// </summary>
         public void Update(TachieSourceDescription description)
         {
-            UpdateCase updateCase = UpdateNodeListForTachie(description);
-
-            if (updateCase != UpdateCase.None)
+            for (int i = 0; i < (isFirst2 ? 2 : 1); i++)
             {
-                if (updateCase.HasFlag(UpdateCase.BitmapParams))
-                {
-                    UpdateParentPaths();
-                    UpdateOutputs(description);
-                }
-                SetCommandList(updateCase);
+                UpdateCase updateCase = UpdateNodeListForTachie(description);
 
-                transformEffect.SetInput(0, commandList, true);
+                if (updateCase != UpdateCase.None)
+                {
+                    if (updateCase.HasFlag(UpdateCase.BitmapParams))
+                    {
+                        UpdateParentPaths();
+                        UpdateOutputs(description);
+                    }
+                    SetCommandList(updateCase);
+
+                    transformEffect.SetInput(0, commandList, true);
+                }
             }
+
+            isFirst2 = false;
         }
 
         private UpdateCase UpdateNodeListForTachie(TachieSourceDescription description)

@@ -8,12 +8,20 @@ namespace SinTachiePlugin.Parts
 {
     internal class VideoEffectChainNode : IDisposable
     {
+        class SubChainNode(IVideoEffect effect, IVideoEffectProcessor proseccor, FrameAndLength fl)
+        {
+            public IVideoEffect Effect = effect;
+            public IVideoEffectProcessor Proseccor = proseccor;
+            public FrameAndLength Fl = fl;
+            public ID2D1Image? Input;
+        }
+
         readonly IGraphicsDevicesAndContext devices;
         readonly AffineTransform2D transform;
         readonly ID2D1Bitmap empty;
         readonly DisposeCollector disposer = new();
         bool wasEmpty;
-        List<(IVideoEffect effect, IVideoEffectProcessor proseccer, FrameAndLength fl)> Chain = [];
+        List<SubChainNode> Chain = [];
 
         public ID2D1Image Output;
 
@@ -31,30 +39,44 @@ namespace SinTachiePlugin.Parts
 
             wasEmpty = false;
 
-            Chain = effects.Select(effect => (effect, effect.CreateVideoEffect(devices), new FrameAndLength(fl))).ToList();
+            Chain = [.. effects.Select(effect => new SubChainNode(effect, effect.CreateVideoEffect(devices), new FrameAndLength(fl)))];
         }
 
         public void UpdateChain(IEnumerable<IVideoEffect> effects, FrameAndLength fl)
         {
+            // 使われなくなった映像エフェクトを見つけ出す。
             var disposedIndex = from e_ep in Chain
-                                where !effects.Contains(e_ep.effect)
+                                where !effects.Contains(e_ep.Effect)
                                 select Chain.IndexOf(e_ep) into i
                                 orderby i descending
                                 select i;
+
+            // 使われなくなった映像エフェクトを開放する。
             foreach (int index in disposedIndex)
             {
-                (IVideoEffect effect, IVideoEffectProcessor processor, FrameAndLength fl) tuple = Chain[index];
-                tuple.processor.ClearInput();
-                tuple.processor.Dispose();
+                SubChainNode node = Chain[index];
+                node.Proseccor.ClearInput();
+                node.Proseccor.Dispose();
                 Chain.RemoveAt(index);
             }
 
-            List<IVideoEffect> keeped = Chain.Select((e_ep) => e_ep.effect).ToList();
-            List<(IVideoEffect, IVideoEffectProcessor, FrameAndLength)> newChain = new(effects.Count());
+            // 
+            List<IVideoEffect> keeped = [.. Chain.Select((e_ep) => e_ep.Effect)];
+            List<SubChainNode> newChain = new(effects.Count());
             foreach (var effect in effects)
             {
                 int index = keeped.IndexOf(effect);
-                newChain.Add(index < 0 ? (effect, effect.CreateVideoEffect(devices), fl) : Chain[index] with { fl = fl});
+                if (index < 0)
+                {
+                    // 新しく使われる映像エフェクトの場合はタプルを新しく生成
+                    newChain.Add(new(effect, effect.CreateVideoEffect(devices), fl));
+                }
+                else
+                {
+                    // すでに使われている映像エフェクトの場合は再使用
+                    Chain[index].Fl = fl;
+                    newChain.Add(Chain[index]);
+                }
             }
 
             Chain = newChain;
@@ -82,24 +104,27 @@ namespace SinTachiePlugin.Parts
                     Output = empty;
                     wasEmpty = true;
                 }
+
                 return result;
             }
 
             ID2D1Image? output = input;
             foreach (var tuple in Chain)
             {
-                if (tuple.effect.IsEnabled)
+                if (tuple.Effect.IsEnabled)
                 {
-                    IVideoEffectProcessor item = tuple.proseccer;
-                    FrameAndLength fl = tuple.fl;
-                    item.SetInput(output);
+                    IVideoEffectProcessor item = tuple.Proseccor;
+                    FrameAndLength fl = tuple.Fl;
+                    if (tuple.Input != output) 
+                        item.SetInput(output);
                     timeLineItemSourceDescription = new(timelineSourceDescription, fl.Frame, fl.Length, 0);
-                    EffectDescription effectDescription = new(timeLineItemSourceDescription, result, 0, 1);
+                    EffectDescription effectDescription = new(timeLineItemSourceDescription, result, 0, 1, 0, 1);
                     result = item.Update(effectDescription);
                     
                     output = item.Output;
                 }
             }
+
             transform.SetInput(0, output, true);
 
             if (wasEmpty)
@@ -127,8 +152,8 @@ namespace SinTachiePlugin.Parts
                     // マネージド状態を破棄します (マネージド オブジェクト)
                     Chain.ForEach(i =>
                     {
-                        i.proseccer.ClearInput();
-                        i.proseccer.Dispose();
+                        i.Proseccor.ClearInput();
+                        i.Proseccor.Dispose();
                     });
                     ClearEffectChain();
                     disposer.Dispose();
