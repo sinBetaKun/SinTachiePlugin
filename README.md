@@ -1,7 +1,8 @@
 # SinTachiePlugin
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/05c9273e-b6fb-4879-a191-6b09aa31511b" width="75%">
+  <img src="https://github.com/user-attachments/assets/ac35fdb6-a292-48c8-97fe-984d94349e54" width="75%">
 </p>
+
 
 ## すべてを Cosense に託す。→ [Cosenseページ](https://scrapbox.io/SinTachiePlugin/sin%E5%9E%8B%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0%E3%83%91%E3%83%BC%E3%83%84%E7%AB%8B%E3%81%A1%E7%B5%B5%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3)
 
