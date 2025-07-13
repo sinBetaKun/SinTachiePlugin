@@ -1,9 +1,9 @@
-﻿using Vortice.Direct2D1.Effects;
-using Vortice.Direct2D1;
-using YukkuriMovieMaker.Commons;
-using SinTachiePlugin.Enums;
+﻿using System.Collections.Immutable;
 using System.Numerics;
-using System.Collections.Immutable;
+using SinTachiePlugin.Enums;
+using Vortice.Direct2D1;
+using Vortice.Direct2D1.Effects;
+using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Player.Video;
 
 namespace SinTachiePlugin.Parts

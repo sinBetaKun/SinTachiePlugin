@@ -12,7 +12,7 @@ namespace SinTachiePlugin.LayerValueListController
 {
     public class LayerNode
     {
-        readonly string path = string.Empty;
+        readonly string? path = null;
         public int? Index { get; set; } = null;
         public int Depth { get; set; } = -1;
         public List<LayerNode> Children { get; set; } = [];
