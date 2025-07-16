@@ -8,6 +8,21 @@
              xmlns:res="clr-namespace:SinTachiePlugin.Parts.Controller"
              d:DataContext="{d:DesignInstance Type=local:PartBlock}"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SinTachiePlugin;component/Resource/MaterialIcons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="ButtonAppearStyle" TargetType="Button">
+                <Setter Property="Content" Value="{StaticResource Visible}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Appear, Mode=OneWay}" Value="False">
+                        <Setter Property="Content" Value="{StaticResource Invisible}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid Background="#0000" ToolTip="{x:Static res:Resources.PartBlockToolTip}">
         <Grid.Style>
             <Style TargetType="Grid">
@@ -24,21 +39,8 @@
                 <WrapPanel>
                     <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="2" VerticalAlignment="Center">
                         <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
-                            <CheckBox Margin="2,3,5,0" VerticalAlignment="Top" Width="15" Height="15" HorizontalAlignment="Left"
-                                      IsChecked="{Binding Appear, Mode=OneWay}" Unchecked="Update_CheckBox" Checked="Update_CheckBox"
-                                      ToolTip="{x:Static res:Resources.PartBlockToolTip}">
-
-                                <CheckBox.Style>
-                                    <Style TargetType="CheckBox">
-                                        <Setter Property="Background" Value="#0000"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Selected}" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </CheckBox.Style>
-                            </CheckBox>
+                            <Button Height="16" Width="16" Margin="2" Background="Transparent" BorderThickness="0"
+                                    Click="Switch_Appear" Style="{StaticResource ButtonAppearStyle}" />
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel.Style>
                                     <Style TargetType="StackPanel">
@@ -171,8 +173,10 @@
                     </StackPanel>
                 </WrapPanel>
                 <c:FileSelector x:Name="selector" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,4,0,0"
-                                Value="{Binding ImagePath}" ShowThumbnail="True" FileType="画像" FileGroup="TachieParts"
-                                BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
+                Value="{Binding ImagePath}" ShowThumbnail="True" FileType="画像" FileGroup="TachieParts"
+                BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>
+                <!--
+                -->
             </StackPanel>
         </Border>
     </Grid>

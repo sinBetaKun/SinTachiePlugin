@@ -40,6 +40,16 @@ namespace SinTachiePlugin.Parts
             EndEdit?.Invoke(this, e);
         }
 
+        private void Switch_Appear(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PartBlock vm)
+            {
+                BeginEdit?.Invoke(this, e);
+                vm.Appear = !vm.Appear;
+                EndEdit?.Invoke(this, e);
+            }
+        }
+
         private void Update_CheckBox(object sender, RoutedEventArgs e)
         {
             if(DataContext is PartBlock vm && sender is System.Windows.Controls.CheckBox checkBox)
