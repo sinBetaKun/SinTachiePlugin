@@ -32,6 +32,7 @@ namespace SinTachiePlugin.Parts
         /// </summary>
         public void Update(TachieSourceDescription description)
         {
+            // 最初は二回描画しないと、個別エフェクトを持つパーツは正しく描画されない。
             for (int i = 0; i < (isFirst2 ? 2 : 1); i++)
             {
                 UpdateCase updateCase = UpdateNodeListForTachie(description);

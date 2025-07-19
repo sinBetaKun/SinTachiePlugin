@@ -26,7 +26,9 @@
                 <ColumnDefinition Width="26"/>
             </Grid.ColumnDefinitions>
             
-            <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Path=LayerValues}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" Name="list" ScrollViewer.CanContentScroll="False">
+            <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Path=LayerValues}"
+                     SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" Name="list" ScrollViewer.CanContentScroll="False"
+                     PreviewMouseWheel="List_PreviewMouseWheel">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="Height" Value="30"/>

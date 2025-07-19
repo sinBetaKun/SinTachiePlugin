@@ -52,9 +52,10 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="26"/>
                     </Grid.ColumnDefinitions>
-                    <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" SelectionChanged="list_SelectionChanged"
+                    <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" SelectionChanged="List_SelectionChanged"
                              ItemsSource="{Binding Parts}" SelectedIndex="{Binding SelectedPartIndex}" SelectionMode="Extended"
-                             Name="list" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                             Name="list" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             PreviewMouseWheel="List_PreviewMouseWheel">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <local:PartBlockUI BeginEdit="PropertiesEditor_BeginEdit" EndEdit="PropertiesEditor_EndEdit"/>

@@ -1,4 +1,7 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using SinTachiePlugin.LayerValueListController.Controller;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
@@ -51,6 +54,53 @@ namespace SinTachiePlugin.LayerValueListController
         public void SetEditorInfo(IEditorInfo info)
         {
             propertiesEditor.SetEditorInfo(info);
+        }
+
+        private void List_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            var scrollViewer = FindVisualChild<ScrollViewer>(list);
+            if (scrollViewer == null) return;
+
+            e.Handled = true;
+            bool scrollingUp = e.Delta > 0;
+
+            if ((scrollingUp && scrollViewer.VerticalOffset == 0) ||
+                (!scrollingUp && scrollViewer.VerticalOffset >= scrollViewer.ScrollableHeight))
+            {
+                // 端に到達 → スクロールイベントを親に渡す
+
+                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
+                {
+                    RoutedEvent = UIElement.MouseWheelEvent,
+                    Source = sender
+                };
+
+                // 親要素を取得してイベント再発火
+                var parent = ((System.Windows.Controls.Control)sender).Parent as UIElement;
+                parent?.RaiseEvent(eventArg);
+            }
+            else
+            {
+                // まだスクロール可能 → 自分で処理
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+            }
+        }
+
+        private static T? FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T t)
+                    return t;
+                else
+                {
+                    T? result = FindVisualChild<T>(child);
+                    if (result != null)
+                        return result;
+                }
+            }
+            return null;
         }
     }
 }
