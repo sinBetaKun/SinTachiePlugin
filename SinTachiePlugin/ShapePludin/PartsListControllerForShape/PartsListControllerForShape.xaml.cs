@@ -206,8 +206,14 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
 
         private void List_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            var scrollViewer = FindVisualChild<ScrollViewer>(list);
+            var scrollViewer = PartsListControllerViewModelBase.FindVisualChild<ScrollViewer>(list);
             if (scrollViewer == null) return;
+
+            if (PartsListControllerViewModelBase.AnyOpendComboBox(list))
+            {
+                e.Handled = false;
+                return;
+            }
 
             e.Handled = true;
             bool scrollingUp = e.Delta > 0;
@@ -232,23 +238,6 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
                 // まだスクロール可能 → 自分で処理
                 scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
             }
-        }
-
-        private static T? FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
-        {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-            {
-                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
-                if (child is T t)
-                    return t;
-                else
-                {
-                    T? result = FindVisualChild<T>(child);
-                    if (result != null)
-                        return result;
-                }
-            }
-            return null;
         }
     }
 }

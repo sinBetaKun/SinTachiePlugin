@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
-using SinTachiePlugin.Informations;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using Newtonsoft.Json;
+using SinTachiePlugin.Informations;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Settings;
+using ComboBox = System.Windows.Controls.ComboBox;
 
 namespace SinTachiePlugin.Parts
 {
@@ -669,6 +671,45 @@ namespace SinTachiePlugin.Parts
 
         public void SetEditorInfo(IEditorInfo info)
         {
+        }
+
+
+
+        public static T? FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T t)
+                    return t;
+                else
+                {
+                    T? result = FindVisualChild<T>(child);
+                    if (result != null)
+                        return result;
+                }
+            }
+            return null;
+        }
+
+        public static bool AnyOpendComboBox(DependencyObject depObj)
+        {
+            if (depObj == null) return false;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(depObj, i);
+                if (child is ComboBox combo)
+                {
+                    if (combo.IsDropDownOpen)
+                        return true;
+                }
+
+                if (AnyOpendComboBox(child))
+                    return true;
+            }
+
+            return false;
         }
     }
 }
