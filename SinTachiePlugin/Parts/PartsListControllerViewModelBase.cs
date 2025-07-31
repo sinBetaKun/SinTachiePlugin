@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.ComponentModel;
 using System.IO;
-using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -15,6 +15,14 @@ namespace SinTachiePlugin.Parts
 {
     public abstract class PartsListControllerViewModelBase : Bindable, INotifyPropertyChanged, IPropertyEditorControl2, IDisposable
     {
+        class NaturalStringComparer : IComparer<TreeViewItem>
+        {
+            [DllImport("shlwapi.dll", CharSet = CharSet.Unicode)]
+            static extern int StrCmpLogicalW(string x, string y);
+
+            public int Compare(TreeViewItem x, TreeViewItem y) => StrCmpLogicalW((string)x.Header, (string)y.Header);
+        }
+
         readonly INotifyPropertyChanged item;
         protected readonly ItemProperty[] properties;
         static string clipedBlocks = "";
@@ -97,25 +105,32 @@ namespace SinTachiePlugin.Parts
         }
 
         readonly List<(TreeViewItem, string)> nameTreeItems = [];
+        string lastAddedPartPath = string.Empty;
 
         IEnumerable<TreeViewItem> CreateTreeItem(DirectoryInfo target)
         {
-
             List<TreeViewItem> nodes = [];
 
             foreach (DirectoryInfo di in target.GetDirectories())
             {
                 TreeViewItem t = new() { Header = di.Name };
                 TreeViewItem[] tmp = [.. CreateTreeItem(di)];
+
                 if (tmp.Length != 0)
                 {
                     foreach (TreeViewItem ts in tmp)
                     {
                         t.Items.Add(ts);
                     }
+
+                    if (lastAddedPartPath.StartsWith(di.FullName))
+                        t.IsExpanded = true;
+
                     nodes.Add(t);
                 }
             }
+
+            nodes.Sort(new NaturalStringComparer());
 
             IEnumerable<TreeViewItem> leafs = target.GetFiles()
                 .Where(fi => FileSettings.Default.FileExtensions.GetFileType(fi.FullName) == FileType.画像)
@@ -129,7 +144,11 @@ namespace SinTachiePlugin.Parts
                     nameTreeItems.Add((t, fi.FullName));
                     return t;
                 });
-            return [.. nodes, .. leafs];
+
+            List<TreeViewItem> leafs2 = [.. leafs];
+            leafs2.Sort(new NaturalStringComparer());
+
+            return [.. nodes, .. leafs2];
         }
 
         private void PartTreeNodeClick(object sender, RoutedEventArgs e)
@@ -139,6 +158,7 @@ namespace SinTachiePlugin.Parts
                 string tagName;
                 string partImagePath = nameTreeItems.Find(t => t.Item1 == item).Item2;
                 string fromRoot = partImagePath.Split(Root + "\\").Last();
+
                 if (Path.GetDirectoryName(fromRoot) is string dn && !string.IsNullOrEmpty(dn))
                 {
                     tagName = dn;
@@ -149,14 +169,17 @@ namespace SinTachiePlugin.Parts
                 }
 
                 string[] tags = [.. from part in Parts select part.TagName];
+
                 if (tags.Contains(tagName))
                 {
                     int sideNum = 1;
                     while (tags.Contains($"{tagName}({sideNum})")) sideNum++;
                     tagName += $"({sideNum})";
                 }
+
                 int tmpSelectedIndex;
                 BeginEdit?.Invoke(this, EventArgs.Empty);
+
                 if (SelectedPartIndex < 0)
                 {
                     tmpSelectedIndex = Parts.Count;
@@ -169,9 +192,11 @@ namespace SinTachiePlugin.Parts
                     Parts = Parts.Insert(tmpSelectedIndex, new PartBlock(partImagePath, tagName, tags));
                     SetProperties();
                 }
+
                 EndEdit?.Invoke(this, EventArgs.Empty);
                 SelectedPartIndex = tmpSelectedIndex;
                 PartsPopupIsOpen = false;
+                lastAddedPartPath = partImagePath;
             }
         }
 
@@ -179,11 +204,13 @@ namespace SinTachiePlugin.Parts
         {
             treeView.Items.Clear();
             bool rootUnexist = !Path.Exists(Root);
+
             if (!rootUnexist)
             {
                 try
                 {
                     DirectoryInfo di = new(Root);
+
                     foreach (TreeViewItem item in CreateTreeItem(di))
                     {
                         treeView.Items.Add(item);
@@ -199,18 +226,21 @@ namespace SinTachiePlugin.Parts
             {
                 var intro = rootUnexist ? "素材の場所のパスが無効です。" : "素材の場所にパーツが見つかりませんでした。";
                 var dialog = SinTachieDialog.GetOKorCancel($"{intro}\n画像未指定のパーツブロックを追加しますか？");
+
                 if (dialog == DialogResult.OK)
                 {
                     var tmpSelectedIndex = SelectedPartIndex;
                     BeginEdit?.Invoke(this, EventArgs.Empty);
                     string tag = "[Untitled]";
                     var tags = from part in Parts select part.TagName;
+
                     if (tags.Contains(tag))
                     {
                         int sideNum = 1;
                         while (tags.Contains($"{tag}({sideNum})")) sideNum++;
                         tag += $"({sideNum})";
                     }
+
                     if (tmpSelectedIndex < 0)
                     {
                         Parts = Parts.Add(new PartBlock("", tag, tags.ToArray()));
@@ -221,12 +251,15 @@ namespace SinTachiePlugin.Parts
                         Parts = Parts.Insert(tmpSelectedIndex, new PartBlock("", tag, tags.ToArray()));
                         SelectedPartIndex = tmpSelectedIndex;
                     }
+
                     SetProperties();
                     EndEdit?.Invoke(this, EventArgs.Empty);
                     PartsPopupIsOpen = false;
                 }
+
                 return;
             }
+
             PartsPopupIsOpen = true;
         }
 
@@ -263,6 +296,7 @@ namespace SinTachiePlugin.Parts
             while (true)
             {
                 bool ok = true;
+
                 foreach (var part in parts)
                 {
                     if (part.TagName == ret)
@@ -297,6 +331,7 @@ namespace SinTachiePlugin.Parts
             while (true)
             {
                 bool ok = true;
+
                 foreach (var part in parts)
                 {
                     if (part.TagName == ret)
@@ -351,6 +386,7 @@ namespace SinTachiePlugin.Parts
                         Parts = Parts.Insert(index++, part);
                     }
                 }
+
                 SetProperties();
                 EndEdit?.Invoke(this, EventArgs.Empty);
                 SelectedPartIndex = tmpSelectedIndex;
@@ -445,7 +481,9 @@ namespace SinTachiePlugin.Parts
         {
             BeginEdit?.Invoke(this, EventArgs.Empty);
             Parts.ForEach(i => i.Appear = false);
+
             foreach (var selected in selecteds) selected.Appear = true;
+            
             SetProperties();
             EndEdit?.Invoke(this, EventArgs.Empty);
         }
@@ -518,10 +556,12 @@ namespace SinTachiePlugin.Parts
         {
             var tmpSelectedPartIndex = SelectedPartIndex;
             BeginEdit?.Invoke(this, EventArgs.Empty);
+
             foreach (var selected in selecteds)
             {
                 selected.ReloadDefault();
             }
+            
             SetProperties();
             EndEdit?.Invoke(this, EventArgs.Empty);
             SelectedPartIndex = tmpSelectedPartIndex;
@@ -606,11 +646,13 @@ namespace SinTachiePlugin.Parts
                 {
                     BeginEdit?.Invoke(this, EventArgs.Empty);
                     var selected = Parts[SelectedPartIndex];
+
                     if (selected == null)
                     {
                         SinTachieDialog.ShowError(new("選択されたブロックを取得できません。"));
                         return;
                     }
+                    
                     selected.UpdateDefault();
                     EndEdit?.Invoke(this, EventArgs.Empty);
                 });
@@ -621,11 +663,13 @@ namespace SinTachiePlugin.Parts
                 {
                     BeginEdit?.Invoke(this, EventArgs.Empty);
                     var selected = Parts[SelectedPartIndex];
+
                     if (selected == null)
                     {
                         SinTachieDialog.ShowError(new("選択されたブロックを取得できません。"));
                         return;
                     }
+
                     selected.DeleteDafault();
                     EndEdit?.Invoke(this, EventArgs.Empty);
                 });
@@ -638,6 +682,7 @@ namespace SinTachiePlugin.Parts
             var tmpSelectedIndex = SelectedPartIndex;
             Parts = Parts.RemoveRange(selecteds);
             SetProperties();
+
             if (Parts.Count > 0) SelectedPartIndex = Math.Min(tmpSelectedIndex, Parts.Count - 1);
             else SelectedPartIndex = -1;
         }
@@ -658,6 +703,7 @@ namespace SinTachiePlugin.Parts
 
             // ボタンの有効・無効を状況によって切り替える必要のあるコマンド
             var commands = new[] { WriteDefaultCommand, DeleteDefaultCommand };
+
             foreach (var command in commands)
                 command.RaiseCanExecuteChanged();
         }
@@ -680,11 +726,13 @@ namespace SinTachiePlugin.Parts
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
             {
                 DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+
                 if (child is T t)
                     return t;
                 else
                 {
                     T? result = FindVisualChild<T>(child);
+
                     if (result != null)
                         return result;
                 }
@@ -699,6 +747,7 @@ namespace SinTachiePlugin.Parts
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
             {
                 var child = VisualTreeHelper.GetChild(depObj, i);
+
                 if (child is ComboBox combo)
                 {
                     if (combo.IsDropDownOpen)
