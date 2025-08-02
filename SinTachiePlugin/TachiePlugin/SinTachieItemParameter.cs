@@ -1,4 +1,4 @@
-﻿using SinTachiePlugin.Parts;
+﻿using SinTachiePlugin.Parts.Controller;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
@@ -8,7 +8,7 @@ namespace SinTachiePlugin.Parts
 {
     internal class SinTachieItemParameter : TachieItemParameterBase
     {
-        [Display(Name = "描画順序", Description = "描画順序")]
+        [Display]
         [PartsListController(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<PartBlock> Parts { get => parts; set => Set(ref parts, value); }
         ImmutableList<PartBlock> parts = [];

@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="SinTachiePlugin.LayerValueListController.Controller.LayerValueUI"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SinTachiePlugin.LayerValueListController.Controller"
+             xmlns:local2="clr-namespace:SinTachiePlugin.LayerValueListController"
+             xmlns:layerValCnt="clr-namespace:SinTachiePlugin.LayerValueListController.Controller"
+             d:DataContext="{d:DesignInstance Type=local2:LayerValue}"
+             mc:Ignorable="d">
+    <Grid Background="#0000">
+        <Grid.Style>
+            <Style TargetType="Grid">
+                <Setter Property="Margin" Value="6,0,0,0" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Selected}" Value="True">
+                        <Setter Property="Margin" Value="0,0,0,0" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
+        <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1">
+
+            <StackPanel Margin="0,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                <Border Margin="4,4,0,4" BorderThickness="2" VerticalAlignment="Center">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="BorderBrush" Value="#0000"/>
+                            <Setter Property="Background" Value="#60808080"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Selected}" Value="True">
+                                    <Setter Property="BorderBrush" Value="#60808080"/>
+                                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Text="{Binding Cerrar.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0"
+                   VerticalAlignment="Center" FontSize="12"
+                   ToolTip="{x:Static layerValCnt:Resources.CerrarValueToolTip}"/>
+                </Border>
+                <TextBlock Margin="4,4,0,4" VerticalAlignment="Center" FontSize="12">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="~"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AnimationMode}" Value="CerrarPlusAbrir">
+                                    <Setter Property="Text" Value="+"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding AnimationMode}" Value="CerrarTimesAbrir">
+                                    <Setter Property="Text" Value="*"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding AnimationMode}" Value="Sin">
+                                    <Setter Property="Text" Value=","/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <Border Margin="4,4,0,4" BorderThickness="2" VerticalAlignment="Center">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="BorderBrush" Value="#0000"/>
+                            <Setter Property="Background" Value="#60808080"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Selected}" Value="True">
+                                    <Setter Property="BorderBrush" Value="#60808080"/>
+                                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Text="{Binding Abrir.Values[0].Value,StringFormat={}{0:F1}%}" Margin="4,0,4,0"
+                   VerticalAlignment="Center" FontSize="12"
+                   ToolTip="{x:Static layerValCnt:Resources.AbrirValueToolTip}"/>
+                </Border>
+                <TextBlock Text="{Binding Comment}" Margin="10,4,0,4" VerticalAlignment="Center" FontSize="12"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

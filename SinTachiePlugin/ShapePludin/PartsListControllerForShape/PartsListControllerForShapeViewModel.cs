@@ -1,21 +1,10 @@
-﻿using SinTachiePlugin.Informations;
-using SinTachiePlugin.Parts;
-using System;
-using System.Collections.Generic;
+﻿using SinTachiePlugin.Parts;
 using System.Collections.Immutable;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using YukkuriMovieMaker.Commons;
-using YukkuriMovieMaker.Settings;
 
 namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
 {
-    public partial class PartsListControllerForShapeViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
+    public class PartsListControllerForShapeViewModel(ItemProperty[] properties) : PartsListControllerViewModelBase(properties)
     {
         public override void SetProperties()
         {
@@ -36,6 +25,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
             if (!Parts.SequenceEqual(values.Parts))
             {
                 Parts = [.. values.Parts];
+                Parts.ForEach(x => x.Selected = false);
             }
             Root = values.Root;
         }

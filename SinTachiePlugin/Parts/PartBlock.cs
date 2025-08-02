@@ -1,35 +1,30 @@
 ﻿using Newtonsoft.Json;
 using SinTachiePlugin.Informations;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.Intrinsics.Arm;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Shapes;
-using Vortice.Direct2D1;
-using YukkuriMovieMaker.Commons;
 using Path = System.IO.Path;
 
 namespace SinTachiePlugin.Parts
 {
-    public partial class PartBlock : ControlledParamsOfPart
+    public class PartBlock : ControlledParamsOfPart
     {
+        [JsonIgnore]
+        public bool Selected { get => selected; set => Set(ref selected, value); }
+        bool selected = false;
+
         static string? MakeStpiPath(string path)
         {
             if (!File.Exists(path))
             {
-                ShowWarning($"存在しない画像ファイルの{PartInfo.Extension}ファイルパスは作れません。\n({path})");
+                SinTachieDialog.ShowWarning($"存在しない画像ファイルの{PartInfo.Extension}ファイルパスは作れません。\n({path})");
                 return null;
             }
             string? dn = Path.GetDirectoryName(path);
             string? name = Path.GetFileNameWithoutExtension(path);
             if (string.IsNullOrEmpty(dn) || string.IsNullOrEmpty(name))
             {
-                ShowWarning($"パスが無効な画像ファイルの{PartInfo.Extension}ファイルパスは作れません。\n({path})");
+                SinTachieDialog.ShowWarning($"パスが無効な画像ファイルの{PartInfo.Extension}ファイルパスは作れません。\n({path})");
                 return null;
             }
             return Path.Combine(dn, name + "." + PartInfo.Extension);
@@ -37,7 +32,6 @@ namespace SinTachiePlugin.Parts
 
         public PartBlock()
         {
-
         }
 
         public PartBlock(string fp, string tag, string[] aborigines)
@@ -51,7 +45,7 @@ namespace SinTachiePlugin.Parts
                     CopyFrom(block);
                     if (aborigines.Contains(block.TagName))
                     {
-                        var dialog = GetDialog(
+                        var dialog = SinTachieDialog.GetYESorNO(
                             $"デフォルト設定におけるタグ({block.TagName})は、リスト内で既に使われています。" +
                             "\nデフォルト設定のタグを使いますか？" +
                             $"\n（キャンセルした場合、タグは「{tag}」になります。）");
@@ -83,7 +77,7 @@ namespace SinTachiePlugin.Parts
             {
                 if (info.DefaltValues != null)
                 {
-                    var anwer = GetDialog(
+                    var anwer = SinTachieDialog.GetOKorCancel(
                         $"{PartInfo.Extension}ファイルにデフォルト値が設定されています。" +
                         $"\n設定を上書きしますか？"
                         );
@@ -94,7 +88,7 @@ namespace SinTachiePlugin.Parts
             else info = new PartInfo();
             info.DefaltValues = this;
             string str = overwrited ? "上書き" : "保存";
-            if (OutputStpi(info)) ShowInformation($"デフォルト値を{str}しました。");
+            if (OutputStpi(info)) SinTachieDialog.ShowInformation($"デフォルト値を{str}しました。");
         }
 
         /// <summary>
@@ -107,24 +101,24 @@ namespace SinTachiePlugin.Parts
             var info = InputStpi();
             if(info == null)
             {
-                ShowInformation(
+                SinTachieDialog.ShowInformation(
                     $"デフォルト値を記録する{PartInfo.Extension}ファイルはまだ作成されていないので、" +
                     "デフォルト値はまだ設定されていません。");
                 return;
             }
             if(info.DefaltValues == null)
             {
-                ShowInformation(
+                SinTachieDialog.ShowInformation(
                     "デフォルト値はまだ設定されていません。");
                 return;
             }
-            DialogResult dialogResult = GetDialog(
+            DialogResult dialogResult = SinTachieDialog.GetOKorCancel(
                 $"デフォルト値を削除しますか？\n（{PartInfo.Extension}ファイルは削除されません。）");
             if (dialogResult == DialogResult.OK)
             {
                 info.DefaltValues = null;
                 OutputStpi(info);
-                if (OutputStpi(info)) ShowInformation("デフォルト値を削除しました。");
+                if (OutputStpi(info)) SinTachieDialog.ShowInformation("デフォルト値を削除しました。");
             }
         }
 
@@ -142,14 +136,8 @@ namespace SinTachiePlugin.Parts
             int randomNumber = random.Next(0, 99);
             const int num = 5;
             string str = (randomNumber < num) ? " ☆アローリ☆ " : "リロード";
-            ShowInformation($"デフォルト値を{str}しました。");
+            SinTachieDialog.ShowInformation($"「{tag}」\nデフォルト値を{str}しました。");
         }
-
-        public static JsonSerializerSettings GetJsonSetting =>
-            new()
-            {
-                TypeNameHandling = TypeNameHandling.Auto
-            };
 
         private PartInfo? InputStpi()
         {
@@ -171,7 +159,7 @@ namespace SinTachiePlugin.Parts
                             }
                             else
                             {
-                                ShowWarning($"{PartInfo.Extension}ファイルから情報を取得できませんでした。");
+                                SinTachieDialog.ShowWarning($"{PartInfo.Extension}ファイルから情報を取得できませんでした。");
                                 return null;
                             }
                         }
@@ -179,7 +167,7 @@ namespace SinTachiePlugin.Parts
                 }
                 catch (Exception ex)
                 {
-                    ShowWarning($"{PartInfo.Extension}ファイルの読み込みに失敗しました。\n" + ex.Message);
+                    SinTachieDialog.ShowWarning($"{PartInfo.Extension}ファイルの読み込みに失敗しました。\n" + ex.Message);
                     return null;
                 }
             }
@@ -203,9 +191,7 @@ namespace SinTachiePlugin.Parts
                 }
                 catch (Exception e)
                 {
-                    string clsName = GetType().Name;
-                    string? mthName = MethodBase.GetCurrentMethod()?.Name;
-                    ShowError("stpiファイルの出力時にエラーが発生しました。\n" + e.Message, clsName, mthName);
+                    SinTachieDialog.ShowError(new("stpiファイルの出力時にエラーが発生しました。\n" + e.Message));
                     return false;
                 }
                 ImagePath = path;

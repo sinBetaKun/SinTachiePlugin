@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using YukkuriMovieMaker.Commons;
 
 namespace SinTachiePlugin.Informations
@@ -15,16 +9,32 @@ namespace SinTachiePlugin.Informations
     public class SinTachieDialog : Animatable
     {
         /// <summary>
-        /// 質問をダイアログを出し、回答を返す
+        /// 質問をダイアログを出し、回答を返す(OK or Cancel)
         /// </summary>
         /// <param name="message">質問内容</param>
-        /// <returns></returns>
-        static public DialogResult GetDialog(string message)
+        /// <returns>OK or Cancel</returns>
+        static public DialogResult GetOKorCancel(string message)
         {
             return MessageBox.Show(
                         message,
                         PluginInfo.Title,
                         MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button1
+                        );
+        }
+
+        /// <summary>
+        /// 質問をダイアログを出し、回答を返す(Yes or No)
+        /// </summary>
+        /// <param name="message">質問内容</param>
+        /// <returns>Yes or No</returns>
+        static public DialogResult GetYESorNO(string message)
+        {
+            return MessageBox.Show(
+                        message,
+                        PluginInfo.Title,
+                        MessageBoxButtons.YesNo,
                         MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1
                         );
@@ -63,7 +73,7 @@ namespace SinTachiePlugin.Informations
         /// エラー表示する
         /// </summary>
         /// <param name="cont">内容</param>
-        static public void ShowError(string cont , string? className, string? methodName)
+        static public void ShowError(Exception ex)
         {
             var result = MessageBox.Show(
                             "エラーが発生しました。" +
@@ -71,11 +81,10 @@ namespace SinTachiePlugin.Informations
                             "\n（「はい(Y)」を押すとリンク先をブラウザで開きます。）" +
                             "\nエラー内容" +
                             "\n---" +
-                            "\n" + cont +
+                            "\n" + ex.Message +
                             "\n---" +
-                            "\nエラー発生箇所" +
-                            "\n\tクラス：" + (className ?? "(情報なし)") +
-                            "\n\tメソッド：" + (methodName ?? "(情報なし)"),
+                            "\nエラー発生箇所:\n" +
+                            ex.StackTrace,
                             PluginInfo.Title,
                             MessageBoxButtons.YesNo,
                             MessageBoxIcon.Error

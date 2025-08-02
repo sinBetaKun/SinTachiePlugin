@@ -1,30 +1,14 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-//using SinTachiePlugin.Effects;
 using SinTachiePlugin.Enums;
 using SinTachiePlugin.Informations;
 using SinTachiePlugin.LayerValueListController;
-using SinTachiePlugin.Parts.LayerValueListController;
-using SinTachiePlugin.Parts;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Vortice;
-using Windows.Services.Maps;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
-using System.Windows.Media.Effects;
 using YukkuriMovieMaker.Plugin.Effects;
-using System.Xml.Linq;
+using SinTachiePlugin.Parts.Controller;
+using SinTachiePlugin.LayerValueListController.Controller;
 
 namespace SinTachiePlugin.Parts
 {
@@ -32,46 +16,26 @@ namespace SinTachiePlugin.Parts
     /// ユーザがコントローラーで編集できるパラメータをまとめたクラス。
     /// 何か新しくパラメータを追加したり、それらの管理システムを変更したいときは、このクラスを編集すること。
     /// </summary>
-    public partial class ControlledParamsOfPart : SinTachieDialog
+    public class ControlledParamsOfPart : Animatable
     {
         public bool Appear { get => appear; set => Set(ref appear, value); }
         bool appear = true;
 
-        [Display(GroupName = "ブロック情報", Name = "タグ")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_TagName), ResourceType = typeof(Resources))]
         [TextEditor(AcceptsReturn = true)]
         public string TagName { get => tagName; set => Set(ref tagName, value); }
         string tagName = string.Empty;
 
-        [Display(GroupName = "ブロック情報", Name = "親")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_Parent), ResourceType = typeof(Resources))]
         [TextEditor(AcceptsReturn = true)]
         public string Parent { get => parent; set => Set(ref parent, value); }
         string parent = string.Empty;
 
-        /// <summary>
-        /// 描画時に現在の値を取得する際は GetBusNum を呼び出す。
-        /// ここから直々に GetValue すると、Listbox の一要素の UI に変化が起きなくなってしまう。
-        /// </summary>
-        [Display(GroupName = "ブロック情報", Name = "バス")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_BusNum), ResourceType = typeof(Resources))]
         [AnimationSlider("F0", "", -50, 50)]
         public Animation BusNum { get; } = new Animation(0, -1000, 1000);
-/*
-        /// <summary>
-        /// Listbox の一要素の UI を変化させて、ユーザに見やすくしたいんじゃ。
-        /// </summary>
-        [JsonIgnore]
-        public int BusNumView { get => busNumView; set => Set(ref busNumView, value); }
-        int busNumView = 0;
 
-        /// <summary>
-        /// BusNum の現在の値を取得する際はこちらを呼び出す
-        /// </summary>
-        public int GetBusNum(long frame, long length, int fps)
-        {
-            BusNumView = (int)BusNum.GetValue(frame, length, fps);
-            return BusNumView;
-        }*/
-
-        [Display(GroupName = "ブロック情報", Name = "画像")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_ImagePath), ResourceType = typeof(Resources))]
         [FileSelectorForPartOfSinTachie]
         public string ImagePath
         {
@@ -83,81 +47,116 @@ namespace SinTachiePlugin.Parts
         }
         string imagePath = string.Empty;
 
-        [Display(GroupName = "ブロック情報", Name = "備考")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_Comment), ResourceType = typeof(Resources))]
         [TextEditor(AcceptsReturn = true)]
         public string Comment { get => comment; set => Set(ref comment, value); }
         string comment = string.Empty;
 
-        [Display(GroupName = "ブロック情報", Name = "差分レイヤー")]
+        [Display(GroupName = nameof(Resources.GroupeName_BlockInfo), Name = nameof(Resources.ParamName_LayerValues), ResourceType = typeof(Resources))]
         [LayerValueListController(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<LayerValue> LayerValues { get => layerValue; set => Set(ref layerValue, value); }
         ImmutableList<LayerValue> layerValue = [];
 
-        [Display(GroupName = "描画", Name = "X")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_X), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "px", -500, 500)]
         public Animation X { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = "描画", Name = "Y")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Y), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "px", -500, 500)]
         public Animation Y { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = "描画", Name = "不透明度")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Z), ResourceType = typeof(Resources))]
+        [AnimationSlider("F1", "px", -500, 500)]
+        public Animation Z { get; } = new Animation(0, -10000, 10000);
+
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Opacity), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "%", 0, 100)]
         public Animation Opacity { get; } = new Animation(100, 0, 100);
 
-        [Display(GroupName = "描画", Name = "拡大率")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Scale), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "%", 0, 200)]
         public Animation Scale { get; } = new Animation(100, 0, 5000);
 
-        [Display(GroupName = "描画", Name = "回転角")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Rotate), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "°", -360, 360)]
         public Animation Rotate { get; } = new Animation(0, -36000, 36000, 360);
 
-        [Display(GroupName = "描画", Name = "左右反転")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Mirror), ResourceType = typeof(Resources))]
         [AnimationSlider("F0", "", 0, 1)]
         public Animation Mirror { get; } = new Animation(0, 0, 1);
 
-        [Display(GroupName = "描画", Name = "合成モード")]
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_Composition), ResourceType = typeof(Resources))]
         [EnumComboBox]
         public BlendSTP BlendMode { get => blendMode; set { Set(ref blendMode, value); } }
 
         BlendSTP blendMode = BlendSTP.SourceOver;
 
-        [Display(GroupName = "描画", Name = "拡大率依存", Description = "拡大率依存")]
-        [ToggleSlider]
-        public bool ScaleDependent { get => scaleDependent; set => Set(ref scaleDependent, value); }
-        bool scaleDependent = true;
+        [Display(GroupName = nameof(Resources.GroupeName_Drawing), Name = nameof(Resources.ParamName_ZOrder), ResourceType = typeof(Resources))]
+        [EnumComboBox]
+        public ZSortMode ZSortMode { get => zSortMode; set { Set(ref zSortMode, value); } }
 
-        [Display(GroupName = "描画", Name = "不透明度依存", Description = "不透明度依存")]
+        ZSortMode zSortMode = ZSortMode.BusScreen;
+
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_XYZ), ResourceType = typeof(Resources))]
+        [ToggleSlider]
+        public bool XYZDependent { get => xyzDependent; set => Set(ref xyzDependent, value); }
+        bool xyzDependent = true;
+
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_Opacity), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool OpacityDependent { get => opacityDependent; set => Set(ref opacityDependent, value); }
         bool opacityDependent = true;
 
-        [Display(GroupName = "描画", Name = "回転角依存", Description = "回転角依存")]
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_Scale), ResourceType = typeof(Resources))]
+        [ToggleSlider]
+        public bool ScaleDependent { get => scaleDependent; set => Set(ref scaleDependent, value); }
+        bool scaleDependent = true;
+
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_Rotate), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool RotateDependent { get => rotateDependent; set => Set(ref rotateDependent, value); }
         bool rotateDependent = true;
 
-        [Display(GroupName = "中心位置", Name = "X")]
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_Mirror), ResourceType = typeof(Resources))]
+        [ToggleSlider]
+        public bool MirrorDependent { get => mirrorDependent; set => Set(ref mirrorDependent, value); }
+        bool mirrorDependent = true;
+
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_Camera), Description = nameof(Resources.ParamDesc_CameraDependent), ResourceType = typeof(Resources))]
+        [ToggleSlider]
+        public bool CameraDependent { get => cameraDependent; set => Set(ref cameraDependent, value); }
+        bool cameraDependent = true;
+
+        [Display(GroupName = nameof(Resources.GroupeName_ValueDependent), Name = nameof(Resources.ParamName_UnlazyEffectDependent), Description = nameof(Resources.ParamDesc_UnlazyEffectDependent), ResourceType = typeof(Resources))]
+        [ToggleSlider]
+        public bool UnlazyEffectDependent { get => unlazyEffectDependent; set => Set(ref unlazyEffectDependent, value); }
+        bool unlazyEffectDependent = true;
+
+        [Display(GroupName = nameof(Resources.GroupeName_CenterPoint), Name = nameof(Resources.ParamName_X), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "px", -500, 500)]
         public Animation Cnt_X { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = "中心位置", Name = "Y")]
+        [Display(GroupName = nameof(Resources.GroupeName_CenterPoint), Name = nameof(Resources.ParamName_Y), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "px", -500, 500)]
         public Animation Cnt_Y { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = "中心位置", Name = "位置を保持")]
+        [Display(GroupName = nameof(Resources.GroupeName_CenterPoint), Name = nameof(Resources.ParamName_KeepPlace), ResourceType = typeof(Resources))]
         [ToggleSlider]
         public bool KeepPlace { get => keepPlace; set => Set(ref keepPlace, value); }
         bool keepPlace = false;
 
-        [Display(GroupName = "サブ拡大率", Name = "横方向")]
+        [Display(GroupName = nameof(Resources.GroupeName_SubScale), Name = nameof(Resources.ParamName_Exp_X), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "%", 0, 200)]
         public Animation Exp_X { get; } = new Animation(100, 0, 5000);
 
-        [Display(GroupName = "サブ拡大率", Name = "縦方向")]
+        [Display(GroupName = nameof(Resources.GroupeName_SubScale), Name = nameof(Resources.ParamName_Exp_Y), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "%", 0, 200)]
         public Animation Exp_Y { get; } = new Animation(100, 0, 5000);
+
+        [Display(GroupName = nameof(Resources.GroupeName_PartEffect), ResourceType = typeof(Resources))]
+        [VideoEffectSelector(PropertyEditorSize = PropertyEditorSize.FullWidth)]
+        public ImmutableList<IVideoEffect> Effects { get => effects; set => Set(ref effects, value); }
+        ImmutableList<IVideoEffect> effects = [];
 
         public void CopyFrom(ControlledParamsOfPart original)
         {
@@ -171,28 +170,50 @@ namespace SinTachiePlugin.Parts
             LayerValues = original.LayerValues.Select(x => new LayerValue(x)).ToImmutableList();
             X.CopyFrom(original.X);
             Y.CopyFrom(original.Y);
+            Z.CopyFrom(original.Z);
             Opacity.CopyFrom(original.Opacity);
             Scale.CopyFrom(original.Scale);
             Rotate.CopyFrom(original.Rotate);
             Mirror.CopyFrom(original.Mirror);
             BlendMode = original.BlendMode;
+            ZSortMode = original.ZSortMode;
             Cnt_X.CopyFrom(original.Cnt_X);
             Cnt_Y.CopyFrom(original.Cnt_Y);
             KeepPlace = original.KeepPlace;
             Exp_X.CopyFrom(original.Exp_X);
             Exp_Y.CopyFrom(original.Exp_Y);
-            //Top.CopyFrom(original.Top);
-            //Bottom.CopyFrom(original.Bottom);
-            //Left.CopyFrom(original.Left);
-            //Right.CopyFrom(original.Right);
-            //GBlurValue.CopyFrom(original.GBlurValue);
-            //DBlurValue.CopyFrom(original.DBlurValue);
-            //DBlurAngle.CopyFrom(original.DBlurAngle);
+            XYZDependent = original.XYZDependent;
             ScaleDependent = original.ScaleDependent;
             OpacityDependent = original.OpacityDependent;
             RotateDependent = original.RotateDependent;
+            MirrorDependent = original.MirrorDependent;
+            CameraDependent = original.CameraDependent;
+            UnlazyEffectDependent = original.UnlazyEffectDependent;
+            try
+            {
+                string effectsStr = JsonConvert.SerializeObject(original.Effects, Newtonsoft.Json.Formatting.Indented, GetJsonSetting);
+                if (JsonConvert.DeserializeObject<IVideoEffect[]>(effectsStr, GetJsonSetting) is IVideoEffect[] effects)
+                {
+                    Effects = [.. effects];
+                }
+                else
+                {
+                    throw new Exception(Resources.ErrorLog_DeserializeVideoEffects);
+                }
+            }
+            catch (Exception ex)
+            {
+                Effects = [];
+                SinTachieDialog.ShowWarning(ex.Message);
+            }
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [BusNum, ..LayerValues, X, Y, Opacity, Scale, Rotate, Mirror, Cnt_X, Cnt_Y, Exp_X, Exp_Y/*, ..Effects*/];
+        public static JsonSerializerSettings GetJsonSetting =>
+            new()
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
+
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [BusNum, ..LayerValues, X, Y, Z, Opacity, Scale, Rotate, Mirror, Cnt_X, Cnt_Y, Exp_X, Exp_Y, .. Effects];
     }
 }

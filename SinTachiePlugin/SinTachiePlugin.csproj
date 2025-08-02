@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+		<TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
-		<FileVersion>1.0.5.0</FileVersion>
+		<FileVersion>1.1.0.0</FileVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
@@ -15,54 +15,110 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<Reference Include="Newtonsoft.Json">
+			<HintPath>$(YMM4DirPath)Newtonsoft.Json.dll</HintPath>
+		</Reference>
+		<Reference Include="SharpGen.Runtime">
+			<HintPath>$(YMM4DirPath)SharpGen.Runtime.dll</HintPath>
+		</Reference>
+		<Reference Include="Vortice.Direct2D1">
+			<HintPath>$(YMM4DirPath)Vortice.Direct2D1.dll</HintPath>
+		</Reference>
+		<Reference Include="Vortice.DirectX">
+			<HintPath>$(YMM4DirPath)Vortice.DirectX.dll</HintPath>
+		</Reference>
+		<Reference Include="Vortice.Mathematics">
+			<HintPath>$(YMM4DirPath)Vortice.Mathematics.dll</HintPath>
+		</Reference>
+		<Reference Include="YukkuriMovieMaker.Controls">
+			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.dll</HintPath>
+		</Reference>
+		<Reference Include="YukkuriMovieMaker.Controls">
+			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Controls.dll</HintPath>
+		</Reference>
+		<Reference Include="YukkuriMovieMaker.Plugin">
+			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Plugin.dll</HintPath>
+		</Reference>
+		<Reference Include="YukkuriMovieMaker.Plugin.Community">
+			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Plugin.Community.dll</HintPath>
+		</Reference>
+		<Reference Include="YukkuriMovieMaker.Plugin.Tachie.AnimationTachie">
+			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Plugin.Tachie.AnimationTachie.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<Compile Update="Enums\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="LayerValueListController\Controller\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="LayerValueListController\Extra\Parameter\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="LayerValueListController\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Parts\Controller\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Parts\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Reference Include="SharpGen.Runtime">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\SharpGen.Runtime.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Vortice.Direct2D1">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\Vortice.Direct2D1.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Vortice.DirectX">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\Vortice.DirectX.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Vortice.Mathematics">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\Vortice.Mathematics.dll</HintPath>
-	  </Reference>
-	  <Reference Include="YukkuriMovieMaker.Controls">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\YukkuriMovieMaker.Controls.dll</HintPath>
-	  </Reference>
-	  <Reference Include="YukkuriMovieMaker.Plugin">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\YukkuriMovieMaker.Plugin.dll</HintPath>
-	  </Reference>
-	  <Reference Include="YukkuriMovieMaker.Plugin.Community">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\YukkuriMovieMaker.Plugin.Community.dll</HintPath>
-	  </Reference>
-	  <Reference Include="YukkuriMovieMaker.Plugin.Tachie.AnimationTachie">
-	    <HintPath>..\..\..\..\YukkuriMovieMaker_v4\YukkuriMovieMaker.Plugin.Tachie.AnimationTachie.dll</HintPath>
-	  </Reference>
+		<EmbeddedResource Update="Enums\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="LayerValueListController\Controller\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="LayerValueListController\Extra\Parameter\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="LayerValueListController\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Parts\Controller\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Parts\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 	</ItemGroup>
 
-
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="mkdir &quot;C:\Users\shinm\Desktop\YukkuriMovieMaker_v4\user\plugin\$(ProjectName)&quot; &gt; NUL 2&gt;&amp;1&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;C:\Users\shinm\Desktop\YukkuriMovieMaker_v4\user\plugin\$(ProjectName)\&quot;" />
+		<Exec Command="mkdir &quot;$(YMM4DirPath)user\plugin\$(ProjectName)&quot; &gt; NUL 2&gt;&amp;1&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;E:\sinBeta\app\YukkuriMovieMaker_v4\user\plugin\$(ProjectName)\&quot;" />
 	</Target>
 
 </Project>

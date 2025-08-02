@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SinTachiePlugin.Parts;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Controls;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
 using YukkuriMovieMaker.Project;
@@ -12,15 +9,15 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter
 {
     public class PeriodicParameter : LayerValueExtraBase, IStartParameter, IIntervalParameter, ITransitionParameter
     {
-        [Display(Name = "開始", Description = "差分を動かし始めるタイミング")]
+        [Display(Name = nameof(Resources.ParamName_Start), Description = nameof(Resources.ParamDesc_Start), ResourceType = typeof(Resources))]
         [AnimationSlider("F2", "秒", 0, 10)]
         public Animation Start { get; } = new Animation(0, 0, 9999);
 
-        [Display(Name = "間隔", Description = "差分を動かす時間間隔（遷移は含まれない）")]
+        [Display(Name = nameof(Resources.ParamName_Interval), Description = nameof(Resources.ParamDesc_Interval), ResourceType = typeof(Resources))]
         [AnimationSlider("F2", "秒", 0, 10)]
         public Animation Interval { get; } = new Animation(0, 0, 9999);
 
-        [Display(Name = "遷移", Description = "差分を動かし始めてから終わるまでの時間")]
+        [Display(Name = nameof(Resources.ParamName_Transition), Description = nameof(Resources.ParamDesc_Transition), ResourceType = typeof(Resources))]
         [AnimationSlider("F2", "秒", 0, 10)]
         public Animation Transition { get; } = new Animation(0, 0, 9999);
 
@@ -31,16 +28,16 @@ namespace SinTachiePlugin.LayerValueListController.Extra.Parameter
         /// <param name="length"></param>
         /// <param name="fps"></param>
         /// <returns>0から1までのdouble</returns>
-        public override double GetValue(long frame, long length, int fps)
+        public override double GetValue(FrameAndLength fl, int fps)
         {
-            double start = Start.GetValue(frame, length, fps);
-            double time = frame / (double)fps - start;
+            double start = Start.GetValue(fl.Frame, fl.Length, fps);
+            double time = fl.Frame / (double)fps - start;
 
             if (time < 0)
                 return 1.0;
 
-            double interval = Interval.GetValue(frame, length, fps);
-            double transition = Transition.GetValue(frame, length, fps);
+            double interval = fl.GetValue(Interval, fps);
+            double transition = fl.GetValue(Transition, fps);
 
             double time2 = time % (transition + interval);
 

@@ -1,0 +1,83 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Viewbox x:Key="Cut" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M19,3L13,9L15,11L22,4V3M12,12.5A0.5,0.5 0 0,1 11.5,12A0.5,0.5 0 0,1 12,11.5A0.5,0.5 0 0,1 12.5,12A0.5,0.5 0 0,1 12,12.5M6,20A2,2 0 0,1 4,18C4,16.89 4.9,16 6,16A2,2 0 0,1 8,18C8,19.11 7.1,20 6,20M6,8A2,2 0 0,1 4,6C4,4.89 4.9,4 6,4A2,2 0 0,1 8,6C8,7.11 7.1,8 6,8M9.64,7.64C9.87,7.14 10,6.59 10,6A4,4 0 0,0 6,2A4,4 0 0,0 2,6A4,4 0 0,0 6,10C6.59,10 7.14,9.87 7.64,9.64L10,12L7.64,14.36C7.14,14.13 6.59,14 6,14A4,4 0 0,0 2,18A4,4 0 0,0 6,22A4,4 0 0,0 10,18C10,17.41 9.87,16.86 9.64,16.36L12,14L19,21H22V20L9.64,7.64Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Copy" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Paste" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M19,20H5V4H7V7H17V4H19M12,2A1,1 0 0,1 13,3A1,1 0 0,1 12,4A1,1 0 0,1 11,3A1,1 0 0,1 12,2M19,2H14.82C14.4,0.84 13.3,0 12,0C10.7,0 9.6,0.84 9.18,2H5A2,2 0 0,0 3,4V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V4A2,2 0 0,0 19,2Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Duplicate" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M11,17H4A2,2 0 0,1 2,15V3A2,2 0 0,1 4,1H16V3H4V15H11V13L15,16L11,19V17M19,21V7H8V13H6V7A2,2 0 0,1 8,5H19A2,2 0 0,1 21,7V21A2,2 0 0,1 19,23H8A2,2 0 0,1 6,21V19H8V21H19Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Minus" x:Shared="false">
+        <Canvas Width="22" Height="22">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M17 12H5V10H17Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Plus" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Up" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M11,20V7.75L5.75,13L5,12.34L11.5,5.84L18,12.34L17.25,13L12,7.75V20H11Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Down" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M12,5V17.25L17.25,12L18,12.66L11.5,19.16L5,12.66L5.75,12L11,17.25V5H12Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Save-Plus" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M17 3H5C3.89 3 3 3.9 3 5V19C3 20.11 3.9 21 5 21H12.81C12.45 20.38 12.2 19.7 12.08 19L12 19C10.34 19 9 17.66 9 16S10.34 13 12 13C12.68 13 13.34 13.23 13.87 13.65C15 12.59 16.46 12 18 12C19.05 12 20.09 12.28 21 12.81V7L17 3M15 9H5V5H15V9M17 14V17H14V19H17V22H19V19H22V17H19V14H17Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Save-Minus" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M5 3C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H12.81C12.45 20.38 12.2 19.7 12.08 19H5V5H16.17L19 7.83V12.08C19.7 12.2 20.38 12.45 21 12.81V7L17 3H5M6 6V10H15V6H6M12 12C10.34 12 9 13.34 9 15S10.34 18 12 18C12 16.11 12.89 14.34 14.39 13.21C13.85 12.5 13 12 12 12M14 17V19H22V17H14Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Reload" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M2 12C2 16.97 6.03 21 11 21C13.39 21 15.68 20.06 17.4 18.4L15.9 16.9C14.63 18.25 12.86 19 11 19C4.76 19 1.64 11.46 6.05 7.05C10.46 2.64 18 5.77 18 12H15L19 16H19.1L23 12H20C20 7.03 15.97 3 11 3C6.03 3 2 7.03 2 12Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="ArrowExpandVertical" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M13,9V15H16L12,19L8,15H11V9H8L12,5L16,9H13M4,2H20V4H4V2M4,20H20V22H4V20Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="CheckAll" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M0.41,13.41L6,19L7.41,17.58L1.83,12M22.24,5.58L11.66,16.17L7.5,12L6.07,13.41L11.66,19L23.66,7M18,7L16.59,5.58L10.24,11.93L11.66,13.34L18,7Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="CheckOutline" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M19.78,2.2L24,6.42L8.44,22L0,13.55L4.22,9.33L8.44,13.55L19.78,2.2M19.78,5L8.44,16.36L4.22,12.19L2.81,13.55L8.44,19.17L21.19,6.42L19.78,5Z" />
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Visible">
+        <Canvas Width="24" Height="24">
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/>
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Invisible">
+        <Canvas Width="24" Height="24">
+            <Path Fill="Red" Data="M11.83,9L15,12.16C15,12.11 15,12.05 15,12A3,3 0 0,0 12,9C11.94,9 11.89,9 11.83,9M7.53,9.8L9.08,11.35C9.03,11.56 9,11.77 9,12A3,3 0 0,0 12,15C12.22,15 12.44,14.97 12.65,14.92L14.2,16.47C13.53,16.8 12.79,17 12,17A5,5 0 0,1 7,12C7,11.21 7.2,10.47 7.53,9.8M2,4.27L4.28,6.55L4.73,7C3.08,8.3 1.78,10 1,12C2.73,16.39 7,19.5 12,19.5C13.55,19.5 15.03,19.2 16.38,18.66L16.81,19.08L19.73,22L21,20.73L3.27,3M12,7A5,5 0 0,1 17,12C17,12.64 16.87,13.26 16.64,13.82L19.57,16.75C21.07,15.5 22.27,13.86 23,12C21.27,7.61 17,4.5 12,4.5C10.6,4.5 9.26,4.75 8,5.2L10.17,7.35C10.74,7.13 11.35,7 12,7Z"/>
+        </Canvas>
+    </Viewbox>
+</ResourceDictionary>

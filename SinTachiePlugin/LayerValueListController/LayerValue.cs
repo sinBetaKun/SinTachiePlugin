@@ -1,53 +1,48 @@
-﻿using SinTachiePlugin.Enums;
+﻿using Newtonsoft.Json;
+using SinTachiePlugin.Enums;
 using SinTachiePlugin.Informations;
 using SinTachiePlugin.LayerValueListController.Extra;
 using SinTachiePlugin.LayerValueListController.Extra.Parameter;
-using SinTachiePlugin.Parts.LayerValueListController;
-using System;
-using System.Collections.Generic;
+using SinTachiePlugin.Parts;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
-using YukkuriMovieMaker.Plugin.Community.Effect.Video.ZoomPixel.Size;
-using YukkuriMovieMaker.Plugin.Effects;
 
 namespace SinTachiePlugin.LayerValueListController
 {
     public class LayerValue : Animatable
     {
-        [Display(GroupName = "差分制御", Name = "制御モード", Description = "セラールとアブリールの値の使い方を指定")]
+        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), Name = nameof(Resources.ParamName_AnimationMode), Description = nameof(Resources.ParamDesc_AnimationMode), ResourceType = typeof(Resources))]
         [EnumComboBox]
         public LayerAnimationMode AnimationMode { get => animationMode; set => Set(ref animationMode, value); }
         LayerAnimationMode animationMode = LayerAnimationMode.CerrarPlusAbrir;
 
-        [Display(GroupName = "差分制御", Name = "範囲外の値", Description = "0%~100%の範囲外になったときの値の変換方法を指定")]
+        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), Name = nameof(Resources.ParamName_OuterMode), Description = nameof(Resources.ParamDesc_OuterMode), ResourceType = typeof(Resources))]
         [EnumComboBox]
         public OuterLayerValueMode OuterMode { get => outerMode; set => Set(ref outerMode, value); }
         OuterLayerValueMode outerMode = OuterLayerValueMode.Limit;
 
-        [Display(GroupName = "差分制御", Name = "セラール")]
+        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), Name = nameof(Resources.ParamName_Cerrar), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "%", -150, 150)]
         public Animation Cerrar { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = "差分制御", Name = "アブリール")]
+        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), Name = nameof(Resources.ParamName_Abrir), ResourceType = typeof(Resources))]
         [AnimationSlider("F1", "%", -150, 150)]
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 
-        [Display(GroupName = "差分制御", AutoGenerateField = true)]
-        public LayerValueExtraBase Extra {
-            get => extra;
-            set => Set(ref extra, value);
-        }
+        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), AutoGenerateField = true, ResourceType = typeof(Resources))]
+        public LayerValueExtraBase Extra { get => extra; set => Set(ref extra, value); }
         LayerValueExtraBase extra = new NoExtra();
 
-        [Display(GroupName = "差分制御", Name = "備考")]
+        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), Name = nameof(Resources.ParamName_Comment), ResourceType = typeof(Resources))]
         [TextEditor(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public string Comment { get => comment; set => Set(ref comment, value); }
         string comment = string.Empty;
+
+        [JsonIgnore]
+        public bool Selected { get => selected; set => Set(ref selected, value); }
+        bool selected = false;
 
         public LayerValue()
         {
@@ -64,14 +59,12 @@ namespace SinTachiePlugin.LayerValueListController
             Comment = block.Comment;
         }
 
-        public double GetValue(long len, long frame, int fps, double voiceVolume)
+        public double GetValue(FrameAndLength fl, int fps, double voiceVolume)
         {
-            double cerrar = Cerrar.GetValue(frame, len, fps);
-            double abrir = Abrir.GetValue(frame, len, fps);
+            double cerrar = fl.GetValue(Cerrar, fps);
+            double abrir = fl.GetValue(Abrir, fps);
             double num;
-            string clsName = GetType().Name;
-            string? mthName = MethodBase.GetCurrentMethod()?.Name;
-            double extraValue = Extra.GetValue(frame, len, fps);
+            double extraValue = Extra.GetValue(fl, fps);
             switch (AnimationMode)
             {
                 case LayerAnimationMode.CerrarPlusAbrir:
@@ -84,7 +77,7 @@ namespace SinTachiePlugin.LayerValueListController
                     num = cerrar * Math.Sin(abrir / 100 * 2 * Math.PI);
                     break;
                 case LayerAnimationMode.VoiceVolume:
-                    num = cerrar + voiceVolume * (abrir - cerrar);
+                    num = (voiceVolume < 0) ? extraValue : cerrar + voiceVolume * (abrir - cerrar);
                     break;
                 case LayerAnimationMode.PeriodicShuttle:
                     extraValue = (0.5 - extraValue) * (extraValue <= 0.5 ? 2 : -2);
@@ -94,8 +87,8 @@ namespace SinTachiePlugin.LayerValueListController
                     num = cerrar + extraValue * (abrir - cerrar);
                     break;
                 default:
-                    string message = $"存在しないタイプの制御モードが指定されました。\n(AnimationMode = {AnimationMode})";
-                    SinTachieDialog.ShowError(message, clsName, mthName);
+                    string message = "存在しないタイプの制御モードが指定されました。" + $"\n(AnimationMode = {AnimationMode})";
+                    SinTachieDialog.ShowError(new Exception(message));
                     throw new Exception($"[{PluginInfo.Title}]{message}");
             }
 
@@ -104,14 +97,14 @@ namespace SinTachiePlugin.LayerValueListController
                 case OuterLayerValueMode.Limit:
                     return num < 0 ? 0 : num > 100 ? 1 : num / 100;
                 case OuterLayerValueMode.Shuttle:
-                    while (num < 0) num += 200;
-                    return (num <= 100 ? num : 200 - num) / 100;
+                    if ((num %= 200) < 0) num += 200;
+                    return num / 100;
                 case OuterLayerValueMode.Loop:
-                    while (num < 0) num += 100;
-                    return num % 100 / 100;
+                    if ((num %= 100) < 0) num += 100;
+                    return num / 100;
                 default:
-                    string message = $"存在しないタイプの範囲外変換モードが指定されました。\n(OuterMode = {OuterMode})";
-                    SinTachieDialog.ShowError(message, clsName, mthName);
+                    string message = "存在しないタイプの範囲外変換モードが指定されました。" + $"\n(OuterMode = {OuterMode})";
+                    SinTachieDialog.ShowError(new Exception(message));
                     throw new Exception($"[{PluginInfo.Title}]{message}");
             }
         }
