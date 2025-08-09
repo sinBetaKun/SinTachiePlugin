@@ -1,8 +1,7 @@
 ﻿using YukkuriMovieMaker.Commons;
 
-namespace SinTachiePlugin.LayerValueListController.Extra
+namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Interval
 {
-    [Obsolete]
     internal interface IIntervalParameter
     {
         public Animation Interval { get; }

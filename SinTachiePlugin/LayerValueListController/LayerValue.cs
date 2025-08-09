@@ -11,24 +11,17 @@ using YukkuriMovieMaker.Controls;
 
 namespace SinTachiePlugin.LayerValueListController
 {
+    [Obsolete]
     public class LayerValue : Animatable
     {
-        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), Name = nameof(Resources.ParamName_AnimationMode), Description = nameof(Resources.ParamDesc_AnimationMode), ResourceType = typeof(Resources))]
-        [EnumComboBox]
         public LayerAnimationMode AnimationMode { get => animationMode; set => Set(ref animationMode, value); }
         LayerAnimationMode animationMode = LayerAnimationMode.CerrarPlusAbrir;
 
-        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), Name = nameof(Resources.ParamName_OuterMode), Description = nameof(Resources.ParamDesc_OuterMode), ResourceType = typeof(Resources))]
-        [EnumComboBox]
         public OuterLayerValueMode OuterMode { get => outerMode; set => Set(ref outerMode, value); }
         OuterLayerValueMode outerMode = OuterLayerValueMode.Limit;
 
-        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), Name = nameof(Resources.ParamName_Cerrar), ResourceType = typeof(Resources))]
-        [AnimationSlider("F1", "%", -150, 150)]
         public Animation Cerrar { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), Name = nameof(Resources.ParamName_Abrir), ResourceType = typeof(Resources))]
-        [AnimationSlider("F1", "%", -150, 150)]
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 
         [Display(GroupName = nameof(Resources.GroupeName_LayerValue), AutoGenerateField = true, ResourceType = typeof(Resources))]

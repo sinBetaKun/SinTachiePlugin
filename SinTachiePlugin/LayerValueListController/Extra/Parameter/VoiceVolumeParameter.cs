@@ -6,19 +6,11 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.LayerValueListController.Extra.Parameter
 {
+    [Obsolete]
     public class VoiceVolumeParameter : LayerValueExtraBase, INoVoiceValueParameter
     {
-        [Display(Name = nameof(Resources.ParamName_NoVoiceValue), Description = nameof(Resources.ParamDesc_NoVoiceValue), ResourceType = typeof(Resources))]
-        [AnimationSlider("F1", "%", -150, 150)]
         public Animation NoVoiceValue { get; } = new Animation(0, -10000, 10000);
 
-        /// <summary>
-        /// 制御モードが周期的往復/ループのとき、差分を指定する値を返す。
-        /// </summary>
-        /// <param name="frame"></param>
-        /// <param name="length"></param>
-        /// <param name="fps"></param>
-        /// <returns>0から1までのdouble</returns>
         public override double GetValue(FrameAndLength fl, int fps)
         {
             return fl.GetValue(NoVoiceValue, fps);

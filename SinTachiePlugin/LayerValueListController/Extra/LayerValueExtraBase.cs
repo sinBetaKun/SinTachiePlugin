@@ -3,6 +3,7 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.LayerValueListController.Extra
 {
+    [Obsolete]
     public abstract class LayerValueExtraBase : SharedParameterBase
     {
         public LayerValueExtraBase()

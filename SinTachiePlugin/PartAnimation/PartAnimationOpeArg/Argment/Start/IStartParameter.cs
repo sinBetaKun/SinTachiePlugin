@@ -1,8 +1,7 @@
 ﻿using YukkuriMovieMaker.Commons;
 
-namespace SinTachiePlugin.LayerValueListController.Extra
+namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Start
 {
-    [Obsolete]
     internal interface IStartParameter
     {
         public Animation Start { get; }

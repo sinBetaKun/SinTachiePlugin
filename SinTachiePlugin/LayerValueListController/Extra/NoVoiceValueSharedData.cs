@@ -2,6 +2,7 @@
 
 namespace SinTachiePlugin.LayerValueListController.Extra
 {
+    [Obsolete]
     internal class NoVoiceValueSharedData
     {
         public Animation NoVoiceValue { get; } = new Animation(0, -10000, 10000);
