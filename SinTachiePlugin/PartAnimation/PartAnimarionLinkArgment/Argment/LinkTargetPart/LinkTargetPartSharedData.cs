@@ -1,4 +1,4 @@
-﻿namespace SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Argment.LinkTarget
+﻿namespace SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Argment.LinkTargetPart
 {
     internal class LinkTargetPartSharedData
     {

@@ -2,7 +2,7 @@
 
 namespace SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Parameter
 {
-    internal class OverrideParameter : PartAnimationLinkArgBase, ILinkTagParameter
+    internal class IndependentParameter : PartAnimationLinkArgBase, ILinkTagParameter
     {
     }
 }
