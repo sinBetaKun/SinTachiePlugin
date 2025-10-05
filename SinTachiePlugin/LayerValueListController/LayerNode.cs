@@ -10,6 +10,7 @@ using YukkuriMovieMaker.Plugin;
 
 namespace SinTachiePlugin.LayerValueListController
 {
+    [Obsolete]
     public class LayerNode
     {
         readonly string? path = null;

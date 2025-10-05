@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
-		<FileVersion>1.1.0.0</FileVersion>
+		<FileVersion>1.2.0.0</FileVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
@@ -30,7 +30,16 @@
 		<Reference Include="Vortice.Mathematics">
 			<HintPath>$(YMM4DirPath)Vortice.Mathematics.dll</HintPath>
 		</Reference>
-		<Reference Include="YukkuriMovieMaker.Controls">
+		<Reference Include="NAudio">
+			<HintPath>$(YMM4DirPath)NAudio.dll</HintPath>
+		</Reference>
+		<Reference Include="NAudio.Core">
+			<HintPath>$(YMM4DirPath)NAudio.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="PsdParser">
+			<HintPath>$(YMM4DirPath)PsdParser.dll</HintPath>
+		</Reference>
+		<Reference Include="YukkuriMovieMaker">
 			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.dll</HintPath>
 		</Reference>
 		<Reference Include="YukkuriMovieMaker.Controls">
@@ -42,8 +51,14 @@
 		<Reference Include="YukkuriMovieMaker.Plugin.Community">
 			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Plugin.Community.dll</HintPath>
 		</Reference>
+		<Reference Include="YukkuriMovieMaker.Plugin.FileSource.Psd">
+			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Plugin.FileSource.Psd.dll</HintPath>
+		</Reference>
 		<Reference Include="YukkuriMovieMaker.Plugin.Tachie.AnimationTachie">
 			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Plugin.Tachie.AnimationTachie.dll</HintPath>
+		</Reference>
+		<Reference Include="YukkuriMovieMaker.Plugin.Tachie.Psd">
+			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Plugin.Tachie.Psd.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
@@ -64,11 +79,6 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
-		<Compile Update="LayerValueListController\Resources.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Resources.resx</DependentUpon>
-		</Compile>
 		<Compile Update="Parts\Controller\Resources.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
@@ -84,10 +94,10 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
-		<Compile Update="Properties\Text.Designer.cs">
+		<Compile Update="Properties\Texts.Designer.cs">
 		  <DesignTime>True</DesignTime>
 		  <AutoGen>True</AutoGen>
-		  <DependentUpon>Text.resx</DependentUpon>
+		  <DependentUpon>Texts.resx</DependentUpon>
 		</Compile>
 	</ItemGroup>
 
@@ -104,10 +114,6 @@
 			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
-		<EmbeddedResource Update="LayerValueListController\Resources.resx">
-			<Generator>PublicResXFileCodeGenerator</Generator>
-			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
 		<EmbeddedResource Update="Parts\Controller\Resources.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -120,9 +126,9 @@
 			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
-		<EmbeddedResource Update="Properties\Text.resx">
+		<EmbeddedResource Update="Properties\Texts.resx">
 		  <Generator>PublicResXFileCodeGenerator</Generator>
-		  <LastGenOutput>Text.Designer.cs</LastGenOutput>
+		  <LastGenOutput>Texts.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 	</ItemGroup>
 

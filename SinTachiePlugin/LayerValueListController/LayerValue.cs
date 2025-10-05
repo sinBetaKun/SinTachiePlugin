@@ -4,10 +4,7 @@ using SinTachiePlugin.Informations;
 using SinTachiePlugin.LayerValueListController.Extra;
 using SinTachiePlugin.LayerValueListController.Extra.Parameter;
 using SinTachiePlugin.Parts;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using YukkuriMovieMaker.Commons;
-using YukkuriMovieMaker.Controls;
 
 namespace SinTachiePlugin.LayerValueListController
 {
@@ -24,12 +21,9 @@ namespace SinTachiePlugin.LayerValueListController
 
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 
-        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), AutoGenerateField = true, ResourceType = typeof(Resources))]
         public LayerValueExtraBase Extra { get => extra; set => Set(ref extra, value); }
         LayerValueExtraBase extra = new NoExtra();
 
-        [Display(GroupName = nameof(Resources.GroupeName_LayerValue), Name = nameof(Resources.ParamName_Comment), ResourceType = typeof(Resources))]
-        [TextEditor(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public string Comment { get => comment; set => Set(ref comment, value); }
         string comment = string.Empty;
 

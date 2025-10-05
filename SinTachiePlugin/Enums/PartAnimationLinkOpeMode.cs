@@ -10,11 +10,11 @@ namespace SinTachiePlugin.Enums
 {
     internal enum PartAnimationLinkOpeMode
     {
-        [Display(Name = nameof(Text.PartAnimationLink_LinkMode_Override), ResourceType = typeof(Text))]
-        Override,
-        [Display(Name = nameof(Text.PartAnimationLink_LinkMode_Add), ResourceType = typeof(Text))]
+        [Display(Name = nameof(Texts.PartAnimationLink_LinkOpeMode_DontLink), ResourceType = typeof(Texts))]
+        DontLink,
+        [Display(Name = nameof(Texts.PartAnimationLink_LinkOpeMode_Add), ResourceType = typeof(Texts))]
         Add,
-        [Display(Name = nameof(Text.PartAnimationLink_LinkMode_Multiply), ResourceType = typeof(Text))]
+        [Display(Name = nameof(Texts.PartAnimationLink_LinkOpeMode_Multiply), ResourceType = typeof(Texts))]
         Multiply,
     }
 }

@@ -4,6 +4,7 @@ using SinTachiePlugin.LayerValueListController.Extra.Parameter;
 
 namespace SinTachiePlugin.LayerValueListController
 {
+    [Obsolete]
     internal static class LayerAnimationModeEx
     {
         public static LayerValueExtraBase Convert(this LayerAnimationMode mode, LayerValueExtraBase current)

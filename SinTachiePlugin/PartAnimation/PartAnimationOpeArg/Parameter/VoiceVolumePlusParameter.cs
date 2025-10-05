@@ -12,15 +12,15 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
 {
     internal class VoiceVolumePlusParameter : PartAnimationOpeArgBase, IAbrirParameter, ICerrarParameter, IInitialParameter
     {
-        [Display(GroupName = nameof(Text.PartAnimationOpeArg_GroupName), Name = nameof(Text.PartAnimationOpeArg_Open), ResourceType = typeof(Text))]
+        [Display(GroupName = nameof(Texts.PartAnimationOpeArg_GroupName), Name = nameof(Texts.PartAnimationOpeArg_Open), ResourceType = typeof(Texts))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 
-        [Display(GroupName = nameof(Text.PartAnimationOpeArg_GroupName), Name = nameof(Text.PartAnimationOpeArg_Close), ResourceType = typeof(Text))]
+        [Display(GroupName = nameof(Texts.PartAnimationOpeArg_GroupName), Name = nameof(Texts.PartAnimationOpeArg_Close), ResourceType = typeof(Texts))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Cerrar { get; } = new Animation(0, -10000, 10000);
 
-        [Display(GroupName = nameof(Text.PartAnimationOpeArg_GroupName), Name = nameof(Text.PartAnimationOpeArg_Silent), ResourceType = typeof(Text))]
+        [Display(GroupName = nameof(Texts.PartAnimationOpeArg_GroupName), Name = nameof(Texts.PartAnimationOpeArg_Silent), ResourceType = typeof(Texts))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Initial { get; } = new Animation(0, -10000, 10000);
 

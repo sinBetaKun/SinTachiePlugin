@@ -10,7 +10,7 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
 {
     internal class SimpleParameter : PartAnimationOpeArgBase, IAbrirParameter
     {
-        [Display(Name = nameof(Text.PartAnimationOpeArg_Output), ResourceType = typeof(Text))]
+        [Display(Name = nameof(Texts.PartAnimationOpeArg_Output), ResourceType = typeof(Texts))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 

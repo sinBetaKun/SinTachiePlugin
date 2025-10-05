@@ -5,21 +5,23 @@ namespace SinTachiePlugin.Enums
 {
     internal enum PartAnimationOpeMode
     {
-        [Display(Name = nameof(Text.PartAnimationOpeMode_Simple), ResourceType = typeof(Text))]
+        [Display(Name = nameof(Texts.PartAnimationOpeMode_Simple), ResourceType = typeof(Texts))]
         Simple,
-        [Display(Name = nameof(Text.PartAnimationOpeMode_Sum), ResourceType = typeof(Text))]
+        [Display(Name = nameof(Texts.PartAnimationOpeMode_Sum), ResourceType = typeof(Texts))]
         Sum,
-        [Display(Name = nameof(Text.PartAnimationOpeMode_Product), ResourceType = typeof(Text))]
+        [Display(Name = nameof(Texts.PartAnimationOpeMode_Product), ResourceType = typeof(Texts))]
         Product,
-        [Display(Name = nameof(Text.PartAnimationOpeMode_Sin), ResourceType = typeof(Text))]
+        [Display(Name = nameof(Texts.PartAnimationOpeMode_Sin), ResourceType = typeof(Texts))]
         Sin,
-        [Display(Name = nameof(Text.PartAnimationOpeMode_VoiceVolume), ResourceType = typeof(Text))]
+        [Display(Name = nameof(Texts.PartAnimationOpeMode_VoiceVolume), ResourceType = typeof(Texts))]
         VoiceVolume,
-        [Display(Name = nameof(Text.PartAnimationOpeMode_VoiceVolumePlus), ResourceType = typeof(Text))]
+        [Display(Name = nameof(Texts.PartAnimationOpeMode_VoiceVolumePlus), ResourceType = typeof(Texts))]
         VoiceVolumePlus,
-        [Display(Name = nameof(Text.PartAnimationOpeMode_PeriodicShuttle), ResourceType = typeof(Text))]
+        [Display(Name = nameof(Texts.PartAnimationOpeMode_PeriodicShuttle), ResourceType = typeof(Texts))]
         PeriodicShuttle,
-        [Display(Name = nameof(Text.PartAnimationOpeMode_PeriodicLoop), ResourceType = typeof(Text))]
+        [Display(Name = nameof(Texts.PartAnimationOpeMode_PeriodicLoop), ResourceType = typeof(Texts))]
         PeriodicLoop,
+        [Display(Name = nameof(Texts.PartAnimationOpeMode_PeriodicLoop), ResourceType = typeof(Texts))]
+        AudioFile,
     }
 }
