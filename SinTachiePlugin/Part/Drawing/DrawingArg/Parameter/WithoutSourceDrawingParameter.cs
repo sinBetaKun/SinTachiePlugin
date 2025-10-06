@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YukkuriMovieMaker.Commons;
+﻿using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Part.Drawing.DrawingArg.Parameter
 {
-    internal class WithoutSourceParameter : DrawingArgBase
+    internal class WithoutSourceDrawingParameter : DrawingArgBase
     {
-        public WithoutSourceParameter()
+        public WithoutSourceDrawingParameter()
         {
         }
 
-        public WithoutSourceParameter(SharedDataStore? store = null) : base(store)
+        public WithoutSourceDrawingParameter(SharedDataStore? store = null) : base(store)
         {
         }
 

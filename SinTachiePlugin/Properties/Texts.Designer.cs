@@ -88,6 +88,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   描画原点 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupName_CenterPoint {
+            get {
+                return ResourceManager.GetString("GroupName_CenterPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   描画 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string GroupName_Drawing {
@@ -516,6 +525,24 @@ namespace SinTachiePlugin.Properties {
         public static string PartAnimationOpeMode_VoiceVolumePlus {
             get {
                 return ResourceManager.GetString("PartAnimationOpeMode_VoiceVolumePlus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   原点 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_CenterPoint_CenterMode {
+            get {
+                return ResourceManager.GetString("PartParam_CenterPoint_CenterMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ポイント に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_CenterPoint_CustomPoint {
+            get {
+                return ResourceManager.GetString("PartParam_CenterPoint_CustomPoint", resourceCulture);
             }
         }
         

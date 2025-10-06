@@ -5,7 +5,6 @@ using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Clip;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.LoopPlayback;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Parent;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.PlaybackSpeed;
-using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Point;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.SceneId;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.StartFrameNumber;
 using SinTachiePlugin.Properties;
@@ -17,7 +16,7 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
 {
-    internal class SceneParameter : SourceSelectArgBase, IParentParameter, ISceneIdParameter, IClipParameter, IPointParameter, IPlaybackSpeedParameter, IStartFrameNumberParameter, ILoopPlaybackParameter
+    internal class SceneParameter : SourceSelectArgBase, IParentParameter, ISceneIdParameter, IClipParameter, IPlaybackSpeedParameter, IStartFrameNumberParameter, ILoopPlaybackParameter
     {
         [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(Texts))]
         [TextEditor]
@@ -37,11 +36,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         [Display(AutoGenerateField = true)]
         public ClippingArgBase ClippingArg { get => clippingArg; set => Set(ref clippingArg, value); }
         private ClippingArgBase clippingArg = new DontClipParameter();
-
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(Texts))]
-        [TextEditor]
-        public string Point { get => point; set => Set(ref point, value); }
-        private string point = string.Empty;
 
         [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_PlaybackSpeed), ResourceType = typeof(Texts))]
         [FrameNumberEditor]
@@ -87,8 +81,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 ClippingMode = clippingParameter.ClippingMode;
                 ClippingArg = clippingParameter.ClippingArg;
             }
-            if (origin is IPointParameter pointParameter)
-                Point = pointParameter.Point;
             if (origin is IPlaybackSpeedParameter playbackSpeedParameter)
                 PlaybackSpeed = playbackSpeedParameter.PlaybackSpeed;
             if (origin is IStartFrameNumberParameter startFrameNumberParameter)
@@ -104,7 +96,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
             store.Save(new ParentSharedData(this));
             store.Save(new SceneIdSharedData(this));
             store.Save(new ClipSharedData(this));
-            store.Save(new PointSharedData(this));
             store.Save(new PlaybackSpeedSharedData(this));
             store.Save(new StartFrameNumberSharedData(this));
             store.Save(new LoopPlaybackSharedData(this));
@@ -118,8 +109,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 sceneIdSharedData.CopyTo(this);
             if (store.Load<ClipSharedData>() is ClipSharedData clipSharedData)
                 clipSharedData.CopyTo(this);
-            if (store.Load<PointSharedData>() is PointSharedData pointSharedData)
-                pointSharedData.CopyTo(this);
             if (store.Load<PlaybackSpeedSharedData>() is PlaybackSpeedSharedData playbackSpeedSharedData)
                 playbackSpeedSharedData.CopyTo(this);
             if (store.Load<StartFrameNumberSharedData>() is StartFrameNumberSharedData startFrameNumberSharedData)

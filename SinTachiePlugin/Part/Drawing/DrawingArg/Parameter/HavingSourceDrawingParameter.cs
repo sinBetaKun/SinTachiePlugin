@@ -4,19 +4,15 @@ using SinTachiePlugin.Part.Drawing.DrawingArg.Argment.SubArg;
 using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment;
 using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Parameter;
 using SinTachiePlugin.Properties;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
 using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Part.Drawing.DrawingArg.Parameter
 {
-    internal class HavingSourceParameter : DrawingArgBase, IModeMasterParameter, ISubArgParameter
+    internal class HavingSourceDrawingParameter : DrawingArgBase, IModeMasterParameter, ISubArgParameter
     {
         [Display(Name = nameof(Texts.PartParam_Drawing_Mode_Master), ResourceType = typeof(Texts))]
         [EnumComboBox]
@@ -27,11 +23,11 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.Parameter
         public DrawingSubArgBase SubArg { get => subArg; set => Set(ref subArg, value); }
         private DrawingSubArgBase subArg = new MasterModeParameter();
 
-        public HavingSourceParameter()
+        public HavingSourceDrawingParameter()
         {
         }
 
-        public HavingSourceParameter(SharedDataStore? store = null) : base(store)
+        public HavingSourceDrawingParameter(SharedDataStore? store = null) : base(store)
         {
         }
 

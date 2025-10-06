@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using SinTachiePlugin.Enums;
+using SinTachiePlugin.Part.CenterPoint.CenterPointArg;
+using SinTachiePlugin.Part.CenterPoint.CenterPointArg.Parameter;
 using SinTachiePlugin.Part.Drawing.DrawingArg;
 using SinTachiePlugin.Part.Drawing.DrawingArg.Parameter;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg;
@@ -38,7 +40,11 @@ namespace SinTachiePlugin.Part
 
         [Display(GroupName = nameof(Texts.GroupName_Drawing), AutoGenerateField = true)]
         public DrawingArgBase DrawingArg { get => drawingArg; set => Set(ref drawingArg, value); }
-        private DrawingArgBase drawingArg = new HavingSourceParameter();
+        private DrawingArgBase drawingArg = new HavingSourceDrawingParameter();
+
+        [Display(GroupName = nameof(Texts.GroupName_CenterPoint), AutoGenerateField = true)]
+        public CenterPointArgBase CenterPointArg { get => centerPointArg; set => Set(ref centerPointArg, value); }
+        private CenterPointArgBase centerPointArg = new HavingSourceCenterPointParameter();
 
         public ControledParametersOfPart()
         {
@@ -48,6 +54,7 @@ namespace SinTachiePlugin.Part
         {
             SourceSelectArg = LayerType.Convert(SourceSelectArg);
             DrawingArg = LayerType.Convert(DrawingArg);
+            CenterPointArg = LayerType.Convert(CenterPointArg);
             return base.EndEditAsync();
         }
 

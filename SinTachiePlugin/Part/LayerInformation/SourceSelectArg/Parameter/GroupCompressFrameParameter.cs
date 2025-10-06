@@ -3,7 +3,6 @@ using SinTachiePlugin.Part.LayerInformation.ClippingArg;
 using SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Clip;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Parent;
-using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Point;
 using SinTachiePlugin.Properties;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
@@ -12,7 +11,7 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
 {
-    internal class GroupCompressFrameParameter : SourceSelectArgBase, IParentParameter, IClipParameter, IPointParameter
+    internal class GroupCompressFrameParameter : SourceSelectArgBase, IParentParameter, IClipParameter
     {
         [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(Texts))]
         [TextEditor]
@@ -27,11 +26,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         [Display(AutoGenerateField = true)]
         public ClippingArgBase ClippingArg { get => clippingArg; set => Set(ref clippingArg, value); }
         private ClippingArgBase clippingArg = new DontClipParameter();
-
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(Texts))]
-        [TextEditor]
-        public string Point { get => point; set => Set(ref point, value); }
-        private string point = string.Empty;
 
         public GroupCompressFrameParameter()
         {
@@ -56,8 +50,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 ClippingMode = clippingParameter.ClippingMode;
                 ClippingArg = clippingParameter.ClippingArg;
             }
-            if (origin is IPointParameter pointParameter)
-                Point = pointParameter.Point;
         }
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => [];
@@ -67,7 +59,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         {
             store.Save(new ParentSharedData(this));
             store.Save(new ClipSharedData(this));
-            store.Save(new PointSharedData(this));
         }
 
         protected override void LoadSharedData(SharedDataStore store)
@@ -76,8 +67,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 parentSharedData.CopyTo(this);
             if (store.Load<ClipSharedData>() is ClipSharedData clipSharedData)
                 clipSharedData.CopyTo(this);
-            if (store.Load<PointSharedData>() is PointSharedData pointSharedData)
-                pointSharedData.CopyTo(this);
         }
     }
 }

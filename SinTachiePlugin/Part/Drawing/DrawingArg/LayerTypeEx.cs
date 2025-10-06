@@ -10,12 +10,12 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg
             var store = current.GetSharedData();
             DrawingArgBase param = type switch
             {
-                LayerType.Image => new HavingSourceParameter(store),
-                LayerType.Psd => new HavingSourceParameter(store),
-                LayerType.Video => new HavingSourceParameter(store),
-                LayerType.Scene => new HavingSourceParameter(store),
-                LayerType.Group => new WithoutSourceParameter(store),
-                LayerType.Group_CompressFrame => new HavingSourceParameter(store),
+                LayerType.Image => new HavingSourceDrawingParameter(store),
+                LayerType.Psd => new HavingSourceDrawingParameter(store),
+                LayerType.Video => new HavingSourceDrawingParameter(store),
+                LayerType.Scene => new HavingSourceDrawingParameter(store),
+                LayerType.Group => new WithoutSourceDrawingParameter(store),
+                LayerType.Group_CompressFrame => new HavingSourceDrawingParameter(store),
                 _ => throw new ArgumentOutOfRangeException(nameof(type)),
             };
 

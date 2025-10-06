@@ -7,7 +7,6 @@ using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Clip;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.ImageFilePath;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Parent;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.PartAnimationValues;
-using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Point;
 using SinTachiePlugin.PartAnimation;
 using SinTachiePlugin.Properties;
 using YukkuriMovieMaker.Commons;
@@ -16,7 +15,7 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
 {
-    internal class ImageFileParameter : SourceSelectArgBase, IParentParameter, IImageFilePathParameter, IClipParameter, IPointParameter, IPartAnimationValuesParameter
+    internal class ImageFileParameter : SourceSelectArgBase, IParentParameter, IImageFilePathParameter, IClipParameter, IPartAnimationValuesParameter
     {
         [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(Texts))]
         [TextEditor]
@@ -36,11 +35,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         [Display(AutoGenerateField = true)]
         public ClippingArgBase ClippingArg { get => clippingArg; set => Set(ref clippingArg, value); }
         private ClippingArgBase clippingArg = new DontClipParameter();
-
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(Texts))]
-        [TextEditor]
-        public string Point { get => point; set => Set(ref point, value); }
-        private string point = string.Empty;
 
         [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_PartAnimationValues), ResourceType = typeof(Texts))]
         public ImmutableList<PartAnimationValue> PartAnimationValues { get => partAnimationValues; set => Set(ref partAnimationValues, value); }
@@ -71,8 +65,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 ClippingMode = clippingParameter.ClippingMode;
                 ClippingArg = clippingParameter.ClippingArg;
             }
-            if (origin is IPointParameter pointParameter)
-                Point = pointParameter.Point;
             if (origin is IPartAnimationValuesParameter partAnimationValuesParameter)
                 PartAnimationValues = partAnimationValuesParameter.PartAnimationValues;
         }
@@ -84,7 +76,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
             store.Save(new ParentSharedData(this));
             store.Save(new ImageFilePathSharedData(this));
             store.Save(new ClipSharedData(this));
-            store.Save(new PointSharedData(this));
             store.Save(new PartAnimationSharedData(this));
         }
 
@@ -96,8 +87,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 imageFilePathSharedData.CopyTo(this);
             if (store.Load<ClipSharedData>() is ClipSharedData clipSharedData)
                 clipSharedData.CopyTo(this);
-            if (store.Load<PointSharedData>() is PointSharedData pointSharedData)
-                pointSharedData.CopyTo(this);
             if (store.Load<PartAnimationSharedData>() is PartAnimationSharedData partAnimationSharedData)
                 partAnimationSharedData.CopyTo(this);
         }

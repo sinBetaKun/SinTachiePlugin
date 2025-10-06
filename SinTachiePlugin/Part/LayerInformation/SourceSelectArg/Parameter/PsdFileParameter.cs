@@ -6,7 +6,6 @@ using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.EnablePsdLay
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.ImageFilePath;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Parent;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.PartAnimationValues;
-using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Point;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.PsdFilePath;
 using SinTachiePlugin.PartAnimation;
 using SinTachiePlugin.Properties;
@@ -19,7 +18,7 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
 {
-    internal class PsdFileParameter : SourceSelectArgBase, IParentParameter, IPsdFilePathParameter, IClipParameter, IPointParameter, IEnablePsdLayersParameter, IPartAnimationValuesParameter
+    internal class PsdFileParameter : SourceSelectArgBase, IParentParameter, IPsdFilePathParameter, IClipParameter, IEnablePsdLayersParameter, IPartAnimationValuesParameter
     {
         [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(Texts))]
         [TextEditor]
@@ -39,11 +38,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         [Display(AutoGenerateField = true)]
         public ClippingArgBase ClippingArg { get => clippingArg; set => Set(ref clippingArg, value); }
         private ClippingArgBase clippingArg = new DontClipParameter();
-
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(Texts))]
-        [TextEditor]
-        public string Point { get => point; set => Set(ref point, value); }
-        private string point = string.Empty;
 
         [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_EnablePsdLayers), ResourceType = typeof(Texts))]
         [PsdLayerEditor(PropertyEditorSize = PropertyEditorSize.FullWidth)]
@@ -79,8 +73,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 ClippingMode = clippingParameter.ClippingMode;
                 ClippingArg = clippingParameter.ClippingArg;
             }
-            if (origin is IPointParameter pointParameter)
-                Point = pointParameter.Point;
             if (origin is IEnablePsdLayersParameter enablePsdLayersParameter)
                 EnablePsdLayers = enablePsdLayersParameter.EnablePsdLayers;
             if (origin is IPartAnimationValuesParameter partAnimationValuesParameter)
@@ -94,7 +86,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
             store.Save(new ParentSharedData(this));
             store.Save(new PsdFilePathSharedData(this));
             store.Save(new ClipSharedData(this));
-            store.Save(new PointSharedData(this));
             store.Save(new EnablePsdLayersSharedData(this));
             store.Save(new PartAnimationSharedData(this));
         }
@@ -107,8 +98,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 psdFilePathSharedData.CopyTo(this);
             if (store.Load<ClipSharedData>() is ClipSharedData clipSharedData)
                 clipSharedData.CopyTo(this);
-            if (store.Load<PointSharedData>() is PointSharedData pointSharedData)
-                pointSharedData.CopyTo(this);
             if (store.Load<EnablePsdLayersSharedData>() is EnablePsdLayersSharedData enablePsdLayersSharedData)
                 enablePsdLayersSharedData.CopyTo(this);
             if (store.Load<PartAnimationSharedData>() is PartAnimationSharedData partAnimationSharedData)

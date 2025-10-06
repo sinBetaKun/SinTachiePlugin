@@ -279,6 +279,9 @@
   <data name="GroupName_LayerInfo" xml:space="preserve">
     <value>レイヤー情報</value>
   </data>
+  <data name="GroupName_CenterPoint" xml:space="preserve">
+    <value>描画原点</value>
+  </data>
   <data name="GroupName_Drawing" xml:space="preserve">
     <value>描画</value>
   </data>
@@ -353,6 +356,12 @@
   </data>
   <data name="PartParam_LayerInfo_SourseSelectArg_Point" xml:space="preserve">
     <value>ポイント</value>
+  </data>
+  <data name="PartParam_CenterPoint_CustomPoint" xml:space="preserve">
+    <value>ポイント</value>
+  </data>
+  <data name="PartParam_CenterPoint_CenterMode" xml:space="preserve">
+    <value>原点</value>
   </data>
   <data name="PartParam_LayerInfo_SourseSelectArg_PartComment" xml:space="preserve">
     <value>パーツ備考</value>
