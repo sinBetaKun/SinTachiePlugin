@@ -14,24 +14,24 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
 {
     internal class PeriodicLoopParameter : PartAnimationOpeArgBase, IAbrirParameter, ICerrarParameter, IOffsetParameter, IIntervalParameter, ITransitionParameter
     {
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_A), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_A), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_B), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_B), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Cerrar { get; } = new Animation(0, -10000, 10000);
 
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_Offset), ResourceType = typeof(Texts))]
-        [AnimationSlider("F2", nameof(Texts.ValueUnit_Second), 0, 10, ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_Offset), ResourceType = typeof(TextResource))]
+        [AnimationSlider("F2", nameof(TextResource.ValueUnit_Second), 0, 10, ResourceType = typeof(TextResource))]
         public Animation Offset { get; } = new Animation(0, 0, 9999);
 
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_Interval), ResourceType = typeof(Texts))]
-        [AnimationSlider("F2", nameof(Texts.ValueUnit_Second), 0, 10, ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_Interval), ResourceType = typeof(TextResource))]
+        [AnimationSlider("F2", nameof(TextResource.ValueUnit_Second), 0, 10, ResourceType = typeof(TextResource))]
         public Animation Interval { get; } = new Animation(0, 0, 9999);
 
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_Transition), ResourceType = typeof(Texts))]
-        [AnimationSlider("F2", nameof(Texts.ValueUnit_Second), 0, 10, ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_Transition), ResourceType = typeof(TextResource))]
+        [AnimationSlider("F2", nameof(TextResource.ValueUnit_Second), 0, 10, ResourceType = typeof(TextResource))]
         public Animation Transition { get; } = new Animation(0, 0, 9999);
 
         /// <summary>

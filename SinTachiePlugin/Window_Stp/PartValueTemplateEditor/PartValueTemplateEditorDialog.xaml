@@ -1,0 +1,47 @@
+﻿<Window x:Class="SinTachiePlugin.Window_Stp.PartValueTemplateEditor.PartValueTemplateEditorDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SinTachiePlugin.Window_Stp.PartValueTemplateEditor"
+        xmlns:resx="clr-namespace:SinTachiePlugin.Properties"
+        mc:Ignorable="d"
+        Title="{x:Static resx:TextResource.PartValueTemplateEditorDialog_Title}" Height="300" Width="500">
+    <DockPanel>
+        <StackPanel Margin="0,16,0,0"
+                    DockPanel.Dock="Left">
+            <Button Name="NewButton"
+                    Content="{x:Static resx:TextResource.PartValueTemplateEditorDialog_NewAdd}"
+                    Padding="4"
+                    Margin="8"
+                    Click="NewButton_Click"/>
+            <Button Name="ReadButton"
+                    Content="{x:Static resx:TextResource.PartValueTemplateEditorDialog_Read}"
+                    Padding="4"
+                    Margin="8"
+                    Click="ReadButton_Click"/>
+            <Button Name="OverwriteButton"
+                    Content="{x:Static resx:TextResource.PartValueTemplateEditorDialog_Overwrite}"
+                    Padding="4"
+                    Margin="8"
+                    Click="OverwriteButton_Click"/>
+            <Button Name="RenameButton"
+                    Content="{x:Static resx:TextResource.PartValueTemplateEditorDialog_Rename}"
+                    Padding="4"
+                    Margin="8"
+                    Click="RenameButton_Click"/>
+            <Button Name="DeleteButton"
+                    Content="{x:Static resx:TextResource.PartValueTemplateEditorDialog_Delete}"
+                    Padding="4"
+                    Margin="8"
+                    Click="DeleteButton_Click"/>
+        </StackPanel>
+        <Border Margin="16"
+                BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                BorderThickness="2">
+            <ListBox Name="TemplateList"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     SelectionChanged="TemplateList_SelectionChanged"/>
+        </Border>
+    </DockPanel>
+</Window>

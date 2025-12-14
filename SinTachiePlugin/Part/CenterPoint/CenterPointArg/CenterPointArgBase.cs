@@ -2,7 +2,7 @@
 
 namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg
 {
-    internal abstract class CenterPointArgBase : SharedParameterBase
+    public abstract class CenterPointArgBase : SharedParameterBase
     {
         public CenterPointArgBase()
         {

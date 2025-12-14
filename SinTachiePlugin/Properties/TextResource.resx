@@ -165,6 +165,27 @@
   <data name="PartAnimationOpeArg_Silent" xml:space="preserve">
     <value>セリフないとき</value>
   </data>
+  <data name="PartAnimationValueVeiwer_Silent" xml:space="preserve">
+    <value>黙</value>
+  </data>
+  <data name="PartAnimationValueVeiwer_Index" xml:space="preserve">
+    <value>成分</value>
+  </data>
+  <data name="PartAnimationValueVeiwer_AnimationTag" xml:space="preserve">
+    <value>アニメーションタグ</value>
+  </data>
+  <data name="PartAnimationValueVeiwer_Comment" xml:space="preserve">
+    <value>備考</value>
+  </data>
+  <data name="PartAnimationValueVeiwer_Close" xml:space="preserve">
+    <value>閉</value>
+  </data>
+  <data name="PartAnimationValueVeiwer_AnmOpeMode" xml:space="preserve">
+    <value>出力</value>
+  </data>
+  <data name="PartAnimationValueVeiwer_Open" xml:space="preserve">
+    <value>開</value>
+  </data>
   <data name="PartAnimationOpeArg_Offset" xml:space="preserve">
     <value>開始</value>
   </data>
@@ -172,9 +193,6 @@
     <value>位相</value>
   </data>
   <data name="PartAnimationOpeMode_Product" xml:space="preserve">
-    <value>A × B</value>
-  </data>
-  <data name="PartAnimationOpeMode_Product1" xml:space="preserve">
     <value>A × B</value>
   </data>
   <data name="PartAnimationOpeMode_Simple" xml:space="preserve">
@@ -241,16 +259,13 @@
     <value>再生速度</value>
   </data>
   <data name="ZSortMode_IgnoreZ" xml:space="preserve">
-    <value>Z座標を無視</value>
+    <value>Z座標を無視して優先度順に描画</value>
   </data>
-  <data name="ZSortMode_IgnoreGroup" xml:space="preserve">
-    <value>グループを無視してZ順に描画</value>
+  <data name="ZSortMode_IgnorePriority" xml:space="preserve">
+    <value>優先度を無視してZ順に描画</value>
   </data>
-  <data name="ZSortMode_InGroup" xml:space="preserve">
-    <value>グループ内でZ順に描画</value>
-  </data>
-  <data name="ZSortMode_InGroup1" xml:space="preserve">
-    <value>グループ内でZ順に描画</value>
+  <data name="ZSortMode_DontOverride" xml:space="preserve">
+    <value>上書きしない</value>
   </data>
   <data name="LayerType_Image" xml:space="preserve">
     <value>画像</value>
@@ -264,9 +279,6 @@
   <data name="LayerType_Group" xml:space="preserve">
     <value>グループ</value>
   </data>
-  <data name="LayerType_Group_CompressFrame" xml:space="preserve">
-    <value>グループ（画像を合成）</value>
-  </data>
   <data name="LayerType_Scene" xml:space="preserve">
     <value>シーン</value>
   </data>
@@ -279,8 +291,17 @@
   <data name="GroupName_LayerInfo" xml:space="preserve">
     <value>レイヤー情報</value>
   </data>
+  <data name="GroupName_PartEffect" xml:space="preserve">
+    <value>パーツ個別エフェクト</value>
+  </data>
+  <data name="GroupName_ValueDependent" xml:space="preserve">
+    <value>値の依存</value>
+  </data>
   <data name="GroupName_CenterPoint" xml:space="preserve">
     <value>描画原点</value>
+  </data>
+  <data name="GroupName_CustomPoint" xml:space="preserve">
+    <value>カスタムポイント</value>
   </data>
   <data name="GroupName_Drawing" xml:space="preserve">
     <value>描画</value>
@@ -300,13 +321,40 @@
   <data name="PartParam_Drawing_Value_Zoom" xml:space="preserve">
     <value>拡大率</value>
   </data>
+  <data name="PartParam_Drawing_Value_Zoom_Y" xml:space="preserve">
+    <value>縦拡大</value>
+  </data>
+  <data name="PartParam_ValueDependentMode_XYZ" xml:space="preserve">
+    <value>X/Y/Z</value>
+  </data>
+  <data name="PartParam_ValueDependentMode_Invert" xml:space="preserve">
+    <value>左右反転</value>
+  </data>
+  <data name="PartParam_ValueDependentMode_Zoom" xml:space="preserve">
+    <value>拡大率</value>
+  </data>
+  <data name="PartParam_ValueDependentMode_Rotation" xml:space="preserve">
+    <value>回転角</value>
+  </data>
+  <data name="PartParam_ValueDependentMode_Opacity" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
+  <data name="PartParam_ValueDependentMode_Camera" xml:space="preserve">
+    <value>カメラ</value>
+  </data>
+  <data name="PartParam_ValueDependentMode_UnlazyEffect" xml:space="preserve">
+    <value>非遅延エフェクト</value>
+  </data>
+  <data name="PartParam_Drawing_Value_Zoom_X" xml:space="preserve">
+    <value>横拡大</value>
+  </data>
   <data name="PartParam_Drawing_Mode_Zoom" xml:space="preserve">
     <value>拡大率の合成</value>
   </data>
   <data name="PartParam_Drawing_Value_ZSort" xml:space="preserve">
     <value>Z順描画</value>
   </data>
-  <data name="PartParam_Drawing_Value_Inverse" xml:space="preserve">
+  <data name="PartParam_Drawing_Value_Invert" xml:space="preserve">
     <value>左右反転</value>
   </data>
   <data name="PartParam_Drawing_Mode_Inverse" xml:space="preserve">
@@ -323,6 +371,12 @@
   </data>
   <data name="PartParam_LayerInfo_Hide" xml:space="preserve">
     <value>非表示</value>
+  </data>
+  <data name="PartParam_Drawing_Value_Priority" xml:space="preserve">
+    <value>優先度</value>
+  </data>
+  <data name="PartParam_Drawing_Value_Mode_Priority" xml:space="preserve">
+    <value>優先度の合成</value>
   </data>
   <data name="PartParam_LayerInfo_SourseSelectArg_Parent" xml:space="preserve">
     <value>親</value>
@@ -384,11 +438,23 @@
   <data name="ClippingMode_ClipWithTag" xml:space="preserve">
     <value>クリッピング先のパーツを指定</value>
   </data>
+  <data name="CenterPointMode_OfPart" xml:space="preserve">
+    <value>親パーツの中心</value>
+  </data>
+  <data name="CenterPointMode_DontOverride" xml:space="preserve">
+    <value>上書きしない</value>
+  </data>
+  <data name="CenterPointMode_CustomPointName" xml:space="preserve">
+    <value>カスタムポイントを指定</value>
+  </data>
   <data name="ClippingMode_ClipToParent" xml:space="preserve">
     <value>親パーツにクリッピング</value>
   </data>
   <data name="ValueMode_Override" xml:space="preserve">
     <value>上書き</value>
+  </data>
+  <data name="ValueMode_DontOverride" xml:space="preserve">
+    <value>上書きしない</value>
   </data>
   <data name="ValueMode_Compose" xml:space="preserve">
     <value>統合</value>
@@ -423,5 +489,134 @@
   </data>
   <data name="PartParam_Drawing_Mode_Opacity" xml:space="preserve">
     <value>不透明度の合成</value>
+  </data>
+  <data name="CenterPointMode_OfImage" xml:space="preserve">
+    <value>親パーツの画像の中心</value>
+  </data>
+  <data name="CustomNamePoint_DefaultName" xml:space="preserve">
+    <value>点</value>
+  </data>
+  <data name="ValueDependentMode_On" xml:space="preserve">
+    <value>✅依存させる</value>
+  </data>
+  <data name="ValueDependentMode_DontOverride" xml:space="preserve">
+    <value>上書きしない</value>
+  </data>
+  <data name="ValueDependentMode_Off" xml:space="preserve">
+    <value>✖依存させない</value>
+  </data>
+  <data name="ExpensionMessage_InputIsNull" xml:space="preserve">
+    <value>入力がありません。</value>
+  </data>
+  <data name="PartAnimationValueVeiwer_A" xml:space="preserve">
+    <value>A</value>
+  </data>
+  <data name="PartAnimationValueVeiwer_B" xml:space="preserve">
+    <value>B</value>
+  </data>
+  <data name="ZSortMode_BasedOnPriority" xml:space="preserve">
+    <value>優先度が等しいときにZ準描画</value>
+  </data>
+  <data name="ContextMenuItemHeader_Common_Cut" xml:space="preserve">
+    <value>切り取り</value>
+  </data>
+  <data name="ContextMenuItemHeader_Common_Duplicate" xml:space="preserve">
+    <value>複製</value>
+  </data>
+  <data name="ContextMenuItemHeader_Common_Paste" xml:space="preserve">
+    <value>貼り付け</value>
+  </data>
+  <data name="ContextMenuItemHeader_Common_Copy" xml:space="preserve">
+    <value>コピー</value>
+  </data>
+  <data name="PartValueListView_ContextMenu_Copy" xml:space="preserve">
+    <value>コピー</value>
+  </data>
+  <data name="PartValueListView_ContextMenu_Cut" xml:space="preserve">
+    <value>切り取り</value>
+  </data>
+  <data name="PartValueListView_ContextMenu_Paste" xml:space="preserve">
+    <value>貼り付け</value>
+  </data>
+  <data name="PartValueListView_ContextMenu_ShowAll" xml:space="preserve">
+    <value>全て表示</value>
+  </data>
+  <data name="PartValueListView_ContextMenu_ShowOnlySelected" xml:space="preserve">
+    <value>選択しているパーツのみ表示</value>
+  </data>
+  <data name="PartValueListView_AddPartMessage_InvalidSourcePath" xml:space="preserve">
+    <value>素材の場所のパスが無効です。</value>
+  </data>
+  <data name="PartValueListView_AddPartMessage_NotFoundAnyFiles" xml:space="preserve">
+    <value>素材の場所のパスが無効です。</value>
+  </data>
+  <data name="PartValueListView_AddPartMessage_AskAddEmptyPart" xml:space="preserve">
+    <value>画像未指定のパーツブロックを追加しますか？</value>
+  </data>
+  <data name="PartValueListView_ContextMenu_Duplicate" xml:space="preserve">
+    <value>複製</value>
+  </data>
+  <data name="ErrorMessage_FailToReadStpsi" xml:space="preserve">
+    <value>stpsiファイルの読み込みに失敗しました。</value>
+  </data>
+  <data name="ErrorMessage_FailToReadStpi" xml:space="preserve">
+    <value>stpiファイルの読み込みに失敗しました。</value>
+  </data>
+  <data name="ErrorMessage_FailToGetInfoFromStpsi" xml:space="preserve">
+    <value>stpsiファイルから情報を取得できませんでした。</value>
+  </data>
+  <data name="ErrorMessage_FailToGetInfoFromStpi" xml:space="preserve">
+    <value>stpiファイルから情報を取得できませんでした。</value>
+  </data>
+  <data name="ErrorMessage_FailToSerializeStpsi" xml:space="preserve">
+    <value>stpsiファイルの出力時にエラーが発生しました。</value>
+  </data>
+  <data name="PartSourceInfo_DefaultTemplateName" xml:space="preserve">
+    <value>(デフォルト)</value>
+  </data>
+  <data name="PartValueTemplateEditorDialog_Warning_DeleteTemplate" xml:space="preserve">
+    <value>"{0}" のパラメータテンプレート "{1}" を削除しますか？</value>
+  </data>
+  <data name="PartValueTemplateEditorDialog_Warning_OverWriteTemplate" xml:space="preserve">
+    <value>"{0}" のパラメータテンプレート "{1}" に現在のパラメータで上書きしますか？</value>
+  </data>
+  <data name="AskNameOfNewTemplateDialog_Title" xml:space="preserve">
+    <value>テンプレート名</value>
+  </data>
+  <data name="AskNameOfNewTemplateDialog_TemplateName" xml:space="preserve">
+    <value>テンプレートの名前を入力</value>
+  </data>
+  <data name="AskNameOfNewTemplateDialog_AskOverwriteTemplate" xml:space="preserve">
+    <value>上書きしますか？</value>
+  </data>
+  <data name="PartValueTemplateEditorDialog_NewAdd" xml:space="preserve">
+    <value>新規追加</value>
+  </data>
+  <data name="PartValueTemplateEditorDialog_Read" xml:space="preserve">
+    <value>読み込み</value>
+  </data>
+  <data name="PartValueTemplateEditorDialog_Rename" xml:space="preserve">
+    <value>名前変更</value>
+  </data>
+  <data name="PartValueTemplateEditorDialog_Overwrite" xml:space="preserve">
+    <value>上書き</value>
+  </data>
+  <data name="PartValueTemplateEditorDialog_Delete" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="PartValueTemplateEditorDialog_Title" xml:space="preserve">
+    <value>テンプレートの編集</value>
+  </data>
+  <data name="SinTachiePlugin_Version" xml:space="preserve">
+    <value>1.2.0.0</value>
+  </data>
+  <data name="SinTachiePlugin_Title" xml:space="preserve">
+    <value>sin型カスタムパーツ立ち絵プラグイン</value>
+  </data>
+  <data name="ImageFileNode_Error_InvalidValue" xml:space="preserve">
+    <value>無効な差分指定</value>
+  </data>
+  <data name="ImageFileNodeManager_Error_InvalidIndex" xml:space="preserve">
+    <value>インデックスが正しく指定されていないリーフをImageFileNodeManagerに足そうとしました。ごめんなさい。</value>
   </data>
 </root>

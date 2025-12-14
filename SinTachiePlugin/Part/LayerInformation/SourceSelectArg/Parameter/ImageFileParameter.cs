@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
+using SinTachiePlugin.Control.PartAnimationValueList;
 using SinTachiePlugin.Enums;
 using SinTachiePlugin.Part.LayerInformation.ClippingArg;
 using SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter;
@@ -17,17 +18,17 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
 {
     internal class ImageFileParameter : SourceSelectArgBase, IParentParameter, IImageFilePathParameter, IClipParameter, IPartAnimationValuesParameter
     {
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(TextResource))]
         [TextEditor]
         public string Parent { get => parent; set => Set(ref parent, value); }
         private string parent = string.Empty;
 
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_ImageFile), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_ImageFile), ResourceType = typeof(TextResource))]
         [FileSelector(YukkuriMovieMaker.Settings.FileGroupType.ImageItem)]
         public string ImageFilePath { get => imageFilePath; set => Set(ref imageFilePath, value); }
         private string imageFilePath = string.Empty;
 
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_ClippingMode), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_ClippingMode), ResourceType = typeof(TextResource))]
         [EnumComboBox]
         public ClippingMode ClippingMode { get => clippingMode; set => Set(ref clippingMode, value); }
         private ClippingMode clippingMode = ClippingMode.DontClip;
@@ -36,7 +37,8 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         public ClippingArgBase ClippingArg { get => clippingArg; set => Set(ref clippingArg, value); }
         private ClippingArgBase clippingArg = new DontClipParameter();
 
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_PartAnimationValues), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_PartAnimationValues), ResourceType = typeof(TextResource))]
+        [PartAnimationValueList(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<PartAnimationValue> PartAnimationValues { get => partAnimationValues; set => Set(ref partAnimationValues, value); }
         private ImmutableList<PartAnimationValue> partAnimationValues = [];
 
@@ -66,7 +68,7 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 ClippingArg = clippingParameter.ClippingArg;
             }
             if (origin is IPartAnimationValuesParameter partAnimationValuesParameter)
-                PartAnimationValues = partAnimationValuesParameter.PartAnimationValues;
+                PartAnimationValues = [.. partAnimationValuesParameter.PartAnimationValues];
         }
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => [.. PartAnimationValues];

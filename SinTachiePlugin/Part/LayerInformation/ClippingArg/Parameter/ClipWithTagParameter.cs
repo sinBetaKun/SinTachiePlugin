@@ -9,7 +9,7 @@ namespace SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter
 {
     internal class ClipWithTagParameter : ClippingArgBase, IPartToClipToParameter
     {
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_PartToClipTo), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_PartToClipTo), ResourceType = typeof(TextResource))]
         [TextEditor]
         public string PartToClipTo { get => partToClipTo; set => Set(ref partToClipTo, value); }
         private string partToClipTo = string.Empty;

@@ -49,7 +49,7 @@ namespace SinTachiePlugin.Parts
             if (DataContext is PartBlock vm)
             {
                 BeginEdit?.Invoke(this, e);
-                vm.Appear = !vm.Appear;
+                vm.Hide = !vm.Hide;
                 EndEdit?.Invoke(this, e);
             }
         }
@@ -60,10 +60,10 @@ namespace SinTachiePlugin.Parts
             {
                 if(checkBox.IsChecked is bool isChecked)
                 {
-                    if(vm.Appear != isChecked)
+                    if(vm.Hide != isChecked)
                     {
                         BeginEdit?.Invoke(this, e);
-                        vm.Appear = isChecked;
+                        vm.Hide = isChecked;
                         EndEdit?.Invoke(this, e);
                     }
                 }

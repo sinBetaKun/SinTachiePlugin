@@ -1,9 +1,4 @@
 ﻿using SinTachiePlugin.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Argment.CustomMode
 {
@@ -23,6 +18,8 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Argment.CustomMode
 
         public DrawingValueMode ZSortMode { get; set; } = DrawingValueMode.Override;
 
+        public DrawingValueMode PriorityMode { get; set; } = DrawingValueMode.Override;
+
         public CustomModeSharedData()
         {
         }
@@ -36,6 +33,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Argment.CustomMode
             InverseMode = parameter.InverseMode;
             BlendMode = parameter.BlendMode;
             ZSortMode = parameter.ZSortMode;
+            PriorityMode = parameter.PriorityMode;
         }
 
         public void CopyTo(ICustomModeParameter parameter)
@@ -47,6 +45,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Argment.CustomMode
             parameter.InverseMode = InverseMode;
             parameter.BlendMode = BlendMode;
             parameter.ZSortMode = ZSortMode;
+            parameter.PriorityMode = PriorityMode;
         }
     }
 }

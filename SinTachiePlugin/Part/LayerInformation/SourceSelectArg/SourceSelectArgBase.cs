@@ -2,7 +2,7 @@
 
 namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg
 {
-    internal abstract class SourceSelectArgBase : SharedParameterBase
+    public abstract class SourceSelectArgBase : SharedParameterBase
     {
         public SourceSelectArgBase()
         {

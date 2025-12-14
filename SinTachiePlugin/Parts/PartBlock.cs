@@ -7,6 +7,7 @@ using Path = System.IO.Path;
 
 namespace SinTachiePlugin.Parts
 {
+    [Obsolete]
     public class PartBlock : ControlledParamsOfPart
     {
         [JsonIgnore]

@@ -112,7 +112,7 @@ namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
                     SinTachieDialog.ShowInformation("ブロックが１つもありません。");
                     return;
                 }
-                if (viewModel.Parts.Where(part => !part.Appear).Any())
+                if (viewModel.Parts.Where(part => !part.Hide).Any())
                 {
                     viewModel.CheckAll();
                     return;

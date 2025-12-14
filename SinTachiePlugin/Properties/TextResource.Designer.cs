@@ -22,14 +22,14 @@ namespace SinTachiePlugin.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Texts {
+    public class TextResource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Texts() {
+        internal TextResource() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace SinTachiePlugin.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SinTachiePlugin.Properties.Texts", typeof(Texts).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SinTachiePlugin.Properties.TextResource", typeof(TextResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,69 @@ namespace SinTachiePlugin.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   上書きしますか？ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string AskNameOfNewTemplateDialog_AskOverwriteTemplate {
+            get {
+                return ResourceManager.GetString("AskNameOfNewTemplateDialog_AskOverwriteTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   テンプレートの名前を入力 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string AskNameOfNewTemplateDialog_TemplateName {
+            get {
+                return ResourceManager.GetString("AskNameOfNewTemplateDialog_TemplateName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   テンプレート名 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string AskNameOfNewTemplateDialog_Title {
+            get {
+                return ResourceManager.GetString("AskNameOfNewTemplateDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   カスタムポイントを指定 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CenterPointMode_CustomPointName {
+            get {
+                return ResourceManager.GetString("CenterPointMode_CustomPointName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   上書きしない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CenterPointMode_DontOverride {
+            get {
+                return ResourceManager.GetString("CenterPointMode_DontOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   親パーツの画像の中心 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CenterPointMode_OfImage {
+            get {
+                return ResourceManager.GetString("CenterPointMode_OfImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   親パーツの中心 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CenterPointMode_OfPart {
+            get {
+                return ResourceManager.GetString("CenterPointMode_OfPart", resourceCulture);
             }
         }
         
@@ -88,11 +151,119 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   コピー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ContextMenuItemHeader_Common_Copy {
+            get {
+                return ResourceManager.GetString("ContextMenuItemHeader_Common_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   切り取り に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ContextMenuItemHeader_Common_Cut {
+            get {
+                return ResourceManager.GetString("ContextMenuItemHeader_Common_Cut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   複製 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ContextMenuItemHeader_Common_Duplicate {
+            get {
+                return ResourceManager.GetString("ContextMenuItemHeader_Common_Duplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   貼り付け に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ContextMenuItemHeader_Common_Paste {
+            get {
+                return ResourceManager.GetString("ContextMenuItemHeader_Common_Paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   点 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CustomNamePoint_DefaultName {
+            get {
+                return ResourceManager.GetString("CustomNamePoint_DefaultName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   stpiファイルから情報を取得できませんでした。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ErrorMessage_FailToGetInfoFromStpi {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FailToGetInfoFromStpi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   stpsiファイルから情報を取得できませんでした。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ErrorMessage_FailToGetInfoFromStpsi {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FailToGetInfoFromStpsi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   stpiファイルの読み込みに失敗しました。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ErrorMessage_FailToReadStpi {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FailToReadStpi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   stpsiファイルの読み込みに失敗しました。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ErrorMessage_FailToReadStpsi {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FailToReadStpsi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   stpsiファイルの出力時にエラーが発生しました。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ErrorMessage_FailToSerializeStpsi {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FailToSerializeStpsi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   入力がありません。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ExpensionMessage_InputIsNull {
+            get {
+                return ResourceManager.GetString("ExpensionMessage_InputIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   描画原点 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string GroupName_CenterPoint {
             get {
                 return ResourceManager.GetString("GroupName_CenterPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   カスタムポイント に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupName_CustomPoint {
+            get {
+                return ResourceManager.GetString("GroupName_CustomPoint", resourceCulture);
             }
         }
         
@@ -115,20 +286,47 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   パーツ個別エフェクト に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupName_PartEffect {
+            get {
+                return ResourceManager.GetString("GroupName_PartEffect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   値の依存 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupName_ValueDependent {
+            get {
+                return ResourceManager.GetString("GroupName_ValueDependent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   無効な差分指定 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ImageFileNode_Error_InvalidValue {
+            get {
+                return ResourceManager.GetString("ImageFileNode_Error_InvalidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   インデックスが正しく指定されていないリーフをImageFileNodeManagerに足そうとしました。ごめんなさい。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ImageFileNodeManager_Error_InvalidIndex {
+            get {
+                return ResourceManager.GetString("ImageFileNodeManager_Error_InvalidIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   グループ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LayerType_Group {
             get {
                 return ResourceManager.GetString("LayerType_Group", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   グループ（画像を合成） に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string LayerType_Group_CompressFrame {
-            get {
-                return ResourceManager.GetString("LayerType_Group_CompressFrame", resourceCulture);
             }
         }
         
@@ -475,15 +673,6 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   A × B に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string PartAnimationOpeMode_Product1 {
-            get {
-                return ResourceManager.GetString("PartAnimationOpeMode_Product1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   シンプル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartAnimationOpeMode_Simple {
@@ -525,6 +714,87 @@ namespace SinTachiePlugin.Properties {
         public static string PartAnimationOpeMode_VoiceVolumePlus {
             get {
                 return ResourceManager.GetString("PartAnimationOpeMode_VoiceVolumePlus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   A に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueVeiwer_A {
+            get {
+                return ResourceManager.GetString("PartAnimationValueVeiwer_A", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   アニメーションタグ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueVeiwer_AnimationTag {
+            get {
+                return ResourceManager.GetString("PartAnimationValueVeiwer_AnimationTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   出力 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueVeiwer_AnmOpeMode {
+            get {
+                return ResourceManager.GetString("PartAnimationValueVeiwer_AnmOpeMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   B に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueVeiwer_B {
+            get {
+                return ResourceManager.GetString("PartAnimationValueVeiwer_B", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   閉 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueVeiwer_Close {
+            get {
+                return ResourceManager.GetString("PartAnimationValueVeiwer_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   備考 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueVeiwer_Comment {
+            get {
+                return ResourceManager.GetString("PartAnimationValueVeiwer_Comment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   成分 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueVeiwer_Index {
+            get {
+                return ResourceManager.GetString("PartAnimationValueVeiwer_Index", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   開 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueVeiwer_Open {
+            get {
+                return ResourceManager.GetString("PartAnimationValueVeiwer_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   黙 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueVeiwer_Silent {
+            get {
+                return ResourceManager.GetString("PartAnimationValueVeiwer_Silent", resourceCulture);
             }
         }
         
@@ -630,9 +900,18 @@ namespace SinTachiePlugin.Properties {
         /// <summary>
         ///   左右反転 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_Drawing_Value_Inverse {
+        public static string PartParam_Drawing_Value_Invert {
             get {
-                return ResourceManager.GetString("PartParam_Drawing_Value_Inverse", resourceCulture);
+                return ResourceManager.GetString("PartParam_Drawing_Value_Invert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   優先度の合成 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_Drawing_Value_Mode_Priority {
+            get {
+                return ResourceManager.GetString("PartParam_Drawing_Value_Mode_Priority", resourceCulture);
             }
         }
         
@@ -642,6 +921,15 @@ namespace SinTachiePlugin.Properties {
         public static string PartParam_Drawing_Value_Opacity {
             get {
                 return ResourceManager.GetString("PartParam_Drawing_Value_Opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   優先度 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_Drawing_Value_Priority {
+            get {
+                return ResourceManager.GetString("PartParam_Drawing_Value_Priority", resourceCulture);
             }
         }
         
@@ -687,6 +975,24 @@ namespace SinTachiePlugin.Properties {
         public static string PartParam_Drawing_Value_Zoom {
             get {
                 return ResourceManager.GetString("PartParam_Drawing_Value_Zoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   横拡大 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_Drawing_Value_Zoom_X {
+            get {
+                return ResourceManager.GetString("PartParam_Drawing_Value_Zoom_X", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   縦拡大 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_Drawing_Value_Zoom_Y {
+            get {
+                return ResourceManager.GetString("PartParam_Drawing_Value_Zoom_Y", resourceCulture);
             }
         }
         
@@ -880,6 +1186,276 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   カメラ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_ValueDependentMode_Camera {
+            get {
+                return ResourceManager.GetString("PartParam_ValueDependentMode_Camera", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   左右反転 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_ValueDependentMode_Invert {
+            get {
+                return ResourceManager.GetString("PartParam_ValueDependentMode_Invert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   不透明度 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_ValueDependentMode_Opacity {
+            get {
+                return ResourceManager.GetString("PartParam_ValueDependentMode_Opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   回転角 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_ValueDependentMode_Rotation {
+            get {
+                return ResourceManager.GetString("PartParam_ValueDependentMode_Rotation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   非遅延エフェクト に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_ValueDependentMode_UnlazyEffect {
+            get {
+                return ResourceManager.GetString("PartParam_ValueDependentMode_UnlazyEffect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   X/Y/Z に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_ValueDependentMode_XYZ {
+            get {
+                return ResourceManager.GetString("PartParam_ValueDependentMode_XYZ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   拡大率 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_ValueDependentMode_Zoom {
+            get {
+                return ResourceManager.GetString("PartParam_ValueDependentMode_Zoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   (デフォルト) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartSourceInfo_DefaultTemplateName {
+            get {
+                return ResourceManager.GetString("PartSourceInfo_DefaultTemplateName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   画像未指定のパーツブロックを追加しますか？ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListView_AddPartMessage_AskAddEmptyPart {
+            get {
+                return ResourceManager.GetString("PartValueListView_AddPartMessage_AskAddEmptyPart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   素材の場所のパスが無効です。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListView_AddPartMessage_InvalidSourcePath {
+            get {
+                return ResourceManager.GetString("PartValueListView_AddPartMessage_InvalidSourcePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   素材の場所のパスが無効です。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListView_AddPartMessage_NotFoundAnyFiles {
+            get {
+                return ResourceManager.GetString("PartValueListView_AddPartMessage_NotFoundAnyFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   コピー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListView_ContextMenu_Copy {
+            get {
+                return ResourceManager.GetString("PartValueListView_ContextMenu_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   切り取り に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListView_ContextMenu_Cut {
+            get {
+                return ResourceManager.GetString("PartValueListView_ContextMenu_Cut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   複製 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListView_ContextMenu_Duplicate {
+            get {
+                return ResourceManager.GetString("PartValueListView_ContextMenu_Duplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   貼り付け に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListView_ContextMenu_Paste {
+            get {
+                return ResourceManager.GetString("PartValueListView_ContextMenu_Paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   全て表示 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListView_ContextMenu_ShowAll {
+            get {
+                return ResourceManager.GetString("PartValueListView_ContextMenu_ShowAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   選択しているパーツのみ表示 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListView_ContextMenu_ShowOnlySelected {
+            get {
+                return ResourceManager.GetString("PartValueListView_ContextMenu_ShowOnlySelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   削除 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueTemplateEditorDialog_Delete {
+            get {
+                return ResourceManager.GetString("PartValueTemplateEditorDialog_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   新規追加 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueTemplateEditorDialog_NewAdd {
+            get {
+                return ResourceManager.GetString("PartValueTemplateEditorDialog_NewAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   上書き に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueTemplateEditorDialog_Overwrite {
+            get {
+                return ResourceManager.GetString("PartValueTemplateEditorDialog_Overwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   読み込み に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueTemplateEditorDialog_Read {
+            get {
+                return ResourceManager.GetString("PartValueTemplateEditorDialog_Read", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   名前変更 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueTemplateEditorDialog_Rename {
+            get {
+                return ResourceManager.GetString("PartValueTemplateEditorDialog_Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   テンプレートの編集 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueTemplateEditorDialog_Title {
+            get {
+                return ResourceManager.GetString("PartValueTemplateEditorDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &quot;{0}&quot; のパラメータテンプレート &quot;{1}&quot; を削除しますか？ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueTemplateEditorDialog_Warning_DeleteTemplate {
+            get {
+                return ResourceManager.GetString("PartValueTemplateEditorDialog_Warning_DeleteTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &quot;{0}&quot; のパラメータテンプレート &quot;{1}&quot; に現在のパラメータで上書きしますか？ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueTemplateEditorDialog_Warning_OverWriteTemplate {
+            get {
+                return ResourceManager.GetString("PartValueTemplateEditorDialog_Warning_OverWriteTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   sin型カスタムパーツ立ち絵プラグイン に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SinTachiePlugin_Title {
+            get {
+                return ResourceManager.GetString("SinTachiePlugin_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   1.2.0.0 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SinTachiePlugin_Version {
+            get {
+                return ResourceManager.GetString("SinTachiePlugin_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   上書きしない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ValueDependentMode_DontOverride {
+            get {
+                return ResourceManager.GetString("ValueDependentMode_DontOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ✖依存させない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ValueDependentMode_Off {
+            get {
+                return ResourceManager.GetString("ValueDependentMode_Off", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ✅依存させる に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ValueDependentMode_On {
+            get {
+                return ResourceManager.GetString("ValueDependentMode_On", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   統合 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ValueMode_Compose {
@@ -917,6 +1493,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   上書きしない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ValueMode_DontOverride {
+            get {
+                return ResourceManager.GetString("ValueMode_DontOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   上書き に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ValueMode_Override {
@@ -944,38 +1529,38 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   グループを無視してZ順に描画 に類似しているローカライズされた文字列を検索します。
+        ///   優先度が等しいときにZ準描画 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string ZSortMode_IgnoreGroup {
+        public static string ZSortMode_BasedOnPriority {
             get {
-                return ResourceManager.GetString("ZSortMode_IgnoreGroup", resourceCulture);
+                return ResourceManager.GetString("ZSortMode_BasedOnPriority", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Z座標を無視 に類似しているローカライズされた文字列を検索します。
+        ///   上書きしない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ZSortMode_DontOverride {
+            get {
+                return ResourceManager.GetString("ZSortMode_DontOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   優先度を無視してZ順に描画 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ZSortMode_IgnorePriority {
+            get {
+                return ResourceManager.GetString("ZSortMode_IgnorePriority", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Z座標を無視して優先度順に描画 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ZSortMode_IgnoreZ {
             get {
                 return ResourceManager.GetString("ZSortMode_IgnoreZ", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   グループ内でZ順に描画 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ZSortMode_InGroup {
-            get {
-                return ResourceManager.GetString("ZSortMode_InGroup", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   グループ内でZ順に描画 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ZSortMode_InGroup1 {
-            get {
-                return ResourceManager.GetString("ZSortMode_InGroup1", resourceCulture);
             }
         }
     }

@@ -1,0 +1,269 @@
+﻿<UserControl x:Class="SinTachiePlugin.Control.PartValueList.PartValueView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SinTachiePlugin.Control.PartValueList"
+             xmlns:local2="clr-namespace:SinTachiePlugin.Control.PartValueList.Converters"
+             xmlns:local3="clr-namespace:SinTachiePlugin.Part"
+             xmlns:local4="clr-namespace:SinTachiePlugin.Enums"
+             xmlns:resx="clr-namespace:SinTachiePlugin.Properties"
+             xmlns:c="clr-namespace:YukkuriMovieMaker.Controls;assembly=YukkuriMovieMaker.Controls"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=local3:PartValue}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SinTachiePlugin;component/Resource/MaterialIcons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="ButtonHideStyle" TargetType="Button">
+                <Setter Property="Content" Value="{StaticResource Visible}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ControlledParameters.Hide, Mode=OneWay}" Value="True">
+                        <Setter Property="Content" Value="{StaticResource Invisible}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <local2:DepthMarginConverter x:Key="DepthMarginConverter"/>
+            <local2:ParentPanelVisibilityConverter x:Key="ParentPanelVisibilityConverter"/>
+            <local2:ParentPanelValueConverter x:Key="ParentPanelValueConverter"/>
+            <local2:PriorityPanelVisibilityConverter x:Key="PriorityPanelVisibilityConverter"/>
+            <local2:PriorityPanelValueConverter x:Key="PriorityPanelValueConverter"/>
+            <local2:OpenGroupButtonIconConverter x:Key="OpenGroupButtonIconConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="{Binding Depth, Converter={StaticResource DepthMarginConverter}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0"
+              Grid.Row="0">
+            <Path x:Name="SelectedSign"
+                  Visibility="Hidden"
+                  VerticalAlignment="Center"
+                  Fill="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                  Data="M5,30 L5,0 L15,15 Z"/>
+        </Grid>
+
+        <Border Grid.Column="1"
+                Grid.Row="0"
+                VerticalAlignment="Center"
+                BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                BorderThickness="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <ContentControl Content="{StaticResource Folder}">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ControlledParameters.LayerType}"
+                                             Value="{x:Static local4:LayerType.Group}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+                <Border Grid.Column="1"
+                        VerticalAlignment="Center"
+                        BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                        BorderThickness="1"
+                        Margin="2">
+                    <StackPanel>
+                        <WrapPanel>
+                            <Button Height="16" Width="16" Margin="2" Background="Transparent" BorderThickness="0"
+                                    Click="Switch_Hide" Style="{StaticResource ButtonHideStyle}" />
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ControlledParameters.Tag}" Value="">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlledParameters.Tag}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <TextBlock Text="{x:Static resx:TextResource.PartParam_LayerInfo_Tag}"
+                                           VerticalAlignment="Center"
+                                           FontSize="15"
+                                           Margin="2,0"
+                                           FontWeight="Bold">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ControlledParameters.LayerType}"
+                                                                Value="{x:Static local4:LayerType.Group}">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                                        BorderThickness="1"
+                                        Padding="4,0"
+                                        Margin="2,0,0,0"
+                                        HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding ControlledParameters.Tag}"
+                                                VerticalAlignment="Center"
+                                                FontSize="16"/>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                <TextBlock Text="{x:Static resx:TextResource.PartParam_LayerInfo_LayerType}"
+                                            VerticalAlignment="Center"
+                                            FontWeight="Bold"/>
+                                <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                                        BorderThickness="1"
+                                        Padding="4,0"
+                                        Margin="2,0,0,0"
+                                        HorizontalAlignment="Left">
+                                    <TextBlock VerticalAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="Error!"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ControlledParameters.LayerType}"
+                                                                    Value="{x:Static local4:LayerType.Image}">
+                                                        <Setter Property="Text"
+                                                                Value="{x:Static resx:TextResource.LayerType_Image}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding ControlledParameters.LayerType}"
+                                                                    Value="{x:Static local4:LayerType.Psd}">
+                                                        <Setter Property="Text"
+                                                                Value="{x:Static resx:TextResource.LayerType_Psd}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding ControlledParameters.LayerType}"
+                                                                    Value="{x:Static local4:LayerType.Video}">
+                                                        <Setter Property="Text"
+                                                                Value="{x:Static resx:TextResource.LayerType_Video}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding ControlledParameters.LayerType}"
+                                                                    Value="{x:Static local4:LayerType.Scene}">
+                                                        <Setter Property="Text"
+                                                                Value="{x:Static resx:TextResource.LayerType_Scene}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding ControlledParameters.LayerType}"
+                                                                    Value="{x:Static local4:LayerType.Group}">
+                                                        <Setter Property="Text"
+                                                                Value="{x:Static resx:TextResource.LayerType_Group}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal"
+                                        Visibility="{Binding ControlledParameters, Converter={StaticResource ParentPanelVisibilityConverter}}">
+                                <TextBlock Text="{x:Static resx:TextResource.PartParam_LayerInfo_SourseSelectArg_Parent}"
+                                            VerticalAlignment="Center"
+                                            FontWeight="Bold"/>
+                                <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                                        BorderThickness="1"
+                                        Padding="4,0"
+                                        Margin="2,0,0,0"
+                                        HorizontalAlignment="Left">
+                                    <TextBlock VerticalAlignment="Center"
+                                                Text="{Binding ControlledParameters, Converter={StaticResource ParentPanelValueConverter}}"/>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal"
+                                        Visibility="{Binding ControlledParameters, Converter={StaticResource PriorityPanelVisibilityConverter}}">
+                                <TextBlock Text="{x:Static resx:TextResource.PartParam_Drawing_Value_Priority}"
+                                            VerticalAlignment="Center"
+                                            FontWeight="Bold"/>
+                                <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                                        BorderThickness="1"
+                                        Padding="4,0"
+                                        Margin="2,0,0,0"
+                                        HorizontalAlignment="Left">
+                                    <TextBlock VerticalAlignment="Center"
+                                                Text="{Binding ControlledParameters, Converter={StaticResource PriorityPanelValueConverter}}"/>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ControlledParameters.Cpmment}" Value="">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ControlledParameters.Cpmment}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <TextBlock Text="{x:Static resx:TextResource.PartParam_LayerInfo_Comment}"
+                                           VerticalAlignment="Center"
+                                           Margin="2,0"
+                                           FontWeight="Bold"/>
+                                <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                                        BorderThickness="1"
+                                        Padding="4,0"
+                                        Margin="2,0,0,0"
+                                        HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding ControlledParameters.Comment}"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                            </StackPanel>
+                        </WrapPanel>
+                        <Grid x:Name="SourceSelectorGrid"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+        <Button x:Name="GroupViewChangeButton"
+                Grid.Row="1"
+                Grid.Column="1"
+                Click="GroupViewChanged">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ControlledParameters.LayerType}"
+                                     Value="{x:Static local4:LayerType.Group}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <Button.Content>
+                <Viewbox>
+                    <Canvas Width="16" Height="8">
+                        <Path Opacity="0.7"
+                              Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}"
+                              Data="{Binding Depth, Converter={StaticResource DepthMarginConverter}}"/>
+                    </Canvas>
+                </Viewbox>
+            </Button.Content>
+        </Button>
+    </Grid>
+</UserControl>

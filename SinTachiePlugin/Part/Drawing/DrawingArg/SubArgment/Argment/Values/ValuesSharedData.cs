@@ -22,7 +22,13 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Argment.Values
 
         public Blend Blend { get; set; } = Blend.Normal;
 
-        public ZSortMode2 ZSort { get; set; } = ZSortMode2.InGroup;
+        public ZSortMode2 ZSort { get; set; } = ZSortMode2.BasedOnPriority;
+
+        public Animation Priority { get; } = new(0, -10000, 10000);
+
+        public Animation Zoom_X { get;} = new Animation(100, 0, 5000);
+
+        public Animation Zoom_Y { get;} = new Animation(100, 0, 5000);
 
         public ValuesSharedData()
         {
@@ -36,9 +42,12 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Argment.Values
             Opacity.CopyFrom(parameter.Opacity);
             Zoom.CopyFrom(parameter.Zoom);
             Rotation.CopyFrom(parameter.Rotation);
-            Inverse.CopyFrom(parameter.Inverse);
+            Inverse.CopyFrom(parameter.Invert);
             Blend = parameter.Blend;
             ZSort = parameter.ZSort;
+            Priority.CopyFrom(parameter.Priority);
+            Zoom_X.CopyFrom(parameter.Zoom_X);
+            Zoom_Y.CopyFrom(parameter.Zoom_Y);
         }
 
         public void CopyTo(IValuesParameter parameter)
@@ -49,9 +58,12 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Argment.Values
             parameter.Opacity.CopyFrom(Opacity);
             parameter.Zoom.CopyFrom(Zoom);
             parameter.Rotation.CopyFrom(Rotation);
-            parameter.Inverse.CopyFrom(Inverse);
+            parameter.Invert.CopyFrom(Inverse);
             parameter.Blend = Blend;
             parameter.ZSort = ZSort;
+            parameter.Priority.CopyFrom(Priority);
+            parameter.Zoom_X.CopyFrom(Zoom_X);
+            parameter.Zoom_Y.CopyFrom(Zoom_Y);
         }
     }
 }

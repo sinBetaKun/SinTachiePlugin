@@ -15,7 +15,6 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg
                 LayerType.Video => new VideoFileParameter(store),
                 LayerType.Scene => new SceneParameter(store),
                 LayerType.Group => new GroupParameter(store),
-                LayerType.Group_CompressFrame => new GroupCompressFrameParameter(store),
                 _ => throw new ArgumentOutOfRangeException(nameof(type)),
             };
 
@@ -23,6 +22,22 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg
                 return param;
 
             return current;
+        }
+
+        public static SourceSelectArgBase GetClone(this LayerType type, SourceSelectArgBase origin)
+        {
+            var store = origin.GetSharedData();
+            SourceSelectArgBase param = type switch
+            {
+                LayerType.Image => new ImageFileParameter(store),
+                LayerType.Psd => new PsdFileParameter(store),
+                LayerType.Video => new VideoFileParameter(store),
+                LayerType.Scene => new SceneParameter(store),
+                LayerType.Group => new GroupParameter(store),
+                _ => throw new ArgumentOutOfRangeException(nameof(type)),
+            };
+
+            return param;
         }
     }
 }

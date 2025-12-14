@@ -1,9 +1,4 @@
 ﻿using SinTachiePlugin.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Project;
 
@@ -23,10 +18,16 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Argment.Values
 
         public Animation Rotation { get; }
 
-        public Animation Inverse { get; }
+        public Animation Invert { get; }
 
         public Blend Blend { get; set; }
 
         public ZSortMode2 ZSort { get; set; }
+
+        public Animation Priority { get; }
+
+        public Animation Zoom_X { get; }
+
+        public Animation Zoom_Y { get; }
     }
 }

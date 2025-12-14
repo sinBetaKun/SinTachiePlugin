@@ -13,6 +13,7 @@ using Path = System.IO.Path;
 
 namespace SinTachiePlugin.LayerValueListController
 {
+    [Obsolete]
     public class LayerNodeManager : IDisposable
     {
         public IGraphicsDevicesAndContext devices;

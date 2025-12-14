@@ -13,7 +13,7 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.Parameter
 {
     internal class HavingSourceCenterPointParameter : CenterPointArgBase, ICenterModeParameter, ISubArgParameter
     {
-        [Display(Name = nameof(Texts.PartParam_CenterPoint_CenterMode), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_CenterPoint_CenterMode), ResourceType = typeof(TextResource))]
         [EnumComboBox]
         public CenterPointMode CenterMode { get => centerMode; set => Set(ref centerMode, value); }
         private CenterPointMode centerMode = CenterPointMode.OfPart;
@@ -57,7 +57,7 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.Parameter
             if (store.Load<CenterModeSharedData>() is CenterModeSharedData centerModeSharedData)
                 CenterMode = centerModeSharedData.CenterMode;
             if (store.Load<SubArgSharedData>() is SubArgSharedData subArgSharedData)
-                SubArg = subArgSharedData.SubArg;
+                SubArg = CenterMode.GetClone(subArgSharedData.SubArg);
         }
     }
 }

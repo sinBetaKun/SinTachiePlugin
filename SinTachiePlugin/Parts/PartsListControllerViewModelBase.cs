@@ -13,6 +13,7 @@ using ComboBox = System.Windows.Controls.ComboBox;
 
 namespace SinTachiePlugin.Parts
 {
+    [Obsolete]
     public abstract class PartsListControllerViewModelBase : Bindable, INotifyPropertyChanged, IPropertyEditorControl2, IDisposable
     {
         class NaturalStringComparer : IComparer<TreeViewItem>
@@ -30,11 +31,6 @@ namespace SinTachiePlugin.Parts
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
 
-        public int ListHeight
-        {
-            get => PluginInfo.PartsListHeight;
-            set => Set(ref PluginInfo.PartsListHeight, value);
-        }
 
         /// <summary>
         /// パーツブロックのリストの内容

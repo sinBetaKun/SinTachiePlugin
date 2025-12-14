@@ -1,4 +1,5 @@
-﻿using SinTachiePlugin.Parts.Controller;
+﻿using SinTachiePlugin.Control.PartValueList;
+using SinTachiePlugin.Part;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
@@ -9,14 +10,17 @@ namespace SinTachiePlugin.Parts
     internal class SinTachieItemParameter : TachieItemParameterBase
     {
         [Display]
-        [PartsListController(PropertyEditorSize = PropertyEditorSize.FullWidth)]
-        public ImmutableList<PartBlock> Parts { get => parts; set => Set(ref parts, value); }
-        ImmutableList<PartBlock> parts = [];
-        
+        [PartValueList(PropertyEditorSize = PropertyEditorSize.FullWidth)]
+        public ImmutableList<PartValue> PartValues { get => _partValues; set => Set(ref _partValues, value); }
+        private ImmutableList<PartValue> _partValues = [];
+
+        [Obsolete]
+        public ImmutableList<PartBlock> Parts { set => PartValues = [.. value.Select(p => new PartValue(p))]; }
+
         /// <summary>
         /// クラス内のIAnimatableを列挙する。
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<IAnimatable> GetAnimatables() => Parts;
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [.. PartValues];
     }
 }

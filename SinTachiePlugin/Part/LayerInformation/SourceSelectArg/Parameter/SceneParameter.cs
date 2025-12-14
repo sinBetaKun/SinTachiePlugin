@@ -18,17 +18,17 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
 {
     internal class SceneParameter : SourceSelectArgBase, IParentParameter, ISceneIdParameter, IClipParameter, IPlaybackSpeedParameter, IStartFrameNumberParameter, ILoopPlaybackParameter
     {
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(TextResource))]
         [TextEditor]
         public string Parent { get => parent; set => Set(ref parent, value); }
         private string parent = string.Empty;
 
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_SceneId), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_SceneId), ResourceType = typeof(TextResource))]
         [SceneComboBox]
         public Guid SceneId { get => sceneId; set => Set(ref sceneId, value); }
         private Guid sceneId = Guid.Empty;
 
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_ClippingMode), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_ClippingMode), ResourceType = typeof(TextResource))]
         [EnumComboBox]
         public ClippingMode ClippingMode { get => clippingMode; set => Set(ref clippingMode, value); }
         private ClippingMode clippingMode = ClippingMode.DontClip;
@@ -37,21 +37,21 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         public ClippingArgBase ClippingArg { get => clippingArg; set => Set(ref clippingArg, value); }
         private ClippingArgBase clippingArg = new DontClipParameter();
 
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_PlaybackSpeed), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_PlaybackSpeed), ResourceType = typeof(TextResource))]
         [FrameNumberEditor]
         [DefaultValue(0)]
         [Range(0, 99999)]
         public double PlaybackSpeed { get => playbackSpeed; set => Set(ref playbackSpeed, value); }
         private double playbackSpeed = 1.0;
 
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_StartFrameNumber), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_StartFrameNumber), ResourceType = typeof(TextResource))]
         [TextBoxSlider("F2", "%", 0, 200)]
         [DefaultValue(100)]
         [Range(0, 99999)]
         public int StartFrameNumber { get => startFrameNumber; set => Set(ref startFrameNumber, value); }
         private int startFrameNumber = 0;
 
-        [Display(Name = nameof(Texts.PartParam_LayerInfo_SourseSelectArg_LoopPlayback), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_LoopPlayback), ResourceType = typeof(TextResource))]
         [ToggleSlider]
         public bool LoopPlayback { get => loopPlayback; set => Set(ref loopPlayback, value); }
         private bool loopPlayback = false;

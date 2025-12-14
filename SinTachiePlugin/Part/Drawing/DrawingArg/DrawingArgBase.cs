@@ -2,7 +2,7 @@
 
 namespace SinTachiePlugin.Part.Drawing.DrawingArg
 {
-    internal abstract class DrawingArgBase : SharedParameterBase
+    public abstract class DrawingArgBase : SharedParameterBase
     {
         public DrawingArgBase()
         {

@@ -5,23 +5,23 @@ namespace SinTachiePlugin.Enums
 {
     internal enum PartAnimationOpeMode
     {
-        [Display(Name = nameof(Texts.PartAnimationOpeMode_Simple), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_Simple), ResourceType = typeof(TextResource))]
         Simple,
-        [Display(Name = nameof(Texts.PartAnimationOpeMode_Sum), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_Sum), ResourceType = typeof(TextResource))]
         Sum,
-        [Display(Name = nameof(Texts.PartAnimationOpeMode_Product), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_Product), ResourceType = typeof(TextResource))]
         Product,
-        [Display(Name = nameof(Texts.PartAnimationOpeMode_Sin), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_Sin), ResourceType = typeof(TextResource))]
         Sin,
-        [Display(Name = nameof(Texts.PartAnimationOpeMode_VoiceVolume), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_VoiceVolume), ResourceType = typeof(TextResource))]
         VoiceVolume,
-        [Display(Name = nameof(Texts.PartAnimationOpeMode_VoiceVolumePlus), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_VoiceVolumePlus), ResourceType = typeof(TextResource))]
         VoiceVolumePlus,
-        [Display(Name = nameof(Texts.PartAnimationOpeMode_PeriodicShuttle), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_PeriodicShuttle), ResourceType = typeof(TextResource))]
         PeriodicShuttle,
-        [Display(Name = nameof(Texts.PartAnimationOpeMode_PeriodicLoop), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_PeriodicLoop), ResourceType = typeof(TextResource))]
         PeriodicLoop,
-        [Display(Name = nameof(Texts.PartAnimationOpeMode_PeriodicLoop), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_PeriodicLoop), ResourceType = typeof(TextResource))]
         AudioFile,
     }
 }

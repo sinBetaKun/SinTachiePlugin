@@ -1,14 +1,14 @@
-﻿namespace SinTachiePlugin.Informations
+﻿using SinTachiePlugin.Properties;
+
+namespace SinTachiePlugin.Informations
 {
     /// <summary>
     /// このプラグインそのものの情報を記載したクラス
     /// </summary>
     public class PluginInfo
     {
-        static public string Title => Properties.Resources.PluginTitle;
+        static public string Title => TextResource.SinTachiePlugin_Title;
 
-        static public string Version => Properties.Resources.STPVersion;
-
-        static public int PartsListHeight = 210;
+        static public string Version => TextResource.SinTachiePlugin_Version;
     }
 }

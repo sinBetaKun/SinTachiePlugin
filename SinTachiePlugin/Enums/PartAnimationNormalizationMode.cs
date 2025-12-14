@@ -10,11 +10,11 @@ namespace SinTachiePlugin.Enums
 {
     internal enum PartAnimationNormalizationMode
     {
-        [Display(Name = nameof(Texts.PartAnimationNormalizationMode_Limit), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationNormalizationMode_Limit), ResourceType = typeof(TextResource))]
         Limit,
-        [Display(Name = nameof(Texts.PartAnimationNormalizationMode_Shuttle), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationNormalizationMode_Shuttle), ResourceType = typeof(TextResource))]
         Shuttle,
-        [Display(Name = nameof(Texts.PartAnimationNormalizationMode_Loop), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationNormalizationMode_Loop), ResourceType = typeof(TextResource))]
         Loop,
     }
 }

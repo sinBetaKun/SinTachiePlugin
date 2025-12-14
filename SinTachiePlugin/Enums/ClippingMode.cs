@@ -5,11 +5,11 @@ namespace SinTachiePlugin.Enums
 {
     internal enum ClippingMode
     {
-        [Display(Name = nameof(Texts.ClippingMode_DontClip), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.ClippingMode_DontClip), ResourceType = typeof(TextResource))]
         DontClip,
-        [Display(Name = nameof(Texts.ClippingMode_ClipToParent), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.ClippingMode_ClipToParent), ResourceType = typeof(TextResource))]
         ClipToParent,
-        [Display(Name = nameof(Texts.ClippingMode_ClipWithTag), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.ClippingMode_ClipWithTag), ResourceType = typeof(TextResource))]
         ClipWithTag,
     }
 }

@@ -13,12 +13,12 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.PartAnim
 
         public PartAnimationSharedData(IPartAnimationValuesParameter parameter)
         {
-            PartAnimationValues = parameter.PartAnimationValues;
+            PartAnimationValues = [.. parameter.PartAnimationValues];
         }
 
         public void CopyTo(IPartAnimationValuesParameter parameter)
         {
-            parameter.PartAnimationValues = PartAnimationValues;
+            parameter.PartAnimationValues = [.. PartAnimationValues];
         }
     }
 }

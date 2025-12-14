@@ -12,15 +12,15 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
 {
     internal class SinParameter : PartAnimationOpeArgBase, IAbrirParameter, ICerrarParameter, IThetaParameter
     {
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_Intercept), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_Intercept), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_Amplitude), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_Amplitude), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Cerrar { get; } = new Animation(0, -10000, 10000);
 
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_Theta), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_Theta), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "°", -100, 100)]
         public Animation Theta { get; } = new Animation(0, -360, 360, 360);
 

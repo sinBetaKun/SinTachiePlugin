@@ -1,8 +1,10 @@
-﻿using SinTachiePlugin.Parts;
+﻿using SinTachiePlugin.Control.PartValueList;
+using SinTachiePlugin.Part;
 using SinTachiePlugin.ShapePludin.PartsListControllerForShape;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
+using YukkuriMovieMaker.Controls;
 using YukkuriMovieMaker.Exo;
 using YukkuriMovieMaker.Player.Video;
 using YukkuriMovieMaker.Plugin.Shape;
@@ -13,9 +15,37 @@ namespace SinTachiePlugin.ShapePludin
     internal class ShapeParameterOfSinTachie(SharedDataStore? sharedData) : ShapeParameterBase(sharedData)
     {
         [Display]
-        [PartsListControllerForShape(PropertyEditorSize = PropertyEditorSize.FullWidth)]
-        public PartsOfShapeItem PartsAndRoot { get => partsAndRoot; set => Set(ref partsAndRoot, value); }
-        PartsOfShapeItem partsAndRoot = new();
+        [DirectorySelector]
+        public string Root
+        {
+            get => _root;
+            set
+            {
+                PartValuesAndRoot.Root = value;
+                Set(ref _root, value);
+            }
+        }
+        private string _root = string.Empty;
+
+        [Display]
+        [PartValueListForShape(PropertyEditorSize = PropertyEditorSize.FullWidth)]
+        public PartValuesAndRoot PartValuesAndRoot { get => _partValues; set => Set(ref _partValues, value); }
+        private PartValuesAndRoot _partValues = new();
+
+        [Obsolete]
+        public PartsOfShapeItem PartsAndRoot
+        {
+            set
+            {
+                Root = value.Root;
+                PartValuesAndRoot = new PartValuesAndRoot()
+                {
+                    Root = value.Root,
+                    PartValues = [.. value.Parts.Select(p => new PartValue(p))]
+                };
+            }
+        }
+
 
         public ShapeParameterOfSinTachie() : this(null)
         {
@@ -36,7 +66,7 @@ namespace SinTachiePlugin.ShapePludin
             return new ShapeOfSinTachieSource(devices, this);
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [PartsAndRoot];
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [.. PartValuesAndRoot.PartValues];
 
         protected override void LoadSharedData(SharedDataStore store)
         {
@@ -53,13 +83,17 @@ namespace SinTachiePlugin.ShapePludin
 
         public class SharedData(ShapeParameterOfSinTachie parameter)
         {
-            public string Directory { get; set; } = parameter.PartsAndRoot.Root;
-            public ImmutableList<PartBlock> Parts { get; } = [.. parameter.PartsAndRoot.Parts.Select(x => new PartBlock(x))];
+            public string Directory { get; set; } = parameter.Root;
+            public ImmutableList<PartValue> PartValues { get; } = [.. parameter.PartValuesAndRoot.PartValues.Select(x => new PartValue(x))];
 
             public void CopyTo(ShapeParameterOfSinTachie parameter)
             {
-                var newParam = new PartsOfShapeItem() { Root = Directory, Parts = [.. Parts.Select(x => new PartBlock(x))] };
-                parameter.PartsAndRoot = newParam;
+                parameter.Root = Directory;
+                parameter.PartValuesAndRoot = new()
+                {
+                    Root = Directory,
+                    PartValues = [..PartValues.Select(x => new PartValue(x))]
+                };
             }
         }
     }

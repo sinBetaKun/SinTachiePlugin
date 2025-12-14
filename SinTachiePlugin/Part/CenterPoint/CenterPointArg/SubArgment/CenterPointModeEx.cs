@@ -10,9 +10,9 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment
             var store = current.GetSharedData();
             CenterPointSubArgBase param = mode switch
             {
-                CenterPointMode.OfPart => new NoOptionParameter(store),
-                CenterPointMode.OfImage => new NoOptionParameter(store),
-                CenterPointMode.Custom => new CustomCenterPointParameter(store),
+                CenterPointMode.OfPart => new OnlyCoordinateParameter(store),
+                CenterPointMode.OfImage => new OnlyCoordinateParameter(store),
+                CenterPointMode.CustomPointName => new CustomCenterPointParameter(store),
                 CenterPointMode.DontOverride => new NoOptionParameter(store),
                 _ => throw new ArgumentOutOfRangeException(nameof(mode)),
             };
@@ -21,6 +21,21 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment
                 return param;
 
             return current;
+        }
+
+        public static CenterPointSubArgBase GetClone(this CenterPointMode mode, CenterPointSubArgBase origin)
+        {
+            var store = origin.GetSharedData();
+            CenterPointSubArgBase param = mode switch
+            {
+                CenterPointMode.OfPart => new OnlyCoordinateParameter(store),
+                CenterPointMode.OfImage => new OnlyCoordinateParameter(store),
+                CenterPointMode.CustomPointName => new CustomCenterPointParameter(store),
+                CenterPointMode.DontOverride => new NoOptionParameter(store),
+                _ => throw new ArgumentOutOfRangeException(nameof(mode)),
+            };
+
+            return param;
         }
     }
 }

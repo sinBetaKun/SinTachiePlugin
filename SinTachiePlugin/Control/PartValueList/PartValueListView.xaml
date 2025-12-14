@@ -1,0 +1,174 @@
+﻿<UserControl x:Class="SinTachiePlugin.Control.PartValueList.PartValueListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SinTachiePlugin.Control.PartValueList"
+             xmlns:c="clr-namespace:YukkuriMovieMaker.Controls;assembly=YukkuriMovieMaker.Controls"
+             xmlns:resx="clr-namespace:SinTachiePlugin.Properties"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type={x:Type local:PartValueListViewModel}}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SinTachiePlugin;component/Resource/MaterialIcons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            BorderThickness="2"
+            Margin="4,4,0,12"
+            Grid.Row="2">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" MinHeight="120"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="2" Margin="4">
+                <StackPanel>
+                    <Grid>
+                        <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="1" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{x:Static resx:TextResource.SinTachiePlugin_Version}" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <Grid Margin="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="26"/>
+                        </Grid.ColumnDefinitions>
+                        <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" SelectionChanged="List_SelectionChanged"
+                                 ItemsSource="{Binding Parts}" SelectedIndex="{Binding SelectedPartIndex}" SelectionMode="Extended"
+                                 Name="ItemList" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 PreviewMouseWheel="List_PreviewMouseWheel">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <local:PartValueView BeginEdit="PropertiesEditor_BeginEdit"
+                                                         EndEdit="PropertiesEditor_EndEdit"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ContextMenu>
+                                <ContextMenu Closed="ContextMenu_Closed">
+                                    <MenuItem x:Name="CutButton"
+                                              Header="{x:Static resx:TextResource.PartValueListView_ContextMenu_Cut}"
+                                              Click="CutButton_Click"
+                                              Icon="{StaticResource Cut}"/>
+                                    <MenuItem x:Name="CopyButton"
+                                              Header="{x:Static resx:TextResource.PartValueListView_ContextMenu_Copy}"
+                                              Click="CopyButton_Click"
+                                              Icon="{StaticResource Copy}"/>
+                                    <MenuItem x:Name="PasteButton"
+                                              Header="{x:Static resx:TextResource.PartValueListView_ContextMenu_Paste}"
+                                              Click="PasteButton_Click"
+                                              Icon="{StaticResource Paste}"/>
+                                    <MenuItem x:Name="DuplicateButton"
+                                              Header="{x:Static resx:TextResource.PartValueListView_ContextMenu_Duplicate}"
+                                              Click="DuplicateButton_Click"
+                                              Icon="{StaticResource Duplicate}"/>
+                                    <Separator />
+                                    <MenuItem x:Name="ShowAllPartsButton"
+                                              Header="{x:Static resx:TextResource.PartValueListView_ContextMenu_ShowAll}"
+                                              Click ="ShowAllPartsButton_Clicked"
+                                              Icon="{StaticResource CheckAll}"/>
+                                    <MenuItem x:Name="ShowOnlySelectedPartsButton"
+                                              Header="{x:Static resx:TextResource.PartValueListView_ContextMenu_ShowOnlySelected}"
+                                              Click ="ShowOnlySelectedPartsButton_Clicked"
+                                              Icon="{StaticResource CheckOutline}"/>
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                        </ListBox>
+                        <Grid Grid.Column="1">
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="26"/>
+                                    <RowDefinition Height="26"/>
+                                    <RowDefinition Height="26"/>
+                                    <RowDefinition Height="26"/>
+                                    <RowDefinition Height="16"/>
+                                    <RowDefinition Height="26"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="26"/>
+                                    <ColumnDefinition Width="10"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- ブロックの並びを編集するエリア -->
+                                <Button x:Name="AddButton"
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Content="{StaticResource Plus}"
+                                        Click="AddButton_Click"/>
+                                <Button x:Name="RemoveButton"
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Content="{StaticResource Minus}"
+                                        Click="RemoveButton_Click"/>
+                                <Button x:Name="UpButton"
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Content="{StaticResource Up}"
+                                        Click="UpButton_Click"/>
+                                <Button x:Name="DownButton"
+                                        Grid.Row="3"
+                                        Grid.Column="0"
+                                        Content="{StaticResource Down}"
+                                        Click="DownButton_Click"/>
+
+                                <!-- 選択されたブロックのデフォルト値を編集するエリア -->
+                                <Button x:Name="EditTemplateButton"
+                                        Grid.Row="5"
+                                        Grid.Column="0"
+                                        Content="{StaticResource Book-Edit}"
+                                        Click="EditTemplateButton_Click"/>
+
+                                <!-- 選択されたブロックのデフォルト値を編集するエリア -->
+                                <Grid>
+                                    <Button x:Name="SelectLayerTypeButton"
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Click="SelectLayerTypeButton_Click"/>
+                                    <Popup x:Name="LayerTypeSelectorPopup"
+                                           Placement="Bottom"
+                                           StaysOpen="False"
+                                           VerticalAlignment="Top">
+                                        <ListBox Panel.ZIndex="100">
+                                            <ListBoxItem Content="{x:Static resx:TextResource.LayerType_Image}" MouseLeftButtonUp="SelectImage_MouseLeftButtonUp"/>
+                                            <ListBoxItem Content="{x:Static resx:TextResource.LayerType_Psd}" MouseLeftButtonUp="SelectPsd_MouseLeftButtonUp"/>
+                                            <ListBoxItem Content="{x:Static resx:TextResource.LayerType_Video}" MouseLeftButtonUp="SelectVideo_MouseLeftButtonUp"/>
+                                            <ListBoxItem Content="{x:Static resx:TextResource.LayerType_Scene}" MouseLeftButtonUp="SelectScene_MouseLeftButtonUp"/>
+                                            <ListBoxItem Content="{x:Static resx:TextResource.LayerType_Group}" MouseLeftButtonUp="SelectGroup_MouseLeftButtonUp"/>
+                                        </ListBox>
+                                    </Popup>
+                                </Grid>
+                                
+                                <!-- 新しく追加するパーツのファイル選択候補を表示するエリア -->
+                                <Popup x:Name="SourceSelector"
+                                       Placement="Left"
+                                       StaysOpen="False"
+                                       VerticalAlignment="Top">
+                                    <ScrollViewer MaxHeight="300"
+                                                  MinWidth="100"
+                                                  PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                                        <TreeView x:Name="PartNameTree" Panel.ZIndex="100"/>
+                                    </ScrollViewer>
+                                </Popup>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <GridSplitter Grid.Row="1"
+                      HorizontalAlignment="Stretch"/>
+            <c:PropertiesEditor
+                Name="propertiesEditor"
+                Target="{Binding ElementName=ItemList,Path=SelectedValue}"
+                BeginEdit="PropertiesEditor_BeginEdit" 
+                EndEdit="PropertiesEditor_EndEdit"
+                Grid.Row="2">
+            </c:PropertiesEditor>
+        </Grid>
+    </Border>
+</UserControl>

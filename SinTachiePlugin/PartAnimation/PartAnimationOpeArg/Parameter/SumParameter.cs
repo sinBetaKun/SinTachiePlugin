@@ -16,11 +16,11 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
 {
     internal class SumParameter : PartAnimationOpeArgBase, IAbrirParameter, ICerrarParameter
     {
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_A), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_A), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_B), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_B), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Cerrar { get; } = new Animation(0, -10000, 10000);
 

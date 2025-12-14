@@ -11,12 +11,12 @@ namespace SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Parameter
 {
     internal class DoLinkParameter : PartAnimationLinkArgBase, ITargetPartTagParameter, ITargetAnimationTagParameter
     {
-        [Display(Name = nameof(Texts.PartAnimationLink_TargetPartTag), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationLink_TargetPartTag), ResourceType = typeof(TextResource))]
         [TextEditor]
         public string TargetPartTag { get => targetPartTag; set => Set(ref targetPartTag, value); }
         private string targetPartTag = string.Empty;
 
-        [Display(Name = nameof(Texts.PartAnimationLink_TargetAnimationTag), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationLink_TargetAnimationTag), ResourceType = typeof(TextResource))]
         [TextEditor]
         public string TargetAnimationTag { get => targetAnimationTag; set => Set(ref targetAnimationTag, value); }
         private string targetAnimationTag = string.Empty;

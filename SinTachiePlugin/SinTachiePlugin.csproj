@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
+		<TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<FileVersion>1.2.0.0</FileVersion>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -94,10 +93,10 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
-		<Compile Update="Properties\Texts.Designer.cs">
+		<Compile Update="Properties\TextResource.Designer.cs">
 		  <DesignTime>True</DesignTime>
 		  <AutoGen>True</AutoGen>
-		  <DependentUpon>Texts.resx</DependentUpon>
+		  <DependentUpon>TextResource.resx</DependentUpon>
 		</Compile>
 	</ItemGroup>
 
@@ -126,18 +125,16 @@
 			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
-		<EmbeddedResource Update="Properties\Texts.resx">
+		<EmbeddedResource Update="Properties\TextResource.resx">
 		  <Generator>PublicResXFileCodeGenerator</Generator>
-		  <LastGenOutput>Texts.Designer.cs</LastGenOutput>
+		  <LastGenOutput>TextResource.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Control\" />
-	</ItemGroup>
-
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<!--
 		<Exec Command="mkdir &quot;$(YMM4DirPath)user\plugin\$(ProjectName)&quot; &gt; NUL 2&gt;&amp;1&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;E:\sinBeta\app\YukkuriMovieMaker_v4\user\plugin\$(ProjectName)\&quot;" />
+		-->
 	</Target>
 
 </Project>

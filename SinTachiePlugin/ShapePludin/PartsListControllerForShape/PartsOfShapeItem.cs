@@ -4,6 +4,7 @@ using YukkuriMovieMaker.Commons;
 
 namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
 {
+    [Obsolete]
     public class PartsOfShapeItem : Animatable
     {
         public string Root { get => root; set => Set(ref root, value); }

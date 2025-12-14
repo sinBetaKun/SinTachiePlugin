@@ -23,7 +23,7 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Clip
         public void CopyTo(IClipParameter parameter)
         {
             parameter.ClippingMode = ClippingMode;
-            parameter.ClippingArg = ClippingArg;
+            parameter.ClippingArg = ClippingMode.GetClone(ClippingArg);
         }
     }
 }

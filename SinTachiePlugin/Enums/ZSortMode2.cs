@@ -5,11 +5,13 @@ namespace SinTachiePlugin.Enums
 {
     internal enum ZSortMode2
     {
-        [Display(Name = nameof(Texts.ZSortMode_IgnoreZ), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.ZSortMode_IgnoreZ), ResourceType = typeof(TextResource))]
         IgnoreZ,
-        [Display(Name = nameof(Texts.ZSortMode_InGroup), ResourceType = typeof(Texts))]
-        InGroup,
-        [Display(Name = nameof(Texts.ZSortMode_IgnoreGroup), ResourceType = typeof(Texts))]
-        IgnoreGroup,
+        [Display(Name = nameof(TextResource.ZSortMode_BasedOnPriority), ResourceType = typeof(TextResource))]
+        BasedOnPriority,
+        [Display(Name = nameof(TextResource.ZSortMode_IgnorePriority), ResourceType = typeof(TextResource))]
+        IgnorePriority,
+        [Display(Name = nameof(TextResource.ZSortMode_DontOverride), ResourceType = typeof(TextResource))]
+        DontOverride,
     }
 }

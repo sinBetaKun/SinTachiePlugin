@@ -17,5 +17,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Argment.CustomMode
         public DrawingValueMode BlendMode { get; set; }
 
         public DrawingValueMode ZSortMode { get; set; }
+
+        public DrawingValueMode PriorityMode { get; set; }
     }
 }

@@ -5,11 +5,13 @@ namespace SinTachiePlugin.Enums
 {
     internal enum DrawingValueModeMaster
     {
-        [Display(Name = nameof(Texts.ValueMode_Override), Description = nameof(Texts.ValueMode_Override_Description), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.ValueMode_Override), Description = nameof(TextResource.ValueMode_Override_Description), ResourceType = typeof(TextResource))]
         Override,
-        [Display(Name = nameof(Texts.ValueMode_Compose), Description = nameof(Texts.ValueMode_Compose_Description), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.ValueMode_Compose), Description = nameof(TextResource.ValueMode_Compose_Description), ResourceType = typeof(TextResource))]
         Compose,
-        [Display(Name = nameof(Texts.ValueMode_Custom), Description = nameof(Texts.ValueMode_Custom_Description), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.ValueMode_Custom), Description = nameof(TextResource.ValueMode_Custom_Description), ResourceType = typeof(TextResource))]
         Custom,
+        [Display(Name = nameof(TextResource.ValueMode_DontOverride), Description = nameof(TextResource.ValueMode_Override_Description), ResourceType = typeof(TextResource))]
+        DontOverride,
     }
 }

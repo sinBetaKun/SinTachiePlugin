@@ -1,4 +1,5 @@
-﻿using Vortice.Direct2D1;
+﻿using SinTachiePlugin.Properties;
+using Vortice.Direct2D1;
 using YukkuriMovieMaker.Player.Video;
 
 namespace SinTachiePlugin.EffectChainFlag
@@ -7,7 +8,7 @@ namespace SinTachiePlugin.EffectChainFlag
     {
         private ID2D1Image? input;
 
-        public ID2D1Image Output => input ?? throw new ArgumentNullException("入力がありません");
+        public ID2D1Image Output => input ?? throw new ArgumentNullException(TextResource.ExpensionMessage_InputIsNull);
 
         public SInTachiePlugin_PartEffectChainFlag_Processor()
         {

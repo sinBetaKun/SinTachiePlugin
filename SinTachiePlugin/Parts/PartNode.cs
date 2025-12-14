@@ -8,6 +8,7 @@ using YukkuriMovieMaker.Player.Video;
 
 namespace SinTachiePlugin.Parts
 {
+    [Obsolete]
     public class PartNode : IDisposable
     {
         readonly public PartBlock block;

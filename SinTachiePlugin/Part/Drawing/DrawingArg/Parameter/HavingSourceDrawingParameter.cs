@@ -14,7 +14,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.Parameter
 {
     internal class HavingSourceDrawingParameter : DrawingArgBase, IModeMasterParameter, ISubArgParameter
     {
-        [Display(Name = nameof(Texts.PartParam_Drawing_Mode_Master), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartParam_Drawing_Mode_Master), ResourceType = typeof(TextResource))]
         [EnumComboBox]
         public DrawingValueModeMaster ModeMaster { get => modeMaster; set => Set(ref modeMaster, value); }
         private DrawingValueModeMaster modeMaster = DrawingValueModeMaster.Override;
@@ -58,7 +58,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.Parameter
             if (store.Load<ModeMasterSharedData>() is ModeMasterSharedData modeMasterSharedData)
                 ModeMaster = modeMasterSharedData.ModeMaster;
             if (store.Load<SubArgSharedData>() is SubArgSharedData subArgSharedData)
-                SubArg = subArgSharedData.SubArg;
+                SubArg = ModeMaster.GetClone(subArgSharedData.SubArg);
         }
     }
 }

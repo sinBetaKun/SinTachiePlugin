@@ -47,7 +47,7 @@ namespace SinTachiePlugin.Parts
         public ParamsOfPartNode(IGraphicsDevicesAndContext devices, PartBlock block, FrameAndLength fl, int fps, double voiceVolume)
         {
             FrameAndLength = new(fl);
-            Appear = block.Appear;
+            Appear = block.Hide;
             BlendMode = block.BlendMode;
             ZSortMode = block.ZSortMode;
             BusNum = (int)fl.GetValue(block.BusNum, fps);
@@ -91,7 +91,7 @@ namespace SinTachiePlugin.Parts
         {
             FrameAndLength.CopyFrom(fl);
 
-            var appear = block.Appear;
+            var appear = block.Hide;
             var blendMode = block.BlendMode;
             var zSortMode = block.ZSortMode;
             var busNum = (int)block.BusNum.GetValue(fl.Frame, fl.Length, fps);

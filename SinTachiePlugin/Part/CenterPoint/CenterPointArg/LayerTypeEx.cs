@@ -15,7 +15,6 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg
                 LayerType.Video => new HavingSourceCenterPointParameter(store),
                 LayerType.Scene => new HavingSourceCenterPointParameter(store),
                 LayerType.Group => new WithoutSourceCenterPointParameter(store),
-                LayerType.Group_CompressFrame => new HavingSourceCenterPointParameter(store),
                 _ => throw new ArgumentOutOfRangeException(nameof(type)),
             };
 
@@ -23,6 +22,22 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg
                 return param;
 
             return current;
+        }
+
+        public static CenterPointArgBase GetClone(this LayerType type, CenterPointArgBase origin)
+        {
+            var store = origin.GetSharedData();
+            CenterPointArgBase param = type switch
+            {
+                LayerType.Image => new HavingSourceCenterPointParameter(store),
+                LayerType.Psd => new HavingSourceCenterPointParameter(store),
+                LayerType.Video => new HavingSourceCenterPointParameter(store),
+                LayerType.Scene => new HavingSourceCenterPointParameter(store),
+                LayerType.Group => new WithoutSourceCenterPointParameter(store),
+                _ => throw new ArgumentOutOfRangeException(nameof(type)),
+            };
+
+            return param;
         }
     }
 }

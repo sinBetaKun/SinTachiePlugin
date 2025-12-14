@@ -3,19 +3,17 @@ using SinTachiePlugin.Properties;
 
 namespace SinTachiePlugin.Enums
 {
-    internal enum LayerType
+    public enum LayerType
     {
-        [Display(Name = nameof(Texts.LayerType_Image), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.LayerType_Image), ResourceType = typeof(TextResource))]
         Image,
-        [Display(Name = nameof(Texts.LayerType_Psd), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.LayerType_Psd), ResourceType = typeof(TextResource))]
         Psd,
-        [Display(Name = nameof(Texts.LayerType_Video), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.LayerType_Video), ResourceType = typeof(TextResource))]
         Video,
-        [Display(Name = nameof(Texts.LayerType_Scene), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.LayerType_Scene), ResourceType = typeof(TextResource))]
         Scene,
-        [Display(Name = nameof(Texts.LayerType_Group), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.LayerType_Group), ResourceType = typeof(TextResource))]
         Group,
-        [Display(Name = nameof(Texts.LayerType_Group_CompressFrame), ResourceType = typeof(Texts))]
-        Group_CompressFrame,
     }
 }

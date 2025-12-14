@@ -15,7 +15,6 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg
                 LayerType.Video => new HavingSourceDrawingParameter(store),
                 LayerType.Scene => new HavingSourceDrawingParameter(store),
                 LayerType.Group => new WithoutSourceDrawingParameter(store),
-                LayerType.Group_CompressFrame => new HavingSourceDrawingParameter(store),
                 _ => throw new ArgumentOutOfRangeException(nameof(type)),
             };
 
@@ -23,6 +22,22 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg
                 return param;
 
             return current;
+        }
+
+        public static DrawingArgBase GetClone(this LayerType type, DrawingArgBase origin)
+        {
+            var store = origin.GetSharedData();
+            DrawingArgBase param = type switch
+            {
+                LayerType.Image => new HavingSourceDrawingParameter(store),
+                LayerType.Psd => new HavingSourceDrawingParameter(store),
+                LayerType.Video => new HavingSourceDrawingParameter(store),
+                LayerType.Scene => new HavingSourceDrawingParameter(store),
+                LayerType.Group => new WithoutSourceDrawingParameter(store),
+                _ => throw new ArgumentOutOfRangeException(nameof(type)),
+            };
+
+            return param;
         }
     }
 }

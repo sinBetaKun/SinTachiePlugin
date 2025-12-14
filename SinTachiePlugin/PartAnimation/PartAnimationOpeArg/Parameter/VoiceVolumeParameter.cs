@@ -11,11 +11,11 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
 {
     internal class VoiceVolumeParameter : PartAnimationOpeArgBase, IAbrirParameter, ICerrarParameter
     {
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_Open), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_Open), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_Close), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_Close), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Cerrar { get; } = new Animation(0, -10000, 10000);
 

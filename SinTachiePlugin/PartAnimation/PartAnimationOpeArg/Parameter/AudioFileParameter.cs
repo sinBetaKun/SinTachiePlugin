@@ -16,27 +16,27 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
 {
     internal class AudioFileParameter : PartAnimationOpeArgBase, IAbrirParameter, ICerrarParameter, IAudioFilePathParameter, IStartFrameNumberParameter, IPlaybackSpeedParameter
     {
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_Open), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_Open), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Abrir { get; } = new Animation(100, -10000, 10000);
 
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_Close), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_Close), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", -100, 100)]
         public Animation Cerrar { get; } = new Animation(0, -10000, 10000);
 
-        [Display(Name = nameof(Texts.PartAnimationOpeMode_AudioFile), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_AudioFile), ResourceType = typeof(TextResource))]
         [FileSelector(YukkuriMovieMaker.Settings.FileGroupType.AudioItem)]
         public string AudioFilePath { get => audioFilePath; set => Set(ref audioFilePath, value); }
         private string audioFilePath = string.Empty;
 
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_StartFrameNumber), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_StartFrameNumber), ResourceType = typeof(TextResource))]
         [FrameNumberEditor]
         [DefaultValue(0)]
         [Range(0, 99999)]
         public int StartFrameNumber { get => startFrameNumber; set => Set(ref startFrameNumber, value); }
         private int startFrameNumber = 0;
 
-        [Display(Name = nameof(Texts.PartAnimationOpeArg_PlaybackSpeed), ResourceType = typeof(Texts))]
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_PlaybackSpeed), ResourceType = typeof(TextResource))]
         [TextBoxSlider("F2", "%", 0, 200)]
         [DefaultValue(100)]
         [Range(0, 99999)]
