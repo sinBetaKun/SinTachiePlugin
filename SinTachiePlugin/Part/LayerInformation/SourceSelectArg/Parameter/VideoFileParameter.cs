@@ -18,43 +18,43 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
 {
     internal class VideoFileParameter : SourceSelectArgBase, IParentParameter, IVideoFilePathParameter, IClipParameter, IPlaybackSpeedParameter, IStartFrameNumberParameter, ILoopPlaybackParameter
     {
-        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_Parent), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_Parent), ResourceType = typeof(TextResource))]
         [TextEditor]
-        public string Parent { get => parent; set => Set(ref parent, value); }
-        private string parent = string.Empty;
+        public string Parent { get => _parent; set => Set(ref _parent, value); }
+        private string _parent = string.Empty;
 
-        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_VideoFile), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_VideoFile), ResourceType = typeof(TextResource))]
         [FileSelector(YukkuriMovieMaker.Settings.FileGroupType.VideoItem)]
-        public string VideoFilePath { get => videoFilePath; set => Set(ref videoFilePath, value); }
-        private string videoFilePath = string.Empty;
+        public string VideoFilePath { get => _videoFilePath; set => Set(ref _videoFilePath, value); }
+        private string _videoFilePath = string.Empty;
 
-        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_ClippingMode), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_ClippingMode), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public ClippingMode ClippingMode { get => clippingMode; set => Set(ref clippingMode, value); }
-        private ClippingMode clippingMode = ClippingMode.DontClip;
+        public ClippingMode ClippingMode { get => _clippingMode; set => Set(ref _clippingMode, value); }
+        private ClippingMode _clippingMode = ClippingMode.DontClip;
 
         [Display(AutoGenerateField = true)]
-        public ClippingArgBase ClippingArg { get => clippingArg; set => Set(ref clippingArg, value); }
-        private ClippingArgBase clippingArg = new DontClipParameter();
+        public ClippingArgBase ClippingArg { get => _clippingArg; set => Set(ref _clippingArg, value); }
+        private ClippingArgBase _clippingArg = new DontClipParameter();
 
-        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_PlaybackSpeed), ResourceType = typeof(TextResource))]
-        [FrameNumberEditor]
-        [DefaultValue(0)]
-        [Range(0, 99999)]
-        public double PlaybackSpeed { get => playbackSpeed; set => Set(ref playbackSpeed, value); }
-        private double playbackSpeed = 1.0;
-
-        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_StartFrameNumber), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_PlaybackSpeed), ResourceType = typeof(TextResource))]
         [TextBoxSlider("F2", "%", 0, 200)]
         [DefaultValue(100)]
         [Range(0, 99999)]
-        public int StartFrameNumber { get => startFrameNumber; set => Set(ref startFrameNumber, value); }
-        private int startFrameNumber = 0;
+        public double PlaybackSpeed { get => _playbackSpeed; set => Set(ref _playbackSpeed, value); }
+        private double _playbackSpeed = 100.0;
 
-        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_LoopPlayback), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_StartFrameNumber), ResourceType = typeof(TextResource))]
+        [FrameNumberEditor]
+        [DefaultValue(0)]
+        [Range(0, 99999)]
+        public int StartFrameNumber { get => _startFrameNumber; set => Set(ref _startFrameNumber, value); }
+        private int _startFrameNumber = 0;
+
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_LoopPlayback), ResourceType = typeof(TextResource))]
         [ToggleSlider]
-        public bool LoopPlayback { get => loopPlayback; set => Set(ref loopPlayback, value); }
-        private bool loopPlayback = false;
+        public bool LoopPlayback { get => _loopPlayback; set => Set(ref _loopPlayback, value); }
+        private bool _loopPlayback = false;
 
         public VideoFileParameter()
         {
@@ -79,7 +79,7 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
             if (origin is IClipParameter clippingParameter)
             {
                 ClippingMode = clippingParameter.ClippingMode;
-                ClippingArg = clippingParameter.ClippingArg;
+                ClippingArg = clippingParameter.ClippingArg.GetClone();
             }
             if (origin is IPlaybackSpeedParameter playbackSpeedParameter)
                 PlaybackSpeed = playbackSpeedParameter.PlaybackSpeed;
@@ -89,7 +89,14 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 LoopPlayback = loopPlaybackParameter.LoopPlayback;
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [];
+        public override SourceSelectArgBase GetClone()
+        {
+            VideoFileParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
+        }
+
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [ClippingArg];
 
         protected override void SaveSharedData(SharedDataStore store)
         {

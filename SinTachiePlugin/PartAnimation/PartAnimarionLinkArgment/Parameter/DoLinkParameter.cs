@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Argment.TargetAnimationTag;
 using SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Argment.TargetPartTag;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Abrir;
 using SinTachiePlugin.Properties;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
@@ -29,12 +28,19 @@ namespace SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Parameter
         {
         }
 
-        public override void CopyTo(PartAnimationLinkArgBase? origin)
+        public override void CopyFrom(PartAnimationLinkArgBase? origin)
         {
             if (origin is ITargetPartTagParameter targetPartTagParameter)
                 targetPartTagParameter.TargetPartTag = TargetPartTag;
             if (origin is ITargetAnimationTagParameter targetAnimationTagParameter)
                 targetAnimationTagParameter.TargetAnimationTag = TargetAnimationTag;
+        }
+
+        public override PartAnimationLinkArgBase GetClone()
+        {
+            DoLinkParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
         }
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => [];

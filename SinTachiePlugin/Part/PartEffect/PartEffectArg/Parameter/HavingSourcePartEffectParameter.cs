@@ -27,6 +27,13 @@ namespace SinTachiePlugin.Part.PartEffect.PartEffectArg.Parameter
                 effects = [.. effectsParameter.Effects];
         }
 
+        public override PartEffectArgBase GetClone()
+        {
+            HavingSourcePartEffectParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
+        }
+
         protected override IEnumerable<IAnimatable> GetAnimatables() => [.. Effects];
 
         protected override void SaveSharedData(SharedDataStore store)

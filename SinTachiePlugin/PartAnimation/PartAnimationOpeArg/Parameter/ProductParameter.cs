@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SinTachiePlugin.Draw;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Abrir;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Cerrar;
-using SinTachiePlugin.Parts;
 using SinTachiePlugin.Properties;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
@@ -47,6 +47,13 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
                 Abrir.CopyFrom(abrirParam.Abrir);
             if (origin is ICerrarParameter cerrarParam)
                 Cerrar.CopyFrom(cerrarParam.Cerrar);
+        }
+
+        public override PartAnimationOpeArgBase GetClone()
+        {
+            ProductParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
         }
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => [Abrir, Cerrar];

@@ -13,8 +13,15 @@ namespace SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Parameter
         {
         }
 
-        public override void CopyTo(PartAnimationLinkArgBase? origin)
+        public override void CopyFrom(PartAnimationLinkArgBase? origin)
         {
+        }
+
+        public override PartAnimationLinkArgBase GetClone()
+        {
+            DontLinkParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
         }
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => [];

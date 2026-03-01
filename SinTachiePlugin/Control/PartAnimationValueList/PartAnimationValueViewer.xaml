@@ -7,7 +7,7 @@
              xmlns:local2="clr-namespace:SinTachiePlugin.PartAnimation"
              xmlns:local3="clr-namespace:SinTachiePlugin.Enums"
              xmlns:resx="clr-namespace:SinTachiePlugin.Properties"
-             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local2:PartAnimationValue}">
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local2:PartAnimationValueExtra}">
     <Grid Margin="2">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>

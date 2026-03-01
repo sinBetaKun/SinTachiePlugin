@@ -53,9 +53,6 @@
 		<Reference Include="YukkuriMovieMaker.Plugin.FileSource.Psd">
 			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Plugin.FileSource.Psd.dll</HintPath>
 		</Reference>
-		<Reference Include="YukkuriMovieMaker.Plugin.Tachie.AnimationTachie">
-			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Plugin.Tachie.AnimationTachie.dll</HintPath>
-		</Reference>
 		<Reference Include="YukkuriMovieMaker.Plugin.Tachie.Psd">
 			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Plugin.Tachie.Psd.dll</HintPath>
 		</Reference>
@@ -129,6 +126,10 @@
 		  <Generator>PublicResXFileCodeGenerator</Generator>
 		  <LastGenOutput>TextResource.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="PartAnimation\PartAnimationOpeArg\Argment\NormalizationMode\" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

@@ -23,21 +23,5 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg
 
             return current;
         }
-
-        public static DrawingArgBase GetClone(this LayerType type, DrawingArgBase origin)
-        {
-            var store = origin.GetSharedData();
-            DrawingArgBase param = type switch
-            {
-                LayerType.Image => new HavingSourceDrawingParameter(store),
-                LayerType.Psd => new HavingSourceDrawingParameter(store),
-                LayerType.Video => new HavingSourceDrawingParameter(store),
-                LayerType.Scene => new HavingSourceDrawingParameter(store),
-                LayerType.Group => new WithoutSourceDrawingParameter(store),
-                _ => throw new ArgumentOutOfRangeException(nameof(type)),
-            };
-
-            return param;
-        }
     }
 }

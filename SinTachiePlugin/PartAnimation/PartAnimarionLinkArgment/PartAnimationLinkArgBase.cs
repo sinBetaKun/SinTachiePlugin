@@ -17,6 +17,8 @@ namespace SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment
         {
         }
 
-        public abstract void CopyTo(PartAnimationLinkArgBase? origin);
+        public abstract void CopyFrom(PartAnimationLinkArgBase? origin);
+
+        public abstract PartAnimationLinkArgBase GetClone();
     }
 }

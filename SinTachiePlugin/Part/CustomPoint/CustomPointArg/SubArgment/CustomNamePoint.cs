@@ -1,4 +1,4 @@
-﻿namespace SinTachiePlugin.Part.CustomPoint.CustomPointArg
+﻿namespace SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgment
 {
     internal class CustomNamePoint
     {

@@ -9,19 +9,13 @@ using YukkuriMovieMaker.Settings;
 
 namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
 {
-    internal class ImageFileNodeManager : IDisposable
+    internal class ImageFileNodeManager
     {
-        private readonly IGraphicsDevicesAndContext _devices;
         private readonly ImageFileNode? _root;
-        private string _nowPath = string.Empty;
-        public IImageFileSource? Source { get; private set; }
-        public int Width { get; private set; } = 0;
-        public int Height { get; private set; } = 0;
+        public string Value = string.Empty;
 
-        public ImageFileNodeManager(string path, IGraphicsDevicesAndContext _device)
+        public ImageFileNodeManager(string path)
         {
-            _devices = _device;
-
             if (string.IsNullOrEmpty(path))
                 // パスが空文字列の場合
                 return;
@@ -143,6 +137,8 @@ namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
                     AddLeaf(tmp, kv.Value);
                 }
             }
+
+            Value = path;
         }
 
         private void AddLeaf(ImageFileNode node, int[] indexs)
@@ -162,7 +158,7 @@ namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
 
             for (int i = 0; i < len - 1; i++)
             {
-                ImageFileNode? tmp2 = tmp.Children.FirstOrDefault(node => node.Index == indexs[i]);
+                ImageFileNode? tmp2 = tmp.VolumeChildren.FirstOrDefault(node => node.Index == indexs[i]);
 
                 if (tmp2 is null)
                 {
@@ -170,7 +166,7 @@ namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
                     {
                         // 空のノードを追加
                         tmp2 = new ImageFileNode() { Depth = i + 1, Index = indexs[j] };
-                        tmp.Children.Add(tmp2);
+                        tmp.VolumeChildren.Add(tmp2);
                         tmp = tmp2;
                     }
 
@@ -182,7 +178,7 @@ namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
                 }
             }
 
-            var indexs2 = (from child in tmp.Children select child.Index).ToList();
+            var indexs2 = (from child in tmp.VolumeChildren select child.Index).ToList();
             var index = indexs2.IndexOf(indexs.Last());
 
             if (index < 0)
@@ -192,92 +188,62 @@ namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
 
                 if (node.Index < 0)
                 {
-                    tmp.Children.Add(node);
+                    tmp.VolumeChildren.Add(node);
                     return;
                 }
 
-                int num = tmp.Children.Count - (indexs2.Contains(-1) ? 1 : 0);
+                int num = tmp.VolumeChildren.Count - (indexs2.Contains(-1) ? 1 : 0);
 
                 if (node.Index < 0)
                 {
                     for (int i = num - 1; i > -1; i--)
                     {
-                        if (tmp.Children[i].Index > 0)
+                        if (tmp.VolumeChildren[i].Index > 0)
                         {
-                            tmp.Children.Add(node);
+                            tmp.VolumeChildren.Add(node);
                             return;
                         }
 
-                        if (tmp.Children[i].Index < node.Index)
+                        if (tmp.VolumeChildren[i].Index < node.Index)
                         {
-                            tmp.Children.Insert(i + 1, node);
+                            tmp.VolumeChildren.Insert(i + 1, node);
                             return;
                         }
                     }
 
-                    tmp.Children.Insert(num, node);
+                    tmp.VolumeChildren.Insert(num, node);
                     return;
                 }
 
                 for (int i = 0; i < num; i++)
                 {
-                    if (tmp.Children[i].Index < 0)
+                    if (tmp.VolumeChildren[i].Index < 0)
                     {
-                        tmp.Children.Insert(i, node);
+                        tmp.VolumeChildren.Insert(i, node);
                         return;
                     }
 
-                    if (tmp.Children[i].Index > node.Index)
+                    if (tmp.VolumeChildren[i].Index > node.Index)
                     {
-                        tmp.Children.Insert(i, node);
+                        tmp.VolumeChildren.Insert(i, node);
                         return;
                     }
                 }
 
-                tmp.Children.Insert(num, node);
+                tmp.VolumeChildren.Insert(num, node);
                 return;
             }
         }
 
-        public void UpdateSource(List<double> values, List<PartAnimationNormalizationMode> outers)
+        public void Update(List<double> values, List<PartAnimationNormalizationMode> outers)
         {
             if (_root is not null)
             {
                 if (_root.GetValue(values, outers) is string path)
                 {
-                    if (_nowPath != path)
-                    {
-                        _nowPath = path;
-                        Source?.Dispose();
-                        Source = ImageFileSourceFactory.Create(_devices, path);
-                        if (Source is not null)
-                        {
-                            SizeI size = Source.Output.PixelSize;
-                            if (Width != size.Width || Height != size.Height)
-                            {
-                                Width = size.Width;
-                                Height = size.Height;
-                            }
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    Value = path;
                 }
             }
-
-            Source = null;
-            Width = 0;
-            Height = 0;
         }
-
-        #region IDisposable
-        public void Dispose()
-        {
-            Source?.Dispose();
-        }
-        #endregion
     }
 }

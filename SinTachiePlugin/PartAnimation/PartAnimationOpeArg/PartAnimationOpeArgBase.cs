@@ -1,4 +1,4 @@
-﻿using SinTachiePlugin.Parts;
+﻿using SinTachiePlugin.Draw;
 using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg
@@ -16,5 +16,7 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg
         public abstract double GetValue(FrameAndLength fl, int fps, double voiceVolume);
 
         public abstract void CopyFrom(PartAnimationOpeArgBase? origin);
+
+        public abstract PartAnimationOpeArgBase GetClone();
     }
 }

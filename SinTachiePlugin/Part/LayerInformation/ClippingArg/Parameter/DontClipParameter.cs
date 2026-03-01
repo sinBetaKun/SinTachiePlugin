@@ -17,6 +17,13 @@ namespace SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter
         {
         }
 
+        public override ClippingArgBase GetClone()
+        {
+            DontClipParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
+        }
+
         protected override IEnumerable<IAnimatable> GetAnimatables() => [];
 
         protected override void SaveSharedData(SharedDataStore store)

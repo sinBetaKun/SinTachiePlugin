@@ -12,6 +12,8 @@ namespace SinTachiePlugin.Part.LayerInformation.ClippingArg
         {
         }
 
+        public abstract ClippingArgBase GetClone();
+
         public abstract void CopyFrom(ClippingArgBase? origin);
     }
 }

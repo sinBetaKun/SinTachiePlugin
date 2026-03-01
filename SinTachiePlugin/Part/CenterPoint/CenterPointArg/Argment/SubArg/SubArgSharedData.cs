@@ -1,10 +1,5 @@
 ﻿using SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment;
 using SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment.Parameter;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.Argment.SubArg
 {
@@ -18,12 +13,12 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.Argment.SubArg
 
         public SubArgSharedData(ISubArgParameter parameter)
         {
-            SubArg = parameter.SubArg;
+            SubArg = parameter.SubArg.GetClone();
         }
 
         public void CopyTo(ISubArgParameter parameter)
         {
-            parameter.SubArg = SubArg;
+            parameter.SubArg = SubArg.GetClone();
         }
     }
 }

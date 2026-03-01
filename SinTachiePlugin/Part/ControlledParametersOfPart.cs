@@ -8,6 +8,7 @@ using SinTachiePlugin.Part.Drawing.DrawingArg;
 using SinTachiePlugin.Part.Drawing.DrawingArg.Parameter;
 using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Parameter;
 using SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter;
+using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Parameter;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter;
 using SinTachiePlugin.Part.PartEffect.PartEffectArg;
@@ -83,12 +84,12 @@ namespace SinTachiePlugin.Part
             Tag = origin.Tag;
             Comment = origin.Comment;
 
-            SourceSelectArg = ThisLayerType.GetClone(origin.SourceSelectArg);
-            DrawingArg = ThisLayerType.GetClone(origin.DrawingArg);
-            CenterPointArg = ThisLayerType.GetClone(origin.CenterPointArg);
-            CustomPointArg = ThisLayerType.GetClone(origin.CustomPointArg);
-            ValueDependentArg = ThisLayerType.GetClone(origin.ValueDependentArg);
-            PartEffectArg = ThisLayerType.GetClone(origin.PartEffectArg);
+            SourceSelectArg = origin.SourceSelectArg.GetClone();
+            DrawingArg = origin.DrawingArg.GetClone();
+            CenterPointArg = origin.CenterPointArg.GetClone();
+            CustomPointArg = origin.CustomPointArg.GetClone();
+            ValueDependentArg = origin.ValueDependentArg.GetClone();
+            PartEffectArg = origin.PartEffectArg.GetClone();
         }
 
         [Obsolete]
@@ -103,15 +104,36 @@ namespace SinTachiePlugin.Part
                 Parent = block.Parent,
                 ImageFilePath = block.ImagePath,
                 ClippingMode = ClippingMode.DontClip,
-                ClippingArg = new DontClipParameter(),
-                PartAnimationValues = [.. block.LayerValues.Select(v => new PartAnimationValue(v))]
+                ClippingArg = new DontClipParameter()
             };
-            SourceSelectArg = ip;
 
-            for (int i = 0; i < ip.PartAnimationValues.Count; i++)
+            if (block.LayerValues.Count > 1)
             {
-                ip.PartAnimationValues[i].Index = i + 1;
+                MultiValuesParameter multiValuesParameter = new()
+                {
+                    PartAnimationValues = [.. block.LayerValues.Select(v => new PartAnimationValueExtra(v))]
+                };
+
+                for (int i = 0; i < multiValuesParameter.PartAnimationValues.Count; i++)
+                {
+                    multiValuesParameter.PartAnimationValues[i].Index = i + 1;
+                }
+
+                ip.PartAnimationValueMode = PartAnimationValueMode.Multi;
+                ip.PartAnimationValueArg = multiValuesParameter;
+                
             }
+            else if (block.LayerValues.Count > 0)
+            {
+                SingleValueParameter singleValueParameter = new()
+                {
+                    PartAnimationValue = new(block.LayerValues.First())
+                };
+                ip.PartAnimationValueMode = PartAnimationValueMode.Single;
+                ip.PartAnimationValueArg = singleValueParameter;
+            }
+
+            SourceSelectArg = ip;
 
             Comment = block.Comment;
             #endregion

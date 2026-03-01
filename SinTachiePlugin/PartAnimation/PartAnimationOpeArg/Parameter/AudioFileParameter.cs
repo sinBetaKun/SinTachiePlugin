@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using NAudio.Wave;
+using SinTachiePlugin.Draw;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Abrir;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.AudioFilePath;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Cerrar;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.PlaybackSpeed;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.StartFrameNumber;
-using SinTachiePlugin.Parts;
 using SinTachiePlugin.Properties;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
@@ -84,6 +84,13 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
                 StartFrameNumber = startFrameNumberParam.StartFrameNumber;
             if (origin is IPlaybackSpeedParameter playbackSpeedParameter)
                 PlaybackSpeed = playbackSpeedParameter.PlaybackSpeed;
+        }
+
+        public override PartAnimationOpeArgBase GetClone()
+        {
+            AudioFileParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
         }
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => [Abrir, Cerrar];

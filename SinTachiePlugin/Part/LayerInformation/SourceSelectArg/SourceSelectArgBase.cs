@@ -12,6 +12,8 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg
         {
         }
 
+        public abstract SourceSelectArgBase GetClone();
+
         public abstract void CopyFrom(SourceSelectArgBase? origin);
     }
 }

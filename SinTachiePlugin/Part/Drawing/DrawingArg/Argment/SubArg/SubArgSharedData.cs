@@ -1,10 +1,5 @@
 ﻿using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment;
 using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Parameter;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SinTachiePlugin.Part.Drawing.DrawingArg.Argment.SubArg
 {
@@ -18,12 +13,12 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.Argment.SubArg
 
         public SubArgSharedData(ISubArgParameter parameter)
         {
-            SubArg = parameter.SubArg;
+            SubArg = parameter.SubArg.GetClone();
         }
 
         public void CopyTo(ISubArgParameter parameter)
         {
-            parameter.SubArg = SubArg;
+            parameter.SubArg = SubArg.GetClone();
         }
     }
 }

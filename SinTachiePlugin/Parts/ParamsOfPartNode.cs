@@ -9,6 +9,7 @@ using YukkuriMovieMaker.Plugin.Effects;
 
 namespace SinTachiePlugin.Parts
 {
+    [Obsolete]
     internal class ParamsOfPartNode : IDisposable
     {
         readonly DisposeCollector disposer = new();

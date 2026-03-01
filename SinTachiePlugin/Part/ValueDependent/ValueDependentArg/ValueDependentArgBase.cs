@@ -12,6 +12,8 @@ namespace SinTachiePlugin.Part.ValueDependent.ValueDependentArg
         {
         }
 
+        public abstract ValueDependentArgBase GetClone();
+
         public abstract void CopyFrom(ValueDependentArgBase? origin);
     }
 }

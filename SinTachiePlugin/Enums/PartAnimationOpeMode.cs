@@ -17,6 +17,8 @@ namespace SinTachiePlugin.Enums
         VoiceVolume,
         [Display(Name = nameof(TextResource.PartAnimationOpeMode_VoiceVolumePlus), ResourceType = typeof(TextResource))]
         VoiceVolumePlus,
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_AIUEOMouth), ResourceType = typeof(TextResource))]
+        AIUEOMouth,
         [Display(Name = nameof(TextResource.PartAnimationOpeMode_PeriodicShuttle), ResourceType = typeof(TextResource))]
         PeriodicShuttle,
         [Display(Name = nameof(TextResource.PartAnimationOpeMode_PeriodicLoop), ResourceType = typeof(TextResource))]

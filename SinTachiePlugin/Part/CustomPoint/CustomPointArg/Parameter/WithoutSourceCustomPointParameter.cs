@@ -17,6 +17,13 @@ namespace SinTachiePlugin.Part.CustomPoint.CustomPointArg.Parameter
         {
         }
 
+        public override CustomPointArgBase GetClone()
+        {
+            WithoutSourceCustomPointParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
+        }
+
         protected override IEnumerable<IAnimatable> GetAnimatables() => [];
 
         protected override void SaveSharedData(SharedDataStore store)

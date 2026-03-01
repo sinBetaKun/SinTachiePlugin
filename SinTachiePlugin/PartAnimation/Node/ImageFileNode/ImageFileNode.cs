@@ -1,6 +1,7 @@
 ﻿using SinTachiePlugin.Enums;
 using SinTachiePlugin.Informations;
 using SinTachiePlugin.Properties;
+using YukkuriMovieMaker.Plugin.Voice;
 
 namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
 {
@@ -10,7 +11,8 @@ namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
         public int Index = -1;
         public int Depth = -1;
 
-        public readonly List<ImageFileNode> Children = [];
+        public readonly List<ImageFileNode> VolumeChildren = [];
+        public readonly ImageFileNode?[] VowelChildren = new ImageFileNode?[6];
 
         public ImageFileNode()
         {
@@ -58,16 +60,16 @@ namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
                     num2 = 0;
                 }
 
-                if (Children.Any(child => child.Index < 0))
+                if (VolumeChildren.Any(child => child.Index < 0))
                 {
-                    int layerIndex = (int)(value * (Children.Count - 1 + num)) + num2;
-                    ret = Children[layerIndex].GetValue(values, outers);
+                    int layerIndex = (int)(value * (VolumeChildren.Count - 1 + num)) + num2;
+                    ret = VolumeChildren[layerIndex].GetValue(values, outers);
                 }
                 else
                 {
-                    int layerIndex = (int)(value * (Children.Count + num)) + num2;
-                    if (layerIndex == Children.Count) return path;
-                    ret = Children[layerIndex].GetValue(values, outers);
+                    int layerIndex = (int)(value * (VolumeChildren.Count + num)) + num2;
+                    if (layerIndex == VolumeChildren.Count) return path;
+                    ret = VolumeChildren[layerIndex].GetValue(values, outers);
                 }
 
                 return ret ?? path;

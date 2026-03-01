@@ -12,7 +12,7 @@ namespace SinTachiePlugin.Control.PartAnimationValueList
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
 
-        private List<PartAnimationValue> _clipboad = [];
+        private List<PartAnimationValueExtra> _clipboad = [];
 
         public PartAnimationValueListView()
         {
@@ -59,7 +59,7 @@ namespace SinTachiePlugin.Control.PartAnimationValueList
             if (DataContext is not PartAnimationValueListViewModel vm)
                 return;
 
-            List<PartAnimationValue> selecteds = GetSelecteds();
+            List<PartAnimationValueExtra> selecteds = GetSelecteds();
 
             if (selecteds.Count > 1)
             {
@@ -106,12 +106,12 @@ namespace SinTachiePlugin.Control.PartAnimationValueList
             }
         }
 
-        private List<PartAnimationValue> GetSelecteds()
+        private List<PartAnimationValueExtra> GetSelecteds()
         {
-            List<PartAnimationValue> selecteds = [];
+            List<PartAnimationValueExtra> selecteds = [];
 
             foreach (var selected in ItemList.SelectedItems)
-                if (selected is PartAnimationValue item)
+                if (selected is PartAnimationValueExtra item)
                     selecteds.Add(item);
 
             return selecteds;
@@ -122,7 +122,7 @@ namespace SinTachiePlugin.Control.PartAnimationValueList
             if (DataContext is not PartAnimationValueListViewModel vm)
                 return;
 
-            vm.InsertItems([new PartAnimationValue()]);
+            vm.InsertItems([new PartAnimationValueExtra()]);
         }
 
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
@@ -181,14 +181,14 @@ namespace SinTachiePlugin.Control.PartAnimationValueList
             vm.InsertItems(GetCloneOfSelected());
         }
 
-        private List<PartAnimationValue> GetCloneOfSelected()
+        private List<PartAnimationValueExtra> GetCloneOfSelected()
         {
-            return [.. GetSelecteds().Select(v => new PartAnimationValue(v))];
+            return [.. GetSelecteds().Select(v => new PartAnimationValueExtra(v))];
         }
 
-        private List<PartAnimationValue> GetCloneOfClipboad()
+        private List<PartAnimationValueExtra> GetCloneOfClipboad()
         {
-            return [.. _clipboad.Select(v => new PartAnimationValue(v))];
+            return [.. _clipboad.Select(v => new PartAnimationValueExtra(v))];
         }
     }
 }

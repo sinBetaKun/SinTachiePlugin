@@ -24,21 +24,5 @@ namespace SinTachiePlugin.Part.ValueDependent.ValueDependentArg
 
             return current;
         }
-
-        public static ValueDependentArgBase GetClone(this LayerType type, ValueDependentArgBase origin)
-        {
-            SharedDataStore store = origin.GetSharedData();
-            ValueDependentArgBase param = type switch
-            {
-                LayerType.Image => new HavingSourceValueDependentParameter(store),
-                LayerType.Psd => new HavingSourceValueDependentParameter(store),
-                LayerType.Video => new HavingSourceValueDependentParameter(store),
-                LayerType.Scene => new HavingSourceValueDependentParameter(store),
-                LayerType.Group => new WithoutSourceValueDependentParameter(store),
-                _ => throw new ArgumentOutOfRangeException(nameof(type)),
-            };
-
-            return param;
-        }
     }
 }

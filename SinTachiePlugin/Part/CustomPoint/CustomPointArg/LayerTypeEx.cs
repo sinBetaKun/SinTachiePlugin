@@ -24,21 +24,5 @@ namespace SinTachiePlugin.Part.CustomPoint.CustomPointArg
 
             return current;
         }
-
-        public static CustomPointArgBase GetClone(this LayerType type, CustomPointArgBase origin)
-        {
-            SharedDataStore store = origin.GetSharedData();
-            CustomPointArgBase param = type switch
-            {
-                LayerType.Image => new HavingSourceCustomPointParameter(store),
-                LayerType.Psd => new HavingSourceCustomPointParameter(store),
-                LayerType.Video => new HavingSourceCustomPointParameter(store),
-                LayerType.Scene => new HavingSourceCustomPointParameter(store),
-                LayerType.Group => new WithoutSourceCustomPointParameter(store),
-                _ => throw new ArgumentOutOfRangeException(nameof(type)),
-            };
-
-            return param;
-        }
     }
 }

@@ -34,6 +34,13 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment.Parameter
             }
         }
 
+        public override CenterPointSubArgBase GetClone()
+        {
+            OnlyCoordinateParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
+        }
+
         protected override IEnumerable<IAnimatable> GetAnimatables() => [X, Y];
 
         protected override void SaveSharedData(SharedDataStore store)

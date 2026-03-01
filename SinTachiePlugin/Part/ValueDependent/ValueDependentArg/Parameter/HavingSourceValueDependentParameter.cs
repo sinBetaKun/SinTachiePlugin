@@ -67,6 +67,13 @@ namespace SinTachiePlugin.Part.ValueDependent.ValueDependentArg.Parameter
             }
         }
 
+        public override ValueDependentArgBase GetClone()
+        {
+            HavingSourceValueDependentParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
+        }
+
         protected override IEnumerable<IAnimatable> GetAnimatables() => [];
 
         protected override void SaveSharedData(SharedDataStore store)

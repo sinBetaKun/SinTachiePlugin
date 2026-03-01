@@ -12,6 +12,8 @@ namespace SinTachiePlugin.Part.PartEffect.PartEffectArg
         {
         }
 
+        public abstract PartEffectArgBase GetClone();
+
         public abstract void CopyFrom(PartEffectArgBase? origin);
     }
 }

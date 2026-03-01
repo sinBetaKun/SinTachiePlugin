@@ -22,20 +22,5 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment
 
             return current;
         }
-
-        public static DrawingSubArgBase GetClone(this DrawingValueModeMaster mode, DrawingSubArgBase origin)
-        {
-            var store = origin.GetSharedData();
-            DrawingSubArgBase param = mode switch
-            {
-                DrawingValueModeMaster.Override => new MasterModeParameter(store),
-                DrawingValueModeMaster.Compose => new MasterModeParameter(store),
-                DrawingValueModeMaster.Custom => new CustomModeParameter(store),
-                DrawingValueModeMaster.DontOverride => new DontOverrideParameter(store),
-                _ => throw new ArgumentOutOfRangeException(nameof(mode)),
-            };
-
-            return param;
-        }
     }
 }

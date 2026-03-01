@@ -25,6 +25,13 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 IsOpened = isOpenedParameter.IsOpened;
         }
 
+        public override SourceSelectArgBase GetClone()
+        {
+            GroupParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
+        }
+
         protected override IEnumerable<IAnimatable> GetAnimatables() => [];
 
         protected override void SaveSharedData(SharedDataStore store)

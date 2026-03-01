@@ -196,6 +196,24 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   カスタムポイントを作る に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CustomPointDefineMode_DoMake {
+            get {
+                return ResourceManager.GetString("CustomPointDefineMode_DoMake", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   カスタムポイントを作らない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CustomPointDefineMode_DontMake {
+            get {
+                return ResourceManager.GetString("CustomPointDefineMode_DontMake", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   stpiファイルから情報を取得できませんでした。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ErrorMessage_FailToGetInfoFromStpi {
@@ -637,6 +655,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   あいうえお口パク に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationOpeMode_AIUEOMouth {
+            get {
+                return ResourceManager.GetString("PartAnimationOpeMode_AIUEOMouth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   音声ファイル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartAnimationOpeMode_AudioFile {
@@ -700,7 +727,7 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   口パク に類似しているローカライズされた文字列を検索します。
+        ///   音量口パク に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartAnimationOpeMode_VoiceVolume {
             get {
@@ -709,11 +736,38 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   口パク＋ に類似しているローカライズされた文字列を検索します。
+        ///   音量口パク＋ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartAnimationOpeMode_VoiceVolumePlus {
             get {
                 return ResourceManager.GetString("PartAnimationOpeMode_VoiceVolumePlus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   多次元でアニメーションを指定する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueMode_Multi {
+            get {
+                return ResourceManager.GetString("PartAnimationValueMode_Multi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   アニメーションを指定しない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueMode_None {
+            get {
+                return ResourceManager.GetString("PartAnimationValueMode_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   アニメーションを指定する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationValueMode_Single {
+            get {
+                return ResourceManager.GetString("PartAnimationValueMode_Single", resourceCulture);
             }
         }
         
@@ -1035,144 +1089,153 @@ namespace SinTachiePlugin.Properties {
         /// <summary>
         ///   クリッピングモード に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_ClippingMode {
+        public static string PartParam_LayerInfo_SourceSelectArg_ClippingMode {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_ClippingMode", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_ClippingMode", resourceCulture);
             }
         }
         
         /// <summary>
         ///   レイヤー に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_EnablePsdLayers {
+        public static string PartParam_LayerInfo_SourceSelectArg_EnablePsdLayers {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_EnablePsdLayers", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_EnablePsdLayers", resourceCulture);
             }
         }
         
         /// <summary>
         ///   パーツ備考 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_GroupComment {
+        public static string PartParam_LayerInfo_SourceSelectArg_GroupComment {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_GroupComment", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_GroupComment", resourceCulture);
             }
         }
         
         /// <summary>
         ///   画像 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_ImageFile {
+        public static string PartParam_LayerInfo_SourceSelectArg_ImageFile {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_ImageFile", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_ImageFile", resourceCulture);
             }
         }
         
         /// <summary>
         ///   画像を合成 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_IsCompressFrame {
+        public static string PartParam_LayerInfo_SourceSelectArg_IsCompressFrame {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_IsCompressFrame", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_IsCompressFrame", resourceCulture);
             }
         }
         
         /// <summary>
         ///   ループ再生 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_LoopPlayback {
+        public static string PartParam_LayerInfo_SourceSelectArg_LoopPlayback {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_LoopPlayback", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_LoopPlayback", resourceCulture);
             }
         }
         
         /// <summary>
         ///   親 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_Parent {
+        public static string PartParam_LayerInfo_SourceSelectArg_Parent {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_Parent", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_Parent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ｱﾆﾒｰｼｮﾝモード に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_LayerInfo_SourceSelectArg_PartAnimationValueMode {
+            get {
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_PartAnimationValueMode", resourceCulture);
             }
         }
         
         /// <summary>
         ///   アニメーション に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_PartAnimationValues {
+        public static string PartParam_LayerInfo_SourceSelectArg_PartAnimationValues {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_PartAnimationValues", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_PartAnimationValues", resourceCulture);
             }
         }
         
         /// <summary>
         ///   パーツ備考 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_PartComment {
+        public static string PartParam_LayerInfo_SourceSelectArg_PartComment {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_PartComment", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_PartComment", resourceCulture);
             }
         }
         
         /// <summary>
         ///   クリッピング先 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_PartToClipTo {
+        public static string PartParam_LayerInfo_SourceSelectArg_PartToClipTo {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_PartToClipTo", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_PartToClipTo", resourceCulture);
             }
         }
         
         /// <summary>
         ///   再生速度 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_PlaybackSpeed {
+        public static string PartParam_LayerInfo_SourceSelectArg_PlaybackSpeed {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_PlaybackSpeed", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_PlaybackSpeed", resourceCulture);
             }
         }
         
         /// <summary>
         ///   ポイント に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_Point {
+        public static string PartParam_LayerInfo_SourceSelectArg_Point {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_Point", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_Point", resourceCulture);
             }
         }
         
         /// <summary>
         ///   PSD に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_PsdFile {
+        public static string PartParam_LayerInfo_SourceSelectArg_PsdFile {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_PsdFile", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_PsdFile", resourceCulture);
             }
         }
         
         /// <summary>
         ///   シーン に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_SceneId {
+        public static string PartParam_LayerInfo_SourceSelectArg_SceneId {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_SceneId", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_SceneId", resourceCulture);
             }
         }
         
         /// <summary>
         ///   再生開始位置 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_StartFrameNumber {
+        public static string PartParam_LayerInfo_SourceSelectArg_StartFrameNumber {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_StartFrameNumber", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_StartFrameNumber", resourceCulture);
             }
         }
         
         /// <summary>
         ///   動画 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_LayerInfo_SourseSelectArg_VideoFile {
+        public static string PartParam_LayerInfo_SourceSelectArg_VideoFile {
             get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourseSelectArg_VideoFile", resourceCulture);
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_VideoFile", resourceCulture);
             }
         }
         
@@ -1420,7 +1483,7 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   1.2.0.0 に類似しているローカライズされた文字列を検索します。
+        ///   1.2.0.0 β-0 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string SinTachiePlugin_Version {
             get {

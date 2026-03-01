@@ -14,8 +14,8 @@ namespace SinTachiePlugin.Control.PartAnimationValueList
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
 
-        public List<PartAnimationValue> Values { get => _values; set => Set(ref _values, value); }
-        private List<PartAnimationValue> _values = [];
+        public List<PartAnimationValueExtra> Values { get => _values; set => Set(ref _values, value); }
+        private List<PartAnimationValueExtra> _values = [];
 
         public int SelectedIndex { get => _selectedIndex; set => Set(ref _selectedIndex, value); }
         int _selectedIndex = -1;
@@ -40,12 +40,12 @@ namespace SinTachiePlugin.Control.PartAnimationValueList
         {
             var otherProperties = _properties.Skip(1);
             foreach (var property in otherProperties)
-                property.SetValue(Values.Select(x => new PartAnimationValue(x)).ToImmutableList());
+                property.SetValue(Values.Select(x => new PartAnimationValueExtra(x)).ToImmutableList());
         }
 
         private void UpdateValues()
         {
-            ImmutableList<PartAnimationValue> list = _properties[0].GetValue<ImmutableList<PartAnimationValue>>() ?? [];
+            ImmutableList<PartAnimationValueExtra> list = _properties[0].GetValue<ImmutableList<PartAnimationValueExtra>>() ?? [];
 
             if (!Values.SequenceEqual(list))
                 Values = [.. list];
@@ -55,36 +55,36 @@ namespace SinTachiePlugin.Control.PartAnimationValueList
             SelectedIndex = index;
         }
 
-        public void SetProperties(List<PartAnimationValue> list)
+        public void SetProperties(List<PartAnimationValueExtra> list)
         {
             foreach (var property in _properties)
-                property.SetValue(list.Select(x => new PartAnimationValue(x)).ToImmutableList());
+                property.SetValue(list.Select(x => new PartAnimationValueExtra(x)).ToImmutableList());
         }
 
-        public void InsertItems(List<PartAnimationValue> items)
+        public void InsertItems(List<PartAnimationValueExtra> items)
         {
             if (SelectedIndex < -1 || SelectedIndex >= Values.Count)
                 return;
 
             int index = SelectedIndex;
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            List<PartAnimationValue> values = [.. Values];
+            List<PartAnimationValueExtra> values = [.. Values];
             values.InsertRange(index + 1, items);
             SetProperties(values);
             EndEdit?.Invoke(this, EventArgs.Empty);
             SelectedIndex = index + 1;
         }
 
-        public void RemoveItems(List<PartAnimationValue> items)
+        public void RemoveItems(List<PartAnimationValueExtra> items)
         {
             if (items.Count == 0)
                 return;
 
             int index = SelectedIndex;
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            List<PartAnimationValue> values = [.. Values];
+            List<PartAnimationValueExtra> values = [.. Values];
 
-            foreach (PartAnimationValue value in items)
+            foreach (PartAnimationValueExtra value in items)
                 values.Remove(value);
 
             SetProperties(values);
@@ -104,8 +104,8 @@ namespace SinTachiePlugin.Control.PartAnimationValueList
 
             int index = SelectedIndex;
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            List<PartAnimationValue> values = [.. Values];
-            PartAnimationValue value = values[index];
+            List<PartAnimationValueExtra> values = [.. Values];
+            PartAnimationValueExtra value = values[index];
             values.Remove(value);
             values.Insert(index - 1, value);
             SetProperties(values);
@@ -125,8 +125,8 @@ namespace SinTachiePlugin.Control.PartAnimationValueList
 
             int index = SelectedIndex;
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            List<PartAnimationValue> values = [.. Values];
-            PartAnimationValue value = values[index];
+            List<PartAnimationValueExtra> values = [.. Values];
+            PartAnimationValueExtra value = values[index];
             values.Remove(value);
             values.Insert(index + 1, value);
             SetProperties(values);

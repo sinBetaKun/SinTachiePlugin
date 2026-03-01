@@ -17,6 +17,13 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.Parameter
         {
         }
 
+        public override DrawingArgBase GetClone()
+        {
+            WithoutSourceDrawingParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
+        }
+
         protected override IEnumerable<IAnimatable> GetAnimatables() => [];
 
         protected override void SaveSharedData(SharedDataStore store)

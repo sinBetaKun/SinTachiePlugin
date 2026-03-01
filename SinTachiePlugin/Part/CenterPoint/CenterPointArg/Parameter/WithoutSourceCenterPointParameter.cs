@@ -17,6 +17,13 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.Parameter
         {
         }
 
+        public override CenterPointArgBase GetClone()
+        {
+            WithoutSourceCenterPointParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
+        }
+
         protected override IEnumerable<IAnimatable> GetAnimatables() => [];
 
         protected override void SaveSharedData(SharedDataStore store)

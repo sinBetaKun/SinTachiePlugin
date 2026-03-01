@@ -42,7 +42,14 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.Parameter
             if (origin is IModeMasterParameter modeMasterParameter)
                 ModeMaster = modeMasterParameter.ModeMaster;
             if (origin is ISubArgParameter subArgParameter)
-                SubArg = subArgParameter.SubArg;
+                SubArg = subArgParameter.SubArg.GetClone();
+        }
+
+        public override DrawingArgBase GetClone()
+        {
+            HavingSourceDrawingParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
         }
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => [SubArg];
@@ -58,7 +65,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.Parameter
             if (store.Load<ModeMasterSharedData>() is ModeMasterSharedData modeMasterSharedData)
                 ModeMaster = modeMasterSharedData.ModeMaster;
             if (store.Load<SubArgSharedData>() is SubArgSharedData subArgSharedData)
-                SubArg = ModeMaster.GetClone(subArgSharedData.SubArg);
+                SubArg = subArgSharedData.SubArg.GetClone();
         }
     }
 }

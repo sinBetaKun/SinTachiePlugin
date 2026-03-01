@@ -12,6 +12,8 @@ namespace SinTachiePlugin.Part.CustomPoint.CustomPointArg
         {
         }
 
+        public abstract CustomPointArgBase GetClone();
+
         public abstract void CopyFrom(CustomPointArgBase? origin);
     }
 }

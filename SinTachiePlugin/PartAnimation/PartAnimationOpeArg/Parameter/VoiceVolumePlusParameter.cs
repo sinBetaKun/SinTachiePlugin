@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SinTachiePlugin.Draw;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Abrir;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Cerrar;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Inithal;
-using SinTachiePlugin.Parts;
 using SinTachiePlugin.Properties;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
@@ -57,6 +57,13 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
                 Cerrar.CopyFrom(cerrarParam.Cerrar);
             if (origin is IInitialParameter initialParam)
                 Initial.CopyFrom(initialParam.Initial);
+        }
+
+        public override PartAnimationOpeArgBase GetClone()
+        {
+            VoiceVolumePlusParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
         }
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => [Abrir, Cerrar, Initial];

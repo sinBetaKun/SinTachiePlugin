@@ -21,19 +21,5 @@ namespace SinTachiePlugin.Part.LayerInformation.ClippingArg
 
             return current;
         }
-
-        public static ClippingArgBase GetClone(this ClippingMode mode, ClippingArgBase origin)
-        {
-            var store = origin.GetSharedData();
-            ClippingArgBase param = mode switch
-            {
-                ClippingMode.DontClip => new DontClipParameter(store),
-                ClippingMode.ClipToParent => new ClipToParentParameter(store),
-                ClippingMode.ClipWithTag => new ClipWithTagParameter(store),
-                _ => throw new ArgumentOutOfRangeException(nameof(mode)),
-            };
-
-            return param;
-        }
     }
 }

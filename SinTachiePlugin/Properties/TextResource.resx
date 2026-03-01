@@ -202,10 +202,10 @@
     <value>A + B</value>
   </data>
   <data name="PartAnimationOpeMode_VoiceVolume" xml:space="preserve">
-    <value>口パク</value>
+    <value>音量口パク</value>
   </data>
   <data name="PartAnimationOpeMode_VoiceVolumePlus" xml:space="preserve">
-    <value>口パク＋</value>
+    <value>音量口パク＋</value>
   </data>
   <data name="PartAnimationOpeMode_AudioFile" xml:space="preserve">
     <value>音声ファイル</value>
@@ -378,37 +378,40 @@
   <data name="PartParam_Drawing_Value_Mode_Priority" xml:space="preserve">
     <value>優先度の合成</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_Parent" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_Parent" xml:space="preserve">
     <value>親</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_ImageFile" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_ImageFile" xml:space="preserve">
     <value>画像</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_PartAnimationValues" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_PartAnimationValues" xml:space="preserve">
     <value>アニメーション</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_VideoFile" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_VideoFile" xml:space="preserve">
     <value>動画</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_IsCompressFrame" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_IsCompressFrame" xml:space="preserve">
     <value>画像を合成</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_PlaybackSpeed" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_PlaybackSpeed" xml:space="preserve">
     <value>再生速度</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_StartFrameNumber" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_StartFrameNumber" xml:space="preserve">
     <value>再生開始位置</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_LoopPlayback" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_LoopPlayback" xml:space="preserve">
     <value>ループ再生</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_PartToClipTo" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_PartToClipTo" xml:space="preserve">
     <value>クリッピング先</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_ClippingMode" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_ClippingMode" xml:space="preserve">
     <value>クリッピングモード</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_Point" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_PartAnimationValueMode" xml:space="preserve">
+    <value>ｱﾆﾒｰｼｮﾝモード</value>
+  </data>
+  <data name="PartParam_LayerInfo_SourceSelectArg_Point" xml:space="preserve">
     <value>ポイント</value>
   </data>
   <data name="PartParam_CenterPoint_CustomPoint" xml:space="preserve">
@@ -417,23 +420,32 @@
   <data name="PartParam_CenterPoint_CenterMode" xml:space="preserve">
     <value>原点</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_PartComment" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_PartComment" xml:space="preserve">
     <value>パーツ備考</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_GroupComment" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_GroupComment" xml:space="preserve">
     <value>パーツ備考</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_PsdFile" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_PsdFile" xml:space="preserve">
     <value>PSD</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_EnablePsdLayers" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_EnablePsdLayers" xml:space="preserve">
     <value>レイヤー</value>
   </data>
-  <data name="PartParam_LayerInfo_SourseSelectArg_SceneId" xml:space="preserve">
+  <data name="PartParam_LayerInfo_SourceSelectArg_SceneId" xml:space="preserve">
     <value>シーン</value>
   </data>
   <data name="ClippingMode_DontClip" xml:space="preserve">
     <value>クリッピングしない</value>
+  </data>
+  <data name="PartAnimationValueMode_None" xml:space="preserve">
+    <value>アニメーションを指定しない</value>
+  </data>
+  <data name="PartAnimationValueMode_Single" xml:space="preserve">
+    <value>アニメーションを指定する</value>
+  </data>
+  <data name="PartAnimationValueMode_Multi" xml:space="preserve">
+    <value>多次元でアニメーションを指定する</value>
   </data>
   <data name="ClippingMode_ClipWithTag" xml:space="preserve">
     <value>クリッピング先のパーツを指定</value>
@@ -608,7 +620,7 @@
     <value>テンプレートの編集</value>
   </data>
   <data name="SinTachiePlugin_Version" xml:space="preserve">
-    <value>1.2.0.0</value>
+    <value>1.2.0.0 β-0</value>
   </data>
   <data name="SinTachiePlugin_Title" xml:space="preserve">
     <value>sin型カスタムパーツ立ち絵プラグイン</value>
@@ -618,5 +630,14 @@
   </data>
   <data name="ImageFileNodeManager_Error_InvalidIndex" xml:space="preserve">
     <value>インデックスが正しく指定されていないリーフをImageFileNodeManagerに足そうとしました。ごめんなさい。</value>
+  </data>
+  <data name="CustomPointDefineMode_DontMake" xml:space="preserve">
+    <value>カスタムポイントを作らない</value>
+  </data>
+  <data name="CustomPointDefineMode_DoMake" xml:space="preserve">
+    <value>カスタムポイントを作る</value>
+  </data>
+  <data name="PartAnimationOpeMode_AIUEOMouth" xml:space="preserve">
+    <value>あいうえお口パク</value>
   </data>
 </root>

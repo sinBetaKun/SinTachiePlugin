@@ -12,6 +12,8 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg
         {
         }
 
+        public abstract CenterPointArgBase GetClone();
+
         public abstract void CopyFrom(CenterPointArgBase? origin);
     }
 }

@@ -27,6 +27,13 @@ namespace SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter
                 PartToClipTo = partToClipToParameter.PartToClipTo;
         }
 
+        public override ClippingArgBase GetClone()
+        {
+            ClipWithTagParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
+        }
+
         protected override IEnumerable<IAnimatable> GetAnimatables() => [];
 
         protected override void SaveSharedData(SharedDataStore store)

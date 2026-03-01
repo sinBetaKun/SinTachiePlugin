@@ -38,13 +38,20 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.Parameter
 
         public override void CopyFrom(CenterPointArgBase? origin)
         {
-            if (origin is ICenterModeParameter centerModeParameter) 
-                centerMode = centerModeParameter.CenterMode;
+            if (origin is ICenterModeParameter centerModeParameter)
+                CenterMode = centerModeParameter.CenterMode;
             if (origin is ISubArgParameter subArgParameter)
-                subArg = subArgParameter.SubArg;
+                SubArg = subArgParameter.SubArg.GetClone();
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [];
+        public override CenterPointArgBase GetClone()
+        {
+            HavingSourceCenterPointParameter clone = new();
+            clone.CopyFrom(this);
+            return clone;
+        }
+
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [SubArg];
 
         protected override void SaveSharedData(SharedDataStore store)
         {
@@ -55,9 +62,9 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.Parameter
         protected override void LoadSharedData(SharedDataStore store)
         {
             if (store.Load<CenterModeSharedData>() is CenterModeSharedData centerModeSharedData)
-                CenterMode = centerModeSharedData.CenterMode;
+                centerModeSharedData.CopyTo(this);
             if (store.Load<SubArgSharedData>() is SubArgSharedData subArgSharedData)
-                SubArg = CenterMode.GetClone(subArgSharedData.SubArg);
+                subArgSharedData.CopyTo(this);
         }
     }
 }

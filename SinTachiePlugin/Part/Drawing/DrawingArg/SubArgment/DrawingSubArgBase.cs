@@ -12,6 +12,8 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment
         {
         }
 
+        public abstract DrawingSubArgBase GetClone();
+
         public abstract void CopyFrom(DrawingSubArgBase? origin);
     }
 }

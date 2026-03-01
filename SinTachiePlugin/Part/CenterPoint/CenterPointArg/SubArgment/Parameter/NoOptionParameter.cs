@@ -17,6 +17,11 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment.Parameter
         {
         }
 
+        public override CenterPointSubArgBase GetClone()
+        {
+            return new NoOptionParameter();
+        }
+
         protected override IEnumerable<IAnimatable> GetAnimatables() => [];
 
         protected override void SaveSharedData(SharedDataStore store)

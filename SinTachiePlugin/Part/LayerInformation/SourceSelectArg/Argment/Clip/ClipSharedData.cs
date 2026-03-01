@@ -17,13 +17,13 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Clip
         public ClipSharedData(IClipParameter parameter)
         {
             ClippingMode = parameter.ClippingMode;
-            ClippingArg = parameter.ClippingArg;
+            ClippingArg = parameter.ClippingArg.GetClone();
         }
 
         public void CopyTo(IClipParameter parameter)
         {
             parameter.ClippingMode = ClippingMode;
-            parameter.ClippingArg = ClippingMode.GetClone(ClippingArg);
+            parameter.ClippingArg = ClippingArg.GetClone();
         }
     }
 }
