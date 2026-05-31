@@ -1,8 +1,8 @@
 ﻿using SinTachiePlugin.Enums;
-using SinTachiePlugin.Part.Drawing.DrawingArg.Argment.ModeMaster;
-using SinTachiePlugin.Part.Drawing.DrawingArg.Argment.SubArg;
-using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment;
-using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Parameter;
+using SinTachiePlugin.Part.Drawing.DrawingArg.Argument.ModeMaster;
+using SinTachiePlugin.Part.Drawing.DrawingArg.Argument.SubArg;
+using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument;
+using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter;
 using SinTachiePlugin.Properties;
 using System.ComponentModel.DataAnnotations;
 using System.Text;

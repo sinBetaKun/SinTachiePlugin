@@ -1,7 +1,7 @@
 ﻿using SinTachiePlugin.Enums;
-using SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment.Parameter;
+using SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgument.Parameter;
 
-namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment
+namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgument
 {
     internal static class CenterPointModeEx
     {
@@ -10,10 +10,10 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment
             var store = current.GetSharedData();
             CenterPointSubArgBase param = mode switch
             {
-                CenterPointMode.OfPart => new OnlyCoordinateParameter(store),
-                CenterPointMode.OfImage => new OnlyCoordinateParameter(store),
-                CenterPointMode.CustomPointName => new CustomCenterPointParameter(store),
                 CenterPointMode.DontOverride => new NoOptionParameter(store),
+                CenterPointMode.DontSet => new NoOptionParameter(store),
+                CenterPointMode.OnlyCoordinate => new OnlyCoordinateParameter(store),
+                CenterPointMode.CustomPointName => new CustomCenterPointParameter(store),
                 _ => throw new ArgumentOutOfRangeException(nameof(mode)),
             };
 

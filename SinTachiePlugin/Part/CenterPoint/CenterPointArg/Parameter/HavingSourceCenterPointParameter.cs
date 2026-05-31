@@ -1,8 +1,8 @@
 ﻿using SinTachiePlugin.Enums;
-using SinTachiePlugin.Part.CenterPoint.CenterPointArg.Argment.CenterMode;
-using SinTachiePlugin.Part.CenterPoint.CenterPointArg.Argment.SubArg;
-using SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment;
-using SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment.Parameter;
+using SinTachiePlugin.Part.CenterPoint.CenterPointArg.Argument.CenterMode;
+using SinTachiePlugin.Part.CenterPoint.CenterPointArg.Argument.SubArg;
+using SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgument;
+using SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgument.Parameter;
 using SinTachiePlugin.Properties;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
@@ -15,12 +15,12 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.Parameter
     {
         [Display(Name = nameof(TextResource.PartParam_CenterPoint_CenterMode), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public CenterPointMode CenterMode { get => centerMode; set => Set(ref centerMode, value); }
-        private CenterPointMode centerMode = CenterPointMode.OfPart;
+        public CenterPointMode CenterMode { get => _centerMode; set => Set(ref _centerMode, value); }
+        private CenterPointMode _centerMode = CenterPointMode.DontSet;
 
         [Display(AutoGenerateField = true)]
-        public CenterPointSubArgBase SubArg { get => subArg; set => Set(ref subArg, value); }
-        private CenterPointSubArgBase subArg = new NoOptionParameter();
+        public CenterPointSubArgBase SubArg { get => _subArg; set => Set(ref _subArg, value); }
+        private CenterPointSubArgBase _subArg = new NoOptionParameter();
 
         public HavingSourceCenterPointParameter()
         {

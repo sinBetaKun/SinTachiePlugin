@@ -1,4 +1,4 @@
-﻿using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.SceneId;
+﻿using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.SceneId;
 using System.Windows.Data;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;

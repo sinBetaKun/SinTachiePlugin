@@ -13,6 +13,7 @@ namespace SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment
                 PartAnimationLinkOpeMode.DontLink => new DontLinkParameter(store),
                 PartAnimationLinkOpeMode.Add => new DoLinkParameter(store),
                 PartAnimationLinkOpeMode.Multiply => new DoLinkParameter(store),
+                PartAnimationLinkOpeMode.DontOverride => new DontLinkParameter(store),
                 _ => throw new ArgumentOutOfRangeException(nameof(mode)),
             };
 

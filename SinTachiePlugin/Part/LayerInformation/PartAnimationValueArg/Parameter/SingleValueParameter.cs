@@ -1,5 +1,5 @@
-﻿using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Argment.MultiValues;
-using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Argment.SingleValue;
+﻿using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Argument.MultiValues;
+using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Argument.SingleValue;
 using SinTachiePlugin.PartAnimation;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;

@@ -275,6 +275,7 @@ namespace SinTachiePlugin.Control.PartValueList
                 PartValue target = Source[index];
                 int index2 = PartValues.IndexOf(target);
                 int index3 = index2 + GetDescendants(target).Count + 1;
+                int index4 = target.ParentIndex < 0 ? -1 : (target.ParentIndex + GetDescendants(PartValues[target.ParentIndex]).Count + 1);
 
                 foreach (PartValue pv in items)
                     if (pv.ParentIndex > -1)
@@ -285,9 +286,10 @@ namespace SinTachiePlugin.Control.PartValueList
                         if (pv.ParentIndex < 0)
                             pv.ParentIndex = target.ParentIndex;
 
-                for (int i = index3; i < PartValues.Count; i++)
-                    if (PartValues[i].ParentIndex > -1)
-                        PartValues[i].ParentIndex += items.Count;
+                if (index4 > -1)
+                    for (int i = index4; i < PartValues.Count; i++)
+                        if (PartValues[i].ParentIndex > -1)
+                            PartValues[i].ParentIndex += items.Count;
 
                 if (index2 + 1 == PartValues.Count)
                     PartValues.AddRange(items);
@@ -296,11 +298,11 @@ namespace SinTachiePlugin.Control.PartValueList
             }
 
             UpdateSource();
-            int index4 = Source.IndexOf(first);
+            int index5 = Source.IndexOf(first);
             SetProperties();
             UpdateSource();
             EndEdit?.Invoke(this, EventArgs.Empty);
-            SelectedIndex = index4;
+            SelectedIndex = index5;
         }
 
         public void RemoveItems(IEnumerable<PartValue> items)

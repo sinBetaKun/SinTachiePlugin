@@ -1,16 +1,20 @@
 ﻿using SinTachiePlugin.Enums;
 using SinTachiePlugin.Part.CenterPoint.CenterPointArg;
 using SinTachiePlugin.Part.CenterPoint.CenterPointArg.Parameter;
-using SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment.Parameter;
+using SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgument.Parameter;
 using SinTachiePlugin.Part.CustomPoint.CustomPointArg;
 using SinTachiePlugin.Part.CustomPoint.CustomPointArg.Parameter;
 using SinTachiePlugin.Part.Drawing.DrawingArg;
 using SinTachiePlugin.Part.Drawing.DrawingArg.Parameter;
-using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Parameter;
+using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter;
+using SinTachiePlugin.Part.InverseKinematics.InverseKinematicsArg;
+using SinTachiePlugin.Part.InverseKinematics.InverseKinematicsArg.Parameter;
 using SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter;
 using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Parameter;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter;
+using SinTachiePlugin.Part.Origin.OriginArg;
+using SinTachiePlugin.Part.Origin.OriginArg.Parameter;
 using SinTachiePlugin.Part.PartEffect.PartEffectArg;
 using SinTachiePlugin.Part.PartEffect.PartEffectArg.Parameter;
 using SinTachiePlugin.Part.ValueDependent.ValueDependentArg;
@@ -51,6 +55,14 @@ namespace SinTachiePlugin.Part
         public string Comment { get => _comment; set => Set(ref _comment, value); }
         private string _comment = string.Empty;
 
+        [Display(GroupName = nameof(TextResource.GroupName_IK), AutoGenerateField = true, ResourceType = typeof(TextResource))]
+        public InverseKinematicsArgBase InverseKinematicsArg { get => _inverseKinematicsArg; set => Set(ref _inverseKinematicsArg, value); }
+        private InverseKinematicsArgBase _inverseKinematicsArg = new HavingSourceInverseKinematicsParameter();
+
+        [Display(GroupName = nameof(TextResource.GroupName_Origin), AutoGenerateField = true, ResourceType = typeof(TextResource))]
+        public OriginArgBase OriginArg { get => _originArg; set => Set(ref _originArg, value); }
+        private OriginArgBase _originArg = new HavingSourceOriginParameter();
+
         [Display(GroupName = nameof(TextResource.GroupName_Drawing), AutoGenerateField = true, ResourceType = typeof(TextResource))]
         public DrawingArgBase DrawingArg { get => _drawingArg; set => Set(ref _drawingArg, value); }
         private DrawingArgBase _drawingArg = new HavingSourceDrawingParameter();
@@ -85,6 +97,8 @@ namespace SinTachiePlugin.Part
             Comment = origin.Comment;
 
             SourceSelectArg = origin.SourceSelectArg.GetClone();
+            InverseKinematicsArg = origin.InverseKinematicsArg.GetClone();
+            OriginArg = origin.OriginArg.GetClone();
             DrawingArg = origin.DrawingArg.GetClone();
             CenterPointArg = origin.CenterPointArg.GetClone();
             CustomPointArg = origin.CustomPointArg.GetClone();
@@ -136,6 +150,14 @@ namespace SinTachiePlugin.Part
             SourceSelectArg = ip;
 
             Comment = block.Comment;
+            #endregion
+
+            #region Origin
+            HavingSourceOriginParameter hsop = new()
+            {
+                OriginMode = OriginDefineMode.CenterOfParent,
+            };
+            OriginArg = hsop;
             #endregion
 
             #region Drawing
@@ -203,24 +225,41 @@ namespace SinTachiePlugin.Part
             OnlyCoordinateParameter ocp = new();
             ocp.X.CopyFrom(block.Cnt_X);
             ocp.Y.CopyFrom(block.Cnt_Y);
+            ocp.KeepPlace = block.KeepPlace;
             CenterPointArg = new HavingSourceCenterPointParameter()
             {
-                CenterMode = CenterPointMode.OfPart,
+                CenterMode = CenterPointMode.DontSet,
                 SubArg = ocp
             };
             #endregion
 
             #region ValueDependent
-            HavingSourceValueDependentParameter vdp = new()
+            HavingSourceValueDependentParameter vdp = new();
+
+            if (block.XYZDependent && block.OpacityDependent && block.ScaleDependent && block.RotateDependent && block.MirrorDependent && block.CameraDependent && block.UnlazyEffectDependent)
             {
-                XYZ = block.XYZDependent ? ValueDependentMode.On : ValueDependentMode.Off,
-                Opacity = block.OpacityDependent ? ValueDependentMode.On : ValueDependentMode.Off,
-                Zoom = block.ScaleDependent ? ValueDependentMode.On : ValueDependentMode.Off,
-                Rotation = block.RotateDependent ? ValueDependentMode.On : ValueDependentMode.Off,
-                Invert = block.MirrorDependent ? ValueDependentMode.On : ValueDependentMode.Off,
-                Camera = block.CameraDependent ? ValueDependentMode.On : ValueDependentMode.Off,
-                UnlazyEffect = block.UnlazyEffectDependent ? ValueDependentMode.On : ValueDependentMode.Off
-            };
+                vdp.ModeMaster = ValueDependentModeMaster.On;
+            }
+            else if (!block.XYZDependent && !block.OpacityDependent && !block.ScaleDependent && !block.RotateDependent && !block.MirrorDependent && !block.CameraDependent && !block.UnlazyEffectDependent)
+            {
+                vdp.ModeMaster = ValueDependentModeMaster.Off;
+            }
+            else
+            {
+                vdp.ModeMaster = ValueDependentModeMaster.Custom;
+                ValueDependent.ValueDependentArg.SubArgument.Parameter.CustomModeParameter cmp = new()
+                {
+                    XYZ = block.XYZDependent ? ValueDependentMode.On : ValueDependentMode.Off,
+                    Opacity = block.OpacityDependent ? ValueDependentMode.On : ValueDependentMode.Off,
+                    Zoom = block.ScaleDependent ? ValueDependentMode.On : ValueDependentMode.Off,
+                    Rotation = block.RotateDependent ? ValueDependentMode.On : ValueDependentMode.Off,
+                    Invert = block.MirrorDependent ? ValueDependentMode.On : ValueDependentMode.Off,
+                    Camera = block.CameraDependent ? ValueDependentMode.On : ValueDependentMode.Off,
+                    UnlazyEffect = block.UnlazyEffectDependent ? ValueDependentMode.On : ValueDependentMode.Off
+                };
+                vdp.SubArg = cmp;
+            }
+            
             ValueDependentArg = vdp;
             #endregion
 
@@ -238,6 +277,8 @@ namespace SinTachiePlugin.Part
         public override ValueTask EndEditAsync()
         {
             SourceSelectArg = ThisLayerType.Convert(SourceSelectArg);
+            InverseKinematicsArg = ThisLayerType.Convert(InverseKinematicsArg);
+            OriginArg = ThisLayerType.Convert(OriginArg);
             DrawingArg = ThisLayerType.Convert(DrawingArg);
             CenterPointArg = ThisLayerType.Convert(CenterPointArg);
             CustomPointArg = ThisLayerType.Convert(CustomPointArg);
@@ -257,6 +298,8 @@ namespace SinTachiePlugin.Part
         {
             ThisLayerType = type;
             SourceSelectArg = ThisLayerType.Convert(SourceSelectArg);
+            InverseKinematicsArg = ThisLayerType.Convert(InverseKinematicsArg);
+            OriginArg = ThisLayerType.Convert(OriginArg);
             DrawingArg = ThisLayerType.Convert(DrawingArg);
             CenterPointArg = ThisLayerType.Convert(CenterPointArg);
             CustomPointArg = ThisLayerType.Convert(CustomPointArg);
@@ -266,6 +309,6 @@ namespace SinTachiePlugin.Part
         }
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => 
-            [SourceSelectArg, DrawingArg, CenterPointArg, CustomPointArg, ValueDependentArg, PartEffectArg];
+            [SourceSelectArg, InverseKinematicsArg, OriginArg, DrawingArg, CenterPointArg, CustomPointArg, ValueDependentArg, PartEffectArg];
     }
 }

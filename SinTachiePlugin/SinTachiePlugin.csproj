@@ -128,13 +128,9 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="PartAnimation\PartAnimationOpeArg\Argment\NormalizationMode\" />
-	</ItemGroup>
-
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<!--
-		<Exec Command="mkdir &quot;$(YMM4DirPath)user\plugin\$(ProjectName)&quot; &gt; NUL 2&gt;&amp;1&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;E:\sinBeta\app\YukkuriMovieMaker_v4\user\plugin\$(ProjectName)\&quot;" />
+		<Exec Command="mkdir &quot;$(YMM4DirPath)user\plugin\$(ProjectName)&quot; &gt; NUL 2&gt;&amp;1&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;D:\sinBeta\app\YukkuriMovieMaker_v4\user\plugin\$(ProjectName)\&quot;" />
 		-->
 	</Target>
 

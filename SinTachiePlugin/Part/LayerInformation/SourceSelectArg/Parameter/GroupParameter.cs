@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.IsOpened;
+using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.IsOpened;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Project;
 

@@ -1,4 +1,6 @@
-﻿using SinTachiePlugin.Part.PartEffect.PartEffectArg.Argment.Effects;
+﻿using SinTachiePlugin.Enums;
+using SinTachiePlugin.Part.PartEffect.PartEffectArg.Argument.Effects;
+using SinTachiePlugin.Part.PartEffect.PartEffectArg.Argument.OverrideMode;
 using System.Collections.Immutable;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
@@ -7,11 +9,15 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Part.PartEffect.PartEffectArg.Parameter
 {
-    internal class HavingSourcePartEffectParameter : PartEffectArgBase, IEffectsParameter
+    internal class HavingSourcePartEffectParameter : PartEffectArgBase, IEffectsParameter, IPEOverrideModeParameter
     {
+        [EnumComboBox]
+        public PartEffectOverrideMode PEOverrideMode { get => _peOverrideMode; set => Set(ref _peOverrideMode, value); }
+        private PartEffectOverrideMode _peOverrideMode;
+
         [VideoEffectSelector(PropertyEditorSize = PropertyEditorSize.FullWidth)]
-        public ImmutableList<IVideoEffect> Effects { get => effects; set => Set(ref effects, value); }
-        ImmutableList<IVideoEffect> effects = [];
+        public ImmutableList<IVideoEffect> Effects { get => _effects; set => Set(ref _effects, value); }
+        private ImmutableList<IVideoEffect> _effects = [];
 
         public HavingSourcePartEffectParameter()
         {
@@ -24,7 +30,7 @@ namespace SinTachiePlugin.Part.PartEffect.PartEffectArg.Parameter
         public override void CopyFrom(PartEffectArgBase? origin)
         {
             if (origin is IEffectsParameter effectsParameter)
-                effects = [.. effectsParameter.Effects];
+                _effects = [.. effectsParameter.Effects];
         }
 
         public override PartEffectArgBase GetClone()
@@ -38,11 +44,14 @@ namespace SinTachiePlugin.Part.PartEffect.PartEffectArg.Parameter
 
         protected override void SaveSharedData(SharedDataStore store)
         {
+            store.Save(new PEOverrideModeSharedData(this));
             store.Save(new EffectsSharedData(this));
         }
 
         protected override void LoadSharedData(SharedDataStore store)
         {
+            if (store.Load<PEOverrideModeSharedData>() is  PEOverrideModeSharedData peOverrideModeSharedData)
+                PEOverrideMode = peOverrideModeSharedData.PEOverrideMode;
             if (store.Load<EffectsSharedData>() is EffectsSharedData effectsSharedData)
                 Effects = [.. effectsSharedData.Effects];
         }

@@ -16,8 +16,12 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg
                 PartAnimationOpeMode.Sin => new SinParameter(store),
                 PartAnimationOpeMode.VoiceVolume => new VoiceVolumeParameter(store),
                 PartAnimationOpeMode.VoiceVolumePlus => new VoiceVolumePlusParameter(store),
+                PartAnimationOpeMode.AIUEOMouth => new AIUEOMouthParameter(store),
                 PartAnimationOpeMode.PeriodicShuttle => new PeriodicShuttleParameter(store),
                 PartAnimationOpeMode.PeriodicLoop => new PeriodicLoopParameter(store),
+                PartAnimationOpeMode.RandomShuttle => new RandomShuttleParameter(store),
+                PartAnimationOpeMode.RandomLoop => new RandomLoopParameter(store),
+                PartAnimationOpeMode.StringInput => new StringInputParameter(store),
                 _ => throw new ArgumentOutOfRangeException(nameof(mode)),
             };
 

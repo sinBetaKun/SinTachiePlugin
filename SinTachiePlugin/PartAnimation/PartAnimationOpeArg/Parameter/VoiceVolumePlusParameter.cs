@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SinTachiePlugin.Draw;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Abrir;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Cerrar;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Inithal;
+﻿using SinTachiePlugin.Draw;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Abrir;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Cerrar;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Inithal;
 using SinTachiePlugin.Properties;
+using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
+using YukkuriMovieMaker.Player.Video;
 using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
@@ -30,15 +31,19 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         /// <param name="fl">アイテムのフレームと長さ</param>
         /// <param name="fps">fps</param>
         /// <returns>出力</returns>
-        public override double GetValue(FrameAndLength fl, int fps, double voiceVolume)
+        public override PartAnimationResult GetResult(TachieSourceDescription desc)
         {
+            FrameAndLength fl = new(desc);
+            int fps = desc.FPS;
+            double voiceVolume = desc.VoiceVolume;
+
             if (voiceVolume < 0)
-                return fl.GetValue(Initial, fps) / 100;
+                return PartAnimationResult.FromVolume(fl.GetValue(Initial, fps) / 100);
 
             double open = fl.GetValue(Abrir, fps) / 100;
             double close = fl.GetValue(Cerrar, fps) / 100;
 
-            return close + (open - close) * voiceVolume;
+            return PartAnimationResult.FromVolume(close + (open - close) * voiceVolume);
         }
 
         public VoiceVolumePlusParameter()

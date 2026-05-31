@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SinTachiePlugin.Draw;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Abrir;
+﻿using SinTachiePlugin.Draw;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Abrir;
 using SinTachiePlugin.Properties;
+using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
+using YukkuriMovieMaker.Player.Video;
 using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
@@ -17,12 +18,12 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         /// <summary>
         /// 制御モードが周期的往復/ループのとき、差分を指定する値を返す。
         /// </summary>
-        /// <param name="fl">アイテムのフレームと長さ</param>
-        /// <param name="fps">fps</param>
         /// <returns>出力</returns>
-        public override double GetValue(FrameAndLength fl, int fps, double voiceVolume)
+        public override PartAnimationResult GetResult(TachieSourceDescription desc)
         {
-            return fl.GetValue(Abrir, fps) / 100;
+            FrameAndLength fl = new(desc);
+            int fps = desc.FPS;
+            return PartAnimationResult.FromVolume(fl.GetValue(Abrir, fps) / 100);
         }
 
         public SimpleParameter()

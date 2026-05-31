@@ -11,5 +11,7 @@ namespace SinTachiePlugin.Enums
         Add,
         [Display(Name = nameof(TextResource.PartAnimationLink_LinkOpeMode_Multiply), ResourceType = typeof(TextResource))]
         Multiply,
+        [Display(Name = nameof(TextResource.PartAnimationLink_LinkOpeMode_DontOverride), ResourceType = typeof(TextResource))]
+        DontOverride
     }
 }

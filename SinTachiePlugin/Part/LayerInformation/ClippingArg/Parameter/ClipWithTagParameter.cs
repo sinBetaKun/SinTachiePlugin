@@ -1,4 +1,4 @@
-﻿using SinTachiePlugin.Part.LayerInformation.ClippingArg.Argment.PartToClipTo;
+﻿using SinTachiePlugin.Part.LayerInformation.ClippingArg.Argument.PartToClipTo;
 using SinTachiePlugin.Properties;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;

@@ -1,6 +1,6 @@
 ﻿using YukkuriMovieMaker.Project;
 
-namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment
+namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgument
 {
     internal abstract class CenterPointSubArgBase : SharedParameterBase
     {

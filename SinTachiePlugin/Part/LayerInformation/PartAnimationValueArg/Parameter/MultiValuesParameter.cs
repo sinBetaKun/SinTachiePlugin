@@ -1,6 +1,6 @@
 ﻿using SinTachiePlugin.Control.PartAnimationValueList;
-using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Argment.MultiValues;
-using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Argment.SingleValue;
+using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Argument.MultiValues;
+using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Argument.SingleValue;
 using SinTachiePlugin.PartAnimation;
 using SinTachiePlugin.Properties;
 using System.Collections.Immutable;
@@ -12,7 +12,7 @@ namespace SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Parameter
 {
     internal class MultiValuesParameter : PartAnimationValueArgBase, IMultiValuesParameter
     {
-        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_PartAnimationValues), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_PartAnimationValues), ResourceType = typeof(TextResource))]
         [PartAnimationValueList(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<PartAnimationValueExtra> PartAnimationValues { get => _partAnimationValues; set => Set(ref _partAnimationValues, value); }
         private ImmutableList<PartAnimationValueExtra> _partAnimationValues = [];

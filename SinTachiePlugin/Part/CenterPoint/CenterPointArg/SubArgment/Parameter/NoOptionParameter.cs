@@ -1,7 +1,7 @@
 ﻿using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Project;
 
-namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgment.Parameter
+namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgument.Parameter
 {
     internal class NoOptionParameter : CenterPointSubArgBase
     {

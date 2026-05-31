@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Argment.TargetAnimationTag;
-using SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Argment.TargetPartTag;
+using SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Argument.TargetAnimationTag;
+using SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Argument.TargetPartTag;
 using SinTachiePlugin.Properties;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;

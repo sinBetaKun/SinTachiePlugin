@@ -11,5 +11,7 @@ namespace SinTachiePlugin.Enums
         Shuttle,
         [Display(Name = nameof(TextResource.PartAnimationNormalizationMode_Loop), ResourceType = typeof(TextResource))]
         Loop,
+        [Display(Name = nameof(TextResource.PartAnimationNormalizationMode_DontOverride), ResourceType = typeof(TextResource))]
+        DontOverride,
     }
 }

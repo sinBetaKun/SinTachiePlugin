@@ -1,4 +1,4 @@
-﻿using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.PsdFilePath;
+﻿using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.PsdFilePath;
 using System.IO;
 using System.Windows.Data;
 using YukkuriMovieMaker.Commons;

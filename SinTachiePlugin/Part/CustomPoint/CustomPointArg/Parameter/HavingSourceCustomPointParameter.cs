@@ -1,8 +1,8 @@
 ﻿using SinTachiePlugin.Enums;
-using SinTachiePlugin.Part.CustomPoint.CustomPointArg.Argment.DefineMode;
-using SinTachiePlugin.Part.CustomPoint.CustomPointArg.Argment.SubArg;
-using SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgment;
-using SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgment.Parameter;
+using SinTachiePlugin.Part.CustomPoint.CustomPointArg.Argument.DefineMode;
+using SinTachiePlugin.Part.CustomPoint.CustomPointArg.Argument.SubArg;
+using SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument;
+using SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument.Parameter;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;

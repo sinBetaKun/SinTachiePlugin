@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SinTachiePlugin.Draw;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Abrir;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Cerrar;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Interval;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Offset;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Transition;
+﻿using SinTachiePlugin.Draw;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Abrir;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Cerrar;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Interval;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Offset;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Transition;
 using SinTachiePlugin.Properties;
+using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
+using YukkuriMovieMaker.Player.Video;
 using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
@@ -37,29 +38,29 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         /// <summary>
         /// 制御モードが周期的往復/ループのとき、差分を指定する値を返す。
         /// </summary>
-        /// <param name="fl">アイテムのフレームと長さ</param>
-        /// <param name="fps">fps</param>
         /// <returns>出力</returns>
-        public override double GetValue(FrameAndLength fl, int fps, double voiceVolume)
+        public override PartAnimationResult GetResult(TachieSourceDescription desc)
         {
+            FrameAndLength fl = new(desc);
+            int fps = desc.FPS;
             double a = fl.GetValue(Abrir, fps) / 100;
             double start = fl.GetValue(Offset, fps);
             double timespan = (double)fl.Frame / fps - start;
 
             if (timespan < 0)
-                return a;
+                return PartAnimationResult.FromVolume(a);
 
             double interval = fl.GetValue(Interval, fps);
             double transition = fl.GetValue(Transition, fps);
             double surplus = timespan % (transition + interval);
 
             if (surplus > transition)
-                return a;
+                return PartAnimationResult.FromVolume(a);
 
             double rate = surplus / transition;
             double b = fl.GetValue(Cerrar, fps) / 100;
 
-            return a + (b - a) * rate;
+            return PartAnimationResult.FromVolume(a + (b - a) * rate);
         }
 
         public PeriodicLoopParameter()
@@ -91,7 +92,7 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
             return clone;
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [Abrir, Cerrar];
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [Abrir, Cerrar, Offset, Interval, Transition];
 
         protected override void SaveSharedData(SharedDataStore store)
         {

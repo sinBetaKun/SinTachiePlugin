@@ -1,5 +1,5 @@
 ﻿using SinTachiePlugin.Part;
-using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.Parent;
+using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.Parent;
 using System.Globalization;
 using System.Windows.Data;
 

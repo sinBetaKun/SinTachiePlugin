@@ -19,7 +19,7 @@ namespace SinTachiePlugin.Properties {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class TextResource {
@@ -106,20 +106,20 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   親パーツの画像の中心 に類似しているローカライズされた文字列を検索します。
+        ///   指定しない（画像の中心） に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string CenterPointMode_OfImage {
+        public static string CenterPointMode_DontSet {
             get {
-                return ResourceManager.GetString("CenterPointMode_OfImage", resourceCulture);
+                return ResourceManager.GetString("CenterPointMode_DontSet", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   親パーツの中心 に類似しているローカライズされた文字列を検索します。
+        ///   座標を指定 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string CenterPointMode_OfPart {
+        public static string CenterPointMode_OnlyCoordinate {
             get {
-                return ResourceManager.GetString("CenterPointMode_OfPart", resourceCulture);
+                return ResourceManager.GetString("CenterPointMode_OnlyCoordinate", resourceCulture);
             }
         }
         
@@ -214,6 +214,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   点の名前 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CustomPointParam_Name {
+            get {
+                return ResourceManager.GetString("CustomPointParam_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   stpiファイルから情報を取得できませんでした。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ErrorMessage_FailToGetInfoFromStpi {
@@ -268,7 +277,7 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   描画原点 に類似しているローカライズされた文字列を検索します。
+        ///   中心位置 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string GroupName_CenterPoint {
             get {
@@ -295,11 +304,29 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   IK に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupName_IK {
+            get {
+                return ResourceManager.GetString("GroupName_IK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   レイヤー情報 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string GroupName_LayerInfo {
             get {
                 return ResourceManager.GetString("GroupName_LayerInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   描画原点 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupName_Origin {
+            get {
+                return ResourceManager.GetString("GroupName_Origin", resourceCulture);
             }
         }
         
@@ -322,6 +349,33 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   上書きしない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string IKMode_DontOverride {
+            get {
+                return ResourceManager.GetString("IKMode_DontOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   IKを使用しない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string IKMode_None {
+            get {
+                return ResourceManager.GetString("IKMode_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   IKを使用する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string IKMode_TypeA {
+            get {
+                return ResourceManager.GetString("IKMode_TypeA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   無効な差分指定 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ImageFileNode_Error_InvalidValue {
@@ -336,6 +390,96 @@ namespace SinTachiePlugin.Properties {
         public static string ImageFileNodeManager_Error_InvalidIndex {
             get {
                 return ResourceManager.GetString("ImageFileNodeManager_Error_InvalidIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   接続先 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string InverseKinematics_EndEffectorPartTag {
+            get {
+                return ResourceManager.GetString("InverseKinematics_EndEffectorPartTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   接続先ﾎﾟｲﾝﾄ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string InverseKinematics_EndEffectorPointName {
+            get {
+                return ResourceManager.GetString("InverseKinematics_EndEffectorPointName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   接続先X に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string InverseKinematics_EndEffectorPointX {
+            get {
+                return ResourceManager.GetString("InverseKinematics_EndEffectorPointX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   接続先Y に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string InverseKinematics_EndEffectorPointY {
+            get {
+                return ResourceManager.GetString("InverseKinematics_EndEffectorPointY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   IKモード に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string InverseKinematics_IkMode {
+            get {
+                return ResourceManager.GetString("InverseKinematics_IkMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   中間関節 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string InverseKinematics_JointPartTag {
+            get {
+                return ResourceManager.GetString("InverseKinematics_JointPartTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   接続元ﾎﾟｲﾝﾄ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string InverseKinematics_PreEndEffectorPointName {
+            get {
+                return ResourceManager.GetString("InverseKinematics_PreEndEffectorPointName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   接続元X に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string InverseKinematics_PreEndEffectorPointX {
+            get {
+                return ResourceManager.GetString("InverseKinematics_PreEndEffectorPointX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   接続元Y に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string InverseKinematics_PreEndEffectorPointY {
+            get {
+                return ResourceManager.GetString("InverseKinematics_PreEndEffectorPointY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   起点 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string InverseKinematics_RootPartTag {
+            get {
+                return ResourceManager.GetString("InverseKinematics_RootPartTag", resourceCulture);
             }
         }
         
@@ -385,6 +529,42 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   親の中心 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string OriginDefineMode_CenterOfParent {
+            get {
+                return ResourceManager.GetString("OriginDefineMode_CenterOfParent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   親の画像の中心 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string OriginDefineMode_CenterOfParentSource {
+            get {
+                return ResourceManager.GetString("OriginDefineMode_CenterOfParentSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   親のカスタムポイント に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string OriginDefineMode_CustomPointOfParent {
+            get {
+                return ResourceManager.GetString("OriginDefineMode_CustomPointOfParent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   上書きしない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string OriginDefineMode_DontOverride {
+            get {
+                return ResourceManager.GetString("OriginDefineMode_DontOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   アニメーションのリンク先 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartAnimationLink_GroupName {
@@ -421,6 +601,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   上書きしない（デフォルト：「リンクしない」） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationLink_LinkOpeMode_DontOverride {
+            get {
+                return ResourceManager.GetString("PartAnimationLink_LinkOpeMode_DontOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   乗算 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartAnimationLink_LinkOpeMode_Multiply {
@@ -453,6 +642,15 @@ namespace SinTachiePlugin.Properties {
         public static string PartAnimationNormalizationMode {
             get {
                 return ResourceManager.GetString("PartAnimationNormalizationMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   上書きしない（デフォルト：「制限」） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationNormalizationMode_DontOverride {
+            get {
+                return ResourceManager.GetString("PartAnimationNormalizationMode_DontOverride", resourceCulture);
             }
         }
         
@@ -574,6 +772,24 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   間隔A に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationOpeArg_IntervalA {
+            get {
+                return ResourceManager.GetString("PartAnimationOpeArg_IntervalA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   間隔B に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationOpeArg_IntervalB {
+            get {
+                return ResourceManager.GetString("PartAnimationOpeArg_IntervalB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   開始 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartAnimationOpeArg_Offset {
@@ -624,6 +840,15 @@ namespace SinTachiePlugin.Properties {
         public static string PartAnimationOpeArg_StartFrameNumber {
             get {
                 return ResourceManager.GetString("PartAnimationOpeArg_StartFrameNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   文字列 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationOpeArg_StringInput {
+            get {
+                return ResourceManager.GetString("PartAnimationOpeArg_StringInput", resourceCulture);
             }
         }
         
@@ -700,6 +925,24 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   ランダムループ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationOpeMode_RandomLoop {
+            get {
+                return ResourceManager.GetString("PartAnimationOpeMode_RandomLoop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ランダム往復 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationOpeMode_RandomShuttle {
+            get {
+                return ResourceManager.GetString("PartAnimationOpeMode_RandomShuttle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   シンプル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartAnimationOpeMode_Simple {
@@ -714,6 +957,15 @@ namespace SinTachiePlugin.Properties {
         public static string PartAnimationOpeMode_Sin {
             get {
                 return ResourceManager.GetString("PartAnimationOpeMode_Sin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   文字列指定 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationOpeMode_StringInput {
+            get {
+                return ResourceManager.GetString("PartAnimationOpeMode_StringInput", resourceCulture);
             }
         }
         
@@ -853,7 +1105,25 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   原点 に類似しているローカライズされた文字列を検索します。
+        ///   エフェクトを追加する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartEffectOverrideMode_Add {
+            get {
+                return ResourceManager.GetString("PartEffectOverrideMode_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   エフェクトを上書きする に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartEffectOverrideMode_Override {
+            get {
+                return ResourceManager.GetString("PartEffectOverrideMode_Override", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   指定モード に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartParam_CenterPoint_CenterMode {
             get {
@@ -862,11 +1132,20 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   ポイント に類似しているローカライズされた文字列を検索します。
+        ///   ポイント名 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PartParam_CenterPoint_CustomPoint {
+        public static string PartParam_CenterPoint_CustomPointName {
             get {
-                return ResourceManager.GetString("PartParam_CenterPoint_CustomPoint", resourceCulture);
+                return ResourceManager.GetString("PartParam_CenterPoint_CustomPointName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   位置を保持 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_CenterPoint_KeepPlace {
+            get {
+                return ResourceManager.GetString("PartParam_CenterPoint_KeepPlace", resourceCulture);
             }
         }
         
@@ -903,6 +1182,15 @@ namespace SinTachiePlugin.Properties {
         public static string PartParam_Drawing_Mode_Opacity {
             get {
                 return ResourceManager.GetString("PartParam_Drawing_Mode_Opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   優先度の合成 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_Drawing_Mode_Priority {
+            get {
+                return ResourceManager.GetString("PartParam_Drawing_Mode_Priority", resourceCulture);
             }
         }
         
@@ -957,15 +1245,6 @@ namespace SinTachiePlugin.Properties {
         public static string PartParam_Drawing_Value_Invert {
             get {
                 return ResourceManager.GetString("PartParam_Drawing_Value_Invert", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   優先度の合成 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string PartParam_Drawing_Value_Mode_Priority {
-            get {
-                return ResourceManager.GetString("PartParam_Drawing_Value_Mode_Priority", resourceCulture);
             }
         }
         
@@ -1249,6 +1528,33 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   指定モード に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_Origin_OriginMode {
+            get {
+                return ResourceManager.GetString("PartParam_Origin_OriginMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   点の名前 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_Origin_PointName {
+            get {
+                return ResourceManager.GetString("PartParam_Origin_PointName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   値の依存 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_ValueDependent_Mode_Master {
+            get {
+                return ResourceManager.GetString("PartParam_ValueDependent_Mode_Master", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   カメラ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartParam_ValueDependentMode_Camera {
@@ -1488,6 +1794,15 @@ namespace SinTachiePlugin.Properties {
         public static string SinTachiePlugin_Version {
             get {
                 return ResourceManager.GetString("SinTachiePlugin_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   カスタム に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ValueDependentMode_Custom {
+            get {
+                return ResourceManager.GetString("ValueDependentMode_Custom", resourceCulture);
             }
         }
         

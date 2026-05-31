@@ -153,8 +153,17 @@
   <data name="PartAnimationOpeArg_Intercept" xml:space="preserve">
     <value>切片</value>
   </data>
+  <data name="PartAnimationOpeArg_StringInput" xml:space="preserve">
+    <value>文字列</value>
+  </data>
   <data name="PartAnimationOpeArg_Interval" xml:space="preserve">
     <value>間隔</value>
+  </data>
+  <data name="PartAnimationOpeArg_IntervalA" xml:space="preserve">
+    <value>間隔A</value>
+  </data>
+  <data name="PartAnimationOpeArg_IntervalB" xml:space="preserve">
+    <value>間隔B</value>
   </data>
   <data name="PartAnimationOpeArg_Open" xml:space="preserve">
     <value>開</value>
@@ -216,6 +225,12 @@
   <data name="PartAnimationOpeMode_PeriodicShuttle" xml:space="preserve">
     <value>定期往復</value>
   </data>
+  <data name="PartAnimationOpeMode_RandomShuttle" xml:space="preserve">
+    <value>ランダム往復</value>
+  </data>
+  <data name="PartAnimationOpeMode_RandomLoop" xml:space="preserve">
+    <value>ランダムループ</value>
+  </data>
   <data name="PartAnimationOpeMode_PeriodicLoop" xml:space="preserve">
     <value>定期ループ</value>
   </data>
@@ -237,6 +252,9 @@
   <data name="PartAnimationNormalizationMode_Limit" xml:space="preserve">
     <value>制限</value>
   </data>
+  <data name="PartAnimationNormalizationMode_DontOverride" xml:space="preserve">
+    <value>上書きしない（デフォルト：「制限」）</value>
+  </data>
   <data name="PartAnimationNormalizationMode_Shuttle" xml:space="preserve">
     <value>往復</value>
   </data>
@@ -245,6 +263,9 @@
   </data>
   <data name="PartAnimationLink_LinkOpeMode_DontLink" xml:space="preserve">
     <value>リンクしない</value>
+  </data>
+  <data name="PartAnimationLink_LinkOpeMode_DontOverride" xml:space="preserve">
+    <value>上書きしない（デフォルト：「リンクしない」）</value>
   </data>
   <data name="PartAnimationLink_LinkOpeMode" xml:space="preserve">
     <value>リンクモード</value>
@@ -294,11 +315,17 @@
   <data name="GroupName_PartEffect" xml:space="preserve">
     <value>パーツ個別エフェクト</value>
   </data>
+  <data name="GroupName_Origin" xml:space="preserve">
+    <value>描画原点</value>
+  </data>
   <data name="GroupName_ValueDependent" xml:space="preserve">
     <value>値の依存</value>
   </data>
+  <data name="GroupName_IK" xml:space="preserve">
+    <value>IK</value>
+  </data>
   <data name="GroupName_CenterPoint" xml:space="preserve">
-    <value>描画原点</value>
+    <value>中心位置</value>
   </data>
   <data name="GroupName_CustomPoint" xml:space="preserve">
     <value>カスタムポイント</value>
@@ -314,6 +341,9 @@
   </data>
   <data name="PartParam_Drawing_Mode_Master" xml:space="preserve">
     <value>値の合成</value>
+  </data>
+  <data name="PartParam_ValueDependent_Mode_Master" xml:space="preserve">
+    <value>値の依存</value>
   </data>
   <data name="PartParam_Drawing_Mode_XYZ" xml:space="preserve">
     <value>XYZの合成</value>
@@ -372,10 +402,16 @@
   <data name="PartParam_LayerInfo_Hide" xml:space="preserve">
     <value>非表示</value>
   </data>
+  <data name="PartParam_Origin_OriginMode" xml:space="preserve">
+    <value>指定モード</value>
+  </data>
+  <data name="PartParam_Origin_PointName" xml:space="preserve">
+    <value>点の名前</value>
+  </data>
   <data name="PartParam_Drawing_Value_Priority" xml:space="preserve">
     <value>優先度</value>
   </data>
-  <data name="PartParam_Drawing_Value_Mode_Priority" xml:space="preserve">
+  <data name="PartParam_Drawing_Mode_Priority" xml:space="preserve">
     <value>優先度の合成</value>
   </data>
   <data name="PartParam_LayerInfo_SourceSelectArg_Parent" xml:space="preserve">
@@ -414,11 +450,14 @@
   <data name="PartParam_LayerInfo_SourceSelectArg_Point" xml:space="preserve">
     <value>ポイント</value>
   </data>
-  <data name="PartParam_CenterPoint_CustomPoint" xml:space="preserve">
-    <value>ポイント</value>
+  <data name="PartParam_CenterPoint_CustomPointName" xml:space="preserve">
+    <value>ポイント名</value>
   </data>
   <data name="PartParam_CenterPoint_CenterMode" xml:space="preserve">
-    <value>原点</value>
+    <value>指定モード</value>
+  </data>
+  <data name="PartParam_CenterPoint_KeepPlace" xml:space="preserve">
+    <value>位置を保持</value>
   </data>
   <data name="PartParam_LayerInfo_SourceSelectArg_PartComment" xml:space="preserve">
     <value>パーツ備考</value>
@@ -450,8 +489,8 @@
   <data name="ClippingMode_ClipWithTag" xml:space="preserve">
     <value>クリッピング先のパーツを指定</value>
   </data>
-  <data name="CenterPointMode_OfPart" xml:space="preserve">
-    <value>親パーツの中心</value>
+  <data name="CenterPointMode_OnlyCoordinate" xml:space="preserve">
+    <value>座標を指定</value>
   </data>
   <data name="CenterPointMode_DontOverride" xml:space="preserve">
     <value>上書きしない</value>
@@ -502,8 +541,8 @@
   <data name="PartParam_Drawing_Mode_Opacity" xml:space="preserve">
     <value>不透明度の合成</value>
   </data>
-  <data name="CenterPointMode_OfImage" xml:space="preserve">
-    <value>親パーツの画像の中心</value>
+  <data name="CenterPointMode_DontSet" xml:space="preserve">
+    <value>指定しない（画像の中心）</value>
   </data>
   <data name="CustomNamePoint_DefaultName" xml:space="preserve">
     <value>点</value>
@@ -513,6 +552,9 @@
   </data>
   <data name="ValueDependentMode_DontOverride" xml:space="preserve">
     <value>上書きしない</value>
+  </data>
+  <data name="ValueDependentMode_Custom" xml:space="preserve">
+    <value>カスタム</value>
   </data>
   <data name="ValueDependentMode_Off" xml:space="preserve">
     <value>✖依存させない</value>
@@ -639,5 +681,68 @@
   </data>
   <data name="PartAnimationOpeMode_AIUEOMouth" xml:space="preserve">
     <value>あいうえお口パク</value>
+  </data>
+  <data name="PartAnimationOpeMode_StringInput" xml:space="preserve">
+    <value>文字列指定</value>
+  </data>
+  <data name="IKMode_None" xml:space="preserve">
+    <value>IKを使用しない</value>
+  </data>
+  <data name="IKMode_TypeA" xml:space="preserve">
+    <value>IKを使用する</value>
+  </data>
+  <data name="IKMode_DontOverride" xml:space="preserve">
+    <value>上書きしない</value>
+  </data>
+  <data name="InverseKinematics_RootPartTag" xml:space="preserve">
+    <value>起点</value>
+  </data>
+  <data name="InverseKinematics_IkMode" xml:space="preserve">
+    <value>IKモード</value>
+  </data>
+  <data name="InverseKinematics_JointPartTag" xml:space="preserve">
+    <value>中間関節</value>
+  </data>
+  <data name="InverseKinematics_EndEffectorPointName" xml:space="preserve">
+    <value>接続先ﾎﾟｲﾝﾄ</value>
+  </data>
+  <data name="InverseKinematics_PreEndEffectorPointName" xml:space="preserve">
+    <value>接続元ﾎﾟｲﾝﾄ</value>
+  </data>
+  <data name="InverseKinematics_EndEffectorPointX" xml:space="preserve">
+    <value>接続先X</value>
+  </data>
+  <data name="InverseKinematics_PreEndEffectorPointX" xml:space="preserve">
+    <value>接続元X</value>
+  </data>
+  <data name="InverseKinematics_EndEffectorPointY" xml:space="preserve">
+    <value>接続先Y</value>
+  </data>
+  <data name="InverseKinematics_PreEndEffectorPointY" xml:space="preserve">
+    <value>接続元Y</value>
+  </data>
+  <data name="InverseKinematics_EndEffectorPartTag" xml:space="preserve">
+    <value>接続先</value>
+  </data>
+  <data name="OriginDefineMode_DontOverride" xml:space="preserve">
+    <value>上書きしない</value>
+  </data>
+  <data name="OriginDefineMode_CustomPointOfParent" xml:space="preserve">
+    <value>親のカスタムポイント</value>
+  </data>
+  <data name="OriginDefineMode_CenterOfParentSource" xml:space="preserve">
+    <value>親の画像の中心</value>
+  </data>
+  <data name="OriginDefineMode_CenterOfParent" xml:space="preserve">
+    <value>親の中心</value>
+  </data>
+  <data name="CustomPointParam_Name" xml:space="preserve">
+    <value>点の名前</value>
+  </data>
+  <data name="PartEffectOverrideMode_Override" xml:space="preserve">
+    <value>エフェクトを上書きする</value>
+  </data>
+  <data name="PartEffectOverrideMode_Add" xml:space="preserve">
+    <value>エフェクトを追加する</value>
   </data>
 </root>

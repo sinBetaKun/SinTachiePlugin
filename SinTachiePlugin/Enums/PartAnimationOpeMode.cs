@@ -23,7 +23,13 @@ namespace SinTachiePlugin.Enums
         PeriodicShuttle,
         [Display(Name = nameof(TextResource.PartAnimationOpeMode_PeriodicLoop), ResourceType = typeof(TextResource))]
         PeriodicLoop,
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_RandomShuttle), ResourceType = typeof(TextResource))]
+        RandomShuttle,
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_RandomLoop), ResourceType = typeof(TextResource))]
+        RandomLoop,
         [Display(Name = nameof(TextResource.PartAnimationOpeMode_PeriodicLoop), ResourceType = typeof(TextResource))]
         AudioFile,
+        [Display(Name = nameof(TextResource.PartAnimationOpeMode_StringInput), ResourceType = typeof(TextResource))]
+        StringInput,
     }
 }

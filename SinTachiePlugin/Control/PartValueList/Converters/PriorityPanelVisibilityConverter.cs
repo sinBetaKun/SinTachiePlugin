@@ -1,6 +1,6 @@
 ﻿using SinTachiePlugin.Part;
-using SinTachiePlugin.Part.Drawing.DrawingArg.Argment.SubArg;
-using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgment.Argment.Values;
+using SinTachiePlugin.Part.Drawing.DrawingArg.Argument.SubArg;
+using SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Argument.Values;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;

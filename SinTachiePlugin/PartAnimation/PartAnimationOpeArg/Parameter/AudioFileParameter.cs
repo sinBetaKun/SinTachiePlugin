@@ -1,15 +1,16 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using SinTachiePlugin.Draw;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Abrir;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.AudioFilePath;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.Cerrar;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.PlaybackSpeed;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argment.StartFrameNumber;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Abrir;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.AudioFilePath;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Cerrar;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.PlaybackSpeed;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.StartFrameNumber;
 using SinTachiePlugin.Properties;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
+using YukkuriMovieMaker.Player.Video;
 using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
@@ -56,20 +57,22 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         {
         }
 
-        public override double GetValue(FrameAndLength fl, int fps, double voiceVolume)
+        public override PartAnimationResult GetResult(TachieSourceDescription desc)
         {
-            if (lastFrame != StartFrameNumber || length != fl.Length || this.fps != fps)
+            FrameAndLength fl = new(desc);
+
+            if (lastFrame != StartFrameNumber || length != fl.Length || fps != desc.FPS)
             {
                 lastFrame = StartFrameNumber;
                 length = fl.Length;
-                this.fps = fps;
+                fps = desc.FPS;
                 UpdateVolumeArray();
             }
 
             double open = fl.GetValue(Abrir, fps);
             double close = fl.GetValue(Cerrar, fps);
 
-            return close + (open - close) * volumeArray[(int)(fl.Frame * PlaybackSpeed / 100)];
+            return PartAnimationResult.FromVolume(close + (open - close) * volumeArray[(int)(fl.Frame * PlaybackSpeed / 100)]);
         }
 
         public override void CopyFrom(PartAnimationOpeArgBase? origin)

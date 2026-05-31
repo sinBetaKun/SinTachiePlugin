@@ -1,4 +1,4 @@
-﻿using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argment.ImageFilePath;
+﻿using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.ImageFilePath;
 using System.IO;
 using System.Windows.Data;
 using YukkuriMovieMaker.Commons;

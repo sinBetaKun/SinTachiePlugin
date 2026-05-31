@@ -5,13 +5,13 @@ namespace SinTachiePlugin.Enums
 {
     internal enum CenterPointMode
     {
-        [Display(Name = nameof(TextResource.CenterPointMode_OfPart), ResourceType = typeof(TextResource))]
-        OfPart,
-        [Display(Name = nameof(TextResource.CenterPointMode_OfImage), ResourceType = typeof(TextResource))]
-        OfImage,
-        [Display(Name = nameof(TextResource.CenterPointMode_CustomPointName), ResourceType = typeof(TextResource))]
-        CustomPointName,
         [Display(Name = nameof(TextResource.CenterPointMode_DontOverride), ResourceType = typeof(TextResource))]
         DontOverride,
+        [Display(Name = nameof(TextResource.CenterPointMode_DontSet), ResourceType = typeof(TextResource))]
+        DontSet,
+        [Display(Name = nameof(TextResource.CenterPointMode_OnlyCoordinate), ResourceType = typeof(TextResource))]
+        OnlyCoordinate,
+        [Display(Name = nameof(TextResource.CenterPointMode_CustomPointName), ResourceType = typeof(TextResource))]
+        CustomPointName,
     }
 }
