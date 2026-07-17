@@ -78,7 +78,7 @@ namespace SinTachiePlugin.Parts
             FrameAndLength initialFL = new(description);
 
             int count = description.Tachie.Faces
-                .Select(face => (face.FaceParameter as SinTachieFaceParameter).Parts.Count)
+                .Select(face => (face.FaceParameter as SinTachieFaceParameter)?.Parts.Count ?? 0)
                 .Sum()
                 + ip.Parts.Count;
 
