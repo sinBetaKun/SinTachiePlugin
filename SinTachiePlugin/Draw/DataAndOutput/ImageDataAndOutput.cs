@@ -11,6 +11,7 @@ namespace SinTachiePlugin.Draw.DataAndOutput
         private readonly IImageFileSource? _source;
         public readonly int Width;
         public readonly int Height;
+        public bool Used { get; set; } = false;
         public ID2D1Image? Output => _source?.Output;
 
         public ImageDataAndOutput(IGraphicsDevicesAndContext devices, string filePath)

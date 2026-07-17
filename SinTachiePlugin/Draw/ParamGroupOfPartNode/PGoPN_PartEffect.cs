@@ -40,5 +40,15 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                 }
             }
         }
+
+        public void CopyTo(PGoPN_PartEffect pg)
+        {
+            pg.Effects = [.. Effects];
+        }
+
+        public PartNodeComparateResult Comparate(PGoPN_PartEffect pg)
+        {
+            return new(Value: pg.Effects.Count > 0 || Effects.Count > 0);
+        }
     }
 }

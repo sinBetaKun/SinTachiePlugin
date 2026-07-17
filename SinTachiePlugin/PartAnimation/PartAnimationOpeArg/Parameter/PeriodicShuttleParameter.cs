@@ -39,7 +39,7 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         /// 制御モードが周期的往復/ループのとき、差分を指定する値を返す。
         /// </summary>
         /// <returns>出力</returns>
-        public override PartAnimationResult GetResult(TachieSourceDescription desc)
+        public override PartAnimationResultA GetResult(TachieSourceDescription desc)
         {
             FrameAndLength fl = new(desc);
             int fps = desc.FPS;
@@ -48,19 +48,19 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
             double timespan = (double)fl.Frame / fps - start;
 
             if (timespan < 0)
-                return PartAnimationResult.FromVolume(a);
+                return PartAnimationResultA.FromVolume(a);
 
             double interval = fl.GetValue(Interval, fps);
             double transition = fl.GetValue(Transition, fps);
             double surplus = timespan % (transition + interval);
 
             if (surplus > transition)
-                return PartAnimationResult.FromVolume(a);
+                return PartAnimationResultA.FromVolume(a);
 
             double rate = surplus / transition;
             double b = fl.GetValue(Cerrar, fps) / 100;
 
-            return PartAnimationResult.FromVolume(b + (a - b) * (Math.Abs(rate - 0.5) * 2));
+            return PartAnimationResultA.FromVolume(b + (a - b) * (Math.Abs(rate - 0.5) * 2));
         }
 
         public PeriodicShuttleParameter()

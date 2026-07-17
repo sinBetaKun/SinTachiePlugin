@@ -1,6 +1,6 @@
 ﻿using SinTachiePlugin.Enums;
 using SinTachiePlugin.Part;
-using SinTachiePlugin.Part.LayerInformation.ClippingArg.Argument.PartToClipTo;
+using SinTachiePlugin.Part.LayerInformation.ClippingArg.Argument.TagToClipTo;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.Clip;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.Parent;
 
@@ -32,10 +32,10 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                 {
                     ClippingMode = clipParameter.ClippingMode;
 
-                    if (clipParameter.ClippingArg is IPartToClipToParameter partToClipToParameter)
+                    if (clipParameter.ClippingArg is ITagToClipToParameter partToClipToParameter)
                     {
-                        if (!string.IsNullOrEmpty(partToClipToParameter.PartToClipTo))
-                            TagToClipTo = partToClipToParameter.PartToClipTo;
+                        if (!string.IsNullOrEmpty(partToClipToParameter.TagToClipTo))
+                            TagToClipTo = partToClipToParameter.TagToClipTo;
                     }
                     else
                     {

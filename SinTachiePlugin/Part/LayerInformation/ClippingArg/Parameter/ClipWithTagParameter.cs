@@ -1,4 +1,4 @@
-﻿using SinTachiePlugin.Part.LayerInformation.ClippingArg.Argument.PartToClipTo;
+﻿using SinTachiePlugin.Part.LayerInformation.ClippingArg.Argument.TagToClipTo;
 using SinTachiePlugin.Properties;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
@@ -7,11 +7,11 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter
 {
-    internal class ClipWithTagParameter : ClippingArgBase, IPartToClipToParameter
+    internal class ClipWithTagParameter : ClippingArgBase, ITagToClipToParameter
     {
-        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourseSelectArg_PartToClipTo), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_ClippingArg_TagToClipTo), ResourceType = typeof(TextResource))]
         [TextEditor]
-        public string PartToClipTo { get => partToClipTo; set => Set(ref partToClipTo, value); }
+        public string TagToClipTo { get => partToClipTo; set => Set(ref partToClipTo, value); }
         private string partToClipTo = string.Empty;
 
         public ClipWithTagParameter()
@@ -23,8 +23,8 @@ namespace SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter
 
         public override void CopyFrom(ClippingArgBase? origin)
         {
-            if (origin is IPartToClipToParameter partToClipToParameter)
-                PartToClipTo = partToClipToParameter.PartToClipTo;
+            if (origin is ITagToClipToParameter partToClipToParameter)
+                TagToClipTo = partToClipToParameter.TagToClipTo;
         }
 
         public override ClippingArgBase GetClone()
@@ -38,12 +38,12 @@ namespace SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter
 
         protected override void SaveSharedData(SharedDataStore store)
         {
-            store.Save(new PartToClipToSharedData(this));
+            store.Save(new TagToClipToSharedData(this));
         }
 
         protected override void LoadSharedData(SharedDataStore store)
         {
-            if (store.Load<PartToClipToSharedData>() is PartToClipToSharedData partToClipToSharedData)
+            if (store.Load<TagToClipToSharedData>() is TagToClipToSharedData partToClipToSharedData)
                 partToClipToSharedData.CopyTo(this);
         }
     }

@@ -59,7 +59,7 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                                     paa1.LinkOpeMode = pav.LinkOpeMode;
                                     paa1.NormalizationMode = pav.NormalizationMode;
 
-                                    PartAnimationResult result = pav.AnmOpeArgments.GetResult(desc);
+                                    PartAnimationResultA result = pav.AnmOpeArgments.GetResult(desc);
 
                                     if (result.IsVolume)
                                     {
@@ -103,7 +103,7 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                                     if (pav.Index > 0)
                                         paa2.Index = pav.Index;
 
-                                    PartAnimationResult result = pav.AnmOpeArgments.GetResult(desc);
+                                    PartAnimationResultA result = pav.AnmOpeArgments.GetResult(desc);
 
                                     if (result.IsVolume)
                                     {
@@ -153,7 +153,7 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                         {
                             PartAnimationValue pav = singleValuesParameter.PartAnimationValue;
                             partAnimationArg.NormalizationMode = pav.NormalizationMode;
-                            PartAnimationResult result = pav.AnmOpeArgments.GetResult(desc);
+                            PartAnimationResultA result = pav.AnmOpeArgments.GetResult(desc);
 
                             if (result.IsVolume)
                             {
@@ -175,7 +175,32 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
         public void CopyTo(PGoPN_PartAnimationValue pg)
         {
+            pg.PartAnimationArgs = [.. PartAnimationArgs.Select(paa => paa.GetClone())];
+        }
 
+        public PartNodeComparateResult Comparate(PGoPN_PartAnimationValue pg)
+        {
+            bool b0;
+
+            if (pg.PartAnimationArgs.Count != PartAnimationArgs.Count)
+            {
+                b0 = true;
+            }
+            else
+            {
+                for (int i = 0; i < PartAnimationArgs.Count; i++)
+                {
+                    if (PartAnimationArgs[i].IsEqual(pg.PartAnimationArgs[i]))
+                    {
+                        b0 = true;
+                        break;
+                    }
+                }
+
+                b0 = false;
+            }
+
+            return new(Value: b0);
         }
     }
 }

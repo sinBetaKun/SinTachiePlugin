@@ -1,4 +1,4 @@
-﻿using SinTachiePlugin.Part.CustomPoint.CustomPointArg;
+﻿using SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument;
 using SinTachiePlugin.Properties;
 using System.Collections.Immutable;
 using System.ComponentModel;

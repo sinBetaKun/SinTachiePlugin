@@ -185,10 +185,11 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                 pg.Rotate != Rotate ||
                 pg.Invert != Invert ||
                 pg.Blend != Blend ||
-                pg.ZSort != ZSort ||
-                pg.Priority != Priority;
+                pg.ZSort != ZSort;
 
-            return new(Value: valueChanged);
+            bool clChanged = pg.Priority != Priority;
+
+            return new(CommandList: clChanged, Value: valueChanged);
         }
     }
 }

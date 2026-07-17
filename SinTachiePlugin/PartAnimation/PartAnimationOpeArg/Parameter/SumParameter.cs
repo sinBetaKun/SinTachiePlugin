@@ -26,14 +26,14 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         /// <param name="fl">アイテムのフレームと長さ</param>
         /// <param name="fps">fps</param>
         /// <returns>出力</returns>
-        public override PartAnimationResult GetResult(TachieSourceDescription desc)
+        public override PartAnimationResultA GetResult(TachieSourceDescription desc)
         {
             FrameAndLength fl = new(desc);
             int fps = desc.FPS;
             double a = fl.GetValue(Abrir, fps) / 100;
             double b = fl.GetValue(Cerrar, fps) / 100;
 
-            return PartAnimationResult.FromVolume(a * b);
+            return PartAnimationResultA.FromVolume(a * b);
         }
 
         public SumParameter()

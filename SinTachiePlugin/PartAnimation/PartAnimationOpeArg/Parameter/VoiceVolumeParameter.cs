@@ -26,7 +26,7 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         /// <param name="fl">アイテムのフレームと長さ</param>
         /// <param name="fps">fps</param>
         /// <returns>出力</returns>
-        public override PartAnimationResult GetResult(TachieSourceDescription desc)
+        public override PartAnimationResultA GetResult(TachieSourceDescription desc)
         {
             FrameAndLength fl = new(desc);
             int fps = desc.FPS;
@@ -34,11 +34,11 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
             double close = fl.GetValue(Cerrar, fps) / 100;
 
             if (voiceVolume < 0)
-                return PartAnimationResult.FromVolume(close);
+                return PartAnimationResultA.FromVolume(close);
 
             double open = fl.GetValue(Abrir, fps) / 100;
 
-            return PartAnimationResult.FromVolume(close + (open - close) * voiceVolume);
+            return PartAnimationResultA.FromVolume(close + (open - close) * voiceVolume);
         }
 
         public VoiceVolumeParameter()

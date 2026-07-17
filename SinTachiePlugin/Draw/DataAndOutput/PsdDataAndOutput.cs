@@ -14,6 +14,7 @@ namespace SinTachiePlugin.Draw.DataAndOutput
         private readonly PsdFolder _psdFolder;
         public readonly int Width;
         public readonly int Height;
+        public bool Used { get; set; } = false;
         public ID2D1Bitmap? Output;
 
         public PsdDataAndOutput(string filePath, IGraphicsDevicesAndContext devices, PsdFile psdFile, IEnumerable<string> enableLayers)

@@ -14,7 +14,7 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg
         {
         }
 
-        public abstract PartAnimationResult GetResult(TachieSourceDescription desc);
+        public abstract PartAnimationResultA GetResult(TachieSourceDescription desc);
 
         public abstract void CopyFrom(PartAnimationOpeArgBase? origin);
 

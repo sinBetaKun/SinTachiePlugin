@@ -1,7 +1,10 @@
 ﻿using SinTachiePlugin.Enums;
 using SinTachiePlugin.Part.LayerInformation.ClippingArg;
 using SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter;
+using SinTachiePlugin.Part.LayerInformation.InsertArg;
+using SinTachiePlugin.Part.LayerInformation.InsertArg.Parameter;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.Clip;
+using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.Insert;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.LoopPlayback;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.Parent;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.PlaybackSpeed;
@@ -16,7 +19,7 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
 {
-    internal class SceneParameter : SourceSelectArgBase, IParentParameter, ISceneIdParameter, IClipParameter, IPlaybackSpeedParameter, IStartFrameNumberParameter, ILoopPlaybackParameter
+    internal class SceneParameter : SourceSelectArgBase, IParentParameter, ISceneIdParameter, IClipParameter, IInsertParameter, IPlaybackSpeedParameter, IStartFrameNumberParameter, ILoopPlaybackParameter
     {
         [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_Parent), ResourceType = typeof(TextResource))]
         [TextEditor]
@@ -37,6 +40,14 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         public ClippingArgBase ClippingArg { get => _clippingArg; set => Set(ref _clippingArg, value); }
         private ClippingArgBase _clippingArg = new DontClipParameter();
 
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_InsertMode), ResourceType = typeof(TextResource))]
+        [EnumComboBox]
+        public PartInsertDefineMode InsertDefineMode { get => _insertDefineMode; set => Set(ref _insertDefineMode, value); }
+        private PartInsertDefineMode _insertDefineMode = PartInsertDefineMode.DontInsert;
+
+        [Display(AutoGenerateField = true)]
+        public InsertArgBase InsertArg { get => _insertArg; set => Set(ref _insertArg, value); }
+        private InsertArgBase _insertArg = new DontInsertParameter();
 
         [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_PlaybackSpeed), ResourceType = typeof(TextResource))]
         [TextBoxSlider("F2", "%", 0, 200)]
@@ -68,6 +79,7 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         public override ValueTask EndEditAsync()
         {
             ClippingArg = ClippingMode.Convert(ClippingArg);
+            InsertArg = InsertDefineMode.Convert(InsertArg);
             return base.EndEditAsync();
         }
 
@@ -81,6 +93,11 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
             {
                 ClippingMode = clippingParameter.ClippingMode;
                 ClippingArg = clippingParameter.ClippingArg.GetClone();
+            }
+            if (origin is IInsertParameter insertParameter)
+            {
+                InsertDefineMode = insertParameter.InsertDefineMode;
+                InsertArg = insertParameter.InsertArg.GetClone();
             }
             if (origin is IPlaybackSpeedParameter playbackSpeedParameter)
                 PlaybackSpeed = playbackSpeedParameter.PlaybackSpeed;
@@ -97,13 +114,14 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
             return clone;
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [ClippingArg];
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [ClippingArg, InsertArg];
 
         protected override void SaveSharedData(SharedDataStore store)
         {
             store.Save(new ParentSharedData(this));
             store.Save(new SceneIdSharedData(this));
             store.Save(new ClipSharedData(this));
+            store.Save(new InsertSharedData(this));
             store.Save(new PlaybackSpeedSharedData(this));
             store.Save(new StartFrameNumberSharedData(this));
             store.Save(new LoopPlaybackSharedData(this));
@@ -117,6 +135,8 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 sceneIdSharedData.CopyTo(this);
             if (store.Load<ClipSharedData>() is ClipSharedData clipSharedData)
                 clipSharedData.CopyTo(this);
+            if (store.Load<InsertSharedData>() is InsertSharedData insertSharedData)
+                insertSharedData.CopyTo(this);
             if (store.Load<PlaybackSpeedSharedData>() is PlaybackSpeedSharedData playbackSpeedSharedData)
                 playbackSpeedSharedData.CopyTo(this);
             if (store.Load<StartFrameNumberSharedData>() is StartFrameNumberSharedData startFrameNumberSharedData)

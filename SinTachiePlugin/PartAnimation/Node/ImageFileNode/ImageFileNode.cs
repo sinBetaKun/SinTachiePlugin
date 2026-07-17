@@ -1,78 +1,72 @@
 ﻿using SinTachiePlugin.Enums;
 using SinTachiePlugin.Informations;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg;
 using SinTachiePlugin.Properties;
-using YukkuriMovieMaker.Plugin.Voice;
 
 namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
 {
     internal class ImageFileNode
     {
-        private readonly string? path;
-        public int Index = -1;
+        public readonly string Path;
         public int Depth = -1;
+        public string Text = string.Empty;
 
         public readonly List<ImageFileNode> VolumeChildren = [];
-        public readonly ImageFileNode?[] VowelChildren = new ImageFileNode?[6];
-
-        public ImageFileNode()
-        {
-        }
+        public readonly List<ImageFileNode> OtherChildren = [];
 
         public ImageFileNode(string path)
         {
-            this.path = path;
+            Path = path;
         }
 
-        public string? GetValue(List<double> values, List<PartAnimationNormalizationMode> outers)
+        public string? GetValue(List<PartAnimationResultA> values, List<PartAnimationNormalizationMode> nmlzs)
         {
             if (Depth < 0)
                 return null;
 
             if (values.Count <= Depth)
-                return path;
+                return Path;
 
             try
             {
-                if (values[Depth] < 0 || 2 <= values[Depth])
-                {
-                    throw new Exception(TextResource.ImageFileNode_Error_InvalidValue + $"({values[Depth]})");
-                }
-
+                PartAnimationResultB _0 = nmlzs[Depth].Normalize(values[Depth], VolumeChildren.Count);
                 string? ret;
-                int num, num2;
-                double value;
 
-                if (values[Depth] > 1)
+                if (_0.IsIndex)
                 {
-                    if (outers[Depth] != PartAnimationNormalizationMode.Shuttle)
+                    if (_0.Index < 0) // 実は VolumeChildren.Count == 0 だったらここが処理されるんだよね。
                     {
-                        throw new Exception(TextResource.ImageFileNode_Error_InvalidValue + $"({values[Depth]} (OuterLayerValueMode:Shuttle))");
+                        if (OtherChildren.FirstOrDefault(x => x.Text == "_") is ImageFileNode _1)
+                        {
+                            ret = _1.GetValue(values, nmlzs);
+                        }
+                        else
+                        {
+                            return Path;
+                        }
                     }
-
-                    value = 2 - values[Depth];
-                    num = 0;
-                    num2 = 1;
+                    else if (_0.Index < VolumeChildren.Count)
+                    {
+                        ret = VolumeChildren[_0.Index].GetValue(values, nmlzs);
+                    }
+                    else
+                    {
+                        throw new Exception(TextResource.ImageFileNodeManager_Error_InvalidIndex);
+                    }
                 }
                 else
                 {
-                    value = values[Depth];
-                    num = outers[Depth] == PartAnimationNormalizationMode.Loop ? 1 : 0;
-                    num2 = 0;
+                    if (OtherChildren.FirstOrDefault(x => x.Text == _0.Text) is ImageFileNode _1)
+                    {
+                        ret = _1.GetValue(values, nmlzs);
+                    }
+                    else
+                    {
+                        return Path;
+                    }
                 }
 
-                if (VolumeChildren.Any(child => child.Index < 0))
-                {
-                    int layerIndex = (int)(value * (VolumeChildren.Count - 1 + num)) + num2;
-                    ret = VolumeChildren[layerIndex].GetValue(values, outers);
-                }
-                else
-                {
-                    int layerIndex = (int)(value * (VolumeChildren.Count + num)) + num2;
-                    if (layerIndex == VolumeChildren.Count) return path;
-                    ret = VolumeChildren[layerIndex].GetValue(values, outers);
-                }
-
-                return ret ?? path;
+                return ret ?? Path;
             }
             catch (Exception ex)
             {

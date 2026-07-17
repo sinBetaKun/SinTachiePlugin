@@ -2,7 +2,6 @@
 using SinTachiePlugin.Part;
 using SinTachiePlugin.Part.ValueDependent.ValueDependentArg.Parameter;
 using SinTachiePlugin.Part.ValueDependent.ValueDependentArg.SubArgument.Parameter;
-using YukkuriMovieMaker.Player.Video;
 
 namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 {
@@ -33,15 +32,15 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                 {
                     switch (hsvdp.ModeMaster)
                     {
-                        case Enums.ValueDependentModeMaster.On:
+                        case ValueDependentModeMaster.On:
                             XYZ = Opacity = Zoom = Rotation = Invert = Camera = UnlazyEffect = true;
                             break;
 
-                        case Enums.ValueDependentModeMaster.Off:
+                        case ValueDependentModeMaster.Off:
                             XYZ = Opacity = Zoom = Rotation = Invert = Camera = UnlazyEffect = false;
                             break;
 
-                        case Enums.ValueDependentModeMaster.Custom:
+                        case ValueDependentModeMaster.Custom:
                             if (hsvdp.SubArg is CustomModeParameter cmp)
                             {
                                 if (cmp.XYZ != ValueDependentMode.DontOverride)
@@ -64,6 +63,31 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                     }
                 }
             }
+        }
+
+        public void CopyTo(PGoPN_ValueDependent pg)
+        {
+            pg.XYZ = XYZ;
+            pg.Opacity = Opacity;
+            pg.Zoom = Zoom;
+            pg.Rotation = Rotation;
+            pg.Invert = Invert;
+            pg.Camera = Camera;
+            pg.UnlazyEffect = UnlazyEffect;
+        }
+
+        public PartNodeComparateResult Comparate(PGoPN_ValueDependent pg)
+        {
+            bool valueChanged =
+                XYZ != pg.XYZ ||
+                Opacity != pg.Opacity ||
+                Zoom != pg.Zoom ||
+                Rotation != pg.Rotation ||
+                Invert != pg.Invert ||
+                Camera != pg.Camera ||
+                UnlazyEffect != pg.UnlazyEffect;
+
+            return new(Value: valueChanged);
         }
     }
 }

@@ -74,5 +74,30 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                 }
             }
         }
+
+        public void CopyTo(PGoPN_Source pg)
+        {
+            pg.ThisLayerType = ThisLayerType;
+            pg.IsEmpty = IsEmpty;
+            pg.FilePath = FilePath;
+            pg.EnableLayers = EnableLayers;
+            pg.SceneId = SceneId;
+            pg.Time = Time;
+            pg.LoopPlayback = LoopPlayback;
+        }
+
+        public PartNodeComparateResult Comparate(PGoPN_Source pg)
+        {
+            bool valueChanged =
+                pg.ThisLayerType != ThisLayerType ||
+                pg.IsEmpty != IsEmpty ||
+                pg.FilePath != FilePath ||
+                !pg.EnableLayers.SequenceEqual(EnableLayers) ||
+                pg.SceneId != SceneId ||
+                pg.Time != Time ||
+                pg.LoopPlayback != LoopPlayback;
+
+            return new(Value: valueChanged);
+        }
     }
 }

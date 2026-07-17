@@ -14,9 +14,9 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         [TextEditor]
         public string StringInput { get; set; } = string.Empty;
 
-        public override PartAnimationResult GetResult(TachieSourceDescription desc)
+        public override PartAnimationResultA GetResult(TachieSourceDescription desc)
         {
-            return PartAnimationResult.FromText(StringInput);
+            return PartAnimationResultA.FromText(StringInput);
         }
 
         public StringInputParameter()

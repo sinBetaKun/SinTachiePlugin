@@ -15,9 +15,9 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         {
         }
 
-        public override PartAnimationResult GetResult(TachieSourceDescription desc)
+        public override PartAnimationResultA GetResult(TachieSourceDescription desc)
         {
-            return PartAnimationResult.FromText(desc.MouthShape switch
+            return PartAnimationResultA.FromText(desc.MouthShape switch
             {
                 MouthShape.A => "a",
                 MouthShape.E => "e",

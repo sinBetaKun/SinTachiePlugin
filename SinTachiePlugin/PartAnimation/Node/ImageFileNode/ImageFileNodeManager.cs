@@ -1,18 +1,14 @@
 ﻿using SinTachiePlugin.Enums;
-using SinTachiePlugin.Informations;
-using SinTachiePlugin.Properties;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg;
 using System.IO;
-using Vortice.Mathematics;
-using YukkuriMovieMaker.Commons;
-using YukkuriMovieMaker.Plugin;
 using YukkuriMovieMaker.Settings;
 
 namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
 {
     internal class ImageFileNodeManager
     {
-        private readonly ImageFileNode? _root;
-        public string Value = string.Empty;
+        public readonly ImageFileNode? Root;
+        public string Value { get; private set; } = string.Empty;
 
         public ImageFileNodeManager(string path)
         {
@@ -35,7 +31,7 @@ namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
                 return;
 
             // ルートノードを作成
-            _root = new(path)
+            Root = new(path)
             {
                 Depth = 0
             };
@@ -59,187 +55,105 @@ namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
                 ];
 
             // ファイル名とその連番を配列に変換したものの辞書
-            Dictionary<string, int[]> layerNumsDict = [];
+            Dictionary<string, string[]> d0 = [];
 
-            for (int i = 0; i < files.Length; i++)
+            foreach(string file in files)
             {
-                if (Path.GetFileNameWithoutExtension(files[i]) is string fileName)
+                if (Path.GetFileNameWithoutExtension(file) is string fileName)
                 {
-                    // ドットで分割
-                    string[] devideds = fileName.Split(".");
-                    int[] layerNums = new int[devideds.Length - 1];
-                    bool isLayer = true;
+                    d0.Add(file, fileName.Split(".")[1..]);
+                }
+            }
 
-                    // 連番を配列に変換する
-                    for (int j = 1; j < devideds.Length; j++)
+            int n0 = d0.Values.Select(v => v.Length).Max();
+            ImageFileNode root = new(path) { Depth = 0 };
+            List<ImageFileNode> l0 = [root];
+
+            for (int i = 1; i <= n0; i++)
+            {
+                foreach (var kv in d0.Where(x => x.Value.Length == i))
+                {
+                    string s0 = kv.Key;
+                    string[] a0 = kv.Value;
+                    ImageFileNode _0 = root;
+                    bool b0 = false;
+
+                    for (int j = 0; j < i - 1; j++)
                     {
-                        if (int.TryParse(devideds[j], out int n))
+                        string s1 = a0[j];
+
+                        if (_0.OtherChildren.FirstOrDefault(x => x.Text == s1) is ImageFileNode _1)
                         {
-                            if (n < 0)
+                            _0 = _1;
+                        }
+                        else if (s1 == "_")
+                        {
+                            bool b1 = true;
+
+                            for (int k = j + 1; k < i - 1; k++)
+                                if (a0[k] != "_")
+                                    b1 = false;
+
+                            if (b1 && a0.Last() != "_")
                             {
-                                // 連番が負の数の場合
-                                isLayer = false;
-                                break;
+                                while (j < i - 1)
+                                {
+                                    j++;
+                                    ImageFileNode _2 = new(_0.Path) { Depth = j, Text = "_" };
+                                    l0.Add(_2);
+                                    _0.OtherChildren.Add(_2);
+                                    _0 = _2;
+                                }
                             }
                             else
                             {
-                                // 連番が数値である場合はそのまま
-                                layerNums[j - 1] = n;
+                                b0 = true;
                             }
-                        }
-                        else if (devideds[j] == "_")
-                        {
-                            // 連番がアンダースコアである場合は-1にする
-                            layerNums[j - 1] = -1;
+
+                            break;
                         }
                         else
                         {
-                            // 正しい連番でない場合
-                            isLayer = false;
+                            b0 = true;
                             break;
                         }
                     }
 
-                    if (isLayer)
-                    {
-                        // 連番が正しい場合は辞書に登録
-                        layerNumsDict.Add(files[i], layerNums);
-                    }
+                    if (b0)
+                        break;
+
+                    ImageFileNode _3 = new(s0) { Depth = i, Text = a0.Last() };
+                    l0.Add(_3);
+                    _0.OtherChildren.Add(_3);
                 }
             }
 
-
-            // 各ファイル名の連番の数を取得
-            int[] numsOfIndexs = [.. layerNumsDict.Values.Select(indexs => indexs.Length)];
-
-            // 解決対象の連番画像の連番の数
-            int targetLength = -1;
-
-            // 連番画像の解決
-            while (true)
+            foreach (ImageFileNode _0 in l0)
             {
-                IEnumerable<int> unsolvedNums = numsOfIndexs.Where(num => num > targetLength);
-
-                // 全ての連番画像が解決した場合
-                if (!unsolvedNums.Any())
+                var a0 = _0.OtherChildren.Where(x =>
                 {
-                    break;
-                }
+                    if (int.TryParse(x.Text, out int n1))
+                        if (n1 >= 0)
+                            return true;
 
-                // 次に短い連番の数を取得
-                targetLength = unsolvedNums.Min();
+                    return false;
+                }).OrderBy(x => int.Parse(x.Text));
 
-                var kvs = layerNumsDict.Where(preNode => preNode.Value.Length == targetLength && preNode.Value.Length > 0);
-
-                foreach (var kv in kvs)
+                foreach (ImageFileNode _1 in a0)
                 {
-                    ImageFileNode tmp = new (Path.Combine(dirName, kv.Key));
-                    AddLeaf(tmp, kv.Value);
+                    _0.OtherChildren.Remove(_1);
+                    _0.VolumeChildren.Add(_1);
                 }
             }
 
             Value = path;
         }
 
-        private void AddLeaf(ImageFileNode node, int[] indexs)
+        public void Update(List<PartAnimationResultA> results, List<PartAnimationNormalizationMode> outers)
         {
-            if (_root is null)
-                return;
-
-            var len = indexs.Length;
-            if (len < 1)
+            if (Root is not null)
             {
-                node.Depth = 0;
-                SinTachieDialog.ShowError(new(TextResource.ImageFileNodeManager_Error_InvalidIndex));
-                return;
-            }
-
-            ImageFileNode tmp = _root;
-
-            for (int i = 0; i < len - 1; i++)
-            {
-                ImageFileNode? tmp2 = tmp.VolumeChildren.FirstOrDefault(node => node.Index == indexs[i]);
-
-                if (tmp2 is null)
-                {
-                    for (int j = i; j < len - 1; j++)
-                    {
-                        // 空のノードを追加
-                        tmp2 = new ImageFileNode() { Depth = i + 1, Index = indexs[j] };
-                        tmp.VolumeChildren.Add(tmp2);
-                        tmp = tmp2;
-                    }
-
-                    break;
-                }
-                else
-                {
-                    tmp = tmp2;
-                }
-            }
-
-            var indexs2 = (from child in tmp.VolumeChildren select child.Index).ToList();
-            var index = indexs2.IndexOf(indexs.Last());
-
-            if (index < 0)
-            {
-                node.Depth = len;
-                node.Index = indexs.Last();
-
-                if (node.Index < 0)
-                {
-                    tmp.VolumeChildren.Add(node);
-                    return;
-                }
-
-                int num = tmp.VolumeChildren.Count - (indexs2.Contains(-1) ? 1 : 0);
-
-                if (node.Index < 0)
-                {
-                    for (int i = num - 1; i > -1; i--)
-                    {
-                        if (tmp.VolumeChildren[i].Index > 0)
-                        {
-                            tmp.VolumeChildren.Add(node);
-                            return;
-                        }
-
-                        if (tmp.VolumeChildren[i].Index < node.Index)
-                        {
-                            tmp.VolumeChildren.Insert(i + 1, node);
-                            return;
-                        }
-                    }
-
-                    tmp.VolumeChildren.Insert(num, node);
-                    return;
-                }
-
-                for (int i = 0; i < num; i++)
-                {
-                    if (tmp.VolumeChildren[i].Index < 0)
-                    {
-                        tmp.VolumeChildren.Insert(i, node);
-                        return;
-                    }
-
-                    if (tmp.VolumeChildren[i].Index > node.Index)
-                    {
-                        tmp.VolumeChildren.Insert(i, node);
-                        return;
-                    }
-                }
-
-                tmp.VolumeChildren.Insert(num, node);
-                return;
-            }
-        }
-
-        public void Update(List<double> values, List<PartAnimationNormalizationMode> outers)
-        {
-            if (_root is not null)
-            {
-                if (_root.GetValue(values, outers) is string path)
+                if (Root.GetValue(results, outers) is string path)
                 {
                     Value = path;
                 }

@@ -1,6 +1,4 @@
-﻿using Vortice;
-using Vortice.Direct2D1;
-using Vortice.Direct2D1.Effects;
+﻿using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Player.Video;
 
@@ -13,6 +11,7 @@ namespace SinTachiePlugin.Draw.DataAndOutput
         public TimeSpan Time;
         private readonly ISceneInfo? _targetScene;
         private readonly ITimelineSource? _source;
+        public bool Occupied { get; set; } = false;
         public ID2D1Image? Output => _source?.Output;
 
         public SceneDataAndOutput(IGraphicsDevicesAndContext devices, TimelineItemSourceDescription desc, Guid sceneId, TimeSpan time, bool loop)
@@ -24,24 +23,34 @@ namespace SinTachiePlugin.Draw.DataAndOutput
             if (_targetScene is not null && _targetScene.TryCreateVideoSource(_devices, out _source))
             {
                 Time = time;
-
-                if (time.Ticks > _targetScene.Duration.Time.Ticks && !loop)
-                    _source.Update(TimeSpan.FromTicks(Math.Min(time.Ticks, _targetScene.Duration.Time.Ticks)), desc.Usage);
-                else
-                    _source.Update(TimeSpan.FromTicks(time.Ticks % _targetScene.Duration.Time.Ticks), desc.Usage);
+                _source.Update(GetValidTimeSpan(time, loop), desc.Usage);
+            }
+            else
+            {
+                Time = TimeSpan.Zero;
             }
         }
 
-        public void Update(TimelineItemSourceDescription desc, TimeSpan time, bool loop)
+        public TimeSpan GetValidTimeSpan(TimeSpan time, bool loop)
+        {
+            if (_targetScene is null)
+                return TimeSpan.Zero;
+            else if (time.Ticks > _targetScene.Duration.Time.Ticks && !loop)
+                return TimeSpan.FromTicks(_targetScene.Duration.Time.Ticks - 1);
+            else
+                return TimeSpan.FromTicks(time.Ticks % _targetScene.Duration.Time.Ticks);
+        }
+
+        public void Update(TimelineItemSourceDescription desc, TimeSpan time)
         {
             if (_targetScene is not null && _source is not null)
             {
                 Time = time;
-
-                if (time.Ticks > _targetScene.Duration.Time.Ticks && !loop)
-                    _source.Update(TimeSpan.FromTicks(Math.Min(time.Ticks, _targetScene.Duration.Time.Ticks)), desc.Usage);
-                else
-                    _source.Update(TimeSpan.FromTicks(time.Ticks % _targetScene.Duration.Time.Ticks), desc.Usage);
+                _source.Update(time, desc.Usage);
+            }
+            else
+            {
+                Time = TimeSpan.Zero;
             }
         }
 

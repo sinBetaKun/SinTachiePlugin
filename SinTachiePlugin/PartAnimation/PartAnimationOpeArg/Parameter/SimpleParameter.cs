@@ -19,11 +19,11 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         /// 制御モードが周期的往復/ループのとき、差分を指定する値を返す。
         /// </summary>
         /// <returns>出力</returns>
-        public override PartAnimationResult GetResult(TachieSourceDescription desc)
+        public override PartAnimationResultA GetResult(TachieSourceDescription desc)
         {
             FrameAndLength fl = new(desc);
             int fps = desc.FPS;
-            return PartAnimationResult.FromVolume(fl.GetValue(Abrir, fps) / 100);
+            return PartAnimationResultA.FromVolume(fl.GetValue(Abrir, fps) / 100);
         }
 
         public SimpleParameter()

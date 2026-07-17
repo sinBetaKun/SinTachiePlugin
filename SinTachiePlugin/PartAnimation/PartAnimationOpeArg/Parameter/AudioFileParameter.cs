@@ -57,7 +57,7 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         {
         }
 
-        public override PartAnimationResult GetResult(TachieSourceDescription desc)
+        public override PartAnimationResultA GetResult(TachieSourceDescription desc)
         {
             FrameAndLength fl = new(desc);
 
@@ -72,7 +72,7 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
             double open = fl.GetValue(Abrir, fps);
             double close = fl.GetValue(Cerrar, fps);
 
-            return PartAnimationResult.FromVolume(close + (open - close) * volumeArray[(int)(fl.Frame * PlaybackSpeed / 100)]);
+            return PartAnimationResultA.FromVolume(close + (open - close) * volumeArray[(int)(fl.Frame * PlaybackSpeed / 100)]);
         }
 
         public override void CopyFrom(PartAnimationOpeArgBase? origin)

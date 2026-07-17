@@ -376,11 +376,20 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   無効な差分指定 に類似しているローカライズされた文字列を検索します。
+        ///   無効なインデックス指定 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string ImageFileNode_Error_InvalidValue {
+        public static string ImageFileNode_Error_InvalidIndex {
             get {
-                return ResourceManager.GetString("ImageFileNode_Error_InvalidValue", resourceCulture);
+                return ResourceManager.GetString("ImageFileNode_Error_InvalidIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   無効な正規化モード に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ImageFileNode_Error_InvalidNormalizationMode {
+            get {
+                return ResourceManager.GetString("ImageFileNode_Error_InvalidNormalizationMode", resourceCulture);
             }
         }
         
@@ -1123,6 +1132,60 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   挿入しない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartInsertDefineMode_DontInsert {
+            get {
+                return ResourceManager.GetString("PartInsertDefineMode_DontInsert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   上書きしない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartInsertDefineMode_DontOverride {
+            get {
+                return ResourceManager.GetString("PartInsertDefineMode_DontOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   挿入先のタグと順序関係を指定 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartInsertDefineMode_SelectTagAndPosition {
+            get {
+                return ResourceManager.GetString("PartInsertDefineMode_SelectTagAndPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   奥に挿入 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartInsertPosition_Back {
+            get {
+                return ResourceManager.GetString("PartInsertPosition_Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   手前に挿入 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartInsertPosition_Front {
+            get {
+                return ResourceManager.GetString("PartInsertPosition_Front", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   無効なアニメーションリンクモード に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartNode_Error_InvalidAnimationLinkMode {
+            get {
+                return ResourceManager.GetString("PartNode_Error_InvalidAnimationLinkMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   指定モード に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartParam_CenterPoint_CenterMode {
@@ -1339,6 +1402,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   クリッピング先 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_LayerInfo_ClippingArg_TagToClipTo {
+            get {
+                return ResourceManager.GetString("PartParam_LayerInfo_ClippingArg_TagToClipTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   備考 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartParam_LayerInfo_Comment {
@@ -1353,6 +1425,24 @@ namespace SinTachiePlugin.Properties {
         public static string PartParam_LayerInfo_Hide {
             get {
                 return ResourceManager.GetString("PartParam_LayerInfo_Hide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   位置関係 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_LayerInfo_InsertArg_InsertPosition {
+            get {
+                return ResourceManager.GetString("PartParam_LayerInfo_InsertArg_InsertPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   挿入先 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_LayerInfo_InsertArg_TagToInsert {
+            get {
+                return ResourceManager.GetString("PartParam_LayerInfo_InsertArg_TagToInsert", resourceCulture);
             }
         }
         
@@ -1398,6 +1488,15 @@ namespace SinTachiePlugin.Properties {
         public static string PartParam_LayerInfo_SourceSelectArg_ImageFile {
             get {
                 return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_ImageFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   挿入モード に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_LayerInfo_SourceSelectArg_InsertMode {
+            get {
+                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_InsertMode", resourceCulture);
             }
         }
         
@@ -1452,15 +1551,6 @@ namespace SinTachiePlugin.Properties {
         public static string PartParam_LayerInfo_SourceSelectArg_PartComment {
             get {
                 return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_PartComment", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   クリッピング先 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string PartParam_LayerInfo_SourceSelectArg_PartToClipTo {
-            get {
-                return ResourceManager.GetString("PartParam_LayerInfo_SourceSelectArg_PartToClipTo", resourceCulture);
             }
         }
         

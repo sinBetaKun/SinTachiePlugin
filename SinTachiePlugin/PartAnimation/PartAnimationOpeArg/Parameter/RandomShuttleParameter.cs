@@ -42,7 +42,7 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
 
         private readonly int _seed = Environment.TickCount;
 
-        public override PartAnimationResult GetResult(TachieSourceDescription desc)
+        public override PartAnimationResultA GetResult(TachieSourceDescription desc)
         {
             FrameAndLength fl = new(desc);
             int fps = desc.FPS;
@@ -51,7 +51,7 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
             double timespan = (double)fl.Frame / fps - start;
 
             if (timespan < 0)
-                return PartAnimationResult.FromVolume(a);
+                return PartAnimationResultA.FromVolume(a);
 
             double transition = fl.GetValue(Transition, fps);
             double interval = fl.GetValue(Interval, fps);
@@ -67,13 +67,13 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
                     surplus -= transition + interval3;
 
                     if (surplus < 0)
-                        return PartAnimationResult.FromVolume(a);
+                        return PartAnimationResultA.FromVolume(a);
                 }
                 else
                 {
                     double rate = surplus / transition;
                     double b = fl.GetValue(Cerrar, fps) / 100;
-                    return PartAnimationResult.FromVolume(b + (a - b) * (Math.Abs(rate - 0.5) * 2));
+                    return PartAnimationResultA.FromVolume(b + (a - b) * (Math.Abs(rate - 0.5) * 2));
                 }
             }
         }

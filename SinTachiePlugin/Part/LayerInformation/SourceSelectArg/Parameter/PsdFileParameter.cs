@@ -1,9 +1,12 @@
 ﻿using SinTachiePlugin.Enums;
 using SinTachiePlugin.Part.LayerInformation.ClippingArg;
 using SinTachiePlugin.Part.LayerInformation.ClippingArg.Parameter;
+using SinTachiePlugin.Part.LayerInformation.InsertArg;
+using SinTachiePlugin.Part.LayerInformation.InsertArg.Parameter;
 using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg;
 using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Parameter;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.Clip;
+using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.Insert;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.Parent;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.PartAnimationValue;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.PsdFileInfo;
@@ -16,7 +19,7 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
 {
-    internal class PsdFileParameter : SourceSelectArgBase, IParentParameter, IPsdFileInfoParameter, IClipParameter, IPartAnimationValueParameter
+    internal class PsdFileParameter : SourceSelectArgBase, IParentParameter, IPsdFileInfoParameter, IClipParameter, IInsertParameter, IPartAnimationValueParameter
     {
         [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_Parent), ResourceType = typeof(TextResource))]
         [TextEditor]
@@ -35,6 +38,15 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         [Display(AutoGenerateField = true)]
         public ClippingArgBase ClippingArg { get => _clippingArg; set => Set(ref _clippingArg, value); }
         private ClippingArgBase _clippingArg = new DontClipParameter();
+
+        [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_InsertMode), ResourceType = typeof(TextResource))]
+        [EnumComboBox]
+        public PartInsertDefineMode InsertDefineMode { get => _insertDefineMode; set => Set(ref _insertDefineMode, value); }
+        private PartInsertDefineMode _insertDefineMode = PartInsertDefineMode.DontInsert;
+
+        [Display(AutoGenerateField = true)]
+        public InsertArgBase InsertArg { get => _insertArg; set => Set(ref _insertArg, value); }
+        private InsertArgBase _insertArg = new DontInsertParameter();
 
         [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_PartAnimationValueMode), ResourceType = typeof(TextResource))]
         [EnumComboBox]
@@ -56,6 +68,7 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         public override ValueTask EndEditAsync()
         {
             ClippingArg = ClippingMode.Convert(ClippingArg);
+            InsertArg = InsertDefineMode.Convert(InsertArg);
             PartAnimationValueArg = PartAnimationValueMode.Convert(PartAnimationValueArg);
             return base.EndEditAsync();
         }
@@ -75,6 +88,11 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 ClippingMode = clippingParameter.ClippingMode;
                 ClippingArg = clippingParameter.ClippingArg.GetClone();
             }
+            if (origin is IInsertParameter insertParameter)
+            {
+                InsertDefineMode = insertParameter.InsertDefineMode;
+                InsertArg = insertParameter.InsertArg.GetClone();
+            }
             if (origin is IPartAnimationValueParameter partAnimationValueParameter)
             {
                 PartAnimationValueMode = partAnimationValueParameter.PartAnimationValueMode;
@@ -89,13 +107,14 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
             return clone;
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [ClippingArg, PartAnimationValueArg];
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [ClippingArg, InsertArg, PartAnimationValueArg];
 
         protected override void SaveSharedData(SharedDataStore store)
         {
             store.Save(new ParentSharedData(this));
             store.Save(new PsdFileInfoSharedData(this));
             store.Save(new ClipSharedData(this));
+            store.Save(new InsertSharedData(this));
             store.Save(new PartAnimationValueSharedData(this));
         }
 
@@ -107,6 +126,8 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
                 psdFileInfoSharedData.CopyTo(this);
             if (store.Load<ClipSharedData>() is ClipSharedData clipSharedData)
                 clipSharedData.CopyTo(this);
+            if (store.Load<InsertSharedData>() is InsertSharedData insertSharedData)
+                insertSharedData.CopyTo(this);
             if (store.Load<PartAnimationValueSharedData>() is PartAnimationValueSharedData partAnimationValueSharedData)
                 partAnimationValueSharedData.CopyTo(this);
         }
