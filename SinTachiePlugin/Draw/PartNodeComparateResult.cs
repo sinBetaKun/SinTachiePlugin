@@ -15,5 +15,21 @@
                 PartNetwork: a.PartNetwork | b.PartNetwork,
                 Value: a.Value | b.Value,
                 Exception: a.Exception | b.Exception);
+
+        public static PartNodeComparateResult CalcSigma(IEnumerable<PartNodeComparateResult> results)
+        {
+            bool b0, b1, b2, b3;
+            b0 = b1 = b2 = b3 = false;
+
+            foreach (PartNodeComparateResult _0 in results)
+            {
+                b0 |= _0.CommandList;
+                b1 |= _0.PartNetwork;
+                b2 |= _0.Value;
+                b3 |= _0.Exception;
+            }
+
+            return new(b0, b1, b2, b3);
+        }
     }
 }

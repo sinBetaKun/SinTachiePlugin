@@ -1,4 +1,5 @@
-﻿using SinTachiePlugin.Enums;
+﻿using SinTachiePlugin.Draw.EffectChain;
+using SinTachiePlugin.Enums;
 using SinTachiePlugin.Informations;
 using SinTachiePlugin.PartAnimation.Node.ImageFileNode;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg;
@@ -19,30 +20,38 @@ namespace SinTachiePlugin.Draw
         public ImageFileNodeManager? Ifnm { get; private set; }
         public ImmutableList<PartNode> Overall { get; set; } = [];
         public ImmutableList<PartNode> Ancestors { get; private set; } = []; // 祖先の果ては末尾
+        private ImmutableList<VideoEffectChainNode> _effectCain = [];
         public ImmutableList<PartNode> ClippingPath { get; private set; } = [];
 
         private readonly IGraphicsDevicesAndContext _devices;
         private readonly ID2D1Bitmap _empty;
         private ID2D1Image? _source;
-        private bool _sourceChanged = false;
+        private ID2D1Image _preOutput;
+        private PartNodeDrawDescription _drawdesc;
+        private readonly PartNodeDrawer _drawer;
+        //private bool _sourceChanged = false;
 
         public PartNode(IGraphicsDevicesAndContext devices)
         {
             _devices = devices;
             _empty = devices.DeviceContext.CreateEmptyBitmap();
+            _preOutput = _empty;
+            _drawdesc = new()
+            _drawer = new(devices);
         }
 
         public void SetSource(ID2D1Image source)
         {
-            if (_source != source)
-            {
-                _source = source;
-                _sourceChanged = true;
-            }
-            else
-            {
-                _sourceChanged = false;
-            }
+            _source = source;
+            //if (_source != source)
+            //{
+            //    _source = source;
+            //    _sourceChanged = true;
+            //}
+            //else
+            //{
+            //    _sourceChanged = false;
+            //}
         }
 
         public void UpdateParams(List<PartValueAndFL> pvfls, TachieSourceDescription desc)
@@ -162,6 +171,37 @@ namespace SinTachiePlugin.Draw
             {
                 Ifnm = null;
             }
+        }
+
+        public void UpdateAncestors()
+        {
+            List<PartNode> l0 = [this];
+            PartNode _0 = this;
+
+            while (true)
+            {
+                string s0 = _0.Params.LayerInformationGroup.Parent;
+
+                if (string.IsNullOrEmpty(_0.Tag) || Overall.FirstOrDefault(x => x.Tag == s0) is not PartNode _1)
+                {
+                    break;
+                }
+
+                if (l0.Contains(_1))
+                {
+                    Ancestors = [];
+                    return;
+                }
+
+                l0.Add(_1);
+            }
+
+            Ancestors = [.. l0];
+        }
+
+        public void UpdatePreOutput()
+        {
+
         }
 
         public void Dispose()

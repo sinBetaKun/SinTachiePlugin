@@ -94,5 +94,8 @@ namespace SinTachiePlugin.Draw
         /// <param name="fps">FPS</param>
         /// <returns>Animation の GetValue メソッドの戻り値をまとめた Double3</returns>
         public Double3 GetDouble3(Animation a1, Animation a2, Animation a3, int fps) => new(GetValue(a1, fps), GetValue(a2, fps), GetValue(a3, fps));
+
+        public TimelineItemSourceDescription GetTimelineItemSourceDescription(TimelineSourceDescription tsDesc)
+            => new(tsDesc, Frame, Length, 0);
     }
 }
