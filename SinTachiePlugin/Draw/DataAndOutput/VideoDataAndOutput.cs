@@ -20,9 +20,9 @@ namespace SinTachiePlugin.Draw.DataAndOutput
             {
                 FilePath = filePath;
                 _source = source;
-                TimeSpan t0 = GetValidTimeSpan(time, loop);
-                Time = t0;
-                _source.Update(t0);
+                TimeSpan ts_0 = GetValidTimeSpan(time, loop);
+                Time = ts_0;
+                _source.Update(ts_0);
             }
             else
             {
@@ -47,7 +47,6 @@ namespace SinTachiePlugin.Draw.DataAndOutput
 
             Time = time;
             _source.Update(time);
-
         }
 
         public void Dispose()

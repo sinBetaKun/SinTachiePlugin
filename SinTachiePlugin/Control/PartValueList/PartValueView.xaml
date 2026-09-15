@@ -174,7 +174,7 @@
                                         VerticalAlignment="Center"
                                         Orientation="Horizontal"
                                         Visibility="{Binding ControlledParameters, Converter={StaticResource ParentPanelVisibilityConverter}}">
-                                <TextBlock Text="{x:Static resx:TextResource.PartParam_LayerInfo_SourseSelectArg_Parent}"
+                                <TextBlock Text="{x:Static resx:TextResource.PartParam_LayerInfo_SourceSelectArg_Parent}"
                                             VerticalAlignment="Center"
                                             FontWeight="Bold"/>
                                 <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"

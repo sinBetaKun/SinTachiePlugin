@@ -1,6 +1,6 @@
 ﻿namespace SinTachiePlugin.Draw.InverseKinematics
 {
-    internal record IKPath(PartNode Root, PartNode[] R2J, PartNode Joint, PartNode[] J2P, PartNode PreEndEffect, PartNode EndEffect)
+    internal record IKPath(PartNode Root, PartNode[] R2J, PartNode Joint, PartNode[] J2P, PartNode PreEndEffect, PartNode? EndEffect)
     {
         public PartNode[] GetUnsettleds()
         {

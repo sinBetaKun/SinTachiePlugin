@@ -1,4 +1,5 @@
-﻿using SinTachiePlugin.Enums;
+﻿using SinTachiePlugin.Draw.OverallManaging;
+using SinTachiePlugin.Enums;
 using SinTachiePlugin.Part;
 using SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg.Parameter;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.PartAnimationValue;
@@ -6,14 +7,16 @@ using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter;
 using SinTachiePlugin.PartAnimation;
 using SinTachiePlugin.PartAnimation.PartAnimarionLinkArgment.Parameter;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter;
 using System.Collections.Immutable;
 using YukkuriMovieMaker.Player.Video;
 
 namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 {
-    internal class PGoPN_PartAnimationValue
+    internal class PGoPN_PartAnimationValue(AudioSourceManager asm)
     {
         public ImmutableList<PartAnimationArg> PartAnimationArgs { get; private set; } = [];
+        private readonly AudioSourceManager _asm = asm;
 
         public void Reset()
         {
@@ -58,19 +61,7 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
                                     paa1.LinkOpeMode = pav.LinkOpeMode;
                                     paa1.NormalizationMode = pav.NormalizationMode;
-
-                                    PartAnimationResultA result = pav.AnmOpeArgments.GetResult(desc);
-
-                                    if (result.IsVolume)
-                                    {
-                                        paa1.IsVolume = true;
-                                        paa1.Volume = result.Volume;
-                                    }
-                                    else
-                                    {
-                                        paa1.IsVolume = false;
-                                        paa1.Text = result.Text;
-                                    }
+                                    UpdatePAA(paa1, pav, desc, pvfl.FL);
 
                                     switch (pav.LinkOpeMode)
                                     {
@@ -103,25 +94,13 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                                     if (pav.Index > 0)
                                         paa2.Index = pav.Index;
 
-                                    PartAnimationResultA result = pav.AnmOpeArgments.GetResult(desc);
-
-                                    if (result.IsVolume)
-                                    {
-                                        paa2.IsVolume = true;
-                                        paa2.Volume = result.Volume;
-                                    }
-                                    else
-                                    {
-                                        paa2.IsVolume = false;
-                                        paa2.Text = result.Text;
-                                    }
+                                    UpdatePAA(paa2, pav, desc, pvfl.FL);
 
                                     if (pav.NormalizationMode != PartAnimationNormalizationMode.DontOverride)
                                         paa2.NormalizationMode = pav.NormalizationMode;
 
                                     if (pav.LinkOpeMode != PartAnimationLinkOpeMode.DontOverride)
                                         paa2.LinkOpeMode = pav.LinkOpeMode;
-
 
                                     if (pav.LinkOpeMode == PartAnimationLinkOpeMode.Add || pav.LinkOpeMode == PartAnimationLinkOpeMode.Multiply)
                                     {
@@ -153,23 +132,34 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                         {
                             PartAnimationValue pav = singleValuesParameter.PartAnimationValue;
                             partAnimationArg.NormalizationMode = pav.NormalizationMode;
-                            PartAnimationResultA result = pav.AnmOpeArgments.GetResult(desc);
-
-                            if (result.IsVolume)
-                            {
-                                partAnimationArg.IsVolume = true;
-                                partAnimationArg.Volume = result.Volume;
-                            }
-                            else
-                            {
-                                partAnimationArg.IsVolume = false;
-                                partAnimationArg.Text = result.Text;
-                            }
+                            UpdatePAA(partAnimationArg, pav, desc, pvfl.FL);
                         }
                     }
                 }
 
                 PartAnimationArgs = [partAnimationArg];
+            }
+        }
+
+        private void UpdatePAA(PartAnimationArg paa, PartAnimationValue pav, TachieSourceDescription desc, FrameAndLength fl)
+        {
+            if (pav.AnmOpeArgments is AudioFileParameter afp_0)
+            {
+                TimeSpan ts_0 = afp_0.ContentOffset + TimeSpan.FromSeconds(fl.Frame * afp_0.PlaybackSpeed / 1.0f / desc.FPS);
+                afp_0.SetAudioVolume(_asm.Request(afp_0.AudioFilePath, afp_0.AudioTrackIndex, ts_0, afp_0.PlaybackLoop, afp_0.Fluency));
+            }
+
+            PartAnimationResultA result = pav.AnmOpeArgments.GetResult(desc);
+
+            if (result.IsVolume)
+            {
+                paa.IsVolume = true;
+                paa.Volume = result.Volume;
+            }
+            else
+            {
+                paa.IsVolume = false;
+                paa.Text = result.Text;
             }
         }
 

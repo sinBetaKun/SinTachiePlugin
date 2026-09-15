@@ -1,4 +1,4 @@
-﻿using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.PsdFilePath;
+﻿using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Argument.VideoFilePath;
 using System.IO;
 using System.Windows.Data;
 using YukkuriMovieMaker.Commons;
@@ -23,7 +23,7 @@ namespace SinTachiePlugin.Control.PartValueList.SourceSelectorControl
             selector.ListupFilter = (x) => Path.GetDirectoryName(x) == Path.GetDirectoryName(selector.Value);
             selector.SetBinding(
                 FileSelector.ValueProperty,
-                new Binding(nameof(IPsdFilePathParameter.PsdFilePath))
+                new Binding(nameof(IVideoFilePathParameter.VideoFilePath))
                 {
                     Mode = BindingMode.TwoWay,
                 });

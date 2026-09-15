@@ -1,6 +1,7 @@
 ﻿namespace SinTachiePlugin.Enums
 {
     [Flags]
+    [Obsolete]
     public enum UpdateCase
     {
         None         = 0,

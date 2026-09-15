@@ -1,10 +1,15 @@
-﻿using SinTachiePlugin.Part;
+﻿using SinTachiePlugin.Draw.Clipping;
+using SinTachiePlugin.Draw.InverseKinematics;
+using SinTachiePlugin.Draw.OverallManaging;
+using SinTachiePlugin.Draw.PartAnimation;
+using SinTachiePlugin.Part;
 using System.Collections.Immutable;
+using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Player.Video;
 using YukkuriMovieMaker.Plugin.Tachie;
 
-namespace SinTachiePlugin.Draw.OverallManaging
+namespace SinTachiePlugin.Draw.MultiPartBlend
 {
     internal class PartNodeListManager : IDisposable
     {
@@ -18,13 +23,28 @@ namespace SinTachiePlugin.Draw.OverallManaging
         }
 
         private readonly IGraphicsDevicesAndContext _devices;
-        private readonly SourceManager _sm;
+        private readonly ImageSourceManager _ism;
+        private readonly AudioSourceManager _asm = new();
         public ImmutableList<PartNode> Overall { get; private set; } = [];
+        private readonly ClippingManager _clip;
+        private readonly MultiPartBlender _blender;
+        public ID2D1Image Output => _blender.Output;
 
         public PartNodeListManager(IGraphicsDevicesAndContext device)
         {
             _devices = device;
-             _sm = new(device);
+            _ism = new(device);
+            _clip = new(device);
+            _blender = new(device);
+        }
+
+        public void Reset()
+        {
+            _blender.Reset();
+            _clip.Reset();
+            Overall.ForEach(x => x.Dispose());
+            Overall = [];
+            _ism.ClearSources();
         }
 
         public PartNodeComparateResult UpdateOverallParameter(IEnumerable<PartValueAndFL> pvfls, TimelineItemSourceDescription desc)
@@ -39,8 +59,8 @@ namespace SinTachiePlugin.Draw.OverallManaging
 
         public PartNodeComparateResult UpdateOverallParameter(IEnumerable<PartValueAndFL> pvfls, TachieSourceDescription desc)
         {
-            List<string> l0 = [];
-            List<List<PartValueAndFL>> l1 = [];
+            List<string> s_l0 = [];
+            List<List<PartValueAndFL>> pvfl_l_l0 = [];
 
             foreach (PartValueAndFL _0 in pvfls)
             {
@@ -51,61 +71,111 @@ namespace SinTachiePlugin.Draw.OverallManaging
 
                 if (string.IsNullOrEmpty(_1.Tag))
                 {
-                    l0.Add(string.Empty);
-                    l1.Add([_0]);
+                    s_l0.Add(string.Empty);
+                    pvfl_l_l0.Add([_0]);
                 }
                 else
                 {
-                    int n0 = l0.IndexOf(_1.Tag);
+                    int n0 = s_l0.IndexOf(_1.Tag);
 
                     if (n0 < 0)
                     {
-                        l0.Add(_1.Tag);
-                        l1.Add([_0]);
+                        s_l0.Add(_1.Tag);
+                        pvfl_l_l0.Add([_0]);
                     }
                     else
                     {
-                        l1[n0].Add(_0);
+                        pvfl_l_l0[n0].Add(_0);
                     }
                 }
             }
 
-            List<PartNode> l2 = [.. Overall];
-            PartNode[] a0 = new PartNode[l0.Count];
+            List<PartNode> pn_l0 = [.. Overall];
+            PartNode[] pn_a0 = new PartNode[s_l0.Count];
 
-            for (int i = 0; i < l0.Count; i++)
+            for (int i = 0; i < s_l0.Count; i++)
             {
-                if (l2.FirstOrDefault(x => x.Tag == l0[i]) is PartNode _1)
+                if (pn_l0.FirstOrDefault(x => x.Tag == s_l0[i]) is PartNode _1)
                 {
                     // ここ実は理論上、Tagが空文字列でもうまくいくんですよ
-                    l2.Remove(_1);
-                    a0[i] = _1;
+                    pn_l0.Remove(_1);
+                    pn_a0[i] = _1;
                 }
                 else
                 {
-                    a0[i] = new(_devices);
+                    pn_a0[i] = new(_devices, _asm);
                 }
 
-                a0[i].UpdateParams(l1[i], desc);
+                pn_a0[i].UpdateParams(pvfl_l_l0[i], desc);
             }
 
-            Overall = [.. a0];
-            l2.ForEach(x => x.Dispose());
+            Overall = [.. pn_a0];
+            pn_l0.ForEach(x => x.Dispose());
 
-            return PartNodeComparateResult.CalcSigma(a0.Select(x => x.PrevCompResult));
+            return PartNodeComparateResult.CalcSigma(pn_a0.Select(x => x.PrevCompResult));
         }
 
-        public void SourceUpdate(TimelineItemSourceDescription desc)
+        public void UpdateOutput(TimelineItemSourceDescription desc, PartNodeComparateResult cmp)
         {
-            Overall.ForEach(x => x.UpdateFileNodeManager());
-            _sm.UpdateSourcesAssigning(Overall, desc);
+            PartAnimationManager.Generate(Overall);
+            _ism.UpdateSourcesAssigning(Overall, desc);
+            Overall.ForEach(x =>
+            {
+                UpdateAncestors(x);
+                x.UpdatePreOutput(desc);
+            });
+            IKPathManager.OverwriteDrawDescriptionForIK(Overall);
+            Overall.ForEach(x => x.UpdateOutputAndZ());
+            _clip.Update(Overall);
+            PartNodeClipper[] pnc_l0 = [.. _clip.Clippers.OrderBy(x => Overall.IndexOf(x.Destination))];
+            IEnumerable<MultiPartBlendTupple> mpbt_e0 = pnc_l0.Select(x => new MultiPartBlendTupple(x.Destination, x.Output));
+
+            if (cmp.Blend || pnc_l0.Any(x => x.OutputChanged))
+            {
+                _blender.Update(mpbt_e0, false);
+                return;
+            }
+
+            if (cmp.Order || pnc_l0.Any(x => x.Destination.ZChanged))
+            {
+                _blender.Update(mpbt_e0, true);
+                return;
+            }
         }
 
+        private void UpdateAncestors(PartNode pn)
+        {
+            List<PartNode> pn_l0 = [];
+            PartNode pn_0 = pn;
+
+            while (true)
+            {
+                string s_4prt_0 = pn_0.Params.LayerInformationGroup.Parent;
+
+                if (string.IsNullOrEmpty(pn_0.Tag) || Overall.FirstOrDefault(x => x.Tag == s_4prt_0) is not PartNode pn_1)
+                {
+                    break;
+                }
+
+                if (pn_l0.Contains(pn_1))
+                {
+                    pn.Ancestors = [];
+                    return;
+                }
+
+                pn_l0.Add(pn_1);
+            }
+
+            pn.Ancestors = [.. pn_l0];
+        }
 
         public void Dispose()
         {
-            _sm.Dispose();
+            _ism.Dispose();
+            _asm.Dispose();
             Overall.ForEach(x => x.Dispose());
+            _clip.Dispose();
+            _blender.Dispose();
         }
     }
 }

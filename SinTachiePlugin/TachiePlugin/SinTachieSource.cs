@@ -1,135 +1,71 @@
-using Vortice.Direct2D1.Effects;
+using SinTachiePlugin.Draw;
+using SinTachiePlugin.Draw.MultiPartBlend;
+using SinTachiePlugin.Parts;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
-using YukkuriMovieMaker.Plugin.Tachie;
 using YukkuriMovieMaker.Player.Video;
-using SinTachiePlugin.TachiePlugin;
-using SinTachiePlugin.Enums;
-using System.Linq;
+using YukkuriMovieMaker.Plugin.Tachie;
+using FrameAndLength = SinTachiePlugin.Draw.FrameAndLength;
 
-namespace SinTachiePlugin.Parts
+namespace SinTachiePlugin.TachiePlugin
 {
-    internal class SinTachieSource : SinTachieSourceBase, ITachieSource2
+    internal class SinTachieSource(IGraphicsDevicesAndContext devices) : ITachieSource2
     {
-        public ID2D1Image Output => output;
-
-        readonly AffineTransform2D transformEffect;
-        readonly ID2D1Image output;
-
-        bool isFirst2 = true;
-
-        public SinTachieSource(IGraphicsDevicesAndContext devices) : base(devices)
-        {
-            transformEffect = new(devices.DeviceContext);
-            disposer.Collect(transformEffect);
-            transformEffect.SetInput(0, empty, true);
-            output = transformEffect.Output;
-            disposer.Collect(output);
-        }
+        private readonly PartNodeListManager _pnlm = new(devices);
+        public ID2D1Image Output => _pnlm.Output;
 
         /// <summary>
         /// 表示を更新する
         /// </summary>
-        public void Update(TachieSourceDescription description)
+        public void Update(TachieSourceDescription desc)
         {
-            // 最初は二回描画しないと、個別エフェクトを持つパーツは正しく描画されない。
-            for (int i = 0; i < (isFirst2 ? 2 : 1); i++)
+            if (desc.Tachie.ItemParameter is not SinTachieItemParameter ip_0)
             {
-                UpdateCase updateCase = UpdateNodeListForTachie(description);
-
-                if (updateCase != UpdateCase.None)
-                {
-                    if (updateCase.HasFlag(UpdateCase.BitmapParams))
-                    {
-                        UpdateParentPaths();
-                        UpdateOutputs(description);
-                    }
-                    SetCommandList(updateCase);
-
-                    transformEffect.SetInput(0, commandList, true);
-                }
+                _pnlm.Reset();
+                return;
             }
 
-            isFirst2 = false;
+            TachieFaceDescription[] tfd_a0 = [.. desc.Tachie.Faces];
+            IEnumerable<TachieFaceDescription> tfd_e0 = tfd_a0.Where(x => x.Layer < desc.Layer).OrderBy(x => x.Layer);
+            IEnumerable<TachieFaceDescription> tfd_e1 = tfd_a0.Where(x => x.Layer > desc.Layer).OrderBy(x => x.Layer);
+            List<PartValueAndFL> pvfl_l0 = [];
+
+            foreach (TachieFaceDescription tfd_0 in tfd_e0)
+            {
+                if (tfd_0.FaceParameter is not SinTachieFaceParameter fp_0)
+                    continue;
+                
+                FrameAndLength fl_0 = new(tfd_0.ItemPosition.Frame, tfd_0.ItemDuration.Frame);
+                pvfl_l0.AddRange(fp_0.PartValues.Select(x => new PartValueAndFL(x, fl_0)));
+            }
+
+            FrameAndLength fl_1 = new(desc.ItemPosition.Frame, desc.ItemDuration.Frame);
+            pvfl_l0.AddRange(ip_0.PartValues.Select(x => new PartValueAndFL(x, fl_1)));
+
+            foreach (TachieFaceDescription tfd_0 in tfd_e1)
+            {
+                if (tfd_0.FaceParameter is not SinTachieFaceParameter fp_0)
+                    continue;
+
+                FrameAndLength fl = new(tfd_0.ItemPosition.Frame, tfd_0.ItemDuration.Frame);
+                pvfl_l0.AddRange(fp_0.PartValues.Select(x => new PartValueAndFL(x, fl)));
+            }
+
+            if (pvfl_l0.Count == 0)
+            {
+                _pnlm.Reset();
+                return;
+            }
+
+            PartNodeComparateResult cmp_0 = _pnlm.UpdateOverallParameter(pvfl_l0, desc);
+            
+            if (cmp_0.Value)
+                _pnlm.UpdateOutput(desc, cmp_0);
         }
 
-        private UpdateCase UpdateNodeListForTachie(TachieSourceDescription description)
+        public void Dispose()
         {
-            //var cp = description.Tachie.CharacterParameter as SinTachieCharacterParameter;
-
-            // 立ち絵アイテムがnullの時
-            if (description.Tachie.ItemParameter is not SinTachieItemParameter ip)
-            {
-                if (this.numOfNodes < 0)
-                    return UpdateCase.None;
-
-                RemoveNodes(0);
-                this.numOfNodes = -1;
-                return UpdateCase.Both;
-            }
-
-            // fps を取得
-            int fps = description.FPS;
-
-            // 再生位置における声の大きさ（セリフアイテムがないときは -1 が渡される）
-            double voiceVolume = description.VoiceVolume;
-
-            // 立ち絵アイテム上の再生位置とアイテムの長さを description から取得
-            FrameAndLength initialFL = new(description);
-
-            int count = description.Tachie.Faces
-                .Select(face => (face.FaceParameter as SinTachieFaceParameter).Parts.Count)
-                .Sum()
-                + ip.Parts.Count;
-
-            // 並び替えた後の
-            PartBlock[] blocks = new PartBlock[count];
-
-            FrameAndLength[] FLs = new FrameAndLength[count];
-
-            int pos = 0;
-
-            IOrderedEnumerable<int> layerNums = description.Tachie.Faces.Select(face => face.Layer).Append(description.Layer).OrderBy(i => i);
-            foreach (var layerNum in layerNums)
-            {
-                if (description.Tachie.Faces.FirstOrDefault(face => face.Layer == layerNum) is TachieFaceDescription fd)
-                {
-                    FrameAndLength fl = new(
-                        fd.ItemPosition.Frame,
-                        fd.ItemDuration.Frame
-                        );
-
-                    var fp = fd.FaceParameter as SinTachieFaceParameter;
-
-                    for (int i = 0; i < fp.Parts.Count; i++)
-                    {
-                        blocks[pos + i] = fp.Parts[i];
-                        FLs[pos + i] = fl;
-                    }
-
-                    pos += fp.Parts.Count;
-                }
-                else
-                {
-                    FrameAndLength fl = new(
-                        description.ItemPosition.Frame,
-                        description.ItemDuration.Frame
-                        );
-
-                    for (int i = 0; i < ip.Parts.Count; i++)
-                    {
-                        blocks[pos + i] = ip.Parts[i];
-                        FLs[pos + i] = fl;
-                    }
-
-                    pos += ip.Parts.Count;
-                }
-            }
-
-
-            return UpdateNodeList(blocks, FLs, blocks.Length, fps, voiceVolume);
+            _pnlm.Dispose();
         }
-
-
     }
 }

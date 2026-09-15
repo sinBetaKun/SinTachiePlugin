@@ -279,6 +279,12 @@
   <data name="PartAnimationOpeArg_PlaybackSpeed" xml:space="preserve">
     <value>再生速度</value>
   </data>
+  <data name="PartAnimationOpeArg_Fluency" xml:space="preserve">
+    <value>なめらかさ</value>
+  </data>
+  <data name="PartAnimationOpeArg_PlaybackLoop" xml:space="preserve">
+    <value>ループ再生</value>
+  </data>
   <data name="ZSortMode_IgnoreZ" xml:space="preserve">
     <value>Z座標を無視して優先度順に描画</value>
   </data>
@@ -476,6 +482,9 @@
   </data>
   <data name="ClippingMode_DontClip" xml:space="preserve">
     <value>クリッピングしない</value>
+  </data>
+  <data name="ClippingMode_DontOverride" xml:space="preserve">
+    <value>上書きしない</value>
   </data>
   <data name="PartAnimationValueMode_None" xml:space="preserve">
     <value>アニメーションを指定しない</value>
@@ -766,6 +775,9 @@
   <data name="PartInsertDefineMode_SelectTagAndPosition" xml:space="preserve">
     <value>挿入先のタグと順序関係を指定</value>
   </data>
+  <data name="PartInsertDefineMode_ToParentAndPosition" xml:space="preserve">
+    <value>親への順序関係を指定</value>
+  </data>
   <data name="PartInsertDefineMode_DontInsert" xml:space="preserve">
     <value>挿入しない</value>
   </data>
@@ -774,5 +786,25 @@
   </data>
   <data name="PartNode_Error_InvalidAnimationLinkMode" xml:space="preserve">
     <value>無効なアニメーションリンクモード</value>
+  </data>
+  <data name="PartValueListViewModel_Error_FailToGenerateValueTree_0" xml:space="preserve">
+    <value>木構造の処理に失敗しました（#0）</value>
+  </data>
+  <data name="PartValueListViewModel_Error_FailToGenerateValueTree_1" xml:space="preserve">
+    <value>木構造の処理に失敗しました（#1）</value>
+  </data>
+  <data name="PartEffectArg_Error_DeserializeVideoEffects" xml:space="preserve">
+    <value>Jsonデータ内に変換できないエフェクトを検知しました。</value>
+  </data>
+  <data name="CharacterAssetsData_AskSubscribeObsoletePath" xml:space="preserve">
+    <value>素材形式を変更しますか？
+（変更すると現在のパスと非推奨パスがリセットされます。）</value>
+  </data>
+  <data name="CharacterAssetsData_AskChangePathToPacking" xml:space="preserve">
+    <value>この配布用パスに決定しますか？：</value>
+  </data>
+  <data name="CharacterAssetsData_AskChangeType" xml:space="preserve">
+    <value>古いパスを非推奨パスに登録しますか？
+（描画順序リスト編集時に古いパスを自動で検出・修正できます。）</value>
   </data>
 </root>

@@ -1,10 +1,10 @@
-﻿using SinTachiePlugin.Control.PartValueList;
+﻿using SinTachiePlugin.CharacterAsset;
+using SinTachiePlugin.Control.PartValueList;
 using SinTachiePlugin.Part;
 using SinTachiePlugin.ShapePludin.PartsListControllerForShape;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
-using YukkuriMovieMaker.Controls;
 using YukkuriMovieMaker.Exo;
 using YukkuriMovieMaker.Player.Video;
 using YukkuriMovieMaker.Plugin.Shape;
@@ -15,33 +15,21 @@ namespace SinTachiePlugin.ShapePludin
     internal class ShapeParameterOfSinTachie(SharedDataStore? sharedData) : ShapeParameterBase(sharedData)
     {
         [Display]
-        [DirectorySelector]
-        public string Root
-        {
-            get => _root;
-            set
-            {
-                PartValuesAndRoot.Root = value;
-                Set(ref _root, value);
-            }
-        }
-        private string _root = string.Empty;
-
-        [Display]
         [PartValueListForShape(PropertyEditorSize = PropertyEditorSize.FullWidth)]
-        public PartValuesAndRoot PartValuesAndRoot { get => _partValues; set => Set(ref _partValues, value); }
-        private PartValuesAndRoot _partValues = new();
+        public PartValuesAndAssets PartValuesAndAssets { get => _partValues; set => Set(ref _partValues, value); }
+        private PartValuesAndAssets _partValues = new();
 
         [Obsolete]
         public PartsOfShapeItem PartsAndRoot
         {
             set
             {
-                Root = value.Root;
-                PartValuesAndRoot = new PartValuesAndRoot()
+                CharacterAssetsData ad_0 = new();
+                ad_0.ChangePath(value.Root);
+                PartValuesAndAssets = new PartValuesAndAssets()
                 {
-                    Root = value.Root,
-                    PartValues = [.. value.Parts.Select(p => new PartValue(p))]
+                    PartValues = [.. value.Parts.Select(p => new PartValue(p))],
+                    Assets = [ad_0],
                 };
             }
         }
@@ -66,7 +54,7 @@ namespace SinTachiePlugin.ShapePludin
             return new ShapeOfSinTachieSource(devices, this);
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [.. PartValuesAndRoot.PartValues];
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [.. PartValuesAndAssets.PartValues];
 
         protected override void LoadSharedData(SharedDataStore store)
         {
@@ -83,17 +71,15 @@ namespace SinTachiePlugin.ShapePludin
 
         public class SharedData(ShapeParameterOfSinTachie parameter)
         {
-            public string Directory { get; set; } = parameter.Root;
-            public ImmutableList<PartValue> PartValues { get; } = [.. parameter.PartValuesAndRoot.PartValues.Select(x => new PartValue(x))];
+            public PartValuesAndAssets PartValuesAndAssets { get; } = new()
+            {
+                Assets = [.. parameter.PartValuesAndAssets.Assets.Select(x => new CharacterAssetsData(x))],
+                PartValues = [.. parameter.PartValuesAndAssets.PartValues.Select(x => new PartValue(x))]
+            };
 
             public void CopyTo(ShapeParameterOfSinTachie parameter)
             {
-                parameter.Root = Directory;
-                parameter.PartValuesAndRoot = new()
-                {
-                    Root = Directory,
-                    PartValues = [..PartValues.Select(x => new PartValue(x))]
-                };
+                parameter.PartValuesAndAssets = PartValuesAndAssets;
             }
         }
     }

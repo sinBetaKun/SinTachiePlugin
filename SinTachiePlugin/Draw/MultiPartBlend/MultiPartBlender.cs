@@ -1,0 +1,383 @@
+﻿using SinTachiePlugin.Draw.ParamGroupOfPartNode;
+using SinTachiePlugin.Enums;
+using Vortice.Direct2D1;
+using Vortice.Direct2D1.Effects;
+using YukkuriMovieMaker.Commons;
+using Blend = YukkuriMovieMaker.Project.Blend;
+
+namespace SinTachiePlugin.Draw.MultiPartBlend
+{
+    internal class MultiPartBlender : IDisposable
+    {
+        private readonly List<MultiPartBlendTupple> _tupples = [];
+        private readonly IGraphicsDevicesAndContext _devices;
+        private readonly AffineTransform2D _trans;
+        private readonly ID2D1Bitmap _empty;
+        private ID2D1CommandList? _cmdl = null;
+
+        public ID2D1Image Output => _trans.Output;
+
+        public MultiPartBlender(IGraphicsDevicesAndContext devices)
+        {
+            _devices = devices;
+            _trans = new(devices.DeviceContext);
+            _empty = devices.DeviceContext.CreateEmptyBitmap();
+            _trans.SetInput(0, _empty, true);
+        }
+
+        public void Reset()
+        {
+            _tupples.Clear();
+            _cmdl?.Dispose();
+            _trans.SetInput(0, _empty, true);
+        }
+
+        public void Update(IEnumerable<MultiPartBlendTupple> tupples, bool orderCheck)
+        {
+            PartInsertTupple[] pit_a0 = [.. tupples.Select(x => new PartInsertTupple(x))];
+            List<PartInsertTupple> pit_l0 = [];
+            List<PartInsertTupple> pit_l1 = [];
+            List<PartInsertTupple> pit_l2 = [];
+
+            foreach (PartInsertTupple pit_0 in pit_a0)
+            {
+                PGoPN_LayerInformation lig_0 = pit_0.Target.Node.Params.LayerInformationGroup;
+
+                if (lig_0.InsertDefineMode == PartInsertDefineMode.SelectTagAndPosition)
+                {
+                    if (pit_a0.FirstOrDefault(x => x.Target.Node.Tag == lig_0.TagToInsert) is not null)
+                    {
+                        pit_l1.Add(pit_0);
+                        continue;
+                    }
+                }
+
+                pit_l0.Add(pit_0);
+            }
+
+            List<PartInsertTupple> pit_l3 = [];
+
+            while (pit_l1.Count > 0)
+            {
+                PartInsertTupple pit_0 = pit_l1.First();
+                pit_l3.Clear();
+                pit_l3.Add(pit_0);
+
+                while (true)
+                {
+                    PGoPN_LayerInformation lig_0 = pit_0.Target.Node.Params.LayerInformationGroup;
+                    pit_0 = pit_a0.First(x => x.Target.Node.Tag == lig_0.TagToInsert);
+
+                    int i_0 = pit_l3.IndexOf(pit_0);
+
+                    if (i_0 >= 0)
+                    {
+                        pit_l3.ForEach(x => pit_l1.Remove(x));
+                        pit_l0.AddRange(pit_l3[i_0..]);
+                        pit_l2.AddRange(pit_l3[..i_0]);
+                        break;
+                    }
+
+                    if (pit_l0.Contains(pit_0) || pit_l2.Contains(pit_0))
+                    {
+                        pit_l3.ForEach(x => pit_l1.Remove(x));
+                        pit_l2.AddRange(pit_l3);
+                        break;
+                    }
+
+                    pit_l3.Add(pit_0);
+                }
+            }
+
+            foreach (PartInsertTupple pit_0 in pit_l0)
+            {
+                pit_l3.Clear();
+
+                foreach (PartInsertTupple pit_1 in pit_l2)
+                {
+                    PGoPN_LayerInformation lig_0 = pit_1.Target.Node.Params.LayerInformationGroup;
+
+                    if (lig_0.TagToInsert == pit_0.Target.Node.Tag)
+                    {
+                        pit_l1.Add(pit_1);
+                        pit_l3.Add(pit_1);
+
+                        if (lig_0.InsertPosition == PartInsertPosition.Back)
+                        {
+                            pit_0.Back.Add(pit_1);
+                        }
+                        else
+                        {
+                            pit_0.Front.Add(pit_1);
+                        }
+                    }
+                }
+
+                pit_l3.ForEach(x => pit_l2.Remove(x));
+            }
+
+            while (pit_l2.Count > 0)
+            {
+                pit_l3.Clear();
+
+                foreach (PartInsertTupple pit_0 in pit_l1)
+                {
+                    foreach (PartInsertTupple pit_1 in pit_l2)
+                    {
+                        PGoPN_LayerInformation lig_0 = pit_1.Target.Node.Params.LayerInformationGroup;
+
+                        if (lig_0.TagToInsert == pit_0.Target.Node.Tag)
+                        {
+                            pit_l3.Add(pit_1);
+
+                            if (lig_0.InsertPosition == PartInsertPosition.Back)
+                            {
+                                pit_0.Back.Add(pit_1);
+                            }
+                            else
+                            {
+                                pit_0.Front.Add(pit_1);
+                            }
+                        }
+                    }
+                }
+
+                pit_l1.Clear();
+                pit_l1.AddRange(pit_l3);
+                pit_l3.ForEach(x => pit_l2.Remove(x));
+            }
+
+            pit_l0 = OrderByZAndPriority([.. pit_l0.OrderBy(x => pit_a0.IndexOf(x))]);
+            
+            foreach (PartInsertTupple pit_0 in pit_l0)
+            {
+                var _0 = OrderByZAndPriority([.. pit_0.Back.OrderBy(x => pit_a0.IndexOf(x))]);
+                pit_0.Back.Clear();
+                pit_0.Back.AddRange(_0);
+                var _1 = OrderByZAndPriority([.. pit_0.Front.OrderBy(x => -pit_a0.IndexOf(x))]);
+                pit_0.Front.Clear();
+                pit_0.Front.AddRange(_1);
+            }
+
+            List<MultiPartBlendTupple> mpbt_l0 = [];
+
+            foreach (PartInsertTupple pit_0 in pit_l0)
+                mpbt_l0.AddRange(pit_0.GetList());
+
+            bool b_0 = false;
+
+            if (orderCheck && mpbt_l0.Count == _tupples.Count)
+            {
+                for (int i_0 = 0; i_0 < mpbt_l0.Count; i_0++)
+                {
+                    if (mpbt_l0[i_0].Node != _tupples[i_0].Node)
+                    {
+                        b_0 = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                b_0 = true;
+            }
+
+            if (b_0)
+            {
+                _tupples.Clear();
+                _tupples.AddRange(mpbt_l0);
+                _cmdl?.Dispose();
+
+                if (mpbt_l0.Count == 0)
+                {
+                    _trans.SetInput(0, _empty, true);
+                }
+                else
+                {
+                    ID2D1DeviceContext6 dc = _devices.DeviceContext;
+                    _cmdl = dc.CreateCommandList();
+                    dc.Target = _cmdl;
+                    dc.BeginDraw();
+                    dc.Clear(null);
+
+                    foreach (MultiPartBlendTupple mpbt_0 in mpbt_l0)
+                        DrawOrBlend(dc, mpbt_0);
+                }
+            }
+        }
+
+        static private void DrawOrBlend(ID2D1DeviceContext6 dc, MultiPartBlendTupple mpbt)
+        {
+            ID2D1Image output = mpbt.Output;
+            Blend blend = mpbt.Node.Params.DrawingGroup.Blend;
+
+            switch (blend)
+            {
+                case Blend.Normal:
+                    dc.DrawImage(output, compositeMode: CompositeMode.SourceOver);
+                    break;
+
+                case Blend.Add:
+                    dc.DrawImage(output, compositeMode: CompositeMode.Plus);
+                    break;
+
+                case Blend.DestinationOver:
+                    dc.DrawImage(output, compositeMode: CompositeMode.DestinationOver);
+                    break;
+
+                case Blend.DestinationOut:
+                    dc.DrawImage(output, compositeMode: CompositeMode.DestinationOut);
+                    break;
+
+                case Blend.SourceAtop:
+                    dc.DrawImage(output, compositeMode: CompositeMode.SourceAtop);
+                    break;
+
+                case Blend.XOR:
+                    dc.DrawImage(output, compositeMode: CompositeMode.Xor);
+                    break;
+
+                case Blend.MaskInvert:
+                    dc.DrawImage(output, compositeMode: CompositeMode.MaskInverseErt);
+                    break;
+
+                case Blend.Multiply:
+                    dc.BlendImage(output, BlendMode.Multiply, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Screen:
+                    dc.BlendImage(output, BlendMode.Screen, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Darker:
+                    dc.BlendImage(output, BlendMode.Darken, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Lighter:
+                    dc.BlendImage(output, BlendMode.Lighten, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Dissolve:
+                    dc.BlendImage(output, BlendMode.Dissolve, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.ColorBurn:
+                    dc.BlendImage(output, BlendMode.ColorBurn, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.LinearBurn:
+                    dc.BlendImage(output, BlendMode.LinearBurn, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.DarkerColor:
+                    dc.BlendImage(output, BlendMode.DarkerColor, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.LighterColor:
+                    dc.BlendImage(output, BlendMode.LighterColor, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.ColorDodge:
+                    dc.BlendImage(output, BlendMode.ColorDodge, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.LinearDodge:
+                    dc.BlendImage(output, BlendMode.LinearDodge, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Overlay:
+                    dc.BlendImage(output, BlendMode.Overlay, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.SoftLight:
+                    dc.BlendImage(output, BlendMode.SoftLight, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.HardLight:
+                    dc.BlendImage(output, BlendMode.HardLight, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.VividLight:
+                    dc.BlendImage(output, BlendMode.VividLight, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.LinearLight:
+                    dc.BlendImage(output, BlendMode.LinearLight, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.PinLight:
+                    dc.BlendImage(output, BlendMode.PinLight, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.HardMix:
+                    dc.BlendImage(output, BlendMode.HardMix, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Difference:
+                    dc.BlendImage(output, BlendMode.Difference, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Exclusion:
+                    dc.BlendImage(output, BlendMode.Exclusion, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Hue:
+                    dc.BlendImage(output, BlendMode.Hue, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Saturation:
+                    dc.BlendImage(output, BlendMode.Saturation, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Color:
+                    dc.BlendImage(output, BlendMode.Color, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Luminosity:
+                    dc.BlendImage(output, BlendMode.Luminosity, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Subtract:
+                    dc.BlendImage(output, BlendMode.Subtract, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+
+                case Blend.Division:
+                    dc.BlendImage(output, BlendMode.Division, null, null, InterpolationMode.MultiSampleLinear);
+                    break;
+            }
+        }
+
+        private static List<PartInsertTupple> OrderByZAndPriority(List<PartInsertTupple> ts)
+        {
+            PartInsertTupple[] pit_a0 = [.. ts.Where(x => x.Target.Node.Params.DrawingGroup.ZSort == ZSortMode2.IgnorePriority)];
+            int i_0;
+
+            for (i_0 = 0; i_0 < pit_a0.Length; i_0++)
+                if (pit_a0[i_0].Target.Node.Z >= 0.0f)
+                    break;
+
+            List<PartInsertTupple> pit_l0 = [.. pit_a0[..i_0]];
+
+            PartInsertTupple[] pit_a3 = [.. ts.Where(x => !pit_a0.Contains(x))];
+            double[] d_a0 = [.. pit_a3.Select(x => x.Target.Node.Params.DrawingGroup.Priority).Distinct().OrderBy(x => x)];
+
+            foreach (double d_0 in d_a0)
+                pit_l0.AddRange(pit_a3
+                    .Where(x => x.Target.Node.Params.DrawingGroup.Priority == d_0)
+                    .OrderBy(x => x.Target.Node.Params.DrawingGroup.ZSort == ZSortMode2.IgnoreZ ? 0 : x.Target.Node.Z));
+
+            pit_l0.AddRange(pit_a0[i_0..]);
+
+            return pit_l0;
+        }
+
+        public void Dispose()
+        {
+            _trans.SetInput(0, null, true);
+            _trans.Output.Dispose();
+            _trans.Dispose();
+            _empty.Dispose();
+            _cmdl?.Dispose();
+        }
+    }
+}

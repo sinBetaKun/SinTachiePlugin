@@ -1,9 +1,7 @@
 ﻿using SinTachiePlugin.Enums;
 using SinTachiePlugin.Informations;
 using SinTachiePlugin.Part;
-using SinTachiePlugin.Part.LayerInformation.SourceSelectArg;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter;
-using SinTachiePlugin.Parts;
 using SinTachiePlugin.Properties;
 using SinTachiePlugin.Window_Stp.PartValueTemplateEditor;
 using System.IO;
@@ -13,7 +11,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using YukkuriMovieMaker.Commons;
-using YukkuriMovieMaker.Controls;
 using YukkuriMovieMaker.Settings;
 
 namespace SinTachiePlugin.Control.PartValueList
@@ -267,18 +264,18 @@ namespace SinTachiePlugin.Control.PartValueList
             if (_addingPartType == LayerType.Image || _addingPartType == LayerType.Psd || _addingPartType == LayerType.Video)
             {
                 PartNameTree.Items.Clear();
-                bool rootUnexist = !Path.Exists(vm.Root);
+                bool rootUnexist = !vm.Assets.All(x => Path.Exists(x.Path));
 
                 if (!rootUnexist)
                 {
                     try
                     {
-                        DirectoryInfo di = new(vm.Root);
+                        //DirectoryInfo di = new(vm.Root);
 
-                        foreach (TreeViewItem item in CreateTreeItem(di))
-                        {
-                            PartNameTree.Items.Add(item);
-                        }
+                        //foreach (TreeViewItem item in CreateTreeItem(di))
+                        //{
+                        //    PartNameTree.Items.Add(item);
+                        //}
                     }
                     catch (Exception ex)
                     {
@@ -378,57 +375,57 @@ namespace SinTachiePlugin.Control.PartValueList
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
-            if (sender is TreeViewItem item)
-            {
-                string tagName;
-                string partSourcePath = _nameTreeItems.Find(t => t.Item1 == item).Item2;
-                string fromRoot = partSourcePath.Split(vm.Root + "\\").Last();
+            //if (sender is TreeViewItem item)
+            //{
+            //    string tagName;
+            //    string partSourcePath = _nameTreeItems.Find(t => t.Item1 == item).Item2;
+            //    string fromRoot = partSourcePath.Split(vm.Root + "\\").Last();
 
-                if (Path.GetDirectoryName(fromRoot) is string dn && !string.IsNullOrEmpty(dn))
-                {
-                    tagName = dn;
-                }
-                else
-                {
-                    tagName = Path.GetFileNameWithoutExtension((string)item.Header);
-                }
+            //    if (Path.GetDirectoryName(fromRoot) is string dn && !string.IsNullOrEmpty(dn))
+            //    {
+            //        tagName = dn;
+            //    }
+            //    else
+            //    {
+            //        tagName = Path.GetFileNameWithoutExtension((string)item.Header);
+            //    }
 
-                string[] tags = [.. vm.PartValues.Select(pv => pv.ControlledParameters.Tag)];
+            //    string[] tags = [.. vm.PartValues.Select(pv => pv.ControlledParameters.Tag)];
 
-                if (tags.Contains(tagName))
-                {
-                    int sideNum = 1;
-                    while (tags.Contains($"{tagName}({sideNum})")) sideNum++;
-                    tagName += $"({sideNum})";
-                }
+            //    if (tags.Contains(tagName))
+            //    {
+            //        int sideNum = 1;
+            //        while (tags.Contains($"{tagName}({sideNum})")) sideNum++;
+            //        tagName += $"({sideNum})";
+            //    }
 
-                PartValue pv = new();
-                ControlledParametersOfPart cp = pv.ControlledParameters;
-                cp.Tag = tagName;
+            //    PartValue pv = new();
+            //    ControlledParametersOfPart cp = pv.ControlledParameters;
+            //    cp.Tag = tagName;
 
-                switch (_addingPartType)
-                {
-                    case LayerType.Image:
-                        ((ImageFileParameter)cp.SourceSelectArg).ImageFilePath = partSourcePath;
-                        break;
+            //    switch (_addingPartType)
+            //    {
+            //        case LayerType.Image:
+            //            ((ImageFileParameter)cp.SourceSelectArg).ImageFilePath = partSourcePath;
+            //            break;
 
-                    case LayerType.Psd:
-                        cp.SwitchType(LayerType.Psd);
-                        ((PsdFileParameter)cp.SourceSelectArg).PsdFilePath = partSourcePath;
-                        break;
+            //        case LayerType.Psd:
+            //            cp.SwitchType(LayerType.Psd);
+            //            ((PsdFileParameter)cp.SourceSelectArg).PsdFileInfo.FilePath = partSourcePath;
+            //            break;
 
-                    case LayerType.Video:
-                        cp.SwitchType(LayerType.Video);
-                        ((VideoFileParameter)cp.SourceSelectArg).VideoFilePath = partSourcePath;
-                        break;
+            //        case LayerType.Video:
+            //            cp.SwitchType(LayerType.Video);
+            //            ((VideoFileParameter)cp.SourceSelectArg).VideoFilePath = partSourcePath;
+            //            break;
 
-                    default:
-                        return;
-                }
+            //        default:
+            //            return;
+            //    }
 
-                vm.InsertItems([pv]);
-                _lastAddedPartPath = partSourcePath;
-            }
+            //    vm.InsertItems([pv]);
+            //    _lastAddedPartPath = partSourcePath;
+            //}
         }
 
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
@@ -475,7 +472,7 @@ namespace SinTachiePlugin.Control.PartValueList
                 if (param.SourceSelectArg is ImageFileParameter ip)
                     sourcePath = ip.ImageFilePath;
                 else if (param.SourceSelectArg is PsdFileParameter pp)
-                    sourcePath = pp.PsdFilePath;
+                    sourcePath = pp.PsdFileInfo.FilePath ?? string.Empty;
                 else
                     sourcePath = ((VideoFileParameter)param.SourceSelectArg).VideoFilePath;
 

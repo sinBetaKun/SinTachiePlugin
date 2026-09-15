@@ -10,6 +10,7 @@ namespace SinTachiePlugin.Part.LayerInformation.ClippingArg
             var store = current.GetSharedData();
             ClippingArgBase param = mode switch
             {
+                ClippingMode.DontOverride => new DontClipParameter(store),
                 ClippingMode.DontClip => new DontClipParameter(store),
                 ClippingMode.ClipToParent => new ClipToParentParameter(store),
                 ClippingMode.ClipWithTag => new ClipWithTagParameter(store),

@@ -40,7 +40,7 @@
                             <ColumnDefinition />
                             <ColumnDefinition Width="26"/>
                         </Grid.ColumnDefinitions>
-                        <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" SelectionChanged="List_SelectionChanged"
+                        <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" SelectionChanged="ItemList_SelectionChanged"
                                  ItemsSource="{Binding Parts}" SelectedIndex="{Binding SelectedPartIndex}" SelectionMode="Extended"
                                  Name="ItemList" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                  PreviewMouseWheel="List_PreviewMouseWheel">
@@ -51,7 +51,7 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                             <ListBox.ContextMenu>
-                                <ContextMenu Closed="ContextMenu_Closed">
+                                <ContextMenu>
                                     <MenuItem x:Name="CutButton"
                                               Header="{x:Static resx:TextResource.PartValueListView_ContextMenu_Cut}"
                                               Click="CutButton_Click"

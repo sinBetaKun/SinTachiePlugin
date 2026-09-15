@@ -1,14 +1,15 @@
-﻿using SinTachiePlugin.Draw.ParamGroupOfPartNode;
+﻿using SinTachiePlugin.Draw.OverallManaging;
+using SinTachiePlugin.Draw.ParamGroupOfPartNode;
 using SinTachiePlugin.Enums;
 using YukkuriMovieMaker.Player.Video;
 
 namespace SinTachiePlugin.Draw
 {
-    internal class ParamsOfPartNode
+    internal class ParamsOfPartNode(AudioSourceManager asm)
     {
         public bool Hide { get; private set; } = false;
         public PGoPN_Source SourceGroup { get; private set; } = new();
-        public PGoPN_PartAnimationValue PartAnimationValueGroup { get; private set; } = new();
+        public PGoPN_PartAnimationValue PartAnimationValueGroup { get; private set; } = new(asm);
         public PGoPN_LayerInformation LayerInformationGroup { get; private set; } = new();
         public PGoPN_InverseKinematics InverseKinematicsGroup { get; private set; } = new();
         public PGoPN_Origin OriginGroup { get; private set; } = new();
@@ -20,7 +21,7 @@ namespace SinTachiePlugin.Draw
 
         private bool _prevHide = false;
         private readonly PGoPN_Source _prevSource = new();
-        private readonly PGoPN_PartAnimationValue _prevPAV = new();
+        private readonly PGoPN_PartAnimationValue _prevPAV = new(asm);
         private readonly PGoPN_LayerInformation _prevLI = new();
         private readonly PGoPN_InverseKinematics _prevIK = new();
         private readonly PGoPN_Origin _prevOrigin = new();
@@ -86,7 +87,7 @@ namespace SinTachiePlugin.Draw
         public PartNodeComparateResult ComparateWithPrev()
         {
             return
-                new PartNodeComparateResult(CommandList: Hide != _prevHide) |
+                new PartNodeComparateResult(Order: Hide != _prevHide) |
                 SourceGroup.Comparate(_prevSource) |
                 PartAnimationValueGroup.Comparate(_prevPAV) |
                 LayerInformationGroup.Comparate(_prevLI) |

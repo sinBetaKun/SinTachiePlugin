@@ -4,13 +4,13 @@ using YukkuriMovieMaker.Player.Video;
 
 namespace SinTachiePlugin.EffectChainFlag
 {
-    internal class SInTachiePlugin_PartEffectChainFlag_Processor : IVideoEffectProcessor
+    internal class SinTachiePlugin_PartEffectChainFlag_Processor : IVideoEffectProcessor
     {
         private ID2D1Image? input;
 
         public ID2D1Image Output => input ?? throw new ArgumentNullException(TextResource.ExpensionMessage_InputIsNull);
 
-        public SInTachiePlugin_PartEffectChainFlag_Processor()
+        public SinTachiePlugin_PartEffectChainFlag_Processor()
         {
         }
 

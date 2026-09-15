@@ -7,6 +7,7 @@ namespace SinTachiePlugin.Parts
     /// <summary>
     /// アイテム上の再生位置と、アイテムの長さをセットで扱うためのクラス。
     /// </summary>
+    [Obsolete]
     public class FrameAndLength
     {
         /// <summary>

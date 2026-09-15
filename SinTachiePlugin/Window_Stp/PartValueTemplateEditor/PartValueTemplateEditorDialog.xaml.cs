@@ -38,7 +38,8 @@ namespace SinTachiePlugin.Window_Stp.PartValueTemplateEditor
             {
                 _partSourceInfo = new(partInfo);
                 _partSourceInfo.Export();
-                File.Delete(partInfo.StpiPath);
+                // File.Delete(partInfo.StpiPath);
+                // β盤の開発が終わったらこのコメントアウト行を有効にする
             }
             else if (PartSourceInfo.ReadStpsi(sourcePath) is PartSourceInfo partSourceInfo)
             {

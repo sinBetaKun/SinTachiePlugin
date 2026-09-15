@@ -1,55 +1,32 @@
-﻿using SinTachiePlugin.Enums;
-using SinTachiePlugin.Parts;
-using SinTachiePlugin.TachiePlugin;
+﻿using SinTachiePlugin.Draw;
+using SinTachiePlugin.Draw.MultiPartBlend;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Player.Video;
 
 namespace SinTachiePlugin.ShapePludin
 {
-    internal class ShapeOfSinTachieSource : SinTachieSourceBase, IShapeSource
+    internal class ShapeOfSinTachieSource(IGraphicsDevicesAndContext devices, ShapeParameterOfSinTachie param) : IShapeSource
     {
-        readonly ShapeParameterOfSinTachie param;
+        private readonly ShapeParameterOfSinTachie _param = param;
 
-        public ID2D1Image Output => commandList ?? throw new InvalidOperationException("commandList is null");
+        private readonly PartNodeListManager _pnlm = new(devices);
+        public ID2D1Image Output => _pnlm.Output;
 
-        bool isFirst2 = true;
-
-        public ShapeOfSinTachieSource(IGraphicsDevicesAndContext devices, ShapeParameterOfSinTachie param) : base(devices)
+        public void Update(TimelineItemSourceDescription desc)
         {
-            this.param = param;
+            FrameAndLength fl_0 = new(desc);
+            PartNodeComparateResult cmp_0 = _pnlm.UpdateOverallParameter(
+                _param.PartValuesAndAssets.PartValues.Select(x => new PartValueAndFL(x, fl_0))
+                , desc);
+
+            if (cmp_0.Value)
+                _pnlm.UpdateOutput(desc, cmp_0);
         }
 
-        public void Update(TimelineItemSourceDescription description)
+        public void Dispose()
         {
-            for (int i = 0; i < (isFirst2 ? 2 : 1); i++)
-            {
-                UpdateCase updateCase = UpdateNodeListForShape(description);
-
-                if (updateCase != UpdateCase.None)
-                {
-                    if (updateCase.HasFlag(UpdateCase.BitmapParams))
-                    {
-                        UpdateParentPaths();
-                        UpdateOutputs(description);
-                    }
-                    SetCommandList(updateCase);
-                }
-            }
-
-            isFirst2 = false;
-        }
-
-        private UpdateCase UpdateNodeListForShape(TimelineItemSourceDescription description)
-        {
-            FrameAndLength fl = new(description);
-            return UpdateNodeList(
-                [.. param.PartsAndRoot.Parts],
-                [.. Enumerable.Repeat(fl, param.PartsAndRoot.Parts.Count)],
-                param.PartsAndRoot.Parts.Count,
-                description.FPS,
-                0
-                );
+            _pnlm.Dispose();
         }
     }
 }

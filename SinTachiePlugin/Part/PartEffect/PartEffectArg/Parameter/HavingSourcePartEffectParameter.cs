@@ -1,6 +1,9 @@
-﻿using SinTachiePlugin.Enums;
+﻿using Newtonsoft.Json;
+using SinTachiePlugin.Enums;
+using SinTachiePlugin.Informations;
 using SinTachiePlugin.Part.PartEffect.PartEffectArg.Argument.Effects;
 using SinTachiePlugin.Part.PartEffect.PartEffectArg.Argument.OverrideMode;
+using SinTachiePlugin.Properties;
 using System.Collections.Immutable;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
@@ -30,7 +33,25 @@ namespace SinTachiePlugin.Part.PartEffect.PartEffectArg.Parameter
         public override void CopyFrom(PartEffectArgBase? origin)
         {
             if (origin is IEffectsParameter effectsParameter)
-                _effects = [.. effectsParameter.Effects];
+            {
+                try
+                {
+                    string effectsStr = JsonConvert.SerializeObject(effectsParameter.Effects, Formatting.Indented, GetJsonSetting);
+                    if (JsonConvert.DeserializeObject<IVideoEffect[]>(effectsStr, GetJsonSetting) is IVideoEffect[] effects)
+                    {
+                        _effects = [.. effects];
+                    }
+                    else
+                    {
+                        throw new Exception(TextResource.PartEffectArg_Error_DeserializeVideoEffects);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _effects = [];
+                    SinTachieDialog.ShowWarning(ex.Message);
+                }
+            }
         }
 
         public override PartEffectArgBase GetClone()
@@ -39,6 +60,12 @@ namespace SinTachiePlugin.Part.PartEffect.PartEffectArg.Parameter
             clone.CopyFrom(this);
             return clone;
         }
+
+        public static JsonSerializerSettings GetJsonSetting =>
+            new()
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => [.. Effects];
 

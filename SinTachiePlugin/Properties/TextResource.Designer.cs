@@ -124,6 +124,35 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   この配布用パスに決定しますか？： に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CharacterAssetsData_AskChangePathToPacking {
+            get {
+                return ResourceManager.GetString("CharacterAssetsData_AskChangePathToPacking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   古いパスを非推奨パスに登録しますか？
+        ///（描画順序リスト編集時に古いパスを自動で検出・修正できます。） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CharacterAssetsData_AskChangeType {
+            get {
+                return ResourceManager.GetString("CharacterAssetsData_AskChangeType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   素材形式を変更しますか？
+        ///（変更すると現在のパスと非推奨パスがリセットされます。） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CharacterAssetsData_AskSubscribeObsoletePath {
+            get {
+                return ResourceManager.GetString("CharacterAssetsData_AskSubscribeObsoletePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   親パーツにクリッピング に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ClippingMode_ClipToParent {
@@ -147,6 +176,15 @@ namespace SinTachiePlugin.Properties {
         public static string ClippingMode_DontClip {
             get {
                 return ResourceManager.GetString("ClippingMode_DontClip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   上書きしない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ClippingMode_DontOverride {
+            get {
+                return ResourceManager.GetString("ClippingMode_DontOverride", resourceCulture);
             }
         }
         
@@ -745,6 +783,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   なめらかさ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationOpeArg_Fluency {
+            get {
+                return ResourceManager.GetString("PartAnimationOpeArg_Fluency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   アニメーション に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartAnimationOpeArg_GroupName {
@@ -822,6 +869,15 @@ namespace SinTachiePlugin.Properties {
         public static string PartAnimationOpeArg_Output {
             get {
                 return ResourceManager.GetString("PartAnimationOpeArg_Output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ループ再生 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartAnimationOpeArg_PlaybackLoop {
+            get {
+                return ResourceManager.GetString("PartAnimationOpeArg_PlaybackLoop", resourceCulture);
             }
         }
         
@@ -1114,6 +1170,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   Jsonデータ内に変換できないエフェクトを検知しました。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartEffectArg_Error_DeserializeVideoEffects {
+            get {
+                return ResourceManager.GetString("PartEffectArg_Error_DeserializeVideoEffects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   エフェクトを追加する に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartEffectOverrideMode_Add {
@@ -1155,6 +1220,15 @@ namespace SinTachiePlugin.Properties {
         public static string PartInsertDefineMode_SelectTagAndPosition {
             get {
                 return ResourceManager.GetString("PartInsertDefineMode_SelectTagAndPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   親への順序関係を指定 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartInsertDefineMode_ToParentAndPosition {
+            get {
+                return ResourceManager.GetString("PartInsertDefineMode_ToParentAndPosition", resourceCulture);
             }
         }
         
@@ -1794,6 +1868,24 @@ namespace SinTachiePlugin.Properties {
         public static string PartValueListView_ContextMenu_ShowOnlySelected {
             get {
                 return ResourceManager.GetString("PartValueListView_ContextMenu_ShowOnlySelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   木構造の処理に失敗しました（#0） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListViewModel_Error_FailToGenerateValueTree_0 {
+            get {
+                return ResourceManager.GetString("PartValueListViewModel_Error_FailToGenerateValueTree_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   木構造の処理に失敗しました（#1） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListViewModel_Error_FailToGenerateValueTree_1 {
+            get {
+                return ResourceManager.GetString("PartValueListViewModel_Error_FailToGenerateValueTree_1", resourceCulture);
             }
         }
         

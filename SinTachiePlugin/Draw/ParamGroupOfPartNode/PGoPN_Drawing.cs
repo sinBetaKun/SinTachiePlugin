@@ -61,8 +61,8 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                                 Invert = fl.GetValue(mmp.Invert, fps) < 0.5;
                                 Blend = mmp.Blend;
                                 ZSort = mmp.ZSort;
-                                Zoom_X = fl.GetValue(mmp.Zoom_X, fps) / 100;
-                                Zoom_Y = fl.GetValue(mmp.Zoom_Y, fps) / 100;
+                                Zoom_X = zoom * fl.GetValue(mmp.Zoom_X, fps) / 100;
+                                Zoom_Y = zoom * fl.GetValue(mmp.Zoom_Y, fps) / 100;
                                 Priority = fl.GetValue(mmp.Priority, fps);
                                 break;
 
@@ -71,11 +71,11 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                                 Y += fl.GetValue(mmp.Y, fps);
                                 Z += fl.GetValue(mmp.Z, fps);
                                 Opacity *= fl.GetValue(mmp.Opacity, fps) / 100;
-                                zoom *= fl.GetValue(mmp.Zoom, fps) / 100;
+                                zoom = fl.GetValue(mmp.Zoom, fps) / 100;
                                 Rotate += fl.GetValue(mmp.Rotation, fps);
                                 Invert ^= fl.GetValue(mmp.Invert, fps) < 0.5;
-                                Zoom_X *= fl.GetValue(mmp.Zoom_X, fps) / 100;
-                                Zoom_Y *= fl.GetValue(mmp.Zoom_Y, fps) / 100;
+                                Zoom_X *= zoom * fl.GetValue(mmp.Zoom_X, fps) / 100;
+                                Zoom_Y *= zoom * fl.GetValue(mmp.Zoom_Y, fps) / 100;
                                 Priority += fl.GetValue(mmp.Priority, fps);
                                 break;
                         }
@@ -107,14 +107,14 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                         if (cmp.ZoomMode == DrawingValueMode.Override)
                         {
                             zoom = fl.GetValue(cmp.Zoom, fps) / 100;
-                            Zoom_X = fl.GetValue(cmp.Zoom_X, fps) / 100;
-                            Zoom_Y = fl.GetValue(cmp.Zoom_Y, fps) / 100;
+                            Zoom_X = zoom * fl.GetValue(cmp.Zoom_X, fps) / 100;
+                            Zoom_Y = zoom * fl.GetValue(cmp.Zoom_Y, fps) / 100;
                         }
                         else
                         {
-                            zoom *= fl.GetValue(cmp.Zoom, fps) / 100;
-                            Zoom_X *= fl.GetValue(cmp.Zoom_X, fps) / 100;
-                            Zoom_Y *= fl.GetValue(cmp.Zoom_Y, fps) / 100;
+                            zoom = fl.GetValue(cmp.Zoom, fps) / 100;
+                            Zoom_X *= zoom * fl.GetValue(cmp.Zoom_X, fps) / 100;
+                            Zoom_Y *= zoom * fl.GetValue(cmp.Zoom_Y, fps) / 100;
                         }
 
                         if (cmp.RotationMode == DrawingValueMode.Override)
@@ -187,9 +187,10 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                 pg.Blend != Blend ||
                 pg.ZSort != ZSort;
 
-            bool clChanged = pg.Priority != Priority;
+            bool orderChanged = pg.Priority != Priority || pg.ZSort != ZSort;
+            bool blendChanged = pg.Blend != Blend;
 
-            return new(CommandList: clChanged, Value: valueChanged);
+            return new(Order: orderChanged, Blend: blendChanged, Value: valueChanged);
         }
     }
 }

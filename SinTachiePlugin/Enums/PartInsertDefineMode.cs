@@ -11,5 +11,7 @@ namespace SinTachiePlugin.Enums
         DontInsert,
         [Display(Name = nameof(TextResource.PartInsertDefineMode_SelectTagAndPosition), ResourceType = typeof(TextResource))]
         SelectTagAndPosition,
+        [Display(Name = nameof(TextResource.PartInsertDefineMode_SelectTagAndPosition), ResourceType = typeof(TextResource))]
+        ToParentAndPosition,
     }
 }

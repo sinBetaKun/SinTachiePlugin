@@ -8,7 +8,7 @@ using YukkuriMovieMaker.Plugin.Effects;
 namespace SinTachiePlugin.EffectChainFlag
 {
     [VideoEffect("ﾊﾟｰﾂ個別ｴﾌｪｸﾄﾁｪｲﾝﾌﾗｸﾞ", ["STP"], ["パーツ", "エフェクト" , "チェイン", "フラグ"], isAviUtlSupported: false)]
-    public class SInTachiePlugin_PartEffectChainFlag : VideoEffectBase
+    public class SinTachiePlugin_PartEffectChainFlag : VideoEffectBase
     {
         /// <summary>
         /// エフェクトの名前
@@ -41,7 +41,7 @@ namespace SinTachiePlugin.EffectChainFlag
         /// <returns>映像エフェクト</returns>
         public override IVideoEffectProcessor CreateVideoEffect(IGraphicsDevicesAndContext devices)
         {
-            return new SInTachiePlugin_PartEffectChainFlag_Processor();
+            return new SinTachiePlugin_PartEffectChainFlag_Processor();
         }
 
         /// <summary>

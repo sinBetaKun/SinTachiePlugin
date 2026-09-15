@@ -1,4 +1,5 @@
 ﻿using SinTachiePlugin.Informations;
+using SinTachiePlugin.TachiePlugin;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Plugin;
 using YukkuriMovieMaker.Plugin.Tachie;

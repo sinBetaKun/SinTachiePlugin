@@ -1,12 +1,16 @@
 ﻿using System.Windows;
+using YukkuriMovieMaker.Commons;
 
 namespace SinTachiePlugin.Control.PartAnimationValueList
 {
     /// <summary>
     /// PartAnimationValueViewer.xaml の相互作用ロジック
     /// </summary>
-    public partial class PartAnimationValueViewer : System.Windows.Controls.UserControl
+    public partial class PartAnimationValueViewer : System.Windows.Controls.UserControl, IPropertyEditorControl
     {
+        public event EventHandler? BeginEdit;
+        public event EventHandler? EndEdit;
+
         public PartAnimationValueViewer()
         {
             InitializeComponent();

@@ -34,7 +34,12 @@ namespace SinTachiePlugin.Draw
                 m.M44 == 1;
         }
 
-        public static PartNodeDrawDescription GetIdentity() =>
-            new(default, default, default, default, default, 1, false, InterpolationMode.Linear);
+        public float GetZ() => (Rotate
+                    * Matrix4x4.CreateTranslation(Draw)
+                    * Camera
+                    * new Matrix4x4(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, -0.001f, 0f, 0f, 0f, 1f)).M43;
+
+        public static PartNodeDrawDescription Identity { get => _identity; }
+        private static readonly PartNodeDrawDescription _identity = new(default, default, default, default, default, 1, false, InterpolationMode.HighQualityCubic);
     }
 }

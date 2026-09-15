@@ -5,6 +5,8 @@ namespace SinTachiePlugin.Enums
 {
     internal enum ClippingMode
     {
+        [Display(Name = nameof(TextResource.ClippingMode_DontOverride), ResourceType = typeof(TextResource))]
+        DontOverride,
         [Display(Name = nameof(TextResource.ClippingMode_DontClip), ResourceType = typeof(TextResource))]
         DontClip,
         [Display(Name = nameof(TextResource.ClippingMode_ClipToParent), ResourceType = typeof(TextResource))]

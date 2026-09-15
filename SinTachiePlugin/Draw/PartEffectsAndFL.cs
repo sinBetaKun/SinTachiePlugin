@@ -3,9 +3,9 @@ using YukkuriMovieMaker.Plugin.Effects;
 
 namespace SinTachiePlugin.Draw
 {
-    internal class PartEffectsAndFL(ImmutableList<IVideoEffect> effects, FrameAndLength fl)
+    internal class PartEffectsAndFL(IEnumerable<IVideoEffect> effects, FrameAndLength fl)
     {
-        public ImmutableList<IVideoEffect> Effects { get; init; } = effects;
+        public ImmutableList<IVideoEffect> Effects { get; init; } = [.. effects];
 
         public FrameAndLength FL { get; init; } = fl;
     }

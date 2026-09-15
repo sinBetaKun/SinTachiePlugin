@@ -15,7 +15,7 @@ namespace SinTachiePlugin.Control.PartValueList
             if (control is not PartValueListView editor)
                 return;
 
-            PartValueListViewModel vm = new(itemProperties, true);
+            PartValueListViewModel vm = new(itemProperties);
             editor.DataContext = vm;
         }
 

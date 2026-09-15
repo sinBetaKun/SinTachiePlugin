@@ -122,9 +122,10 @@ namespace SinTachiePlugin.Draw
             {
                 AffineTransform2DInterpolationMode interPolationMode2d = desc.InterpolationMode.ToTransform2D();
                 _trans2D.InterPolationMode = interPolationMode2d;
+                Matrix4x4 rttM = desc.Rotate;
                 _trans2D.TransformMatrix = Matrix3x2.CreateTranslation(-1 * desc.Center)
                     * Matrix3x2.CreateScale(desc.Zoom)
-                    * new Matrix3x2(desc.Rotate.M11, desc.Rotate.M11, desc.Rotate.M21, desc.Rotate.M22, desc.Draw.X, desc.Draw.Y);
+                    * new Matrix3x2(rttM.M11, rttM.M12, rttM.M21, rttM.M22, desc.Draw.X, desc.Draw.Y);
             }
             else
             {

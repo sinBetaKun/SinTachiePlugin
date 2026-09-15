@@ -1,6 +1,9 @@
-﻿using SinTachiePlugin.Part;
+﻿using SinTachiePlugin.CharacterAsset;
+using SinTachiePlugin.Informations;
+using SinTachiePlugin.Part;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter;
 using SinTachiePlugin.Parts;
+using SinTachiePlugin.Properties;
 using SinTachiePlugin.ShapePludin;
 using System.Collections.Immutable;
 using System.ComponentModel;
@@ -17,8 +20,89 @@ namespace SinTachiePlugin.Control.PartValueList
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
 
-        public List<PartValue> PartValues { get => _parts; set => Set(ref _parts, value); }
+        public List<PartValue> PartValues
+        {
+            get => _parts;
+            set
+            {
+                PartValue[] pv_a0 = [.. _parts.Where(x => !value.Contains(x))];
+                PartValue[] pv_a1 = [.. value.Where(x => !_parts.Contains(x))];
+                Set(ref _parts, value);
+
+                foreach (PartValue pv_0 in pv_a0)
+                    pv_0.ControlledParameters.LayerTypeChanged -= ExtractFromBrokenGroup;
+
+                foreach (PartValue pv_0 in pv_a1)
+                    pv_0.ControlledParameters.LayerTypeChanged += ExtractFromBrokenGroup;
+            }
+        }
         private List<PartValue> _parts = [];
+
+        private void ExtractFromBrokenGroup(object? sender, EventArgs e)
+        {
+            if (sender is not ControlledParametersOfPart cp_0)
+                return;
+
+            if (cp_0.ThisLayerType == Enums.LayerType.Group)
+                return;
+
+            if (PartValues.FirstOrDefault(x => x.ControlledParameters == cp_0) is not PartValue pv_0)
+                return;
+
+            List<ValueTreeNode> n_l0 = ValueTreeNode.GetTree(PartValues);
+            IEnumerable<ValueTreeNode> n_e0;
+
+            foreach (ValueTreeNode n_0 in n_l0)
+            {
+                if (n_0.Value == pv_0)
+                {
+                    if (n_0.Children.Count == 0)
+                        return;
+
+                    int i_0 = n_l0.IndexOf(n_0);
+                    n_e0 = [.. n_l0[..(i_0 + 1)], .. n_0.Children, .. n_l0[(i_0 + 1)..]];
+                    n_0.Children.Clear();
+                }
+                else
+                {
+                    if (n_0.Find(pv_0) is not ValueTreeNode n_1)
+                        continue;
+
+                    if (n_1.Children.Count == 0)
+                        return;
+
+                    if (n_1.Parent is ValueTreeNode n_2)
+                    {
+                        int i_ = n_2.Children.IndexOf(n_1);
+
+                        if (i_ + 1 < n_2.Children.Count)
+                        {
+                            n_2.Children.InsertRange(i_ + 1, n_1.Children);
+                        }
+                        else
+                        {
+                            n_2.Children.AddRange(n_1.Children);
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+
+                    n_1.Children.Clear();
+                    n_e0 = n_l0;
+                }
+
+                BeginEdit?.Invoke(this, EventArgs.Empty);
+                PartValues = ValueTreeNode.GetList(n_e0);
+                PartValue pv_1 = Source[SelectedIndex];
+                UpdateSource();
+                SetProperties();
+                UpdateSource();
+                EndEdit?.Invoke(this, EventArgs.Empty);
+                SelectedIndex = Source.IndexOf(pv_1);
+            }
+        }
 
         public List<PartValue> Source { get => _source; set => Set(ref _source, value); }
         private List<PartValue> _source = [];
@@ -28,8 +112,8 @@ namespace SinTachiePlugin.Control.PartValueList
 
         private readonly List<PartValue> _openeds = [];
 
-        public string Root { get => _root; set => Set(ref _root, value); }
-        string _root = string.Empty;
+        public ImmutableList<CharacterAssetsData> Assets { get => _assets; set => Set(ref _assets, value); }
+        private ImmutableList<CharacterAssetsData> _assets = [];
 
         public SinTachieCharacterParameter? CharacterParameter
         {
@@ -39,33 +123,27 @@ namespace SinTachiePlugin.Control.PartValueList
                 var oldCP = _characterParameter;
                 if (Set(ref _characterParameter, value))
                 {
-                    if (oldCP != null)
-                    {
-                        oldCP.PropertyChanged -= CharacterParameterChanged;
-                    }
-                    if (_characterParameter != null)
-                    {
-                        _characterParameter.PropertyChanged += CharacterParameterChanged;
-                    }
-                    SetRootFromCharacterParameter();
+                    oldCP?.PropertyChanged -= CharacterParameterChanged;
+                    _characterParameter?.PropertyChanged += CharacterParameterChanged;
+                    SetAssetsFromCharacterParameter();
                 }
             }
         }
         private SinTachieCharacterParameter? _characterParameter;
 
-        private PartValuesAndRoot? _partValuesAndRoot;
+        private readonly PartValuesAndAssets? _partValuesAndAssets;
 
         private void CharacterParameterChanged(object sender, PropertyChangedEventArgs e)
         {
-            SetRootFromCharacterParameter();
+            SetAssetsFromCharacterParameter();
         }
 
-        private void SetRootFromCharacterParameter()
+        private void SetAssetsFromCharacterParameter()
         {
-            Root = _characterParameter?.Directory ?? string.Empty;
+            Assets = _characterParameter?.Assets ?? [];
         }
 
-        public PartValueListViewModel(ItemProperty[] properties, PartValuesAndRoot? partValuesAndRoot = null)
+        public PartValueListViewModel(ItemProperty[] properties, PartValuesAndAssets? partValuesAndRoot = null)
         {
             _properties = properties;
 
@@ -74,8 +152,8 @@ namespace SinTachiePlugin.Control.PartValueList
 
             if (partValuesAndRoot is not null)
             {
-                _partValuesAndRoot = partValuesAndRoot;
-                _partValuesAndRoot.RootChanged += RootOfShapeChanged;
+                _partValuesAndAssets = partValuesAndRoot;
+                _partValuesAndAssets.AssetsChanged += RootOfShapeChanged;
             }
 
             _isShape = partValuesAndRoot is not null;
@@ -91,14 +169,14 @@ namespace SinTachiePlugin.Control.PartValueList
 
         private void RootOfShapeChanged(object? sender, EventArgs e)
         {
-            Root = _partValuesAndRoot!.Root;
+            Assets = _partValuesAndAssets!.Assets;
         }
 
         private void UpdateParts()
         {
             if (_isShape)
             {
-                PartValuesAndRoot par = _properties[0].GetValue<PartValuesAndRoot>() ?? new();
+                PartValuesAndAssets par = _properties[0].GetValue<PartValuesAndAssets>() ?? new();
 
                 if (!PartValues.SequenceEqual(par.PartValues))
                     PartValues = [.. par.PartValues];
@@ -216,6 +294,74 @@ namespace SinTachiePlugin.Control.PartValueList
         public IEnumerable<PartValue> FindChildren(PartValue pv)
         {
             return PartValues.Where(pv => pv.ParentIndex == PartValues.IndexOf(pv));
+        }
+
+        public void InsertItems2(List<PartValue> items)
+        {
+            if (SelectedIndex < -1 || SelectedIndex >= Source.Count)
+                return;
+
+            List<ValueTreeNode> n_l0 = ValueTreeNode.GetTree(PartValues);
+            List<ValueTreeNode> n_l1 = ValueTreeNode.GetTree(items);
+
+            if (SelectedIndex < 0)
+            {
+                n_l0.AddRange(n_l1);
+            }
+            else
+            {
+                PartValue pv_0 = Source[SelectedIndex];
+
+                if (n_l0.FirstOrDefault(x => x.Value == pv_0) is ValueTreeNode n_0)
+                {
+                    if (n_0.InsertToHere(n_l1))
+                    {
+                        if (n_l0.Last() == n_0)
+                        {
+                            n_l0.AddRange(n_l1);
+                        }
+                        else
+                        {
+                            int i_0 = n_l0.IndexOf(n_0);
+                            n_l0.InsertRange(i_0 + 1, n_l1);
+                        }
+                    }
+                }
+                else
+                {
+                    ValueTreeNode? n_1 = null;
+
+                    foreach (ValueTreeNode n_2 in n_l0)
+                    {
+                        if (n_2.Find(pv_0) is ValueTreeNode n_3)
+                        {
+                            n_1 = n_3;
+                            break;
+                        }
+                    }
+
+                    if (n_1 is null)
+                    {
+                        SinTachieDialog.ShowError(new(TextResource.PartValueListViewModel_Error_FailToGenerateValueTree_0));
+                        throw new Exception(TextResource.PartValueListViewModel_Error_FailToGenerateValueTree_0);
+                    }
+
+                    if (n_1.InsertToHere(n_l1))
+                    {
+                        SinTachieDialog.ShowError(new(TextResource.PartValueListViewModel_Error_FailToGenerateValueTree_1));
+                        throw new Exception(TextResource.PartValueListViewModel_Error_FailToGenerateValueTree_1);
+                    }
+                }
+            }
+
+            BeginEdit?.Invoke(this, EventArgs.Empty);
+            PartValues = ValueTreeNode.GetList(n_l0);
+            UpdateSource();
+            int index4 = Source.IndexOf(items.First());
+            SetProperties();
+            UpdateSource();
+            EndEdit?.Invoke(this, EventArgs.Empty);
+            SelectedIndex = index4;
         }
 
         public void InsertItems(List<PartValue> items)
@@ -496,8 +642,8 @@ namespace SinTachiePlugin.Control.PartValueList
         {
             _item.PropertyChanged -= Item_PropertyChanged;
 
-            if (_partValuesAndRoot is not null)
-                _partValuesAndRoot.RootChanged -= RootOfShapeChanged;
+            if (_partValuesAndAssets is not null)
+                _partValuesAndAssets.AssetsChanged -= RootOfShapeChanged;
         }
     }
 }

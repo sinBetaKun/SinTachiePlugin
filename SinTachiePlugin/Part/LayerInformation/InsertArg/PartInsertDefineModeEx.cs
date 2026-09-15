@@ -13,6 +13,7 @@ namespace SinTachiePlugin.Part.LayerInformation.InsertArg
                 PartInsertDefineMode.DontOverride => new DontInsertParameter(store),
                 PartInsertDefineMode.DontInsert => new DontInsertParameter(store),
                 PartInsertDefineMode.SelectTagAndPosition => new SelectTagAndPositionParameter(store),
+                PartInsertDefineMode.ToParentAndPosition => new SelectPositionParameter(store),
                 _ => throw new ArgumentOutOfRangeException(nameof(mode)),
             };
 

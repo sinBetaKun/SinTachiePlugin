@@ -3,8 +3,9 @@ using SinTachiePlugin.Draw;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Abrir;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.AudioFilePath;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.Cerrar;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.ContentOffset;
+using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.PlaybackLoop;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.PlaybackSpeed;
-using SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Argument.StartFrameNumber;
 using SinTachiePlugin.Properties;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -15,7 +16,7 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
 {
-    internal class AudioFileParameter : PartAnimationOpeArgBase, IAbrirParameter, ICerrarParameter, IAudioFilePathParameter, IStartFrameNumberParameter, IPlaybackSpeedParameter
+    internal class AudioFileParameter : PartAnimationOpeArgBase, IAbrirParameter, ICerrarParameter, IAudioFilePathParameter, IContentOffsetParameter, IPlaybackSpeedParameter, IPlaybackLoopParameter
     {
         [Display(Name = nameof(TextResource.PartAnimationOpeArg_Open), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", -100, 100)]
@@ -27,27 +28,43 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
 
         [Display(Name = nameof(TextResource.PartAnimationOpeMode_AudioFile), ResourceType = typeof(TextResource))]
         [FileSelector(YukkuriMovieMaker.Settings.FileGroupType.AudioItem)]
-        public string AudioFilePath { get => audioFilePath; set => Set(ref audioFilePath, value); }
-        private string audioFilePath = string.Empty;
+        public string AudioFilePath { get => _audioFilePath; set => Set(ref _audioFilePath, value); }
+        private string _audioFilePath = string.Empty;
+
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_Fluency), ResourceType = typeof(TextResource))]
+        [TextBoxSlider("F0", "", 0.0, 10.0)]
+        [Range(0.0, 100000.0)]
+        [DefaultValue(0.0)]
+        public int Fluency { get => _fluency; set => Set(ref _fluency, value); }
+        private int _fluency = 0;
 
         [Display(Name = nameof(TextResource.PartAnimationOpeArg_StartFrameNumber), ResourceType = typeof(TextResource))]
-        [FrameNumberEditor]
-        [DefaultValue(0)]
-        [Range(0, 99999)]
-        public int StartFrameNumber { get => startFrameNumber; set => Set(ref startFrameNumber, value); }
-        private int startFrameNumber = 0;
+        [TextBoxSlider("F0", "", 0.0, 3.0)]
+        [Range(0.0, 100000.0)]
+        [DefaultValue(0.0)]
+        public int AudioTrackIndex { get => _audioTrackIndex; set => Set(ref _audioTrackIndex, value); }
+        private int _audioTrackIndex = 0;
+
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_StartFrameNumber), ResourceType = typeof(TextResource))]
+        [TimeSpanRange]
+        [TimeSpanDefaultValue]
+        [TimeSpanEditor]
+        public TimeSpan ContentOffset { get => _contentOffset; set => Set(ref _contentOffset, value); }
+        private TimeSpan _contentOffset = TimeSpan.Zero;
 
         [Display(Name = nameof(TextResource.PartAnimationOpeArg_PlaybackSpeed), ResourceType = typeof(TextResource))]
         [TextBoxSlider("F2", "%", 0, 200)]
         [DefaultValue(100)]
         [Range(0, 99999)]
-        public double PlaybackSpeed { get => playbackSpeed; set => Set(ref playbackSpeed, value); }
-        private double playbackSpeed = 100;
+        public double PlaybackSpeed { get => _playbackSpeed; set => Set(ref _playbackSpeed, value); }
+        private double _playbackSpeed = 100;
 
-        private int lastFrame = 0;
-        private int length = 0;
-        private int fps = 0;
-        private double[] volumeArray = [];
+        [Display(Name = nameof(TextResource.PartAnimationOpeArg_PlaybackLoop), ResourceType = typeof(TextResource))]
+        [ToggleSlider]
+        public bool PlaybackLoop { get => _playbackLoop; set => Set(ref _playbackLoop, value); }
+        private bool _playbackLoop = false;
+
+        private float _volume;
 
         public AudioFileParameter()
         {
@@ -57,22 +74,18 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
         {
         }
 
+        public void SetAudioVolume(float volume)
+        {
+            _volume = volume;
+        }
+
         public override PartAnimationResultA GetResult(TachieSourceDescription desc)
         {
             FrameAndLength fl = new(desc);
+            double open = fl.GetValue(Abrir, desc.FPS);
+            double close = fl.GetValue(Cerrar, desc.FPS);
 
-            if (lastFrame != StartFrameNumber || length != fl.Length || fps != desc.FPS)
-            {
-                lastFrame = StartFrameNumber;
-                length = fl.Length;
-                fps = desc.FPS;
-                UpdateVolumeArray();
-            }
-
-            double open = fl.GetValue(Abrir, fps);
-            double close = fl.GetValue(Cerrar, fps);
-
-            return PartAnimationResultA.FromVolume(close + (open - close) * volumeArray[(int)(fl.Frame * PlaybackSpeed / 100)]);
+            return PartAnimationResultA.FromVolume(close + (open - close) * _volume);
         }
 
         public override void CopyFrom(PartAnimationOpeArgBase? origin)
@@ -83,10 +96,12 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
                 Cerrar.CopyFrom(cerrarParam.Cerrar);
             if (origin is IAudioFilePathParameter audioFilePathParam)
                 AudioFilePath = audioFilePathParam.AudioFilePath;
-            if (origin is IStartFrameNumberParameter startFrameNumberParam)
-                StartFrameNumber = startFrameNumberParam.StartFrameNumber;
+            if (origin is IContentOffsetParameter startFrameNumberParam)
+                ContentOffset = startFrameNumberParam.ContentOffset;
             if (origin is IPlaybackSpeedParameter playbackSpeedParameter)
                 PlaybackSpeed = playbackSpeedParameter.PlaybackSpeed;
+            if (origin is IPlaybackLoopParameter playbackLoopParameter)
+                PlaybackLoop = playbackLoopParameter.PlaybackLoop;
         }
 
         public override PartAnimationOpeArgBase GetClone()
@@ -103,8 +118,9 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
             store.Save(new AbrirSharedData(this));
             store.Save(new CerrarSharedData(this));
             store.Save(new AudioFilePathSharedData(this));
-            store.Save(new StartFrameNumberSharedData(this));
+            store.Save(new ContentOffsetSharedData(this));
             store.Save(new PlaybackSpeedSharedData(this));
+            store.Save(new PlaybackLoopSharedData(this));
         }
 
         protected override void LoadSharedData(SharedDataStore store)
@@ -115,68 +131,12 @@ namespace SinTachiePlugin.PartAnimation.PartAnimationOpeArg.Parameter
                 cerrarSharedData.CopyTo(this);
             if (store.Load<AudioFilePathSharedData>() is AudioFilePathSharedData audioFilePathSharedData)
                 audioFilePathSharedData.CopyTo(this);
-            if (store.Load<StartFrameNumberSharedData>() is StartFrameNumberSharedData startTimeSpanSharedData)
+            if (store.Load<ContentOffsetSharedData>() is ContentOffsetSharedData startTimeSpanSharedData)
                 startTimeSpanSharedData.CopyTo(this);
             if (store.Load<PlaybackSpeedSharedData>() is PlaybackSpeedSharedData playbackSpeedSharedData)
                 playbackSpeedSharedData.CopyTo(this);
-        }
-
-        /// <summary>
-        /// 指定されている音声ファイルから、アイテムの長さ（単位：フレーム）だけ平均 dB を求めて配列に格納する。
-        /// </summary>
-        private void UpdateVolumeArray()
-        {
-            volumeArray = new double[length];
-
-            using (var reader = new AudioFileReader(AudioFilePath))
-            {
-                int channels = reader.WaveFormat.Channels;
-                int sampleRate = reader.WaveFormat.SampleRate;
-
-                for (int frame = 0; frame < length; frame++)
-                {
-                    TimeSpan start = TimeSpan.FromSeconds((double)StartFrameNumber / fps) + TimeSpan.FromSeconds((double)frame / fps);
-                    TimeSpan end = start + TimeSpan.FromSeconds(1.0 / fps);
-                    double ave = GetAverageVolume(reader, start, end, channels, sampleRate);
-
-                    if (ave < 0)
-                    {
-                        Array.Clear(volumeArray, frame, length - frame);
-                        break;
-                    }
-
-                    volumeArray[frame] = ave;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 音声ファイルのリーダーを使って、区間内の平均 dB を計算する。
-        /// </summary>
-        /// <param name="reader">音声ファイルのリーダー</param>
-        /// <param name="start">区間の開始位置</param>
-        /// <param name="end">区間の終了位置</param>
-        /// <param name="channels">チャンネル数</param>
-        /// <param name="sampleRate">サンプリングレート</param>
-        /// <returns>平均 dB</returns>
-        private static double GetAverageVolume(AudioFileReader reader, TimeSpan start, TimeSpan end, int channels, int sampleRate)
-        {
-            // 開始位置にシーク
-            reader.CurrentTime = start;
-            int samplesNeeded = (int)((end - start).TotalSeconds * sampleRate * channels);
-
-            float[] buffer = new float[samplesNeeded];
-            int samplesRead = reader.Read(buffer, 0, samplesNeeded);
-
-            if (samplesRead == 0)
-                return -1;
-
-            double sumSquares = 0;
-
-            for (int i = 0; i < samplesRead; i++)
-                sumSquares += buffer[i] * buffer[i];
-
-            return Math.Sqrt(sumSquares / samplesNeeded); // RMS値
+            if (store.Load<PlaybackLoopSharedData>() is PlaybackLoopSharedData playbackLoopSharedData)
+                playbackLoopSharedData.CopyTo(this);
         }
     }
 }
