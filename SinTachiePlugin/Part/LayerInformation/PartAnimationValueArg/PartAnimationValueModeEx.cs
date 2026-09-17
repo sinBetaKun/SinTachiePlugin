@@ -10,6 +10,7 @@ namespace SinTachiePlugin.Part.LayerInformation.PartAnimationValueArg
             var store = current.GetSharedData();
             PartAnimationValueArgBase param = mode switch
             {
+                PartAnimationValueMode.DontOverride => new NoneValueParameter(store),
                 PartAnimationValueMode.None => new NoneValueParameter(store),
                 PartAnimationValueMode.Single => new SingleValueParameter(store),
                 PartAnimationValueMode.Multi => new MultiValuesParameter(store),

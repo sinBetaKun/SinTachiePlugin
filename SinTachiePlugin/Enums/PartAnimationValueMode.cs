@@ -11,5 +11,7 @@ namespace SinTachiePlugin.Enums
         Single,
         [Display(Name = nameof(TextResource.PartAnimationValueMode_Multi), ResourceType = typeof(TextResource))]
         Multi,
+        [Display(Name = nameof(TextResource.GlobalEnumDisplay_DontOverride), ResourceType = typeof(TextResource))]
+        DontOverride,
     }
 }

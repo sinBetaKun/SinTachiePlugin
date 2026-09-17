@@ -11,7 +11,7 @@ namespace SinTachiePlugin.Enums
         Compose,
         [Display(Name = nameof(TextResource.ValueMode_Custom), Description = nameof(TextResource.ValueMode_Custom_Description), ResourceType = typeof(TextResource))]
         Custom,
-        [Display(Name = nameof(TextResource.ValueMode_DontOverride), Description = nameof(TextResource.ValueMode_Override_Description), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.GlobalEnumDisplay_DontOverride), Description = nameof(TextResource.ValueMode_Override_Description), ResourceType = typeof(TextResource))]
         DontOverride,
     }
 }

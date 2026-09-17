@@ -9,107 +9,131 @@ namespace SinTachiePlugin.Draw.PartAnimation
 {
     internal static class PartAnimationManager
     {
+        /// <summary>
+        /// 描画順序リスト上の全パーツの全ｱﾆﾒｰｼｮﾝﾚｲﾔｰの出力を導出する。
+        /// <br/>
+        /// 別パーツのｱﾆﾒｰｼｮﾝﾚｲﾔｰと連動するｱﾆﾒｰｼｮﾝﾚｲﾔｰもあるのでその処理も行う。
+        /// </summary>
+        /// <param name="pns">描画順序リスト全体</param>
+        /// <exception cref="Exception"></exception>
         public static void Generate(IEnumerable<PartNode> pns)
         {
+            // 描画順序リスト全体
             PartNode[] overall = [.. pns];
 
-            foreach (PartNode pn0 in overall)
+            foreach (PartNode pn_0 in overall)
             {
-                if (pn0.Params.SourceGroup.ThisLayerType == LayerType.Image && File.Exists(pn0.Params.SourceGroup.FilePath))
+                if (pn_0.Params.SourceGroup.ThisLayerType == LayerType.Image && File.Exists(pn_0.Params.SourceGroup.FilePath))
                 {
-                    ImmutableList<PartAnimationArg> l0 = pn0.Params.PartAnimationValueGroup.PartAnimationArgs;
-                    List<PartAnimationArg?> l1 = [];
+                    ImmutableList<PartAnimationArg> paa_l0 = pn_0.Params.PartAnimationValueGroup.PartAnimationArgs;
+                    List<PartAnimationArg?> paa_l1 = [];
 
-                    foreach (PartAnimationArg _0 in l0)
+                    foreach (PartAnimationArg paa_0 in paa_l0)
                     {
-                        while (l1.Count <= _0.Index)
-                            l1.Add(null);
+                        // 値が指定されず飛ばされたｱﾆﾒｰｼｮﾝﾚｲﾔｰ次元軸の情報を埋める。
+                        while (paa_l1.Count <= paa_0.Index)
+                            paa_l1.Add(null);
 
-                        l1[_0.Index] = _0;
+                        paa_l1[paa_0.Index] = paa_0;
                     }
 
+                    // 
+                    List<PartAnimationResultA> parA_l2 = [];
+                    List<PartAnimationArg> paa_l2 = [];
 
-                    List<PartAnimationResultA> l2 = l1.Select(x =>
+                    foreach (PartAnimationArg? paa_0 in paa_l1)
                     {
-                        if (x is null)
-                            return PartAnimationResultA.FromVolume(1);
+                        if (paa_0 is null)
+                        {
+                            parA_l2.Add(PartAnimationResultA.FromVolume(1.0));
+                            continue;
+                        }
 
-                        List<PartAnimationArg> l2 = [x];
-                        PartAnimationArg _0 = x;
+                        paa_l2.Clear();
+                        paa_l2.Add(paa_0);
+                        PartAnimationArg paa_1 = paa_0;
 
+                        // LinkOpeModeの処理（他のパーツのｱﾆﾒｰｼｮﾝﾚｲﾔｰとの連動を処理）
                         while (true)
                         {
-                            if (_0.LinkOpeMode == PartAnimationLinkOpeMode.DontOverride)
+                            // 演算不可能な状態。そもそもこの状態になることは理論上無い。
+                            if (paa_1.LinkOpeMode == PartAnimationLinkOpeMode.DontOverride)
                             {
                                 SinTachieDialog.ShowError(new(TextResource.PartNode_Error_InvalidAnimationLinkMode));
                                 throw new Exception(TextResource.PartNode_Error_InvalidAnimationLinkMode);
                             }
 
-                            if (_0.LinkOpeMode == PartAnimationLinkOpeMode.DontLink)
+                            // 連動しない。（独立）
+                            if (paa_1.LinkOpeMode == PartAnimationLinkOpeMode.DontLink)
                                 break;
 
-                            if (string.IsNullOrEmpty(_0.TargetPartTag)
-                            || overall.FirstOrDefault(y => y.Tag == _0.TargetPartTag) is not PartNode _1)
+                            // 連動の参照先パーツが指定されていない、又は該当する参照先が存在しない。
+                            if (string.IsNullOrEmpty(paa_1.TargetPartTag)
+                                || overall.FirstOrDefault(y => y.Tag == paa_1.TargetPartTag) is not PartNode pn_1)
                                 break;
 
-                            if (!string.IsNullOrEmpty(_0.TargetPartTag)
-                            || _1.Params.PartAnimationValueGroup.PartAnimationArgs
-                            .FirstOrDefault(y => y.AnimationTag == _0.TargetAnimationTag) is not PartAnimationArg _2)
+                            // 連動の参照先ｱﾆﾒｰｼｮﾝﾚｲﾔｰが指定されていない、又は該当する参照先が存在しない。
+                            if (string.IsNullOrEmpty(paa_1.TargetAnimationTag)
+                                || pn_1.Params.PartAnimationValueGroup.PartAnimationArgs
+                                    .FirstOrDefault(y => y.AnimationTag == paa_1.TargetAnimationTag) is not PartAnimationArg paa_2)
                                 break;
 
-                            l2.Add(_2);
+                            paa_l2.Add(paa_2);
 
-                            if (l2.GroupBy(x => x, ReferenceEqualityComparer.Instance).Any(g => g.Count() >= 2))
+                            if (paa_l2.GroupBy(x => x, ReferenceEqualityComparer.Instance).Any(g => g.Count() >= 2))
                             {
-                                if (x.IsVolume)
+                                if (paa_0.IsVolume)
                                 {
-                                    return PartAnimationResultA.FromVolume(x.Volume);
+                                    parA_l2.Add(PartAnimationResultA.FromVolume(paa_0.Volume));
+                                    continue;
                                 }
                                 else
                                 {
-                                    return PartAnimationResultA.FromText(x.Text);
+                                    parA_l2.Add(PartAnimationResultA.FromText(paa_0.Text));
+                                    continue;
                                 }
                             }
 
-                            _0 = _2;
+                            paa_1 = paa_2;
                         }
 
-                        l2.RemoveAt(0);
-                        PartAnimationResultA _4 = x.IsVolume
-                        ? PartAnimationResultA.FromVolume(x.Volume)
-                        : PartAnimationResultA.FromText(x.Text);
+                        paa_l2.RemoveAt(0);
+                        PartAnimationResultA parA_3 = paa_0.IsVolume
+                        ? PartAnimationResultA.FromVolume(paa_0.Volume)
+                        : PartAnimationResultA.FromText(paa_0.Text);
 
-                        foreach (PartAnimationArg _2 in l2)
+                        foreach (PartAnimationArg paa_2 in paa_l2)
                         {
-                            if (_2.IsVolume)
+                            if (paa_2.IsVolume)
                             {
-                                if (_2.LinkOpeMode == PartAnimationLinkOpeMode.Add)
-                                    _4 = new(true, _4.Text, _4.Volume + _2.Volume);
+                                if (paa_2.LinkOpeMode == PartAnimationLinkOpeMode.Add)
+                                    parA_3 = new(true, parA_3.Text, parA_3.Volume + paa_2.Volume);
                                 else
-                                    _4 = new(true, _4.Text, _4.Volume * _2.Volume);
+                                    parA_3 = new(true, parA_3.Text, parA_3.Volume * paa_2.Volume);
                             }
                             else
                             {
-                                _4 = new(false, _2.Text, _4.Volume);
+                                parA_3 = new(false, paa_2.Text, parA_3.Volume);
                             }
                         }
 
-                        return _4;
-                    }).ToList();
+                        parA_l2.Add(parA_3);
+                        continue;
+                    }
 
-                    List<PartAnimationNormalizationMode> l3 = l1.Select(x =>
+                    List<PartAnimationNormalizationMode> panm_l0 = [.. paa_l1.Select(x =>
                     {
                         if (x is null)
                             return PartAnimationNormalizationMode.Limit;
                         else
                             return x.NormalizationMode;
-                    }).ToList();
+                    })];
 
-                    pn0.UpdateIfnm(l2, l3);
+                    pn_0.UpdateIfnm(parA_l2, panm_l0);
                 }
                 else
                 {
-                    pn0.ClearIfnm();
+                    pn_0.ClearIfnm();
                 }
             }
         }

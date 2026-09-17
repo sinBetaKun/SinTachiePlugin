@@ -28,7 +28,7 @@ namespace SinTachiePlugin.Draw
 
         private InputEffectType _opacityInput = InputEffectType.Null;
         private InputEffectType _trans3DInput = InputEffectType.Null;
-        private InputEffectType _outputObject = InputEffectType.Trans2D;
+        private InputEffectType _outputObject = InputEffectType.Null;
 
         public PartNodeDrawer(IGraphicsDevicesAndContext devices)
         {

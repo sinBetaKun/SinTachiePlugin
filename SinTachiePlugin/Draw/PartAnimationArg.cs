@@ -6,7 +6,7 @@ namespace SinTachiePlugin.Draw
     {
         public string AnimationTag = string.Empty;
         public int Index = 0;
-        public double Volume = 0;
+        public double Volume = 1.0;
         public string Text = string.Empty;
         public bool IsVolume = true;
         public PartAnimationNormalizationMode NormalizationMode = PartAnimationNormalizationMode.Limit;

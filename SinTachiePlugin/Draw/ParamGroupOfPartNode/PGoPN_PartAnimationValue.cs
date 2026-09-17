@@ -25,119 +25,125 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
         public void Update(List<PartValueAndFL> pvfls, TachieSourceDescription desc)
         {
-            bool isMulti = false;
+            PartAnimationValueMode pavm_0 = PartAnimationValueMode.None;
 
             for (int i = pvfls.Count - 1; i >= 0; i--)
             {
                 ImageFileParameter ip = (ImageFileParameter)pvfls[i].PartValue.ControlledParameters.SourceSelectArg;
 
-                if (ip.PartAnimationValueMode == PartAnimationValueMode.Multi)
+                if (ip.PartAnimationValueMode != PartAnimationValueMode.DontOverride)
                 {
-                    isMulti = true;
+                    pavm_0 = ip.PartAnimationValueMode;
                     break;
                 }
             }
 
-            if (isMulti)
+            switch (pavm_0)
             {
-                List<PartAnimationArg> partAnimationArgs = [];
+                case PartAnimationValueMode.Multi:
+                    List<PartAnimationArg> partAnimationArgs = [];
 
-                foreach (PartValueAndFL pvfl in pvfls)
-                {
-                    ControlledParametersOfPart cpp = pvfl.PartValue.ControlledParameters;
-
-                    if (cpp.SourceSelectArg is IPartAnimationValueParameter parameter)
+                    foreach (PartValueAndFL pvfl in pvfls)
                     {
-                        if (parameter.PartAnimationValueArg is MultiValuesParameter multiValuesParameter)
+                        ControlledParametersOfPart cpp = pvfl.PartValue.ControlledParameters;
+
+                        if (cpp.SourceSelectArg is IPartAnimationValueParameter parameter)
                         {
-                            foreach (PartAnimationValueExtra pav in multiValuesParameter.PartAnimationValues)
+                            if (parameter.PartAnimationValueArg is MultiValuesParameter multiValuesParameter)
                             {
-                                if (partAnimationArgs.FirstOrDefault(paa => paa.AnimationTag == pav.AnimationTag) is PartAnimationArg paa1)
+                                foreach (PartAnimationValueExtra pav in multiValuesParameter.PartAnimationValues)
                                 {
-                                    partAnimationArgs.Remove(paa1);
-
-                                    if (pav.Index > 0)
-                                        paa1.Index = pav.Index;
-
-                                    paa1.LinkOpeMode = pav.LinkOpeMode;
-                                    paa1.NormalizationMode = pav.NormalizationMode;
-                                    UpdatePAA(paa1, pav, desc, pvfl.FL);
-
-                                    switch (pav.LinkOpeMode)
+                                    if (partAnimationArgs.FirstOrDefault(paa => paa.AnimationTag == pav.AnimationTag) is PartAnimationArg paa1)
                                     {
-                                        case PartAnimationLinkOpeMode.DontLink:
-                                            paa1.TargetPartTag = string.Empty;
-                                            paa1.TargetAnimationTag = string.Empty;
-                                            break;
+                                        partAnimationArgs.Remove(paa1);
 
-                                        case PartAnimationLinkOpeMode.Add or PartAnimationLinkOpeMode.Multiply:
+                                        if (pav.Index > 0)
+                                            paa1.Index = pav.Index;
+
+                                        paa1.LinkOpeMode = pav.LinkOpeMode;
+                                        paa1.NormalizationMode = pav.NormalizationMode;
+                                        UpdatePAA(paa1, pav, desc, pvfl.FL);
+
+                                        switch (pav.LinkOpeMode)
+                                        {
+                                            case PartAnimationLinkOpeMode.DontLink:
+                                                paa1.TargetPartTag = string.Empty;
+                                                paa1.TargetAnimationTag = string.Empty;
+                                                break;
+
+                                            case PartAnimationLinkOpeMode.Add or PartAnimationLinkOpeMode.Multiply:
+                                                DoLinkParameter lp = (DoLinkParameter)pav.LinkArgments;
+
+                                                if (!string.IsNullOrEmpty(lp.TargetPartTag))
+                                                    paa1.TargetPartTag = lp.TargetPartTag;
+
+                                                if (!string.IsNullOrEmpty(lp.TargetAnimationTag))
+                                                    paa1.TargetAnimationTag = lp.TargetAnimationTag;
+
+                                                break;
+                                        }
+
+                                        partAnimationArgs.Add(paa1);
+                                    }
+                                    else
+                                    {
+                                        PartAnimationArg paa2 = new()
+                                        {
+                                            AnimationTag = pav.AnimationTag,
+                                        };
+
+                                        if (pav.Index > 0)
+                                            paa2.Index = pav.Index;
+
+                                        UpdatePAA(paa2, pav, desc, pvfl.FL);
+
+                                        if (pav.NormalizationMode != PartAnimationNormalizationMode.DontOverride)
+                                            paa2.NormalizationMode = pav.NormalizationMode;
+
+                                        if (pav.LinkOpeMode != PartAnimationLinkOpeMode.DontOverride)
+                                            paa2.LinkOpeMode = pav.LinkOpeMode;
+
+                                        if (pav.LinkOpeMode == PartAnimationLinkOpeMode.Add || pav.LinkOpeMode == PartAnimationLinkOpeMode.Multiply)
+                                        {
                                             DoLinkParameter lp = (DoLinkParameter)pav.LinkArgments;
+                                            paa2.TargetPartTag = lp.TargetPartTag;
+                                            paa2.TargetAnimationTag = lp.TargetAnimationTag;
+                                        }
 
-                                            if (!string.IsNullOrEmpty(lp.TargetPartTag))
-                                                paa1.TargetPartTag = lp.TargetPartTag;
-
-                                            if (!string.IsNullOrEmpty(lp.TargetAnimationTag))
-                                                paa1.TargetAnimationTag = lp.TargetAnimationTag;
-
-                                            break;
+                                        partAnimationArgs.Add(paa2);
                                     }
-
-                                    partAnimationArgs.Add(paa1);
-                                }
-                                else
-                                {
-                                    PartAnimationArg paa2 = new()
-                                    {
-                                        AnimationTag = pav.AnimationTag,
-                                    };
-
-                                    if (pav.Index > 0)
-                                        paa2.Index = pav.Index;
-
-                                    UpdatePAA(paa2, pav, desc, pvfl.FL);
-
-                                    if (pav.NormalizationMode != PartAnimationNormalizationMode.DontOverride)
-                                        paa2.NormalizationMode = pav.NormalizationMode;
-
-                                    if (pav.LinkOpeMode != PartAnimationLinkOpeMode.DontOverride)
-                                        paa2.LinkOpeMode = pav.LinkOpeMode;
-
-                                    if (pav.LinkOpeMode == PartAnimationLinkOpeMode.Add || pav.LinkOpeMode == PartAnimationLinkOpeMode.Multiply)
-                                    {
-                                        DoLinkParameter lp = (DoLinkParameter)pav.LinkArgments;
-                                        paa2.TargetPartTag = lp.TargetPartTag;
-                                        paa2.TargetAnimationTag = lp.TargetAnimationTag;
-                                    }
-
-                                    partAnimationArgs.Add(paa2);
                                 }
                             }
                         }
                     }
-                }
 
-                PartAnimationArgs = [.. partAnimationArgs];
-            }
-            else
-            {
-                PartAnimationArg partAnimationArg = new();
+                    PartAnimationArgs = [.. partAnimationArgs];
+                    break;
 
-                foreach (PartValueAndFL pvfl in pvfls)
-                {
-                    ControlledParametersOfPart cp = pvfl.PartValue.ControlledParameters;
+                case PartAnimationValueMode.Single:
+                    PartAnimationArg partAnimationArg = new();
 
-                    if (cp.SourceSelectArg is IPartAnimationValueParameter parameter)
+                    foreach (PartValueAndFL pvfl in pvfls)
                     {
-                        if (parameter.PartAnimationValueArg is SingleValueParameter singleValuesParameter)
+                        ControlledParametersOfPart cp = pvfl.PartValue.ControlledParameters;
+
+                        if (cp.SourceSelectArg is IPartAnimationValueParameter parameter)
                         {
-                            PartAnimationValue pav = singleValuesParameter.PartAnimationValue;
-                            partAnimationArg.NormalizationMode = pav.NormalizationMode;
-                            UpdatePAA(partAnimationArg, pav, desc, pvfl.FL);
+                            if (parameter.PartAnimationValueArg is SingleValueParameter singleValuesParameter)
+                            {
+                                PartAnimationValue pav = singleValuesParameter.PartAnimationValue;
+                                partAnimationArg.NormalizationMode = pav.NormalizationMode;
+                                UpdatePAA(partAnimationArg, pav, desc, pvfl.FL);
+                            }
                         }
                     }
-                }
 
-                PartAnimationArgs = [partAnimationArg];
+                    PartAnimationArgs = [partAnimationArg];
+                    break;
+
+                default:
+                    PartAnimationArgs = [];
+                    break;
             }
         }
 

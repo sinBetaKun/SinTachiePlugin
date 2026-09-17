@@ -11,11 +11,18 @@ namespace SinTachiePlugin.Parts
     {
         [Display]
         [PartValueList(PropertyEditorSize = PropertyEditorSize.FullWidth)]
-        public ImmutableList<PartValue> PartValues { get => _partValues; set => Set(ref _partValues, value); }
+        public ImmutableList<PartValue> PartValues
+        {
+            get => _partValues;
+            set => Set(ref _partValues, value);
+        }
         private ImmutableList<PartValue> _partValues = [];
 
         [Obsolete]
-        public ImmutableList<PartBlock> Parts { set => PartValues = [.. value.Select(p => new PartValue(p))]; }
+        public ImmutableList<PartBlock> Parts
+        {
+            set => PartValues = [.. value.Select(p => new PartValue(p))];
+        }
 
         /// <summary>
         /// クラス内のIAnimatableを列挙する。

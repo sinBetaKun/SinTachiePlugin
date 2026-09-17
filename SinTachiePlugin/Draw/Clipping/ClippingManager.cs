@@ -140,6 +140,7 @@ namespace SinTachiePlugin.Draw.Clipping
             }
 
             pnc_l0.ForEach(x => x.Dispose());
+            Clippers = [.. pnc_l1];
         }
 
         public void Dispose()

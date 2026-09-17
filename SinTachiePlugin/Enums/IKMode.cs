@@ -9,7 +9,7 @@ namespace SinTachiePlugin.Enums
         None,
         [Display(Name = nameof(TextResource.IKMode_TypeA), ResourceType = typeof(TextResource))]
         IKMode_TypeA,
-        [Display(Name = nameof(TextResource.IKMode_DontOverride), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.GlobalEnumDisplay_DontOverride), ResourceType = typeof(TextResource))]
         DontOverride,
     }
 }

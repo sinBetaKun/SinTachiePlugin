@@ -1,5 +1,4 @@
-﻿using SinTachiePlugin.Informations;
-using YukkuriMovieMaker.Plugin;
+﻿using YukkuriMovieMaker.Plugin;
 using YukkuriMovieMaker.Plugin.Shape;
 using YukkuriMovieMaker.Project;
 
@@ -7,7 +6,7 @@ namespace SinTachiePlugin.ShapePludin
 {
     internal class ShapeOfSinTachie : IShapePlugin
     {
-        public string Name => PluginInfo.Title + "(図形アイテム版)";
+        public string Name => "ImageSynthesis";
 
         /// <summary>
         /// 俺ちゃんの名前

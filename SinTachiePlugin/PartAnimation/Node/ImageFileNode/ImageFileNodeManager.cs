@@ -5,9 +5,23 @@ using YukkuriMovieMaker.Settings;
 
 namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
 {
+    /// <summary>
+    /// ｱﾆﾒｰｼｮﾝ差分画像群のファイルパスを管理する。
+    /// </summary>
     internal class ImageFileNodeManager
     {
+        /// <summary>
+        /// 代表画像のノード。
+        /// <br/>
+        /// ここから多次元方向にｱﾆﾒｰｼｮﾝ差分画像が展開される。
+        /// </summary>
         public readonly ImageFileNode? Root;
+
+        /// <summary>
+        /// 出力値から選出された画像のファイルパス。
+        /// <br/>
+        /// Updateメソッドによって更新する。
+        /// </summary>
         public string Value { get; private set; } = string.Empty;
 
         public ImageFileNodeManager(string path)
@@ -24,113 +38,115 @@ namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
                 // 指定されたファイルが画像ファイルでない場合
                 return;
 
-            var dirName = Path.GetDirectoryName(path);
+            // 代表画像のフォルダパス
+            string? s_0 = Path.GetDirectoryName(path);
 
-            if (dirName == null)
+            if (s_0 == null)
                 // ディレクトリのパスを取得できなかった場合
                 return;
 
-            // ルートノードを作成
-            Root = new(path)
-            {
-                Depth = 0
-            };
-
             // パーツ画像をまとめているディレクトリ
-            DirectoryInfo dir = new(dirName);
+            DirectoryInfo dir_0 = new(s_0);
 
-            // 指定されたファイルの名前から拡張子を取り除く
-            string name = Path.GetFileNameWithoutExtension(path);
+            // 拡張子を取り除いた代表画像のファイル名
+            string s_1 = Path.GetFileNameWithoutExtension(path);
 
-            // 指定されたファイルの拡張子を取得する
-            string ext = Path.GetExtension(path);
+            // 代表画像のファイルの拡張子
+            string s_2 = Path.GetExtension(path);
 
-            // dir直下の画像ファイルでnameから始まるものを取得する
-            string[] files =
+            // 代表画像含めた、フォルダ内で発見された差分画像のパス群
+            string[] s_a0 =
                 [..
-                from name2 in dir.GetFiles().Select(file => file.Name)
+                from name2 in dir_0.GetFiles().Select(file => file.Name)
                 where FileSettings.Default.FileExtensions.GetFileType(name2) == FileType.画像
-                where name2.StartsWith(name)
+                where name2.StartsWith(s_1)
                 select name2
                 ];
 
             // ファイル名とその連番を配列に変換したものの辞書
-            Dictionary<string, string[]> d0 = [];
+            Dictionary<string, string[]> dic_0 = [];
 
-            foreach(string file in files)
+            // 各ファイル名（代表画像または差分画像のパス）
+            foreach (string s_3 in s_a0)
             {
-                if (Path.GetFileNameWithoutExtension(file) is string fileName)
+                if (Path.GetFileNameWithoutExtension(s_3) is string fileName)
                 {
-                    d0.Add(file, fileName.Split(".")[1..]);
+                    // 代表画像と差分画像それぞれのパスを、姉妹識別子列とともに辞書へ登録
+                    dic_0.Add(s_3, fileName.Split(".")[1..]);
                 }
             }
 
-            int n0 = d0.Values.Select(v => v.Length).Max();
-            ImageFileNode root = new(path) { Depth = 0 };
-            List<ImageFileNode> l0 = [root];
+            // 最大識別子数（ｱﾆﾒｰｼｮﾝﾚｲﾔｰの次元数）
+            int i_0 = dic_0.Values.Select(v => v.Length).Max();
+            
+            // 代表画像のノード
+            ImageFileNode ifn_0 = new(path, 0);
+            Root = ifn_0;
+            
+            // 生成したノードを纏めるリスト
+            List<ImageFileNode> ifn_l0 = [ifn_0];
 
-            for (int i = 1; i <= n0; i++)
+            // 識別子数順に生成リストへ登録
+            for (int i_1 = 1; i_1 <= i_0; i_1++)
             {
-                foreach (var kv in d0.Where(x => x.Value.Length == i))
+                foreach (var kv in dic_0.Where(x => x.Value.Length == i_1))
                 {
-                    string s0 = kv.Key;
-                    string[] a0 = kv.Value;
-                    ImageFileNode _0 = root;
-                    bool b0 = false;
+                    // 差分画像のファイルパス
+                    string s_3 = kv.Key;
+                    
+                    // 姉妹識別子群
+                    string[] s_a1 = kv.Value;
 
-                    for (int j = 0; j < i - 1; j++)
+                    // 最後の姉妹識別子が、負のインデックス(-1)用の記号だった場合
+                    if (s_a1.Last() == "_")
+                        // そのようなノードには固有の画像ファイルを指すことは許されていない。
+                        continue;
+
+                    // 今から作るノードをこのノードの子に追加する
+                    ImageFileNode ifn_1 = ifn_0;
+
+                    // ノードが存在するところまで姉妹識別子を順番に読み込む
+                    for (int i_2 = 0; i_2 < i_1; i_2++)
                     {
-                        string s1 = a0[j];
-
-                        if (_0.OtherChildren.FirstOrDefault(x => x.Text == s1) is ImageFileNode _1)
+                        // まだノードが存在する場合
+                        if (ifn_1.OtherChildren.FirstOrDefault(x => x.Text == s_a1[i_2]) is ImageFileNode ifn_2)
                         {
-                            _0 = _1;
+                            // 参照を子へ移動。
+                            ifn_1 = ifn_2;
                         }
-                        else if (s1 == "_")
-                        {
-                            bool b1 = true;
-
-                            for (int k = j + 1; k < i - 1; k++)
-                                if (a0[k] != "_")
-                                    b1 = false;
-
-                            if (b1 && a0.Last() != "_")
-                            {
-                                while (j < i - 1)
-                                {
-                                    j++;
-                                    ImageFileNode _2 = new(_0.Path) { Depth = j, Text = "_" };
-                                    l0.Add(_2);
-                                    _0.OtherChildren.Add(_2);
-                                    _0 = _2;
-                                }
-                            }
-                            else
-                            {
-                                b0 = true;
-                            }
-
-                            break;
-                        }
+                        // ここから先のノードが存在しない場合
                         else
                         {
-                            b0 = true;
+                            // 以降、最後の直前まで全て"_"である場合
+                            if (s_a1.AsSpan()[i_2..^1].Count("_") == i_1 - i_2 - 1)
+                            {
+                                string s_4 = ifn_1.Path;
+
+                                for (int i_3 = i_2 + 1; i_3 < i_1; i_3++)
+                                {
+                                    ImageFileNode ifn_3 = new(s_4, i_3) { Text = "_" };
+                                    ifn_l0.Add(ifn_3);
+                                    // 今は姉妹識別子が数値になっているノードも文字列になっているノードと一緒に纏める。
+                                    ifn_1.OtherChildren.Add(ifn_3);
+                                    ifn_1 = ifn_3;
+                                }
+
+                                ImageFileNode ifn_4 = new(s_3, i_1) { Text = s_a1.Last() };
+                                ifn_l0.Add(ifn_4);
+                                // 今は姉妹識別子が数値になっているノードも文字列になっているノードと一緒に纏める。
+                                ifn_1.OtherChildren.Add(ifn_4);
+                            }
+
                             break;
                         }
                     }
-
-                    if (b0)
-                        break;
-
-                    ImageFileNode _3 = new(s0) { Depth = i, Text = a0.Last() };
-                    l0.Add(_3);
-                    _0.OtherChildren.Add(_3);
                 }
             }
 
-            foreach (ImageFileNode _0 in l0)
+            foreach (ImageFileNode ifn_1 in ifn_l0)
             {
-                var a0 = _0.OtherChildren.Where(x =>
+                // 姉妹識別子が数値（正の整数）になっている物をフィルタリング
+                var ifn_e0 = ifn_1.OtherChildren.Where(x =>
                 {
                     if (int.TryParse(x.Text, out int n1))
                         if (n1 >= 0)
@@ -139,10 +155,10 @@ namespace SinTachiePlugin.PartAnimation.Node.ImageFileNode
                     return false;
                 }).OrderBy(x => int.Parse(x.Text));
 
-                foreach (ImageFileNode _1 in a0)
+                foreach (ImageFileNode _1 in ifn_e0)
                 {
-                    _0.OtherChildren.Remove(_1);
-                    _0.VolumeChildren.Add(_1);
+                    ifn_1.OtherChildren.Remove(_1);
+                    ifn_1.VolumeChildren.Add(_1);
                 }
             }
 

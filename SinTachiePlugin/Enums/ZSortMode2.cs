@@ -11,7 +11,7 @@ namespace SinTachiePlugin.Enums
         BasedOnPriority,
         [Display(Name = nameof(TextResource.ZSortMode_IgnorePriority), ResourceType = typeof(TextResource))]
         IgnorePriority,
-        [Display(Name = nameof(TextResource.ZSortMode_DontOverride), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.GlobalEnumDisplay_DontOverride), ResourceType = typeof(TextResource))]
         DontOverride,
     }
 }

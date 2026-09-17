@@ -62,14 +62,20 @@ namespace SinTachiePlugin.Draw
             //}
         }
 
-        public void UpdateIfnm(List<PartAnimationResultA> _0, List<PartAnimationNormalizationMode> _1)
+        /// <summary>
+        /// PartNodeが持つImageFileNodeManagerを更新し、
+        /// 多次元ｱﾆﾒｰｼｮﾝﾚｲﾔｰの出力値から一枚のｱﾆﾒｰｼｮﾝ差分を選出した状態にする。
+        /// </summary>
+        /// <param name="results">第一次出力値リスト</param>
+        /// <param name="nModes">正規化モードリスト（絶対にresultsに順番に対応させる）</param>
+        public void UpdateIfnm(List<PartAnimationResultA> results, List<PartAnimationNormalizationMode> nModes)
         {
             if (!(_ifnm is not null && _ifnm.Root?.Path == Params.SourceGroup.FilePath))
             {
                 _ifnm = new(Params.SourceGroup.FilePath);
             }
 
-            _ifnm.Update(_0, _1);
+            _ifnm.Update(results, nModes);
         }
 
         public void ClearIfnm()
@@ -136,6 +142,7 @@ namespace SinTachiePlugin.Draw
                 else
                 {
                     vecn_0 = new(_devices, pn_0);
+                    vecn_l1.Add(vecn_0);
                 }
 
                 PGoPN_CenterPoint cnpg_0 = pn_0.Params.CenterPointGroup;
@@ -214,14 +221,15 @@ namespace SinTachiePlugin.Draw
                     pefl_l0.Add(new(ve_l0, pefl_0.FL));
                 }
 
-                if (vdg_0.UnlazyEffect)
-                    img_0 = vecn_0.Output;
-
                 b_0 = false;
                 #endregion
 
                 #region CarcLazyEffect
                 DrawDescription dd_1 = vecn_0.Update(pefl_l0, img_0, tsDesc, dd_0);
+
+                if (vdg_0.UnlazyEffect)
+                    img_0 = vecn_0.Output;
+
                 Matrix4x4 m_4rtt_2 = Matrix4x4.CreateRotationZ(MathF.PI * dd_0.Rotation.Z / 180f)
                     * Matrix4x4.CreateRotationY(MathF.PI * -dd_0.Rotation.Y / 180f)
                     * Matrix4x4.CreateRotationX(MathF.PI * -dd_0.Rotation.X / 180f);

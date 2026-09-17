@@ -97,15 +97,6 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   上書きしない に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string CenterPointMode_DontOverride {
-            get {
-                return ResourceManager.GetString("CenterPointMode_DontOverride", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   指定しない（画像の中心） に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string CenterPointMode_DontSet {
@@ -176,15 +167,6 @@ namespace SinTachiePlugin.Properties {
         public static string ClippingMode_DontClip {
             get {
                 return ResourceManager.GetString("ClippingMode_DontClip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   上書きしない に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ClippingMode_DontOverride {
-            get {
-                return ResourceManager.GetString("ClippingMode_DontOverride", resourceCulture);
             }
         }
         
@@ -315,6 +297,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   上書きしない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GlobalEnumDisplay_DontOverride {
+            get {
+                return ResourceManager.GetString("GlobalEnumDisplay_DontOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   中心位置 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string GroupName_CenterPoint {
@@ -383,15 +374,6 @@ namespace SinTachiePlugin.Properties {
         public static string GroupName_ValueDependent {
             get {
                 return ResourceManager.GetString("GroupName_ValueDependent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   上書きしない に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string IKMode_DontOverride {
-            get {
-                return ResourceManager.GetString("IKMode_DontOverride", resourceCulture);
             }
         }
         
@@ -599,15 +581,6 @@ namespace SinTachiePlugin.Properties {
         public static string OriginDefineMode_CustomPointOfParent {
             get {
                 return ResourceManager.GetString("OriginDefineMode_CustomPointOfParent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   上書きしない に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string OriginDefineMode_DontOverride {
-            get {
-                return ResourceManager.GetString("OriginDefineMode_DontOverride", resourceCulture);
             }
         }
         
@@ -1202,15 +1175,6 @@ namespace SinTachiePlugin.Properties {
         public static string PartInsertDefineMode_DontInsert {
             get {
                 return ResourceManager.GetString("PartInsertDefineMode_DontInsert", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   上書きしない に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string PartInsertDefineMode_DontOverride {
-            get {
-                return ResourceManager.GetString("PartInsertDefineMode_DontOverride", resourceCulture);
             }
         }
         
@@ -1989,15 +1953,6 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   上書きしない に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ValueDependentMode_DontOverride {
-            get {
-                return ResourceManager.GetString("ValueDependentMode_DontOverride", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   ✖依存させない に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ValueDependentMode_Off {
@@ -2053,15 +2008,6 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   上書きしない に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ValueMode_DontOverride {
-            get {
-                return ResourceManager.GetString("ValueMode_DontOverride", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   上書き に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ValueMode_Override {
@@ -2094,15 +2040,6 @@ namespace SinTachiePlugin.Properties {
         public static string ZSortMode_BasedOnPriority {
             get {
                 return ResourceManager.GetString("ZSortMode_BasedOnPriority", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   上書きしない に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ZSortMode_DontOverride {
-            get {
-                return ResourceManager.GetString("ZSortMode_DontOverride", resourceCulture);
             }
         }
         

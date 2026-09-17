@@ -202,6 +202,10 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
 
                     foreach (MultiPartBlendTupple mpbt_0 in mpbt_l0)
                         DrawOrBlend(dc, mpbt_0);
+
+                    dc.EndDraw();
+                    _cmdl.Close();//CommandListはEndDraw()の後に必ずClose()を呼んで閉じる必要がある
+                    _trans.SetInput(0, _cmdl, true);
                 }
             }
         }

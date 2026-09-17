@@ -291,9 +291,6 @@
   <data name="ZSortMode_IgnorePriority" xml:space="preserve">
     <value>優先度を無視してZ順に描画</value>
   </data>
-  <data name="ZSortMode_DontOverride" xml:space="preserve">
-    <value>上書きしない</value>
-  </data>
   <data name="LayerType_Image" xml:space="preserve">
     <value>画像</value>
   </data>
@@ -483,9 +480,6 @@
   <data name="ClippingMode_DontClip" xml:space="preserve">
     <value>クリッピングしない</value>
   </data>
-  <data name="ClippingMode_DontOverride" xml:space="preserve">
-    <value>上書きしない</value>
-  </data>
   <data name="PartAnimationValueMode_None" xml:space="preserve">
     <value>アニメーションを指定しない</value>
   </data>
@@ -501,7 +495,7 @@
   <data name="CenterPointMode_OnlyCoordinate" xml:space="preserve">
     <value>座標を指定</value>
   </data>
-  <data name="CenterPointMode_DontOverride" xml:space="preserve">
+  <data name="GlobalEnumDisplay_DontOverride" xml:space="preserve">
     <value>上書きしない</value>
   </data>
   <data name="CenterPointMode_CustomPointName" xml:space="preserve">
@@ -512,9 +506,6 @@
   </data>
   <data name="ValueMode_Override" xml:space="preserve">
     <value>上書き</value>
-  </data>
-  <data name="ValueMode_DontOverride" xml:space="preserve">
-    <value>上書きしない</value>
   </data>
   <data name="ValueMode_Compose" xml:space="preserve">
     <value>統合</value>
@@ -558,9 +549,6 @@
   </data>
   <data name="ValueDependentMode_On" xml:space="preserve">
     <value>✅依存させる</value>
-  </data>
-  <data name="ValueDependentMode_DontOverride" xml:space="preserve">
-    <value>上書きしない</value>
   </data>
   <data name="ValueDependentMode_Custom" xml:space="preserve">
     <value>カスタム</value>
@@ -700,9 +688,6 @@
   <data name="IKMode_TypeA" xml:space="preserve">
     <value>IKを使用する</value>
   </data>
-  <data name="IKMode_DontOverride" xml:space="preserve">
-    <value>上書きしない</value>
-  </data>
   <data name="InverseKinematics_RootPartTag" xml:space="preserve">
     <value>起点</value>
   </data>
@@ -732,9 +717,6 @@
   </data>
   <data name="InverseKinematics_EndEffectorPartTag" xml:space="preserve">
     <value>接続先</value>
-  </data>
-  <data name="OriginDefineMode_DontOverride" xml:space="preserve">
-    <value>上書きしない</value>
   </data>
   <data name="OriginDefineMode_CustomPointOfParent" xml:space="preserve">
     <value>親のカスタムポイント</value>
@@ -768,9 +750,6 @@
   </data>
   <data name="PartInsertPosition_Back" xml:space="preserve">
     <value>奥に挿入</value>
-  </data>
-  <data name="PartInsertDefineMode_DontOverride" xml:space="preserve">
-    <value>上書きしない</value>
   </data>
   <data name="PartInsertDefineMode_SelectTagAndPosition" xml:space="preserve">
     <value>挿入先のタグと順序関係を指定</value>

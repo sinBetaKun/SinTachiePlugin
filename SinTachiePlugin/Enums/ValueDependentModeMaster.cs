@@ -11,7 +11,7 @@ namespace SinTachiePlugin.Enums
         Off,
         [Display(Name = nameof(TextResource.ValueDependentMode_Custom), ResourceType = typeof(TextResource))]
         Custom,
-        [Display(Name = nameof(TextResource.ValueDependentMode_DontOverride), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.GlobalEnumDisplay_DontOverride), ResourceType = typeof(TextResource))]
         DontOverride
     }
 }
