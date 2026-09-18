@@ -22,28 +22,37 @@
             Grid.Row="2">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto" MinHeight="120"/>
+                <RowDefinition Height="200" MinHeight="200"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Border Grid.Row="0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="2" Margin="4">
-                <StackPanel>
-                    <Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
                         <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="1" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{x:Static resx:TextResource.SinTachiePlugin_Version}" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Border>
                     </Grid>
-                    <Grid Margin="4">
+                    <Grid Grid.Row="1" Margin="4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="26"/>
                         </Grid.ColumnDefinitions>
                         <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" SelectionChanged="ItemList_SelectionChanged"
-                                 ItemsSource="{Binding Parts}" SelectedIndex="{Binding SelectedPartIndex}" SelectionMode="Extended"
-                                 Name="ItemList" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                 PreviewMouseWheel="List_PreviewMouseWheel">
+                                 ItemsSource="{Binding Source}" SelectedIndex="{Binding SelectedIndex}" SelectionMode="Extended"
+                                 Name="ItemList" ScrollViewer.CanContentScroll="False" 
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 PreviewMouseWheel="List_PreviewMouseWheel"
+                                 VirtualizingPanel.IsVirtualizing="True"
+                                 VirtualizingPanel.VirtualizationMode="Recycling">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <local:PartValueView BeginEdit="PropertiesEditor_BeginEdit"
@@ -105,7 +114,7 @@
                                         Grid.Row="1"
                                         Grid.Column="0"
                                         Content="{StaticResource Minus}"
-                                        Click="RemoveButton_Click"/>
+                                        Click="RemoveButton_Click" Height="26" VerticalAlignment="Bottom"/>
                                 <Button x:Name="UpButton"
                                         Grid.Row="2"
                                         Grid.Column="0"
@@ -124,26 +133,6 @@
                                         Content="{StaticResource Book-Edit}"
                                         Click="EditTemplateButton_Click"/>
 
-                                <!-- 選択されたブロックのデフォルト値を編集するエリア -->
-                                <Grid>
-                                    <Button x:Name="SelectLayerTypeButton"
-                                            Grid.Row="0"
-                                            Grid.Column="1"
-                                            Click="SelectLayerTypeButton_Click"/>
-                                    <Popup x:Name="LayerTypeSelectorPopup"
-                                           Placement="Bottom"
-                                           StaysOpen="False"
-                                           VerticalAlignment="Top">
-                                        <ListBox Panel.ZIndex="100">
-                                            <ListBoxItem Content="{x:Static resx:TextResource.LayerType_Image}" MouseLeftButtonUp="SelectImage_MouseLeftButtonUp"/>
-                                            <ListBoxItem Content="{x:Static resx:TextResource.LayerType_Psd}" MouseLeftButtonUp="SelectPsd_MouseLeftButtonUp"/>
-                                            <ListBoxItem Content="{x:Static resx:TextResource.LayerType_Video}" MouseLeftButtonUp="SelectVideo_MouseLeftButtonUp"/>
-                                            <ListBoxItem Content="{x:Static resx:TextResource.LayerType_Scene}" MouseLeftButtonUp="SelectScene_MouseLeftButtonUp"/>
-                                            <ListBoxItem Content="{x:Static resx:TextResource.LayerType_Group}" MouseLeftButtonUp="SelectGroup_MouseLeftButtonUp"/>
-                                        </ListBox>
-                                    </Popup>
-                                </Grid>
-                                
                                 <!-- 新しく追加するパーツのファイル選択候補を表示するエリア -->
                                 <Popup x:Name="SourceSelector"
                                        Placement="Left"
@@ -158,9 +147,11 @@
                             </Grid>
                         </Grid>
                     </Grid>
-                </StackPanel>
+                </Grid>
             </Border>
             <GridSplitter Grid.Row="1"
+                          Height="4"
+                           Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
                       HorizontalAlignment="Stretch"/>
             <c:PropertiesEditor
                 Name="propertiesEditor"

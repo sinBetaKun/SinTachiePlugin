@@ -110,7 +110,7 @@ namespace SinTachiePlugin.Control.PartValueList
         public int SelectedIndex { get => selectedIndex; set => Set(ref selectedIndex, value); }
         int selectedIndex = -1;
 
-        private readonly List<PartValue> _openeds = [];
+        //private readonly List<PartValue> _openeds = [];
 
         public ImmutableList<CharacterAssetsData> Assets { get => _assets; set => Set(ref _assets, value); }
         private ImmutableList<CharacterAssetsData> _assets = [];
@@ -190,44 +190,23 @@ namespace SinTachiePlugin.Control.PartValueList
             }
 
             int index = SelectedIndex;
-            FindOpendGroup();
+            //FindOpendGroup();
             UpdateSource();
             SelectedIndex = index;
         }
 
-        private void FindOpendGroup()
-        {
-            _openeds.Clear();
+        //private void FindOpendGroup()
+        //{
+        //    _openeds.Clear();
 
-            foreach (PartValue pv in PartValues)
-                if (pv.ControlledParameters.SourceSelectArg is GroupParameter gp && gp.IsOpened)
-                    _openeds.Add(pv);
-        }
+        //    foreach (PartValue pv in PartValues)
+        //        if (pv.ControlledParameters.SourceSelectArg is GroupParameter gp && gp.IsOpened)
+        //            _openeds.Add(pv);
+        //}
 
         public void UpdateSource()
         {
-            Source = [.. GetVisibleItem()];
-        }
-
-        public List<PartValue> GetVisibleItem(int parentIndex = -1, int depth = 0)
-        {
-            List<PartValue> list = [];
-
-            for (int i = 0; i < PartValues.Count; i++)
-            {
-                PartValue pv = PartValues[i];
-
-                if (pv.ParentIndex == parentIndex)
-                {
-                    list.Add(pv);
-                    pv.Depth = depth;
-
-                    if (pv.ControlledParameters.SourceSelectArg is GroupParameter gp && gp.IsOpened)
-                        list.AddRange(GetVisibleItem(i, depth + 1));
-                }
-            }
-
-            return list;
+            Source = [.. ValueTreeNode.GetVisibleList(ValueTreeNode.GetTree(PartValues), out int _)];
         }
 
         public void CopyToOtherItems()
@@ -271,25 +250,25 @@ namespace SinTachiePlugin.Control.PartValueList
             return list1;
         }
 
-        public void AddOpenedGroup(PartValue pv)
-        {
-            if (pv.ControlledParameters.SourceSelectArg is not GroupParameter gp)
-                return;
+        //public void AddOpenedGroup(PartValue pv)
+        //{
+        //    if (pv.ControlledParameters.SourceSelectArg is not GroupParameter gp)
+        //        return;
 
-            gp.IsOpened = true;
-            _openeds.Add(pv);
-            UpdateSource();
-        }
+        //    gp.IsOpened = true;
+        //    _openeds.Add(pv);
+        //    UpdateSource();
+        //}
 
-        public void RemoveOpenedGroup(PartValue pv)
-        {
-            if (pv.ControlledParameters.SourceSelectArg is not GroupParameter gp)
-                return;
+        //public void RemoveOpenedGroup(PartValue pv)
+        //{
+        //    if (pv.ControlledParameters.SourceSelectArg is not GroupParameter gp)
+        //        return;
 
-            gp.IsOpened = false;
-            _openeds.Remove(pv);
-            UpdateSource();
-        }
+        //    gp.IsOpened = false;
+        //    _openeds.Remove(pv);
+        //    UpdateSource();
+        //}
 
         public IEnumerable<PartValue> FindChildren(PartValue pv)
         {

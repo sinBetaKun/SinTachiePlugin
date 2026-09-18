@@ -528,11 +528,6 @@ namespace SinTachiePlugin.Control.PartValueList
                 vm.ShowOnlySelectedParts(GetSelecteds());
         }
 
-        private void SelectLayerTypeButton_Click(object sender, RoutedEventArgs e)
-        {
-            LayerTypeSelectorPopup.IsOpen = true;
-        }
-
         private void SelectImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             _addingPartType = LayerType.Image;
