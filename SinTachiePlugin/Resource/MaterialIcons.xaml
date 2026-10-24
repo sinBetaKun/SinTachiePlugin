@@ -37,7 +37,13 @@
     </Viewbox>
     <Viewbox x:Key="Down" x:Shared="false">
         <Canvas Width="24" Height="24">
-            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M12,5V17.25L17.25,12L18,12.66L11.5,19.16L5,12.66L5.75,12L11,17.25V5H12Z" />
+            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M12,5V17.25L17.25,12L18,12.66L11.5,19.16L5,12.66L5.75,12L11,17.25V5H12Z"/>
+        </Canvas>
+    </Viewbox>
+    <Viewbox x:Key="Warning" x:Shared="false">
+        <Canvas Width="24" Height="24">
+            <Path Fill="Yellow" Stroke="Black" StrokeThickness="1" Data="M1 21H23L12 2L1 21Z"/>
+            <Path Fill="Black" Data="M13 14H11V9H13M13 18H11V16H13Z"/>
         </Canvas>
     </Viewbox>
     <Viewbox x:Key="Save-Plus" x:Shared="false">
@@ -58,11 +64,6 @@
     <Viewbox x:Key="Reload" x:Shared="false">
         <Canvas Width="24" Height="24">
             <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M2 12C2 16.97 6.03 21 11 21C13.39 21 15.68 20.06 17.4 18.4L15.9 16.9C14.63 18.25 12.86 19 11 19C4.76 19 1.64 11.46 6.05 7.05C10.46 2.64 18 5.77 18 12H15L19 16H19.1L23 12H20C20 7.03 15.97 3 11 3C6.03 3 2 7.03 2 12Z" />
-        </Canvas>
-    </Viewbox>
-    <Viewbox x:Key="ArrowExpandVertical" x:Shared="false">
-        <Canvas Width="24" Height="24">
-            <Path Fill="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" Data="M13,9V15H16L12,19L8,15H11V9H8L12,5L16,9H13M4,2H20V4H4V2M4,20H20V22H4V20Z" />
         </Canvas>
     </Viewbox>
     <Viewbox x:Key="CheckAll" x:Shared="false">

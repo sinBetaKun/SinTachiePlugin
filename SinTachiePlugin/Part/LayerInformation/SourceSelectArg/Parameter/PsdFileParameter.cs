@@ -27,7 +27,11 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         private string _parent = string.Empty;
 
         [Display(AutoGenerateField = true)]
-        public PsdShapeParameter PsdFileInfo { get => _psdFileInfo; set => Set(ref _psdFileInfo, value); }
+        public PsdShapeParameter PsdFileInfo
+        {
+            get => _psdFileInfo;
+            set => Set(ref _psdFileInfo, value);
+        }
         private PsdShapeParameter _psdFileInfo = new();
 
         [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_ClippingMode), ResourceType = typeof(TextResource))]

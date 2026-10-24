@@ -28,7 +28,11 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
 
         [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_SceneId), ResourceType = typeof(TextResource))]
         [SceneComboBox]
-        public Guid SceneId { get => _sceneId; set => Set(ref _sceneId, value); }
+        public Guid SceneId
+        {
+            get => _sceneId;
+            set => Set(ref _sceneId, value);
+        }
         private Guid _sceneId = Guid.Empty;
 
         [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_ClippingMode), ResourceType = typeof(TextResource))]

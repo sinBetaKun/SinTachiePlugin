@@ -1,5 +1,5 @@
 using SinTachiePlugin.Draw;
-using SinTachiePlugin.Draw.MultiPartBlend;
+using SinTachiePlugin.Draw.OverallManaging;
 using SinTachiePlugin.Parts;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
@@ -57,10 +57,7 @@ namespace SinTachiePlugin.TachiePlugin
                 return;
             }
 
-            PartNodeComparateResult cmp_0 = _pnlm.UpdateOverallParameter(pvfl_l0, desc);
-            
-            if (cmp_0.Value)
-                _pnlm.UpdateOutput(desc, cmp_0);
+            _pnlm.Update(pvfl_l0, desc);
         }
 
         public void Dispose()

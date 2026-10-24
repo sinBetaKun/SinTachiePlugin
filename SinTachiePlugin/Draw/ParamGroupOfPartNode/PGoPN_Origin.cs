@@ -23,23 +23,23 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
             foreach (PartValueAndFL pvfl in pvfls.Reverse<PartValueAndFL>())
             {
-                PartValue pv = pvfl.PartValue;
-                ControlledParametersOfPart cpp = pv.ControlledParameters;
+                PartValue pv_0 = pvfl.PartValue;
+                ControlledParametersOfPart cpp_0 = pv_0.ControlledParameters;
 
-                if (cpp.OriginArg is HavingSourceOriginParameter hsop)
+                if (cpp_0.OriginArg is HavingSourceOriginParameter hsop_0)
                 {
-                    if (hsop.SubArg is OriginNoneOptionParameter)
+                    if (hsop_0.SubArg is OriginNoneOptionParameter)
                     {
-                        if (hsop.OriginMode != OriginDefineMode.DontOverride)
+                        if (hsop_0.OriginMode != OriginDefineMode.DontOverride)
                         {
-                            OriginMode = hsop.OriginMode;
+                            OriginMode = hsop_0.OriginMode;
                             return;
                         }
                     }
-                    else if (hsop.SubArg is OriginWithPointNameParameter owpnp)
+                    else if (hsop_0.SubArg is OriginWithPointNameParameter owpnp_0)
                     {
-                        OriginMode = hsop.OriginMode;
-                        PointName = owpnp.PointName;
+                        OriginMode = hsop_0.OriginMode;
+                        PointName = owpnp_0.PointName;
                         return;
                     }
                 }
@@ -54,11 +54,11 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
         public PartNodeComparateResult Comparate(PGoPN_Origin pg)
         {
-            bool valueChanged =
+            bool b_4v =
                 pg.OriginMode != OriginMode ||
                 pg.PointName != PointName;
 
-            return new(Value: valueChanged);
+            return new(Value: b_4v);
         }
     }
 }

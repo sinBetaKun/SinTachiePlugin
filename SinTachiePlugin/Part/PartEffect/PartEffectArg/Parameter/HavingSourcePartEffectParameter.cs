@@ -5,6 +5,7 @@ using SinTachiePlugin.Part.PartEffect.PartEffectArg.Argument.Effects;
 using SinTachiePlugin.Part.PartEffect.PartEffectArg.Argument.OverrideMode;
 using SinTachiePlugin.Properties;
 using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
 using YukkuriMovieMaker.Plugin.Effects;
@@ -14,10 +15,12 @@ namespace SinTachiePlugin.Part.PartEffect.PartEffectArg.Parameter
 {
     internal class HavingSourcePartEffectParameter : PartEffectArgBase, IEffectsParameter, IPEOverrideModeParameter
     {
+        [Display(Name = nameof(TextResource.PartParam_PartEffect_OverrideMode), ResourceType = typeof(TextResource))]
         [EnumComboBox]
         public PartEffectOverrideMode PEOverrideMode { get => _peOverrideMode; set => Set(ref _peOverrideMode, value); }
         private PartEffectOverrideMode _peOverrideMode;
 
+        [Display]
         [VideoEffectSelector(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<IVideoEffect> Effects { get => _effects; set => Set(ref _effects, value); }
         private ImmutableList<IVideoEffect> _effects = [];

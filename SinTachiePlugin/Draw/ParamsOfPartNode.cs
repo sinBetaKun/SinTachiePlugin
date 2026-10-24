@@ -36,7 +36,7 @@ namespace SinTachiePlugin.Draw
             if (pvfls.Count == 0)
                 return;
 
-            Hide = pvfls.Last().PartValue.ControlledParameters.Hide;
+            Hide = pvfls.Any(x => x.PartValue.ControlledParameters.Hide);
 
             SourceGroup.Update(pvfls, desc);
 

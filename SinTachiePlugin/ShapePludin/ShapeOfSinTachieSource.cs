@@ -1,5 +1,5 @@
 ﻿using SinTachiePlugin.Draw;
-using SinTachiePlugin.Draw.MultiPartBlend;
+using SinTachiePlugin.Draw.OverallManaging;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Player.Video;
@@ -16,12 +16,9 @@ namespace SinTachiePlugin.ShapePludin
         public void Update(TimelineItemSourceDescription desc)
         {
             FrameAndLength fl_0 = new(desc);
-            PartNodeComparateResult cmp_0 = _pnlm.UpdateOverallParameter(
+            _pnlm.Update(
                 _param.PartValuesAndAssets.PartValues.Select(x => new PartValueAndFL(x, fl_0))
                 , desc);
-
-            if (cmp_0.Value)
-                _pnlm.UpdateOutput(desc, cmp_0);
         }
 
         public void Dispose()

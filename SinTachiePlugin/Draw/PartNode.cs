@@ -1,9 +1,9 @@
 ﻿using SinTachiePlugin.Draw.EffectChain;
 using SinTachiePlugin.Draw.OverallManaging;
 using SinTachiePlugin.Draw.ParamGroupOfPartNode;
+using SinTachiePlugin.Draw.PointParam;
 using SinTachiePlugin.EffectChainFlag;
 using SinTachiePlugin.Enums;
-using SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument;
 using SinTachiePlugin.PartAnimation.Node.ImageFileNode;
 using SinTachiePlugin.PartAnimation.PartAnimationOpeArg;
 using System.Collections.Immutable;
@@ -114,12 +114,11 @@ namespace SinTachiePlugin.Draw
             ID2D1Image img_0 = _source ?? _empty;
             List<VideoEffectChainNode> vecn_l0 = [.. _effectCain];
             List<VideoEffectChainNode> vecn_l1 = [];
-            List<FrameAndLength> fl_l0 = [];
             PartNode[] pn_a0 = [this, .. Ancestors];
             VideoEffectChainNode vecn_0;
             List<PartEffectsAndFL> pefl_l0 = [];
             List<IVideoEffect> ve_l0 = [];
-            bool b_0 = true;
+            bool b_0 = true; // 現在処理しているのが先祖(f)なのか自身(t)なのか
             List<PartNodeDrawDescription> pndd_l0 = [];
             List<PartNode> pn_l0 = [];
             float d_4opc_0 = 1.0f;
@@ -130,6 +129,7 @@ namespace SinTachiePlugin.Draw
             Matrix4x4 m_4cmr_0 = Matrix4x4.Identity;
             PGoPN_ValueDependent vdg_0 = new();
 
+            // 自身から祖先へ順番に
             foreach (PartNode pn_0 in pn_a0)
             {
                 #region GenerateEffects
@@ -145,21 +145,21 @@ namespace SinTachiePlugin.Draw
                     vecn_l1.Add(vecn_0);
                 }
 
-                PGoPN_CenterPoint cnpg_0 = pn_0.Params.CenterPointGroup;
+                PGoPN_CenterPoint ctpg_0 = pn_0.Params.CenterPointGroup;
                 PGoPN_Drawing dg_0 = pn_0.Params.DrawingGroup;
                 Vector3 vct_0 = new((float)dg_0.X, (float)dg_0.Y, (float)dg_0.Z);
                 Vector2 vct_1;
 
-                if (cnpg_0.CenterMode != CenterPointMode.DontSet)
+                if (ctpg_0.CenterMode != CenterPointMode.DontSet)
                 {
-                    float x = (float)cnpg_0.X;
-                    float y = (float)cnpg_0.Y;
+                    float x = (float)ctpg_0.X;
+                    float y = (float)ctpg_0.Y;
 
-                    if (cnpg_0.CenterMode == CenterPointMode.CustomPointName)
+                    if (ctpg_0.CenterMode == CenterPointMode.CustomPointName)
                     {
                         PGoPN_CustomPoint cspg0 = pn_0.Params.CustomPointGroup;
 
-                        if (cspg0.CustomNamePoints.FirstOrDefault(p => p.Name == cnpg_0.CustomPointName) is CustomNamePoint p_0)
+                        if (cspg0.CustomNamePoints.FirstOrDefault(p => p.Name == ctpg_0.CustomPointName) is CustomNamePointParam p_0)
                         {
                             x += (float)p_0.X;
                             y += (float)p_0.Y;
@@ -167,7 +167,11 @@ namespace SinTachiePlugin.Draw
                     }
 
                     vct_1 = new Vector2(x, y);
-                    vct_0 += new Vector3(vct_1, 0);
+
+                    if (ctpg_0.KeepPlace)
+                    {
+                        vct_0 += new Vector3(vct_1, 0);
+                    }
                 }
                 else
                 {
@@ -188,19 +192,29 @@ namespace SinTachiePlugin.Draw
 
                 pefl_l0.Clear();
 
-                foreach (PartEffectsAndFL pefl_0 in Params.PartEffectGroup.Effects)
+                // 自身にかかるエフェクトは、フラグを無視する
+                if (b_0)
                 {
-                    ve_l0.Clear();
-
-                    if (b_0)
+                    foreach (PartEffectsAndFL pefl_0 in pn_0.Params.PartEffectGroup.Effects)
                     {
+                        ve_l0.Clear();
+
                         foreach (IVideoEffect ve_0 in pefl_0.Effects)
                             if (ve_0.IsEnabled)
                                 ve_l0.Add(ve_0);
+
+                        pefl_l0.Add(new(ve_l0, pefl_0.FL));
                     }
-                    else
+                }
+                // 先祖にかかるエフェクトはフラグで有効無効を切り替える
+                else
+                {
+                    // フラグ用
+                    bool b_1 = true;
+
+                    foreach (PartEffectsAndFL pefl_0 in pn_0.Params.PartEffectGroup.Effects)
                     {
-                        bool b1 = true;
+                        ve_l0.Clear();
 
                         foreach (IVideoEffect ve_0 in pefl_0.Effects)
                         {
@@ -208,17 +222,17 @@ namespace SinTachiePlugin.Draw
                             {
                                 if (ve_0 is SinTachiePlugin_PartEffectChainFlag pecf_0)
                                 {
-                                    b1 = pecf_0.Flag;
+                                    b_1 = pecf_0.Flag;
                                 }
-                                else if (b1)
+                                else if (b_1)
                                 {
                                     ve_l0.Add(ve_0);
                                 }
                             }
                         }
-                    }
 
-                    pefl_l0.Add(new(ve_l0, pefl_0.FL));
+                        pefl_l0.Add(new(ve_l0, pefl_0.FL));
+                    }
                 }
 
                 b_0 = false;
@@ -287,7 +301,7 @@ namespace SinTachiePlugin.Draw
             bool b_4inv_1 = false;
             Vector3 vec_4dr_0 = new();
             Vector3 vec_0;
-            List<CustomNamePoint> cnp_l0 = [];
+            List<CustomNamePointParam> cnp_l0 = [];
             pndd_l0.Reverse();
             pn_l0.Reverse();
 
@@ -298,7 +312,7 @@ namespace SinTachiePlugin.Draw
                 string s_4org_0 = pn_0.Params.OriginGroup.PointName;
 
                 if (!string.IsNullOrEmpty(s_4org_0)
-                    && cnp_l0.FirstOrDefault(p => p.Name == s_4org_0) is CustomNamePoint cnp_0)
+                    && cnp_l0.FirstOrDefault(p => p.Name == s_4org_0) is CustomNamePointParam cnp_0)
                 {
                     vec_0 = new((float)cnp_0.X, (float)cnp_0.Y, 0);
                 }
@@ -329,18 +343,18 @@ namespace SinTachiePlugin.Draw
             }
 
             _preOutput = img_0;
-            PGoPN_CenterPoint cnpg_1 = Params.CenterPointGroup;
+            PGoPN_CenterPoint ctpg_1 = Params.CenterPointGroup;
             Vector2 vec_4cnp_0;
-            if (cnpg_1.CenterMode != CenterPointMode.DontSet)
+            if (ctpg_1.CenterMode != CenterPointMode.DontSet)
             {
-                float x = (float)cnpg_1.X;
-                float y = (float)cnpg_1.Y;
+                float x = (float)ctpg_1.X;
+                float y = (float)ctpg_1.Y;
 
-                if (cnpg_1.CenterMode == CenterPointMode.CustomPointName)
+                if (ctpg_1.CenterMode == CenterPointMode.CustomPointName)
                 {
                     PGoPN_CustomPoint cspg0 = Params.CustomPointGroup;
 
-                    if (cspg0.CustomNamePoints.FirstOrDefault(p => p.Name == cnpg_1.CustomPointName) is CustomNamePoint p0)
+                    if (cspg0.CustomNamePoints.FirstOrDefault(p => p.Name == ctpg_1.CustomPointName) is CustomNamePointParam p0)
                     {
                         x += (float)p0.X;
                         y += (float)p0.Y;

@@ -68,7 +68,7 @@ namespace SinTachiePlugin.Window_Stp.PartValueTemplateEditor
         private void CheckSameName()
         {
             if (_templateNames.Contains(TemplateNameComboBox.Text))
-                if (SinTachieDialog.GetYESorNO(TextResource.AskNameOfNewTemplateDialog_AskOverwriteTemplate) == System.Windows.Forms.DialogResult.No)
+                if (SinTachieDialog.GetYESorNO(TextResource.AskNameOfNewTemplateDialog_AskOverwriteTemplate) == MessageBoxResult.No)
                     return;
 
             TemplateName = TemplateNameComboBox.Text;

@@ -1,6 +1,7 @@
 ﻿using SinTachiePlugin.Control.CustomNamePointList;
 using SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument.Argument.Points;
 using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Project;
 
@@ -8,6 +9,7 @@ namespace SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument.Parameter
 {
     internal class CustomNamePointsParameter : CustomPointSubArgBase, IPointsParameter
     {
+        [Display]
         [CustomNamePointList(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public ImmutableList<CustomNamePoint> Points { get => _points; set => Set(ref _points, value); }
         private ImmutableList<CustomNamePoint> _points = [];

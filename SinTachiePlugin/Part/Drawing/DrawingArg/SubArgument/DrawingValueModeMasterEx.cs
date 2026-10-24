@@ -10,10 +10,11 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument
             var store = current.GetSharedData();
             DrawingSubArgBase param = mode switch
             {
+                DrawingValueModeMaster.Initialize => new DontSetParameter(store),
                 DrawingValueModeMaster.Override => new MasterModeParameter(store),
                 DrawingValueModeMaster.Compose => new MasterModeParameter(store),
                 DrawingValueModeMaster.Custom => new CustomModeParameter(store),
-                DrawingValueModeMaster.DontOverride => new DontOverrideParameter(store),
+                DrawingValueModeMaster.DontOverride => new DontSetParameter(store),
                 _ => throw new ArgumentOutOfRangeException(nameof(mode)),
             };
 

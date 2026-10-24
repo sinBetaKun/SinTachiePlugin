@@ -9,7 +9,7 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
     {
         [JsonIgnore]
         public bool IsOpened { get => _isOpened; set => Set(ref _isOpened, value); }
-        private bool _isOpened;
+        private bool _isOpened = true;
 
         public GroupParameter()
         {

@@ -1,7 +1,7 @@
 ﻿using Vortice.Direct2D1;
 namespace SinTachiePlugin.Draw.MultiPartBlend
 {
-    internal record MultiPartBlendTupple(PartNode Node, ID2D1Image Output)
+    internal record MultiPartBlendTuple(PartNode Node, ID2D1Image Output)
     {
     }
 }

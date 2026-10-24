@@ -15,7 +15,7 @@ namespace SinTachiePlugin.Draw.DataAndOutput
         public readonly int Width;
         public readonly int Height;
         public bool Used { get; set; } = false;
-        public ID2D1Bitmap? Output;
+        public ID2D1Bitmap? Output = null;
 
         public PsdDataAndOutput(string filePath, IGraphicsDevicesAndContext devices, PsdFile psdFile, IEnumerable<string> enableLayers)
         {
@@ -26,7 +26,11 @@ namespace SinTachiePlugin.Draw.DataAndOutput
             Width = psdFile.Header.Width;
             Height = psdFile.Header.Height;
             _psdFolder.SetEnableItems(EnableLayers);
-            Output = PsdFileSourcePlugin.CreateBitmap(devices, _psdFolder, Width, Height);
+
+            if (PsdFileSourcePlugin.CreateBitmap(devices, _psdFolder, Width, Height) is ID2D1Bitmap source)
+            {
+                Output = source;
+            }
         }
 
         public void SetLayers(IEnumerable<string> enableLayers)
@@ -36,9 +40,13 @@ namespace SinTachiePlugin.Draw.DataAndOutput
             if (!EnableLayers.SequenceEqual(list))
             {
                 EnableLayers = list;
-                _psdFolder.SetEnableItems(EnableLayers);
+                _psdFolder.SetEnableItems(list);
                 Output?.Dispose();
-                Output = PsdFileSourcePlugin.CreateBitmap(_devices, _psdFolder, Width, Height);
+
+                if (PsdFileSourcePlugin.CreateBitmap(_devices, _psdFolder, Width, Height) is ID2D1Bitmap source)
+                {
+                    Output = source;
+                }
             }
         }
 

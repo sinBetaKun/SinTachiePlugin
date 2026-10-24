@@ -18,6 +18,7 @@ namespace SinTachiePlugin.Part.CenterPoint.CenterPointArg.SubArgument.Parameter
         public Animation Y { get; } = new(0, -10000, 10000);
 
         [Display(Name = nameof(TextResource.PartParam_CenterPoint_KeepPlace), ResourceType = typeof(TextResource))]
+        [ToggleSlider]
         public bool KeepPlace { get => _keepPlace; set => Set(ref _keepPlace, value); }
         private bool _keepPlace = false;
 

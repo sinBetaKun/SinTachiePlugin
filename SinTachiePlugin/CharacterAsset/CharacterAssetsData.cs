@@ -2,6 +2,7 @@
 using SinTachiePlugin.Informations;
 using SinTachiePlugin.Properties;
 using System.Collections.Immutable;
+using System.Windows;
 using YukkuriMovieMaker.Commons;
 
 namespace SinTachiePlugin.CharacterAsset
@@ -37,10 +38,10 @@ namespace SinTachiePlugin.CharacterAsset
             if (AssetType == assetType)
                 return;
 
-            DialogResult dr_0 = SinTachieDialog.GetOKorCancel(
+            MessageBoxResult dr_0 = SinTachieDialog.GetOKorCancel(
                 TextResource.CharacterAssetsData_AskChangeType);
 
-            if (dr_0 == DialogResult.OK)
+            if (dr_0 == MessageBoxResult.OK)
             {
                 AssetType = assetType;
                 Path = string.Empty;
@@ -57,10 +58,10 @@ namespace SinTachiePlugin.CharacterAsset
             if (!ObsoletePaths.Contains(path))
                 return;
 
-            DialogResult dr_0 = SinTachieDialog.GetYESorNO(
+            MessageBoxResult dr_0 = SinTachieDialog.GetYESorNO(
                 TextResource.CharacterAssetsData_AskSubscribeObsoletePath);
 
-            if (dr_0 == DialogResult.Yes)
+            if (dr_0 == MessageBoxResult.Yes)
             {
                 ObsoletePaths = ObsoletePaths.Add(path);
             }
@@ -74,11 +75,11 @@ namespace SinTachiePlugin.CharacterAsset
             if (string.IsNullOrEmpty(path))
                 return;
 
-            DialogResult dr_0 = SinTachieDialog.GetOKorCancel(
+            MessageBoxResult dr_0 = SinTachieDialog.GetOKorCancel(
                 TextResource.CharacterAssetsData_AskChangePathToPacking
                 + "\n" + path);
 
-            if (dr_0 == DialogResult.OK)
+            if (dr_0 == MessageBoxResult.OK)
             {
                 ChangePath(path);
                 Packed = true;

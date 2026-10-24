@@ -3,13 +3,13 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter
 {
-    internal class DontOverrideParameter : DrawingSubArgBase
+    internal class DontSetParameter : DrawingSubArgBase
     {
-        public DontOverrideParameter()
+        public DontSetParameter()
         {
         }
 
-        public DontOverrideParameter(SharedDataStore? store = null) : base(store)
+        public DontSetParameter(SharedDataStore? store = null) : base(store)
         {
         }
 
@@ -19,7 +19,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter
 
         public override DrawingSubArgBase GetClone()
         {
-            DontOverrideParameter clone = new();
+            DontSetParameter clone = new();
             clone.CopyFrom(this);
             return clone;
         }

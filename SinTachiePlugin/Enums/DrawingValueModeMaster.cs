@@ -5,6 +5,8 @@ namespace SinTachiePlugin.Enums
 {
     internal enum DrawingValueModeMaster
     {
+        [Display(Name = nameof(TextResource.ValueMode_Initialize), Description = nameof(TextResource.ValueMode_Initialize_Description), ResourceType = typeof(TextResource))]
+        Initialize,
         [Display(Name = nameof(TextResource.ValueMode_Override), Description = nameof(TextResource.ValueMode_Override_Description), ResourceType = typeof(TextResource))]
         Override,
         [Display(Name = nameof(TextResource.ValueMode_Compose), Description = nameof(TextResource.ValueMode_Compose_Description), ResourceType = typeof(TextResource))]

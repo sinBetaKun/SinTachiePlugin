@@ -5,7 +5,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.Argument.SubArg
 {
     internal class SubArgSharedData
     {
-        public DrawingSubArgBase SubArg { get; set; } = new MasterModeParameter();
+        public DrawingSubArgBase SubArg { get; set; } = new DontSetParameter();
 
         public SubArgSharedData()
         {

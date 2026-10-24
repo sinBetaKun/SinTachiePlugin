@@ -9,7 +9,6 @@ namespace SinTachiePlugin.Draw.EffectChain
     {
         public readonly IVideoEffect Effect;
         public ID2D1Image Output => _proseccor.Output;
-        private ID2D1Image? _input;
         private readonly IVideoEffectProcessor _proseccor;
         
         public SubChainNode(IGraphicsDevicesAndContext devices, IVideoEffect effect)
@@ -20,11 +19,7 @@ namespace SinTachiePlugin.Draw.EffectChain
 
         public void SetInput(ID2D1Image input)
         {
-            if (input != _input)
-            {
-                _proseccor.SetInput(input);
-                _input = input;
-            }
+            _proseccor.SetInput(input);
         }
 
         public DrawDescription Update(EffectDescription desc)

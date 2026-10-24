@@ -13,13 +13,11 @@ namespace SinTachiePlugin.EffectChainFlag
         /// <summary>
         /// エフェクトの名前
         /// </summary>
-        public override string Label => $"[{FlagSign}] ﾊﾟｰﾂ個別ｴﾌｪｸﾄﾁｪｲﾝﾌﾗｸ";
-
-        private string FlagSign => Flag ? "〇" : "×";
+        public override string Label => $"[{(Flag ? "o" : "x")}] ﾊﾟｰﾂ個別ｴﾌｪｸﾄﾁｪｲﾝﾌﾗｸﾞ";
 
         [Display(GroupName = "以降のエフェクトを子パーツにも適応する", Name = "")]
         [ToggleSlider]
-        public bool Flag { get => flag; set => Set(ref flag, value); }
+        public bool Flag { get => flag; set => Set(ref flag, value, nameof(Flag), nameof(Label)); }
         bool flag = false;
 
         /// <summary>

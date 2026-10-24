@@ -216,6 +216,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   作成 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CustomPointDefineMode {
+            get {
+                return ResourceManager.GetString("CustomPointDefineMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   カスタムポイントを作る に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string CustomPointDefineMode_DoMake {
@@ -239,6 +248,24 @@ namespace SinTachiePlugin.Properties {
         public static string CustomPointParam_Name {
             get {
                 return ResourceManager.GetString("CustomPointParam_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   未開放のオブジェクトが確認されました。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DisposableObjectLogCollector_UndisposedObjectWarning {
+            get {
+                return ResourceManager.GetString("DisposableObjectLogCollector_UndisposedObjectWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   コピーされたパーツの情報を復元できませんでした。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ErrorMessage_FailToGetClippedFromJson {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FailToGetClippedFromJson", resourceCulture);
             }
         }
         
@@ -1152,6 +1179,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   ｴﾌｪｸﾄの上書き に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartEffectOverrideMode {
+            get {
+                return ResourceManager.GetString("PartEffectOverrideMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   エフェクトを追加する に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartEffectOverrideMode_Add {
@@ -1674,6 +1710,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   ｴﾌｪｸﾄの上書き に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_PartEffect_OverrideMode {
+            get {
+                return ResourceManager.GetString("PartParam_PartEffect_OverrideMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   値の依存 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartParam_ValueDependent_Mode_Master {
@@ -1697,6 +1742,15 @@ namespace SinTachiePlugin.Properties {
         public static string PartParam_ValueDependentMode_Invert {
             get {
                 return ResourceManager.GetString("PartParam_ValueDependentMode_Invert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   値の依存 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_ValueDependentMode_Master {
+            get {
+                return ResourceManager.GetString("PartParam_ValueDependentMode_Master", resourceCulture);
             }
         }
         
@@ -1836,6 +1890,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   階層の異なる複数のパーツの描画順序をを同時に入れ替えることはできません。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartValueListView_WarningA {
+            get {
+                return ResourceManager.GetString("PartValueListView_WarningA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   木構造の処理に失敗しました（#0） に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartValueListViewModel_Error_FailToGenerateValueTree_0 {
@@ -1971,7 +2034,7 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   統合 に類似しているローカライズされた文字列を検索します。
+        ///   合成 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ValueMode_Compose {
             get {
@@ -2004,6 +2067,24 @@ namespace SinTachiePlugin.Properties {
         public static string ValueMode_Custom_Description {
             get {
                 return ResourceManager.GetString("ValueMode_Custom_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   初期値 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ValueMode_Initialize {
+            get {
+                return ResourceManager.GetString("ValueMode_Initialize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   全パラメータを初期値にします。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ValueMode_Initialize_Description {
+            get {
+                return ResourceManager.GetString("ValueMode_Initialize_Description", resourceCulture);
             }
         }
         

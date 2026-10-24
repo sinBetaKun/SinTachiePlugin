@@ -1,4 +1,5 @@
 ﻿using SinTachiePlugin.Draw.ParamGroupOfPartNode;
+using SinTachiePlugin.Draw.PointParam;
 using SinTachiePlugin.Enums;
 using SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument;
 using System.Collections.Immutable;
@@ -131,7 +132,7 @@ namespace SinTachiePlugin.Draw.InverseKinematics
 
                 if (!string.IsNullOrEmpty(s_4peepn0) &&
                     pn_4p_0.Params.CustomPointGroup.CustomNamePoints.FirstOrDefault(p => p.Name == s_4peepn0)
-                    is CustomNamePoint cnp_0)
+                    is CustomNamePointParam cnp_0)
                 {
                     vec_4p2e_0 += new Vector3(
                         (float)cnp_0.X,

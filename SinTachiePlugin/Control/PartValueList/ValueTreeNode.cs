@@ -7,7 +7,7 @@ namespace SinTachiePlugin.Control.PartValueList
     /// 描画順序リストコントローラに並べるパーツ達のフォルダ構造を整理する、木構造のノード。
     /// </summary>
     /// <param name="v">このノードに対応させるパーツ</param>
-    internal class ValueTreeNode(PartValue v)
+    internal class ValueTreeNode(PartValue v, sbyte selected)
     {
         /// <summary>
         /// このノードが対応するパーツ
@@ -23,6 +23,11 @@ namespace SinTachiePlugin.Control.PartValueList
         /// 子ノード
         /// </summary>
         public readonly List<ValueTreeNode> Children = [];
+
+        /// <summary>
+        /// 選択状態。最初に選択されたものなら1, 追加選択なら2, 未選択なら0
+        /// </summary>
+        public readonly sbyte Selected = selected;
 
         /// <summary>
         /// 構造内からパーツに対応するノードを探し出す。
@@ -53,35 +58,52 @@ namespace SinTachiePlugin.Control.PartValueList
         /// 木構造をパーツリストに戻す。
         /// </summary>
         /// <param name="nodes">リストにしたい木構造</param>
-        /// <returns>木構造をリスト化したもの</returns>
-        public static List<PartValue> GetList(IEnumerable<ValueTreeNode> nodes)
+        /// <returns>木構造をリスト化したものと選択された状態のパーツ</returns>
+        public static ValueTreeArgs GetList(IEnumerable<ValueTreeNode> nodes)
         {
             // 返すリスト
             List<PartValue> pv_l0 = [];
+            List<PartValue> pv_l1 = [];
+            PartValue? pv_0 = null;
 
             // 渡されたノードを1つずつ
             foreach (ValueTreeNode n_0 in nodes)
             {
                 // ノードに対応するパーツ
-                PartValue pv_0 = n_0.Value;
-                pv_0.ParentIndex = -1;
-                pv_0.Depth = 0;
-                pv_l0.Add(pv_0);
+                PartValue pv_1 = n_0.Value;
+                pv_1.ParentIndex = -1;
+                pv_1.Depth = 0;
+                pv_l0.Add(pv_1);
 
-                // 子孫をリストにしたもの
-                List<PartValue> pv_l1 = GetList(n_0.Children);
-
-                // 1つずつ深度と親インデックスを書き換える。
-                foreach (PartValue pv_1 in pv_l1)
+                switch (n_0.Selected)
                 {
-                    pv_1.Depth++;
-                    pv_1.ParentIndex += pv_l0.Count;
+                    case 1:
+                        pv_0 = pv_1;
+                        break;
+
+                    case 2:
+                        pv_l1.Add(pv_1);
+                        break;
                 }
 
-                pv_l0.AddRange(pv_l1);
+                // 子孫をリストにしたもの
+                ValueTreeArgs vta_0 = GetList(n_0.Children);
+
+                // 1つずつ深度と親インデックスを書き換える。
+                foreach (PartValue pv_2 in vta_0.List)
+                {
+                    pv_2.Depth++;
+                    pv_2.ParentIndex += pv_l0.Count;
+                }
+
+                pv_l0.AddRange(vta_0.List);
+                pv_l1.AddRange(vta_0.AdditionalSelecteds);
+
+                if (vta_0.Selected is not null)
+                    pv_0 = vta_0.Selected;
             }
 
-            return pv_l0;
+            return new(pv_l0, pv_0, pv_l1);
         }
 
         /// <summary>
@@ -170,16 +192,25 @@ namespace SinTachiePlugin.Control.PartValueList
         /// <summary>
         /// パーツリストを木構造に変換する。
         /// </summary>
-        /// <param name="list">変換したいリスト</param>
+        /// <param name="args">変換したいリスト情報</param>
         /// <returns>リストを木構造に変換したもの</returns>
-        public static List<ValueTreeNode> GetTree(IEnumerable<PartValue> list)
+        public static List<ValueTreeNode> GetTree(ValueTreeArgs args)
         {
             List<ValueTreeNode> n_l0 = [];
             List<ValueTreeNode> n_l1 = [];
 
-            foreach (PartValue pv_0 in list)
+            foreach (PartValue pv_0 in args.List)
             {
-                ValueTreeNode n_0 = new(pv_0);
+                sbyte sb_0;
+
+                if (args.Selected == pv_0)
+                    sb_0 = 1;
+                else if (args.AdditionalSelecteds.Contains(pv_0))
+                    sb_0 = 2;
+                else
+                    sb_0 = 0;
+
+                ValueTreeNode n_0 = new(pv_0, sb_0);
                 n_l0.Add(n_0);
                 int i_1 = pv_0.ParentIndex;
 

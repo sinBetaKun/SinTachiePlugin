@@ -1,5 +1,4 @@
 ﻿using SinTachiePlugin.Draw.DataAndOutput;
-using YukkuriMovieMaker.Player.Video;
 
 namespace SinTachiePlugin.Draw.OverallManaging
 {

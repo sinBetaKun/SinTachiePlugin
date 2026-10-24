@@ -1,6 +1,7 @@
 ﻿using PsdParser;
 using SinTachiePlugin.Draw.DataAndOutput;
 using SinTachiePlugin.Draw.ParamGroupOfPartNode;
+using SinTachiePlugin.Enums;
 using System.IO;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
@@ -46,56 +47,56 @@ namespace SinTachiePlugin.Draw.OverallManaging
             _videoDOs.ForEach(x => x.Occupied = false);
             _sceneDOs.ForEach(x => x.Occupied = false);
 
-            VideoDataAndOutput[] a0 = [.. _videoDOs];
-            SceneDataAndOutput[] a1 = [.. _sceneDOs];
+            VideoDataAndOutput[] vdo_a0 = [.. _videoDOs];
+            SceneDataAndOutput[] sdo_a0 = [.. _sceneDOs];
             _videoDOs.Clear();
             _sceneDOs.Clear();
 
-            foreach (string path in a0.Select(x => x.FilePath).Distinct())
-                _videoDOs.AddRange(a0.Where(x => x.FilePath == path).OrderBy(x => x.Time));
+            foreach (string s_4pth_0 in vdo_a0.Select(x => x.FilePath).Distinct())
+                _videoDOs.AddRange(vdo_a0.Where(x => x.FilePath == s_4pth_0).OrderBy(x => x.Time));
 
-            foreach (Guid scene in a1.Select(x => x.SceneId).Distinct())
-                _sceneDOs.AddRange(a1.Where(x => x.SceneId == scene).OrderBy(x => x.Time));
+            foreach (Guid sId_0 in sdo_a0.Select(x => x.SceneId).Distinct())
+                _sceneDOs.AddRange(sdo_a0.Where(x => x.SceneId == sId_0).OrderBy(x => x.Time));
 
-            foreach (PartNode pn in pns)
-                Assign(pn, desc);
+            foreach (PartNode pn_0 in pns)
+                Assign(pn_0, desc);
 
-            ImageDataAndOutput[] a2 = [.. _imageDOs.Where(x => !x.Used)];
-            PsdDataAndOutput[] a3 = [.. _psdDOs.Where(x => !x.Used)];
-            a0 = [.. _videoDOs.Where(x => !x.Occupied)];
-            a1 = [.. _sceneDOs.Where(x => !x.Occupied)];
+            ImageDataAndOutput[] ido_a0 = [.. _imageDOs.Where(x => !x.Used)];
+            PsdDataAndOutput[] pdo_a0 = [.. _psdDOs.Where(x => !x.Used)];
+            vdo_a0 = [.. _videoDOs.Where(x => !x.Occupied)];
+            sdo_a0 = [.. _sceneDOs.Where(x => !x.Occupied)];
 
-            foreach (ImageDataAndOutput _0 in a2)
+            foreach (ImageDataAndOutput ido_0 in ido_a0)
             {
-                _imageDOs.Remove(_0);
-                _0.Dispose();
+                _imageDOs.Remove(ido_0);
+                ido_0.Dispose();
             }
 
-            foreach (PsdDataAndOutput _0 in a3)
+            foreach (PsdDataAndOutput pdo_0 in pdo_a0)
             {
-                _psdDOs.Remove(_0);
-                _0.Dispose();
+                _psdDOs.Remove(pdo_0);
+                pdo_0.Dispose();
             }
 
-            foreach (VideoDataAndOutput _0 in a0)
+            foreach (VideoDataAndOutput vdo_0 in vdo_a0)
             {
-                _videoDOs.Remove(_0);
-                _0.Dispose();
+                _videoDOs.Remove(vdo_0);
+                vdo_0.Dispose();
             }
 
-            foreach (SceneDataAndOutput _0 in a1)
+            foreach (SceneDataAndOutput sdo_0 in sdo_a0)
             {
-                _sceneDOs.Remove(_0);
-                _0.Dispose();
+                _sceneDOs.Remove(sdo_0);
+                sdo_0.Dispose();
             }
 
-            string[] a4 = [.. _psdDOs.Select(x => x.FilePath).Distinct()];
-            PsdFileQuery[] a5 = [.. _psdFileQs.Where(x => !a4.Contains(x.FilePath))];
+            string[] s_a0 = [.. _psdDOs.Select(x => x.FilePath).Distinct()];
+            PsdFileQuery[] pfq_a0 = [.. _psdFileQs.Where(x => !s_a0.Contains(x.FilePath))];
 
-            foreach (PsdFileQuery _0 in a5)
+            foreach (PsdFileQuery pfq_0 in pfq_a0)
             {
-                _psdFileQs.Remove(_0);
-                _0.PsdFile.Dispose();
+                _psdFileQs.Remove(pfq_0);
+                pfq_0.PsdFile.Dispose();
             }
         }
 
@@ -105,7 +106,7 @@ namespace SinTachiePlugin.Draw.OverallManaging
 
             switch (sg_0.ThisLayerType)
             {
-                case Enums.LayerType.Image:
+                case LayerType.Image:
                     if (pn.GetSourcePath() is string path && Path.Exists(path))
                     {
                         if (_imageDOs.FirstOrDefault(x => x.FilePath == path) is ImageDataAndOutput ido_0
@@ -121,6 +122,7 @@ namespace SinTachiePlugin.Draw.OverallManaging
                             if (ido_1.Output is not null)
                             {
                                 pn.SetSource(ido_1.Output);
+                                ido_1.Used = true;
                                 _imageDOs.Add(ido_1);
                             }
                             else
@@ -137,7 +139,7 @@ namespace SinTachiePlugin.Draw.OverallManaging
 
                     break;
 
-                case Enums.LayerType.Psd:
+                case LayerType.Psd:
                     if (Path.Exists(sg_0.FilePath))
                     {
                         if (_psdDOs.FirstOrDefault(x => x.FilePath == sg_0.FilePath && sg_0.EnableLayers.SequenceEqual(x.EnableLayers)) is PsdDataAndOutput pso_0
@@ -180,7 +182,7 @@ namespace SinTachiePlugin.Draw.OverallManaging
 
                     break;
 
-                case Enums.LayerType.Video:
+                case LayerType.Video:
                     if (Path.Exists(sg_0.FilePath))
                     {
                         List<VideoDataAndOutput> vdo_l0 = [.. _videoDOs.Where(x => x.FilePath == sg_0.FilePath)];
@@ -224,36 +226,36 @@ namespace SinTachiePlugin.Draw.OverallManaging
                                 }
                                 else
                                 {
-                                    VideoDataAndOutput _2 = new(_devices, sg_0.FilePath, ts_0, false);
+                                    VideoDataAndOutput vdo_1 = new(_devices, sg_0.FilePath, ts_0, false);
 
-                                    if (_2.Output is not null)
+                                    if (vdo_1.Output is not null)
                                     {
-                                        pn.SetSource(_2.Output);
-                                        _2.Occupied = true;
-                                        _videoDOs.Add(_2);
+                                        pn.SetSource(vdo_1.Output);
+                                        vdo_1.Occupied = true;
+                                        _videoDOs.Add(vdo_1);
                                     }
                                     else
                                     {
+                                        vdo_1.Dispose();
                                         pn.SetSource(_empty);
-                                        _2.Dispose();
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            VideoDataAndOutput _1 = new(_devices, sg_0.FilePath, sg_0.Time, sg_0.LoopPlayback);
+                            VideoDataAndOutput vdo_0 = new(_devices, sg_0.FilePath, sg_0.Time, sg_0.LoopPlayback);
 
-                            if (_1.Output is not null)
+                            if (vdo_0.Output is not null)
                             {
-                                pn.SetSource(_1.Output);
-                                _1.Occupied = true;
-                                _videoDOs.Add(_1);
+                                pn.SetSource(vdo_0.Output);
+                                vdo_0.Occupied = true;
+                                _videoDOs.Add(vdo_0);
                             }
                             else
                             {
+                                vdo_0.Dispose();
                                 pn.SetSource(_empty);
-                                _1.Dispose();
                             }
                         }
                     }
@@ -264,7 +266,7 @@ namespace SinTachiePlugin.Draw.OverallManaging
                         
                     break;
                 
-                case Enums.LayerType.Scene:
+                case LayerType.Scene:
                     if (desc.Scenes.FirstOrDefault(x => x.ID == sg_0.SceneId) is not null)
                     {
                         List<SceneDataAndOutput> l0 = [.. _sceneDOs.Where(x => x.SceneId == sg_0.SceneId)];
@@ -301,43 +303,43 @@ namespace SinTachiePlugin.Draw.OverallManaging
                                     }
                                     else
                                     {
-                                        pn.SetSource(_empty);
                                         _sceneDOs.Remove(_2);
                                         _2.Dispose();
+                                        pn.SetSource(_empty);
                                     }
                                 }
                                 else
                                 {
-                                    SceneDataAndOutput _2 = new(_devices, desc, sg_0.SceneId, t0, false);
+                                    SceneDataAndOutput sdo_0 = new(_devices, desc, sg_0.SceneId, t0, false);
 
-                                    if (_2.Output is not null)
+                                    if (sdo_0.Output is not null)
                                     {
-                                        pn.SetSource(_2.Output);
-                                        _2.Occupied = true;
-                                        _sceneDOs.Add(_2);
+                                        pn.SetSource(sdo_0.Output);
+                                        sdo_0.Occupied = true;
+                                        _sceneDOs.Add(sdo_0);
                                     }
                                     else
                                     {
+                                        sdo_0.Dispose();
                                         pn.SetSource(_empty);
-                                        _2.Dispose();
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            SceneDataAndOutput _1 = new(_devices, desc, sg_0.SceneId, sg_0.Time, sg_0.LoopPlayback);
+                            SceneDataAndOutput sdo_0 = new(_devices, desc, sg_0.SceneId, sg_0.Time, sg_0.LoopPlayback);
 
-                            if (_1.Output is not null)
+                            if (sdo_0.Output is not null)
                             {
-                                pn.SetSource(_1.Output);
-                                _1.Occupied = true;
-                                _sceneDOs.Add(_1);
+                                pn.SetSource(sdo_0.Output);
+                                sdo_0.Occupied = true;
+                                _sceneDOs.Add(sdo_0);
                             }
                             else
                             {
+                                sdo_0.Dispose();
                                 pn.SetSource(_empty);
-                                _1.Dispose();
                             }
                         }
                     }
@@ -356,20 +358,8 @@ namespace SinTachiePlugin.Draw.OverallManaging
 
         public void Dispose()
         {
-            foreach (ImageDataAndOutput image in _imageDOs)
-                image.Dispose();
-
-            foreach (PsdDataAndOutput psd in _psdDOs)
-                psd.Dispose();
-
-            foreach (PsdFile file in _psdFileQs.Select(x => x.PsdFile))
-                file.Dispose();
-
-            foreach (VideoDataAndOutput video in _videoDOs)
-                video.Dispose();
-
-            foreach (SceneDataAndOutput scene in _sceneDOs)
-                scene.Dispose();
+            ClearSources();
+            _empty.Dispose();
         }
     }
 }

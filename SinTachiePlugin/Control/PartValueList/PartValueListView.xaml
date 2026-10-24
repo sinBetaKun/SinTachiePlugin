@@ -18,11 +18,10 @@
     </UserControl.Resources>
     <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
             BorderThickness="2"
-            Margin="4,4,0,12"
-            Grid.Row="2">
+            Margin="4,4,0,12">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="200" MinHeight="200"/>
+                <RowDefinition Height="204" MinHeight="204"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -45,9 +44,13 @@
                             <ColumnDefinition />
                             <ColumnDefinition Width="26"/>
                         </Grid.ColumnDefinitions>
-                        <ListBox Grid.Column="0" HorizontalContentAlignment="Stretch" SelectionChanged="ItemList_SelectionChanged"
-                                 ItemsSource="{Binding Source}" SelectedIndex="{Binding SelectedIndex}" SelectionMode="Extended"
-                                 Name="ItemList" ScrollViewer.CanContentScroll="False" 
+                        <ListBox Grid.Column="0"
+                                 HorizontalContentAlignment="Stretch"
+                                 SelectionChanged="ItemList_SelectionChanged"
+                                 ItemsSource="{Binding Source}"
+                                 SelectedIndex="{Binding SelectedIndex}"
+                                 SelectionMode="Extended"
+                                 Name="ItemList"
                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                                  PreviewMouseWheel="List_PreviewMouseWheel"
@@ -56,7 +59,12 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <local:PartValueView BeginEdit="PropertiesEditor_BeginEdit"
-                                                         EndEdit="PropertiesEditor_EndEdit"/>
+                                                         EndEdit="PropertiesEditor_EndEdit"
+                                                         IsSelected="{
+                                                         Binding RelativeSource={RelativeSource AncestorType=ListBoxItem},
+                                                         Path=IsSelected}"
+                                                         SourceSelectArg="{Binding ControlledParameters.SourceSelectArg, Mode=OneWay}"
+                                                         GroupPullDownChanged="PartValueView_GroupPullDownChanged"/>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                             <ListBox.ContextMenu>
@@ -90,61 +98,53 @@
                             </ListBox.ContextMenu>
                         </ListBox>
                         <Grid Grid.Column="1">
-                            <Grid Grid.Column="1">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/>
-                                    <RowDefinition Height="16"/>
-                                    <RowDefinition Height="26"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="26"/>
-                                    <ColumnDefinition Width="10"/>
-                                </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="26"/>
+                                <RowDefinition Height="26"/>
+                                <RowDefinition Height="26"/>
+                                <RowDefinition Height="26"/>
+                                <RowDefinition Height="26"/>
+                                <RowDefinition Height="26"/>
+                            </Grid.RowDefinitions>
 
-                                <!-- ブロックの並びを編集するエリア -->
-                                <Button x:Name="AddButton"
+                            <!-- ブロックの並びを編集するエリア -->
+                            <Button x:Name="AddButton"
                                         Grid.Row="0"
-                                        Grid.Column="0"
                                         Content="{StaticResource Plus}"
                                         Click="AddButton_Click"/>
-                                <Button x:Name="RemoveButton"
+                            <Button x:Name="RemoveButton"
                                         Grid.Row="1"
-                                        Grid.Column="0"
                                         Content="{StaticResource Minus}"
-                                        Click="RemoveButton_Click" Height="26" VerticalAlignment="Bottom"/>
-                                <Button x:Name="UpButton"
+                                        Click="RemoveButton_Click"/>
+                            <Button x:Name="UpButton"
                                         Grid.Row="2"
-                                        Grid.Column="0"
                                         Content="{StaticResource Up}"
                                         Click="UpButton_Click"/>
-                                <Button x:Name="DownButton"
+                            <Button x:Name="DownButton"
                                         Grid.Row="3"
-                                        Grid.Column="0"
                                         Content="{StaticResource Down}"
                                         Click="DownButton_Click"/>
+                            <ContentControl x:Name="HazardIcon"
+                                            Grid.Row="4"
+                                            Content="{StaticResource Warning}"/>
 
-                                <!-- 選択されたブロックのデフォルト値を編集するエリア -->
-                                <Button x:Name="EditTemplateButton"
+                            <!-- 選択されたブロックのデフォルト値を編集するエリア -->
+                            <Button x:Name="EditTemplateButton"
                                         Grid.Row="5"
-                                        Grid.Column="0"
                                         Content="{StaticResource Book-Edit}"
                                         Click="EditTemplateButton_Click"/>
 
-                                <!-- 新しく追加するパーツのファイル選択候補を表示するエリア -->
-                                <Popup x:Name="SourceSelector"
+                            <!-- 新しく追加するパーツのファイル選択候補を表示するエリア -->
+                            <Popup x:Name="SourceSelector"
                                        Placement="Left"
                                        StaysOpen="False"
                                        VerticalAlignment="Top">
-                                    <ScrollViewer MaxHeight="300"
+                                <ScrollViewer MaxHeight="300"
                                                   MinWidth="100"
                                                   PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                                        <TreeView x:Name="PartNameTree" Panel.ZIndex="100"/>
-                                    </ScrollViewer>
-                                </Popup>
-                            </Grid>
+                                    <TreeView x:Name="PartNameTree" Panel.ZIndex="100"/>
+                                </ScrollViewer>
+                            </Popup>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -153,13 +153,26 @@
                           Height="4"
                            Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
                       HorizontalAlignment="Stretch"/>
-            <c:PropertiesEditor
-                Name="propertiesEditor"
-                Target="{Binding ElementName=ItemList,Path=SelectedValue}"
-                BeginEdit="PropertiesEditor_BeginEdit" 
-                EndEdit="PropertiesEditor_EndEdit"
-                Grid.Row="2">
-            </c:PropertiesEditor>
+            <Grid Grid.Row="2"
+                  Margin="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.Column="0"
+                           Margin="0,0,4,0"
+                           Width="4"
+                           VerticalAlignment="Stretch"
+                           Fill="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
+                <c:PropertiesEditor
+                    Grid.Column="1"
+                    Name="propertiesEditor"
+                    Target="{Binding ElementName=ItemList,Path=SelectedValue}"
+                    BeginEdit="PropertiesEditor_BeginEdit" 
+                    EndEdit="PropertiesEditor_EndEdit"
+                    Grid.Row="2">
+                </c:PropertiesEditor>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

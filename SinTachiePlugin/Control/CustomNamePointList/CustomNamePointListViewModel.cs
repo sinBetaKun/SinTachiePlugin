@@ -15,7 +15,7 @@ namespace SinTachiePlugin.Control.CustomNamePointList
         private List<CustomNamePoint> _points = [];
 
         public int SelectedIndex { get => _selectedIndex; set => Set(ref _selectedIndex, value); }
-        private int _selectedIndex = 0;
+        private int _selectedIndex = -1;
 
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
@@ -44,7 +44,15 @@ namespace SinTachiePlugin.Control.CustomNamePointList
 
                     string name = TextResource.CustomNamePoint_DefaultName + $"({number})";
                     List<CustomNamePoint> points = [.. Points];
-                    points.Insert(tmpSelectedIndex + 1, new CustomNamePoint(name, 0, 0));
+
+                    if (tmpSelectedIndex < 0)
+                    {
+                        points.Add(new CustomNamePoint(name, 0, 0));
+                    }
+                    else
+                    {
+                        points.Insert(tmpSelectedIndex + 1, new CustomNamePoint(name, 0, 0));
+                    }
 
                     foreach (ItemProperty property in properties)
                         property.SetValue(points.Select(x => new CustomNamePoint(x)).ToImmutableList());

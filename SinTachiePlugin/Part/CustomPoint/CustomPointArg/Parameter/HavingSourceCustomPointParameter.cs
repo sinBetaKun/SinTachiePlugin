@@ -3,6 +3,7 @@ using SinTachiePlugin.Part.CustomPoint.CustomPointArg.Argument.DefineMode;
 using SinTachiePlugin.Part.CustomPoint.CustomPointArg.Argument.SubArg;
 using SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument;
 using SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument.Parameter;
+using SinTachiePlugin.Properties;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
@@ -12,6 +13,7 @@ namespace SinTachiePlugin.Part.CustomPoint.CustomPointArg.Parameter
 {
     internal class HavingSourceCustomPointParameter : CustomPointArgBase, IDefineModeParameter, ISubArgParameter
     {
+        [Display(Name = nameof(TextResource.CustomPointDefineMode), ResourceType = typeof(TextResource))]
         [EnumComboBox]
         public CustomPointDefineMode DefineMode { get => _defineMode; set => Set(ref _defineMode, value); }
         private CustomPointDefineMode _defineMode = CustomPointDefineMode.DontMake;

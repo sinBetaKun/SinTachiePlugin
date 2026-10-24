@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using System.Numerics;
 using Vortice.Direct2D1;
+using Vortice.Direct2D1.Effects;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Plugin;
 
@@ -9,10 +11,9 @@ namespace SinTachiePlugin.Draw.DataAndOutput
     {
         public readonly string FilePath;
         private readonly IImageFileSource? _source;
-        public readonly int Width;
-        public readonly int Height;
+        private readonly AffineTransform2D? _trans;
         public bool Used { get; set; } = false;
-        public ID2D1Image? Output => _source?.Output;
+        public ID2D1Image? Output;
 
         public ImageDataAndOutput(IGraphicsDevicesAndContext devices, string filePath)
         {
@@ -20,8 +21,12 @@ namespace SinTachiePlugin.Draw.DataAndOutput
             {
                 FilePath = filePath;
                 _source = source;
-                Width = source.Output.PixelSize.Width;
-                Height = source.Output.PixelSize.Height;
+                _trans = new(devices.DeviceContext);
+                _trans.SetInput(0, source.Output, true);
+                _trans.TransformMatrix = Matrix3x2.CreateTranslation(
+                    -source.Output.PixelSize.Width / 2.0f,
+                    -source.Output.PixelSize.Height / 2.0f);
+                Output = _trans.Output;
             }
             else
             {
@@ -31,7 +36,17 @@ namespace SinTachiePlugin.Draw.DataAndOutput
 
         public void Dispose()
         {
-            _source?.Dispose();
+            if (_trans is not null)
+            {
+                _trans.SetInput(0, null, true);
+                Output?.Dispose();
+                _trans.Dispose();
+            }
+
+            if (_source is not null)
+            {
+                _source.Dispose();
+            }
         }
     }
 }

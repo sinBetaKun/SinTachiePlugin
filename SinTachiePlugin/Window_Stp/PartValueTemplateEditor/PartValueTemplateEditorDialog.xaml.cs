@@ -115,9 +115,9 @@ namespace SinTachiePlugin.Window_Stp.PartValueTemplateEditor
                 TextResource.PartValueTemplateEditorDialog_Warning_OverWriteTemplate
                 .Replace("{0}", _sourcePath)
                 .Replace("{1}", _templateListSource[TemplateList.SelectedIndex].Name);
-            DialogResult result = SinTachieDialog.GetYESorNO(message);
+            MessageBoxResult result = SinTachieDialog.GetYESorNO(message);
 
-            if (result == System.Windows.Forms.DialogResult.Yes)
+            if (result == MessageBoxResult.Yes)
             {
                 _templateListSource[TemplateList.SelectedIndex].Param = new(PartValue.ControlledParameters);
                 _partSourceInfo.Export();
@@ -160,9 +160,9 @@ namespace SinTachiePlugin.Window_Stp.PartValueTemplateEditor
                 TextResource.PartValueTemplateEditorDialog_Warning_DeleteTemplate
                 .Replace("{0}", _sourcePath)
                 .Replace("{1}", _templateListSource[TemplateList.SelectedIndex].Name);
-            DialogResult result = SinTachieDialog.GetYESorNO(message);
+            MessageBoxResult result = SinTachieDialog.GetYESorNO(message);
 
-            if (result == System.Windows.Forms.DialogResult.Yes)
+            if (result == MessageBoxResult.Yes)
             {
                 _partSourceInfo.Templates.Remove(_templateListSource[TemplateList.SelectedIndex]);
                 UpdateTemplateList();

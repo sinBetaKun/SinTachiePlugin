@@ -21,7 +21,9 @@ namespace SinTachiePlugin.Draw
         private Crop? _crop;
         private Transform3D? _trans3D;
         private Opacity? _opacity;
+        private readonly ID2D1Image _trans2dOutput;
         private ID2D1Image? _trans3dOutput;
+        private ID2D1Image? _opacityOutput;
         private readonly ID2D1Bitmap1 _empty;
         private ID2D1Image _input;
         public ID2D1Image Output;
@@ -37,6 +39,7 @@ namespace SinTachiePlugin.Draw
             _trans2D = new(_devices.DeviceContext);
             _input = _empty;
             _trans2D.SetInput(0, _empty, true);
+            _trans2dOutput = _trans2D.Output;
             Output = _empty;
         }
 
@@ -51,161 +54,192 @@ namespace SinTachiePlugin.Draw
                 _trans2D.SetInput(0, input, true);
             }
 
-            if (desc.Is2DTransform())
+            if (desc.Opacity == 0.0f || desc.Zoom.X == 0.0f || desc.Zoom.Y == 0.0f)
             {
                 trans3DInput = InputEffectType.Null;
-
-                if (desc.Opacity < 1)
+                opacityInput = InputEffectType.Null;
+                outputObject = InputEffectType.Null;
+            }
+            else
+            {
+                if (desc.Is2DTransform())
                 {
-                    opacityInput = InputEffectType.Trans2D;
-                    outputObject = InputEffectType.Opacity;
+                    trans3DInput = InputEffectType.Null;
+
+                    if (desc.Opacity < 1.0f)
+                    {
+                        opacityInput = InputEffectType.Trans2D;
+                        outputObject = InputEffectType.Opacity;
+                    }
+                    else
+                    {
+                        opacityInput = InputEffectType.Null;
+                        outputObject = InputEffectType.Trans2D;
+                    }
                 }
                 else
                 {
-                    opacityInput = InputEffectType.Null;
-                    outputObject = InputEffectType.Trans2D;
+                    trans3DInput = InputEffectType.Trans2D;
+
+                    if (desc.Opacity < 1.0f)
+                    {
+                        opacityInput = InputEffectType.Trans3D;
+                        outputObject = InputEffectType.Opacity;
+                    }
+                    else
+                    {
+                        opacityInput = InputEffectType.Null;
+                        outputObject = InputEffectType.Trans3D;
+                    }
+                }
+            }
+            
+            if (outputObject == InputEffectType.Null)
+            {
+                if (_outputObject != InputEffectType.Null)
+                {
+                    ret = true;
+                    _trans3DInput = InputEffectType.Null;
+                    _opacityInput = InputEffectType.Null;
+                    _outputObject = InputEffectType.Null;
+                    _trans2D.TransformMatrix = Matrix3x2.Identity;
+                    Output = _empty;
+                    DisposeOpacity();
+                    Dispose3DTrans();
                 }
             }
             else
             {
-                trans3DInput = InputEffectType.Trans2D;
-
-                if (desc.Opacity < 1)
+                if (_trans3DInput != trans3DInput)
                 {
-                    opacityInput = InputEffectType.Trans3D;
-                    outputObject = InputEffectType.Opacity;
-                }
-                else
-                {
-                    opacityInput = InputEffectType.Null;
-                    outputObject = InputEffectType.Trans3D;
-                }
-            }
-
-            if (_trans3DInput != trans3DInput)
-            {
-                switch (trans3DInput)
-                {
-                    case InputEffectType.Null:
-                        _trans3dOutput?.Dispose();
-                        _trans3dOutput = null;
-
-                        if (_trans3D is not null)
-                        {
-                            _trans3D?.SetInput(0, null, true);
-                            _trans3D?.Dispose();
-                            _trans3D = null;
-                        }
-
-                        if (_crop is not null)
-                        {
-                            _crop?.SetInput(0, null, true);
-                            _crop?.Dispose();
-                            _crop = null;
-                        }
-
-                        break;
-
-                    case InputEffectType.Trans2D:
+                    if (trans3DInput == InputEffectType.Null)
+                    {
+                        Dispose3DTrans();
+                    }
+                    else // InputEffectType.Trans2D
+                    {
                         _trans3D = new(_devices.DeviceContext);
                         _crop = new(_devices.DeviceContext);
-                        _crop.SetInput(0, _trans2D.Output, true);
+                        _crop.SetInput(0, _trans2dOutput, true);
                         _trans3D.SetInput(0, _crop.Output, true);
                         _trans3dOutput = _trans3D.Output;
-                        break;
+                    }
+
+                    _trans3DInput = trans3DInput;
                 }
 
-                _trans3DInput = trans3DInput;
-            }
-
-            if (_trans3D is null)
-            {
-                AffineTransform2DInterpolationMode interPolationMode2d = desc.InterpolationMode.ToTransform2D();
-                _trans2D.InterPolationMode = interPolationMode2d;
-                Matrix4x4 rttM = desc.Rotate;
-                _trans2D.TransformMatrix = Matrix3x2.CreateTranslation(-1 * desc.Center)
-                    * Matrix3x2.CreateScale(desc.Zoom)
-                    * new Matrix3x2(rttM.M11, rttM.M12, rttM.M21, rttM.M22, desc.Draw.X, desc.Draw.Y);
-            }
-            else
-            {
-                AffineTransform2DInterpolationMode interPolationMode2d = desc.InterpolationMode.ToTransform2D();
-                Transform3DInterpolationMode interPolationMode3d = desc.InterpolationMode.ToTransform3D();
-                _trans2D.InterPolationMode = interPolationMode2d;
-                _trans3D.InterPolationMode = interPolationMode3d;
-                _trans2D.TransformMatrix = Matrix3x2.CreateTranslation(-1 * desc.Center) * Matrix3x2.CreateScale(desc.Zoom);
-                _trans3D.TransformMatrix = desc.Rotate
-                    * Matrix4x4.CreateTranslation(desc.Draw)
-                    * desc.Camera
-                    * new Matrix4x4(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, -0.001f, 0f, 0f, 0f, 1f);
-                Apply();
-            }
-
-            if (_opacityInput != opacityInput)
-            {
-                switch (opacityInput)
+                if (_trans3D is null)
                 {
-                    case InputEffectType.Null:
+                    AffineTransform2DInterpolationMode interPolationMode2d = desc.InterpolationMode.ToTransform2D();
+                    _trans2D.InterPolationMode = interPolationMode2d;
+                    Matrix4x4 rttM = desc.Rotate;
+                    _trans2D.TransformMatrix = Matrix3x2.CreateTranslation(-1 * desc.Center)
+                        * Matrix3x2.CreateScale(desc.Zoom)
+                        * new Matrix3x2(rttM.M11, rttM.M12, rttM.M21, rttM.M22, desc.Draw.X, desc.Draw.Y);
+                }
+                else
+                {
+                    AffineTransform2DInterpolationMode interPolationMode2d = desc.InterpolationMode.ToTransform2D();
+                    Transform3DInterpolationMode interPolationMode3d = desc.InterpolationMode.ToTransform3D();
+                    _trans2D.InterPolationMode = interPolationMode2d;
+                    _trans3D.InterPolationMode = interPolationMode3d;
+                    _trans2D.TransformMatrix = Matrix3x2.CreateTranslation(-1 * desc.Center) * Matrix3x2.CreateScale(desc.Zoom);
+                    _trans3D.TransformMatrix = desc.Rotate
+                        * Matrix4x4.CreateTranslation(desc.Draw)
+                        * desc.Camera
+                        * new Matrix4x4(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, -0.001f, 0f, 0f, 0f, 1f);
+                    Apply();
+                }
+
+                if (_opacityInput != opacityInput)
+                {
+                    if (opacityInput == InputEffectType.Null)
+                    {
                         if (_opacity is not null)
+                            DisposeOpacity();
+                    }
+                    else
+                    {
+                        _opacity ??= new(_devices.DeviceContext);
+                        _opacityOutput ??= _opacity.Output;
+
+                        if (opacityInput == InputEffectType.Trans3D)
                         {
-                            _opacity.SetInput(0, null, true);
-                            _opacity.Dispose();
-                            _opacity = null;
+                            _opacity.SetInput(0, _trans3dOutput, true);
                         }
-                        break;
+                        else // InputEffectType.Trans2D
+                        {
+                            _opacity.SetInput(0, _trans2dOutput, true);
+                        }
+                    }
 
-                    case InputEffectType.Trans3D:
-                        _opacity ??= new(_devices.DeviceContext);
-                        _opacity.SetInput(0, _trans3D?.Output, true);
-                        break;
-
-                    case InputEffectType.Trans2D:
-                        _opacity ??= new(_devices.DeviceContext);
-                        _opacity.SetInput(0, _trans2D.Output, true);
-                        break;
+                    _opacityInput = opacityInput;
                 }
 
-                _opacityInput = opacityInput;
-            }
+                _opacity?.Value = desc.Opacity;
 
-            _opacity?.Value = desc.Opacity;
-
-            if (_outputObject != outputObject)
-            {
-                switch (outputObject)
+                if (_outputObject != outputObject)
                 {
-                    case InputEffectType.Trans2D:
-                        Output = _trans2D.Output;
-                        break;
+                    switch (outputObject)
+                    {
+                        case InputEffectType.Trans2D:
+                            Output = _trans2dOutput;
+                            break;
 
-                    case InputEffectType.Trans3D:
-                        Output = _trans3D!.Output;
-                        break;
+                        case InputEffectType.Trans3D:
+                            Output = _trans3dOutput!;
+                            break;
 
-                    case InputEffectType.Opacity:
-                        Output = _opacity!.Output;
-                        break;
+                        case InputEffectType.Opacity:
+                            Output = _opacityOutput!;
+                            break;
+                    }
+
+                    ret = true;
+                    _outputObject = outputObject;
                 }
-
-                ret = true;
-                _outputObject = outputObject;
             }
 
             return ret;
         }
 
+        private void Dispose3DTrans()
+        {
+            if (_trans3D is not null)
+            {
+                _trans3D.SetInput(0, null, true);
+                _trans3dOutput?.Dispose();
+                _trans3dOutput = null;
+                _trans3D.Dispose();
+                _trans3D = null;
+            }
+
+            if (_crop is not null)
+            {
+                _crop.SetInput(0, null, true);
+                _crop.Dispose();
+                _crop = null;
+            }
+        }
+
+        private void DisposeOpacity()
+        {
+            if (_opacity is not null)
+            {
+                _opacity.SetInput(0, null, true);
+                _opacityOutput?.Dispose();
+                _opacity.Dispose();
+                _opacity = null;
+            }
+        }
+
         public void Dispose()
         {
-            Output.Dispose();
-            _opacity?.SetInput(0, null, true);
-            _opacity?.Dispose();
-            _trans3dOutput?.Dispose();
-            _trans3D?.SetInput(0, null, true);
-            _trans3D?.Dispose();
-            _crop?.SetInput(0, null, true);
-            _crop?.Dispose();
-            _trans2D?.SetInput(0, null, true);
-            _trans2D?.Dispose();
+            DisposeOpacity();
+            Dispose3DTrans();
+            _trans2D.SetInput(0, null, true);
+            _trans2dOutput.Dispose();
+            _trans2D.Dispose();
             _empty.Dispose();
         }
 

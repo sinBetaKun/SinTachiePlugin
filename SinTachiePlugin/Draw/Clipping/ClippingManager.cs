@@ -11,9 +11,9 @@ namespace SinTachiePlugin.Draw.Clipping
 
         private readonly IGraphicsDevicesAndContext _devices;
 
-        public ClippingManager(IGraphicsDevicesAndContext d)
+        public ClippingManager(IGraphicsDevicesAndContext devices)
         {
-            _devices = d;
+            _devices = devices;
         }
 
         public void Reset()
@@ -25,7 +25,7 @@ namespace SinTachiePlugin.Draw.Clipping
         public void Update(IEnumerable<PartNode> pns)
         {
             PartNode[] overview = [.. pns];
-            List<ClippingTupple> ct_l0 = [];
+            List<ClippingTuple> ct_l0 = [];
             List<PartNode> pn_l0 = [];
 
             foreach (PartNode pn_0 in overview)
@@ -76,7 +76,7 @@ namespace SinTachiePlugin.Draw.Clipping
                     if (i_0 >= 0)
                     {
                         pn_l1.ForEach(x => pn_l0.Remove(x));
-                        ct_l0.AddRange(pn_l1[i_0..].Select(x => new ClippingTupple(x, null)));
+                        ct_l0.AddRange(pn_l1[i_0..].Select(x => new ClippingTuple(x, null)));
                         pn_l1.RemoveRange(i_0, pn_l1.Count - i_0);
                         PartNode pn_1 = pn_0;
 
@@ -91,7 +91,7 @@ namespace SinTachiePlugin.Draw.Clipping
                         break;
                     }
 
-                    if (ct_l0.FirstOrDefault(x => x.Destination == pn_0) is ClippingTupple ct_2)
+                    if (ct_l0.FirstOrDefault(x => x.Destination == pn_0) is ClippingTuple ct_2)
                     {
                         PartNode pn_1 = ct_2.Destination;
 
@@ -113,7 +113,7 @@ namespace SinTachiePlugin.Draw.Clipping
             List<PartNodeClipper> pnc_l0 = [.. Clippers];
             List<PartNodeClipper> pnc_l1 = [];
 
-            foreach (ClippingTupple ct_0 in ct_l0)
+            foreach (ClippingTuple ct_0 in ct_l0)
             {
                 PartNodeClipper pnc_0;
 

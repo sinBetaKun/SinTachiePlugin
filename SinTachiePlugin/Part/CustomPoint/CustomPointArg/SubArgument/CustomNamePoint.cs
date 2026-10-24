@@ -1,24 +1,32 @@
 ﻿using SinTachiePlugin.Properties;
 using System.ComponentModel.DataAnnotations;
+using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
 
 namespace SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument
 {
-    internal class CustomNamePoint
+    internal class CustomNamePoint : Animatable
     {
         [Display(Name = nameof(TextResource.CustomPointParam_Name), ResourceType = typeof(TextResource))]
         [TextEditor]
-        public string Name { get; set; }
+        public string Name { get => _name; set => Set (ref _name, value); }
+        private string _name = string.Empty;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_X), ResourceType = typeof(TextResource))]
         [TextBoxSlider("F1", "px", -500, 500)]
         [Range(-10000, 10000)]
-        public double X { get; set; }
+        public double X { get => _x; set => Set(ref _x, value); }
+        private double _x = 0.0;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_Y), ResourceType = typeof(TextResource))]
         [TextBoxSlider("F1", "px", -500, 500)]
         [Range(-10000, 10000)]
-        public double Y { get; set; }
+        public double Y { get => _y; set => Set(ref _y, value); }
+        private double _y = 0.0;
+
+        public CustomNamePoint()
+        {
+        }
 
         public CustomNamePoint(string name, double x, double y)
         {
@@ -33,5 +41,7 @@ namespace SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument
             X = origin.X;
             Y = origin.Y;
         }
+
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [];
     }
 }

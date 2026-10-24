@@ -16,7 +16,6 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
         public void Update(List<PartValueAndFL> pvfls, TachieSourceDescription desc)
         {
             Effects.Clear();
-            bool isFirst = true;
 
             foreach (PartValueAndFL pvfl in pvfls.Reverse<PartValueAndFL>())
             {
@@ -25,20 +24,14 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
                 if (pv.ControlledParameters.PartEffectArg is HavingSourcePartEffectParameter hspep)
                 {
-                    if (isFirst)
-                    {
-                        Effects.Add(new(hspep.Effects, fl));
-                        isFirst = false;
-                    }
-                    else
-                    {
-                        Effects.Insert(0, new(hspep.Effects, fl));
-                    }
+                    Effects.Add(new(hspep.Effects, fl));
 
                     if (hspep.PEOverrideMode == Enums.PartEffectOverrideMode.Override)
-                        return;
+                        break;
                 }
             }
+
+            Effects.Reverse();
         }
 
         public void CopyTo(PGoPN_PartEffect pg)
@@ -48,7 +41,7 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
         public PartNodeComparateResult Comparate(PGoPN_PartEffect pg)
         {
-            return new(Value: pg.Effects.Count > 0 || Effects.Count > 0);
+            return new(Value: pg.Effects.Select(x => x.Effects.Count).Sum() > 0 || Effects.Select(x => x.Effects.Count).Sum() > 0);
         }
     }
 }

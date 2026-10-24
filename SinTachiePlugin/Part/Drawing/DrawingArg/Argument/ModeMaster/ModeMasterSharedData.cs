@@ -4,7 +4,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.Argument.ModeMaster
 {
     internal class ModeMasterSharedData
     {
-        public DrawingValueModeMaster ModeMaster { get; set; } = DrawingValueModeMaster.Override;
+        public DrawingValueModeMaster ModeMaster { get; set; } = DrawingValueModeMaster.Initialize;
 
         public ModeMasterSharedData()
         {

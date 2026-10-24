@@ -1,4 +1,5 @@
-﻿using SinTachiePlugin.Enums;
+﻿using Newtonsoft.Json;
+using SinTachiePlugin.Enums;
 using SinTachiePlugin.Informations;
 using SinTachiePlugin.Part;
 using SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using YukkuriMovieMaker.Commons;
+using YukkuriMovieMaker.Project.Items;
 using YukkuriMovieMaker.Settings;
 
 namespace SinTachiePlugin.Control.PartValueList
@@ -18,7 +20,7 @@ namespace SinTachiePlugin.Control.PartValueList
     /// <summary>
     /// PartValueListView.xaml の相互作用ロジック
     /// </summary>
-    public partial class PartValueListView : System.Windows.Controls.UserControl, IPropertyEditorControl2
+    public partial class PartValueListView : UserControl, IPropertyEditorControl2
     {
         private class NaturalStringComparer : IComparer<TreeViewItem>
         {
@@ -31,7 +33,25 @@ namespace SinTachiePlugin.Control.PartValueList
         public event EventHandler? BeginEdit;
         public event EventHandler? EndEdit;
 
-        private List<PartValue> _clipboad = [];
+        private static string _clipboad = "[]";
+        private static int _selectedInClip = -1;
+        
+        private static JsonSerializerSettings GetJsonSetting =>
+            new() { TypeNameHandling = TypeNameHandling.Auto };
+        
+        private static IEnumerable<PartValue> GetClipped() {
+            if (JsonConvert.DeserializeObject<IEnumerable<PartValue>>(_clipboad, GetJsonSetting) is IEnumerable<PartValue> pv_e0)
+                return pv_e0;
+
+            SinTachieDialog.ShowWarning(TextResource.ErrorMessage_FailToGetClippedFromJson);
+            return [];
+        }
+
+        private static void SetClipped(IEnumerable<PartValue> pvs)
+        {
+            _clipboad = JsonConvert.SerializeObject(pvs, Formatting.Indented, GetJsonSetting);
+        }
+
 
         private LayerType _addingPartType = LayerType.Image;
 
@@ -43,7 +63,8 @@ namespace SinTachiePlugin.Control.PartValueList
             InitializeComponent();
             DataContextChanged += PointsEditor_DataContextChanged;
         }
-        public void SetEditorInfo(IEditorInfo info)
+
+        public void SetEditorInfo(IEditorInfo? info)
         {
             propertiesEditor.SetEditorInfo(info);
         }
@@ -70,15 +91,13 @@ namespace SinTachiePlugin.Control.PartValueList
                 oldVm.BeginEdit -= PropertiesEditor_BeginEdit;
                 oldVm.EndEdit -= PropertiesEditor_EndEdit;
             }
+
             if (e.NewValue is PartValueListViewModel newVm)
             {
                 newVm.BeginEdit += PropertiesEditor_BeginEdit;
                 newVm.EndEdit += PropertiesEditor_EndEdit;
             }
-        }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
             UpdateButtons();
         }
 
@@ -99,13 +118,25 @@ namespace SinTachiePlugin.Control.PartValueList
 
             List<PartValue> selecteds = GetSelecteds();
             ShowOnlySelectedPartsButton.IsEnabled = selecteds.Count > 0;
+            ItemMovable cmv = vm.CanMoveItem(selecteds);
+            UpButton.IsEnabled = cmv == ItemMovable.OnlyUp || cmv == ItemMovable.Both;
+            DownButton.IsEnabled = cmv == ItemMovable.OnlyDown || cmv == ItemMovable.Both;
+
+            if (cmv == ItemMovable.Hazard)
+            {
+                HazardIcon.ToolTip = TextResource.PartValueListView_WarningA;
+                HazardIcon.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                HazardIcon.ToolTip = string.Empty;
+                HazardIcon.Visibility = Visibility.Hidden;
+            }
 
             if (selecteds.Count > 1)
             {
                 AddButton.IsEnabled = false;
                 RemoveButton.IsEnabled = true;
-                UpButton.IsEnabled = false;
-                DownButton.IsEnabled = false;
                 CutButton.IsEnabled = true;
                 CopyButton.IsEnabled = true;
                 PasteButton.IsEnabled = false;
@@ -115,14 +146,13 @@ namespace SinTachiePlugin.Control.PartValueList
             else
             {
                 AddButton.IsEnabled = true;
-                PasteButton.IsEnabled = _clipboad.Count > 0;
+                PartValue[] pv_a0 = [.. GetClipped()];
+                PasteButton.IsEnabled = pv_a0.Length > 0;
                 ShowAllPartsButton.IsEnabled = true;
 
                 if (selecteds.Count < 1)
                 {
                     RemoveButton.IsEnabled = false;
-                    UpButton.IsEnabled = false;
-                    DownButton.IsEnabled = false;
                     CutButton.IsEnabled = false;
                     CopyButton.IsEnabled = false;
                     DuplicateButton.IsEnabled = false;
@@ -133,9 +163,7 @@ namespace SinTachiePlugin.Control.PartValueList
                     RemoveButton.IsEnabled = true;
                     CutButton.IsEnabled = true;
                     CopyButton.IsEnabled = true;
-                    DuplicateButton.IsEnabled = true;
-                    UpButton.IsEnabled = vm.CanMoveUpItem();
-                    DownButton.IsEnabled = vm.CanMoveDownItem();
+                    DuplicateButton.IsEnabled = cmv != ItemMovable.Hazard;
                     PartValue selected = selecteds[0];
 
                     if (selected.ControlledParameters.ThisLayerType == LayerType.Image
@@ -197,10 +225,9 @@ namespace SinTachiePlugin.Control.PartValueList
             else
             {
                 // まだスクロール可能 → 自分で処理
-                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta / 120);
             }
         }
-
 
         public static bool AnyOpendComboBox(DependencyObject depObj)
         {
@@ -247,6 +274,17 @@ namespace SinTachiePlugin.Control.PartValueList
             UpdateButtons();
         }
 
+        private void UpdateSelecting()
+        {
+            if (DataContext is not PartValueListViewModel vm)
+                return;
+
+            ItemList.SelectedItems.Clear();
+
+            foreach (int i_1 in vm.SelectedIndexes)
+                ItemList.SelectedItems.Add(ItemList.Items[i_1]);
+        }
+
         public List<PartValue> GetSelecteds()
         {
             List<PartValue> selecteds = [];
@@ -288,9 +326,9 @@ namespace SinTachiePlugin.Control.PartValueList
                     var intro = rootUnexist
                         ? TextResource.PartValueListView_AddPartMessage_InvalidSourcePath
                         : TextResource.PartValueListView_AddPartMessage_NotFoundAnyFiles;
-                    var dialog = SinTachieDialog.GetOKorCancel(intro + "\n" + TextResource.PartValueListView_AddPartMessage_AskAddEmptyPart);
+                    MessageBoxResult dialog = SinTachieDialog.GetOKorCancel(intro + "\n" + TextResource.PartValueListView_AddPartMessage_AskAddEmptyPart);
 
-                    if (dialog == DialogResult.OK)
+                    if (dialog == MessageBoxResult.OK)
                     {
                         var tmpSelectedIndex = vm.SelectedIndex;
                         BeginEdit?.Invoke(this, EventArgs.Empty);
@@ -308,7 +346,8 @@ namespace SinTachiePlugin.Control.PartValueList
                         ControlledParametersOfPart cp = pv2.ControlledParameters;
                         cp.Tag = tagName;
                         cp.SwitchType(_addingPartType);
-                        vm.InsertItems([pv2]);
+                        vm.InsertItems([pv2], pv2);
+                        UpdateSelecting();
                     }
                 }
             }
@@ -316,8 +355,11 @@ namespace SinTachiePlugin.Control.PartValueList
             {
                 PartValue pv3 = new();
                 pv3.ControlledParameters.SwitchType(_addingPartType);
-                vm.InsertItems([pv3]);
+                vm.InsertItems([pv3], pv3);
+                UpdateSelecting();
             }
+
+            UpdateButtons();
         }
 
         IEnumerable<TreeViewItem> CreateTreeItem(DirectoryInfo target)
@@ -423,7 +465,7 @@ namespace SinTachiePlugin.Control.PartValueList
             //            return;
             //    }
 
-            //    vm.InsertItems([pv]);
+            //    vm.InsertItems2([pv]);
             //    _lastAddedPartPath = partSourcePath;
             //}
         }
@@ -441,7 +483,8 @@ namespace SinTachiePlugin.Control.PartValueList
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
-            vm.MoveUpItem();
+            vm.MoveItems(GetSelecteds(), (PartValue)ItemList.SelectedItem, true);
+            UpdateSelecting();
             UpdateButtons();
         }
 
@@ -450,7 +493,8 @@ namespace SinTachiePlugin.Control.PartValueList
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
-            vm.MoveDownItem();
+            vm.MoveItems(GetSelecteds(), (PartValue)ItemList.SelectedItem, false);
+            UpdateSelecting();
             UpdateButtons();
         }
 
@@ -491,13 +535,20 @@ namespace SinTachiePlugin.Control.PartValueList
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
-            _clipboad = GetCloneOfSelected();
+            (List<PartValue> pv_l0, int i_0) = GetCloneOfSelected();
+            SetClipped(pv_l0);
+            _selectedInClip = i_0;
             vm.RemoveItems(GetSelecteds());
+            ItemList.SelectedIndex = -1;
+            UpdateButtons();
         }
 
         private void CopyButton_Click(object sender, RoutedEventArgs e)
         {
-            _clipboad = GetCloneOfSelected();
+            (List<PartValue> pv_l0, int i_0) = GetCloneOfSelected();
+            SetClipped(pv_l0);
+            _selectedInClip = i_0;
+            UpdateButtons();
         }
 
         private void PasteButton_Click(object sender, RoutedEventArgs e)
@@ -505,7 +556,11 @@ namespace SinTachiePlugin.Control.PartValueList
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
-            vm.InsertItems(GetCloneOfClipboad());
+            List<PartValue> pv_l0 = [.. GetClipped()];
+            PartValue lastSelected = pv_l0[_selectedInClip];
+            vm.InsertItems(pv_l0, lastSelected);
+            UpdateSelecting();
+            UpdateButtons();
         }
 
         private void DuplicateButton_Click(object sender, RoutedEventArgs e)
@@ -513,7 +568,11 @@ namespace SinTachiePlugin.Control.PartValueList
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
-            vm.InsertItems(GetCloneOfSelected());
+            ItemList.SelectedIndex = GetSelecteds().Max(ItemList.Items.IndexOf);
+            (List<PartValue> pv_l0, int i_0) = GetCloneOfSelected();
+            vm.InsertItems(pv_l0, pv_l0[i_0]);
+            UpdateSelecting();
+            UpdateButtons();
         }
 
         private void ShowAllPartsButton_Clicked(object sender, RoutedEventArgs e)
@@ -528,93 +587,81 @@ namespace SinTachiePlugin.Control.PartValueList
                 vm.ShowOnlySelectedParts(GetSelecteds());
         }
 
-        private void SelectImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            _addingPartType = LayerType.Image;
-        }
-
-        private void SelectPsd_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            _addingPartType = LayerType.Psd;
-        }
-
-        private void SelectVideo_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            _addingPartType = LayerType.Video;
-        }
-
-        private void SelectScene_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            _addingPartType = LayerType.Scene;
-        }
-
-        private void SelectGroup_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            _addingPartType = LayerType.Group;
-        }
-
-        private List<PartValue> GetCloneOfSelected()
+        private (List<PartValue>, int) GetCloneOfSelected()
         {
             if (DataContext is not PartValueListViewModel vm)
-                return [];
+                return ([], -1);
 
-            HashSet<PartValue> hash = [];
+            List<PartValue> pv_l0 = [];
+            PartValue? lastSelected = (PartValue)ItemList.SelectedItem;
 
-            foreach (PartValue pv1 in GetSelecteds())
+            foreach (PartValue pv_0 in GetSelecteds())
             {
-                List<PartValue> list1 = [pv1];
-                List<PartValue> list2 = [];
+                List<PartValue> pv_l1 = [pv_0];
+                List<PartValue> pv_l2 = [];
 
-                while (list1.Count > 0)
+                while (pv_l1.Count > 0)
                 {
-                    foreach (PartValue pv2 in list1)
+                    foreach (PartValue pv_1 in pv_l1)
                     {
-                        if (pv2.ControlledParameters.ThisLayerType == Enums.LayerType.Group)
-                            list2.AddRange(vm.GetDescendants(pv2));
+                        if (pv_1.ControlledParameters.ThisLayerType == LayerType.Group)
+                            pv_l2.AddRange(vm.GetDescendants(pv_1));
 
-                        hash.Add(pv2);
+                        pv_l0.Add(pv_1);
                     }
 
-                    list1 = list2;
-                    list2 = [];
+                    pv_l1 = pv_l2;
+                    pv_l2 = [];
                 }
             }
 
-            List<PartValue> list3 = [.. hash];
-            list3.Sort((a, b) => vm.PartValues.IndexOf(a).CompareTo(vm.PartValues.IndexOf(b)));
-            List<(PartValue, PartValue)> list4 = [];
+            List<PartValue> pv_l3 = [.. pv_l0.Distinct().OrderBy(vm.PartValues.IndexOf)];
+            int i_0 = pv_l3.IndexOf(lastSelected);
+            List<(PartValue, PartValue)> tp_l0 = [];
 
-            foreach (PartValue pv1 in list3)
+            foreach (PartValue pv_0 in pv_l3)
             {
-                if (pv1.ParentIndex < 0 || pv1.ParentIndex >= vm.PartValues.Count)
+                if (pv_0.ParentIndex < 0 || pv_0.ParentIndex >= vm.PartValues.Count)
                 {
-                    PartValue pv2 = new(pv1) { ParentIndex = -1 };
-                    list4.Add((pv1, pv2));
+                    PartValue pv_1 = new(pv_0) { ParentIndex = -1 };
+                    tp_l0.Add((pv_0, pv_1));
                 }
                 else
                 {
-                    if (list4.Select(item => item.Item1).FirstOrDefault(mi2 => mi2 == vm.PartValues[pv1.ParentIndex]) is PartValue mi3)
+                    if (tp_l0.Select(item => item.Item1).FirstOrDefault(x => x == vm.PartValues[pv_0.ParentIndex]) is PartValue pv_1)
                     {
-                        PartValue pv2 = new(pv1)
+                        PartValue pv_2 = new(pv_0)
                         {
-                            ParentIndex = list4.Select(item => item.Item1).ToList().IndexOf(mi3)
+                            ParentIndex = tp_l0.Select(item => item.Item1).ToList().IndexOf(pv_1)
                         };
-                        list4.Add((pv1, pv2));
+                        tp_l0.Add((pv_0, pv_2));
                     }
                     else
                     {
-                        PartValue pv2 = new(pv1) { ParentIndex = -1 };
-                        list4.Add((pv1, pv2));
+                        PartValue pv2 = new(pv_0) { ParentIndex = -1 };
+                        tp_l0.Add((pv_0, pv2));
                     }
                 }
             }
 
-            return [.. list4.Select(item => item.Item2)];
+            return ([.. tp_l0.Select(item => item.Item2)], i_0);
         }
 
-        private List<PartValue> GetCloneOfClipboad()
+        private void PartValueView_GroupPullDownChanged(object sender, EventArgs e)
         {
-            return [.. _clipboad.Select(pv => new PartValue(pv))];
+            if (DataContext is not PartValueListViewModel vm)
+                return;
+
+            if (sender is not PartValueView pvv)
+                return;
+
+            if (pvv.DataContext is not PartValue pv)
+                return;
+
+            if (pv.ControlledParameters.SourceSelectArg is not GroupParameter)
+                return;
+
+            vm.UpdateSource();
         }
     }
 }

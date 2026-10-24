@@ -24,37 +24,42 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
         public void Update(List<PartValueAndFL> pvfls, TachieSourceDescription desc)
         {
+            CenterMode = CenterPointMode.DontSet;
             CustomPointName = string.Empty;
             X = Y = 0;
             KeepPlace = false;
+            int fps = desc.FPS;
 
             foreach (PartValueAndFL pvfl in pvfls.Reverse<PartValueAndFL>())
             {
                 ControlledParametersOfPart cpp = pvfl.PartValue.ControlledParameters;
-                FrameAndLength fl = pvfl.FL;
-                int fps = desc.FPS;
 
                 if (cpp.CenterPointArg is HavingSourceCenterPointParameter hscpp)
                 {
-                    switch (hscpp.CenterMode)
+                    if (hscpp.CenterMode == CenterPointMode.DontSet)
                     {
-                        case CenterPointMode.DontSet:
-                            return;
+                        return;
+                    }
 
-                        case CenterPointMode.OnlyCoordinate:
-                            OnlyCoordinateParameter ocp = (OnlyCoordinateParameter)hscpp.SubArg;
-                            X = fl.GetValue(ocp.X, fps);
-                            Y = fl.GetValue(ocp.Y, fps);
-                            KeepPlace = ocp.KeepPlace;
-                            return;
+                    FrameAndLength fl = pvfl.FL;
 
-                        case CenterPointMode.CustomPointName:
-                            CustomCenterPointParameter ccpp = (CustomCenterPointParameter)hscpp.SubArg;
-                            CustomPointName = ccpp.CustomPointName;
-                            X = fl.GetValue(ccpp.X, fps);
-                            Y = fl.GetValue(ccpp.Y, fps);
-                            KeepPlace = ccpp.KeepPlace;
-                            return;
+                    if (hscpp.SubArg is OnlyCoordinateParameter ocp_0)
+                    {
+                        CenterMode = CenterPointMode.OnlyCoordinate;
+                        X = fl.GetValue(ocp_0.X, fps);
+                        Y = fl.GetValue(ocp_0.Y, fps);
+                        KeepPlace = ocp_0.KeepPlace;
+                        return;
+                    }
+                    
+                    if (hscpp.SubArg is CustomCenterPointParameter ccpp_0)
+                    {
+                        CenterMode = CenterPointMode.CustomPointName;
+                        CustomPointName = ccpp_0.CustomPointName;
+                        X = fl.GetValue(ccpp_0.X, fps);
+                        Y = fl.GetValue(ccpp_0.Y, fps);
+                        KeepPlace = ccpp_0.KeepPlace;
+                        return;
                     }
                 }
             }
@@ -66,17 +71,19 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
             pg.CustomPointName = CustomPointName;
             pg.X = X;
             pg.Y = Y;
+            pg.KeepPlace = KeepPlace;
         }
 
         public PartNodeComparateResult Comparate(PGoPN_CenterPoint pg)
         {
-            bool valueChanged = 
+            bool b_4v = 
                 CenterMode != pg.CenterMode ||
                 CustomPointName != pg.CustomPointName ||
                 X != pg.X ||
-                Y != pg.Y;
+                Y != pg.Y ||
+                KeepPlace != pg.KeepPlace;
 
-            return new(Value: valueChanged);
+            return new(Value: b_4v);
         }
     }
 }

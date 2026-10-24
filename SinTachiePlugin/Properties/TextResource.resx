@@ -366,6 +366,9 @@
   <data name="PartParam_ValueDependentMode_Zoom" xml:space="preserve">
     <value>拡大率</value>
   </data>
+  <data name="PartParam_ValueDependentMode_Master" xml:space="preserve">
+    <value>値の依存</value>
+  </data>
   <data name="PartParam_ValueDependentMode_Rotation" xml:space="preserve">
     <value>回転角</value>
   </data>
@@ -508,13 +511,13 @@
     <value>上書き</value>
   </data>
   <data name="ValueMode_Compose" xml:space="preserve">
-    <value>統合</value>
+    <value>合成</value>
   </data>
   <data name="ValueMode_Custom" xml:space="preserve">
     <value>カスタム</value>
   </data>
-  <data name="ValueMode_Override_Description" xml:space="preserve">
-    <value>値を上書きします。</value>
+  <data name="ValueMode_Initialize" xml:space="preserve">
+    <value>初期値</value>
   </data>
   <data name="ValueMode_Compose_Description" xml:space="preserve">
     <value>値を混ぜ合わせます。
@@ -595,6 +598,9 @@
   <data name="PartValueListView_ContextMenu_ShowOnlySelected" xml:space="preserve">
     <value>選択しているパーツのみ表示</value>
   </data>
+  <data name="PartValueListView_WarningA" xml:space="preserve">
+    <value>階層の異なる複数のパーツの描画順序をを同時に入れ替えることはできません。</value>
+  </data>
   <data name="PartValueListView_AddPartMessage_InvalidSourcePath" xml:space="preserve">
     <value>素材の場所のパスが無効です。</value>
   </data>
@@ -615,6 +621,9 @@
   </data>
   <data name="ErrorMessage_FailToGetInfoFromStpsi" xml:space="preserve">
     <value>stpsiファイルから情報を取得できませんでした。</value>
+  </data>
+  <data name="ErrorMessage_FailToGetClippedFromJson" xml:space="preserve">
+    <value>コピーされたパーツの情報を復元できませんでした。</value>
   </data>
   <data name="ErrorMessage_FailToGetInfoFromStpi" xml:space="preserve">
     <value>stpiファイルから情報を取得できませんでした。</value>
@@ -672,6 +681,9 @@
   </data>
   <data name="CustomPointDefineMode_DontMake" xml:space="preserve">
     <value>カスタムポイントを作らない</value>
+  </data>
+  <data name="CustomPointDefineMode" xml:space="preserve">
+    <value>作成</value>
   </data>
   <data name="CustomPointDefineMode_DoMake" xml:space="preserve">
     <value>カスタムポイントを作る</value>
@@ -733,6 +745,12 @@
   <data name="PartEffectOverrideMode_Override" xml:space="preserve">
     <value>エフェクトを上書きする</value>
   </data>
+  <data name="PartEffectOverrideMode" xml:space="preserve">
+    <value>ｴﾌｪｸﾄの上書き</value>
+  </data>
+  <data name="PartParam_PartEffect_OverrideMode" xml:space="preserve">
+    <value>ｴﾌｪｸﾄの上書き</value>
+  </data>
   <data name="PartEffectOverrideMode_Add" xml:space="preserve">
     <value>エフェクトを追加する</value>
   </data>
@@ -785,5 +803,14 @@
   <data name="CharacterAssetsData_AskChangeType" xml:space="preserve">
     <value>古いパスを非推奨パスに登録しますか？
 （描画順序リスト編集時に古いパスを自動で検出・修正できます。）</value>
+  </data>
+  <data name="ValueMode_Override_Description" xml:space="preserve">
+    <value>値を上書きします。</value>
+  </data>
+  <data name="ValueMode_Initialize_Description" xml:space="preserve">
+    <value>全パラメータを初期値にします。</value>
+  </data>
+  <data name="DisposableObjectLogCollector_UndisposedObjectWarning" xml:space="preserve">
+    <value>未開放のオブジェクトが確認されました。</value>
   </data>
 </root>

@@ -37,11 +37,11 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
             TagToInsert = string.Empty;
             InsertPosition = PartInsertPosition.Back;
 
-            foreach (PartValueAndFL pvfl in pvfls)
+            foreach (PartValueAndFL pvfl_0 in pvfls)
             {
-                ControlledParametersOfPart cpp = pvfl.PartValue.ControlledParameters;
+                ControlledParametersOfPart cpp_0 = pvfl_0.PartValue.ControlledParameters;
 
-                if (cpp.SourceSelectArg is IClipParameter clipParameter)
+                if (cpp_0.SourceSelectArg is IClipParameter clipParameter)
                 {
                     if (clipParameter.ClippingMode != ClippingMode.DontOverride)
                     {
@@ -58,11 +58,11 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                     }
                 }
 
-                if (cpp.SourceSelectArg is IParentParameter parentParameter)
-                    if (string.IsNullOrEmpty(parentParameter.Parent))
+                if (cpp_0.SourceSelectArg is IParentParameter parentParameter)
+                    if (!string.IsNullOrEmpty(parentParameter.Parent))
                         Parent = parentParameter.Parent;
 
-                if (cpp.SourceSelectArg is IInsertParameter insertParameter)
+                if (cpp_0.SourceSelectArg is IInsertParameter insertParameter)
                 {
                     if (insertParameter.InsertDefineMode != PartInsertDefineMode.DontOverride)
                     {
@@ -95,16 +95,21 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
         public PartNodeComparateResult Comparate(PGoPN_LayerInformation pg)
         {
-            bool networkChanged = pg.Parent != Parent;
-            bool orderChanged = (networkChanged && pg.InsertDefineMode == PartInsertDefineMode.ToParentAndPosition)
-                || pg.InsertDefineMode != InsertDefineMode
-                || pg.TagToInsert != TagToInsert
-                || pg.InsertPosition != InsertPosition;
-            bool vChanged = networkChanged || orderChanged
+            // PartNetwork は親子関係の変化
+            bool b_4n_0 = pg.Parent != Parent;
+
+            // Value でクリッピング先の変化を通知
+            bool b_4v_0 = (b_4n_0 && pg.ClippingMode == ClippingMode.ClipToParent)
                 || pg.ClippingMode != ClippingMode
                 || pg.TagToClipTo != TagToClipTo;
 
-            return new(Order: orderChanged, PartNetwork: networkChanged, Value: vChanged);
+            // Orderは描画順序の変化
+            bool b_4o_0 = (b_4n_0 && pg.InsertDefineMode == PartInsertDefineMode.ToParentAndPosition)
+                || pg.InsertDefineMode != InsertDefineMode
+                || pg.TagToInsert != TagToInsert
+                || pg.InsertPosition != InsertPosition;
+
+            return new(Order: b_4o_0, PartNetwork: b_4n_0, Value: b_4v_0);
         }
     }
 }

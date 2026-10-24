@@ -13,11 +13,12 @@ namespace SinTachiePlugin.Part.ValueDependent.ValueDependentArg.Parameter
 {
     internal class HavingSourceValueDependentParameter : ValueDependentArgBase, IModeMasterParameter, ISubArgParameter
     {
-        [Display(Name = nameof(TextResource.PartParam_ValueDependentMode_XYZ), ResourceType = typeof(TextResource))]
+        [Display(Name = nameof(TextResource.PartParam_ValueDependentMode_Master), ResourceType = typeof(TextResource))]
         [EnumComboBox]
         public ValueDependentModeMaster ModeMaster { get => _modeMaster; set => Set(ref _modeMaster, value); }
         private ValueDependentModeMaster _modeMaster = ValueDependentModeMaster.On;
 
+        [Display(AutoGenerateField = true)]
         public ValueDependentSubArgBase SubArg { get => _subArg; set => Set(ref _subArg, value);  }
         private ValueDependentSubArgBase _subArg = new MasterModeParameter();
 

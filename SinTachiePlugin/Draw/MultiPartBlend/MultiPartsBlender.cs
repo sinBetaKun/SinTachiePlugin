@@ -7,22 +7,23 @@ using Blend = YukkuriMovieMaker.Project.Blend;
 
 namespace SinTachiePlugin.Draw.MultiPartBlend
 {
-    internal class MultiPartBlender : IDisposable
+    internal class MultiPartsBlender : IDisposable
     {
-        private readonly List<MultiPartBlendTupple> _tupples = [];
+        private readonly List<MultiPartBlendTuple> _tupples = [];
         private readonly IGraphicsDevicesAndContext _devices;
         private readonly AffineTransform2D _trans;
         private readonly ID2D1Bitmap _empty;
         private ID2D1CommandList? _cmdl = null;
+        public ID2D1Image Output;
 
-        public ID2D1Image Output => _trans.Output;
-
-        public MultiPartBlender(IGraphicsDevicesAndContext devices)
+        public MultiPartsBlender(IGraphicsDevicesAndContext devices)
         {
+
             _devices = devices;
             _trans = new(devices.DeviceContext);
             _empty = devices.DeviceContext.CreateEmptyBitmap();
             _trans.SetInput(0, _empty, true);
+            Output = _trans.Output;
         }
 
         public void Reset()
@@ -32,14 +33,14 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
             _trans.SetInput(0, _empty, true);
         }
 
-        public void Update(IEnumerable<MultiPartBlendTupple> tupples, bool orderCheck)
+        public void Update(IEnumerable<MultiPartBlendTuple> tupples, bool orderCheck)
         {
-            PartInsertTupple[] pit_a0 = [.. tupples.Select(x => new PartInsertTupple(x))];
-            List<PartInsertTupple> pit_l0 = [];
-            List<PartInsertTupple> pit_l1 = [];
-            List<PartInsertTupple> pit_l2 = [];
+            PartInsertTuple[] pit_a0 = [.. tupples.Select(x => new PartInsertTuple(x))];
+            List<PartInsertTuple> pit_l0 = [];
+            List<PartInsertTuple> pit_l1 = [];
+            List<PartInsertTuple> pit_l2 = [];
 
-            foreach (PartInsertTupple pit_0 in pit_a0)
+            foreach (PartInsertTuple pit_0 in pit_a0)
             {
                 PGoPN_LayerInformation lig_0 = pit_0.Target.Node.Params.LayerInformationGroup;
 
@@ -47,19 +48,27 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
                 {
                     if (pit_a0.FirstOrDefault(x => x.Target.Node.Tag == lig_0.TagToInsert) is not null)
                     {
-                        pit_l1.Add(pit_0);
+                        pit_l0.Add(pit_0);
+                        continue;
+                    }
+                }
+                else if (lig_0.InsertDefineMode == PartInsertDefineMode.ToParentAndPosition)
+                {
+                    if (pit_a0.FirstOrDefault(x => x.Target.Node.Tag == lig_0.Parent) is not null)
+                    {
+                        pit_l0.Add(pit_0);
                         continue;
                     }
                 }
 
-                pit_l0.Add(pit_0);
+                pit_l1.Add(pit_0);
             }
 
-            List<PartInsertTupple> pit_l3 = [];
+            List<PartInsertTuple> pit_l3 = [];
 
-            while (pit_l1.Count > 0)
+            while (pit_l0.Count > 0)
             {
-                PartInsertTupple pit_0 = pit_l1.First();
+                PartInsertTuple pit_0 = pit_l0.First();
                 pit_l3.Clear();
                 pit_l3.Add(pit_0);
 
@@ -72,15 +81,15 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
 
                     if (i_0 >= 0)
                     {
-                        pit_l3.ForEach(x => pit_l1.Remove(x));
-                        pit_l0.AddRange(pit_l3[i_0..]);
+                        pit_l3.ForEach(x => pit_l0.Remove(x));
+                        pit_l1.AddRange(pit_l3[i_0..]);
                         pit_l2.AddRange(pit_l3[..i_0]);
                         break;
                     }
 
-                    if (pit_l0.Contains(pit_0) || pit_l2.Contains(pit_0))
+                    if (pit_l1.Contains(pit_0) || pit_l2.Contains(pit_0))
                     {
-                        pit_l3.ForEach(x => pit_l1.Remove(x));
+                        pit_l3.ForEach(x => pit_l0.Remove(x));
                         pit_l2.AddRange(pit_l3);
                         break;
                     }
@@ -89,17 +98,17 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
                 }
             }
 
-            foreach (PartInsertTupple pit_0 in pit_l0)
+            foreach (PartInsertTuple pit_0 in pit_l1)
             {
                 pit_l3.Clear();
 
-                foreach (PartInsertTupple pit_1 in pit_l2)
+                foreach (PartInsertTuple pit_1 in pit_l2)
                 {
                     PGoPN_LayerInformation lig_0 = pit_1.Target.Node.Params.LayerInformationGroup;
 
                     if (lig_0.TagToInsert == pit_0.Target.Node.Tag)
                     {
-                        pit_l1.Add(pit_1);
+                        pit_l0.Add(pit_1);
                         pit_l3.Add(pit_1);
 
                         if (lig_0.InsertPosition == PartInsertPosition.Back)
@@ -120,9 +129,9 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
             {
                 pit_l3.Clear();
 
-                foreach (PartInsertTupple pit_0 in pit_l1)
+                foreach (PartInsertTuple pit_0 in pit_l0)
                 {
-                    foreach (PartInsertTupple pit_1 in pit_l2)
+                    foreach (PartInsertTuple pit_1 in pit_l2)
                     {
                         PGoPN_LayerInformation lig_0 = pit_1.Target.Node.Params.LayerInformationGroup;
 
@@ -142,14 +151,14 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
                     }
                 }
 
-                pit_l1.Clear();
-                pit_l1.AddRange(pit_l3);
+                pit_l0.Clear();
+                pit_l0.AddRange(pit_l3);
                 pit_l3.ForEach(x => pit_l2.Remove(x));
             }
 
-            pit_l0 = OrderByZAndPriority([.. pit_l0.OrderBy(x => pit_a0.IndexOf(x))]);
+            pit_l1 = OrderByZAndPriority([.. pit_l1.OrderBy(x => pit_a0.IndexOf(x))]);
             
-            foreach (PartInsertTupple pit_0 in pit_l0)
+            foreach (PartInsertTuple pit_0 in pit_l1)
             {
                 var _0 = OrderByZAndPriority([.. pit_0.Back.OrderBy(x => pit_a0.IndexOf(x))]);
                 pit_0.Back.Clear();
@@ -159,18 +168,20 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
                 pit_0.Front.AddRange(_1);
             }
 
-            List<MultiPartBlendTupple> mpbt_l0 = [];
+            List<MultiPartBlendTuple> mpbt_l0 = [];
 
-            foreach (PartInsertTupple pit_0 in pit_l0)
+            foreach (PartInsertTuple pit_0 in pit_l1)
                 mpbt_l0.AddRange(pit_0.GetList());
+
+            List<MultiPartBlendTuple> mpbt_l1 = [.. mpbt_l0.Where(x => !x.Node.Params.Hide)];
 
             bool b_0 = false;
 
-            if (orderCheck && mpbt_l0.Count == _tupples.Count)
+            if (orderCheck && mpbt_l1.Count == _tupples.Count)
             {
-                for (int i_0 = 0; i_0 < mpbt_l0.Count; i_0++)
+                for (int i_0 = 0; i_0 < mpbt_l1.Count; i_0++)
                 {
-                    if (mpbt_l0[i_0].Node != _tupples[i_0].Node)
+                    if (mpbt_l1[i_0].Node != _tupples[i_0].Node)
                     {
                         b_0 = true;
                         break;
@@ -185,10 +196,10 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
             if (b_0)
             {
                 _tupples.Clear();
-                _tupples.AddRange(mpbt_l0);
+                _tupples.AddRange(mpbt_l1);
                 _cmdl?.Dispose();
-
-                if (mpbt_l0.Count == 0)
+                
+                if (mpbt_l1.Count == 0)
                 {
                     _trans.SetInput(0, _empty, true);
                 }
@@ -200,7 +211,7 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
                     dc.BeginDraw();
                     dc.Clear(null);
 
-                    foreach (MultiPartBlendTupple mpbt_0 in mpbt_l0)
+                    foreach (MultiPartBlendTuple mpbt_0 in mpbt_l1)
                         DrawOrBlend(dc, mpbt_0);
 
                     dc.EndDraw();
@@ -210,7 +221,7 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
             }
         }
 
-        static private void DrawOrBlend(ID2D1DeviceContext6 dc, MultiPartBlendTupple mpbt)
+        static private void DrawOrBlend(ID2D1DeviceContext6 dc, MultiPartBlendTuple mpbt)
         {
             ID2D1Image output = mpbt.Output;
             Blend blend = mpbt.Node.Params.DrawingGroup.Blend;
@@ -351,18 +362,18 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
             }
         }
 
-        private static List<PartInsertTupple> OrderByZAndPriority(List<PartInsertTupple> ts)
+        private static List<PartInsertTuple> OrderByZAndPriority(List<PartInsertTuple> ts)
         {
-            PartInsertTupple[] pit_a0 = [.. ts.Where(x => x.Target.Node.Params.DrawingGroup.ZSort == ZSortMode2.IgnorePriority)];
+            PartInsertTuple[] pit_a0 = [.. ts.Where(x => x.Target.Node.Params.DrawingGroup.ZSort == ZSortMode2.IgnorePriority)];
             int i_0;
 
             for (i_0 = 0; i_0 < pit_a0.Length; i_0++)
                 if (pit_a0[i_0].Target.Node.Z >= 0.0f)
                     break;
 
-            List<PartInsertTupple> pit_l0 = [.. pit_a0[..i_0]];
+            List<PartInsertTuple> pit_l0 = [.. pit_a0[..i_0]];
 
-            PartInsertTupple[] pit_a3 = [.. ts.Where(x => !pit_a0.Contains(x))];
+            PartInsertTuple[] pit_a3 = [.. ts.Where(x => !pit_a0.Contains(x))];
             double[] d_a0 = [.. pit_a3.Select(x => x.Target.Node.Params.DrawingGroup.Priority).Distinct().OrderBy(x => x)];
 
             foreach (double d_0 in d_a0)
@@ -378,7 +389,7 @@ namespace SinTachiePlugin.Draw.MultiPartBlend
         public void Dispose()
         {
             _trans.SetInput(0, null, true);
-            _trans.Output.Dispose();
+            Output.Dispose();
             _trans.Dispose();
             _empty.Dispose();
             _cmdl?.Dispose();

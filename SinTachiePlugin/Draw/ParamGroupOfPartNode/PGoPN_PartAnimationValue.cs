@@ -176,27 +176,14 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
         public PartNodeComparateResult Comparate(PGoPN_PartAnimationValue pg)
         {
-            bool b0;
-
             if (pg.PartAnimationArgs.Count != PartAnimationArgs.Count)
-            {
-                b0 = true;
-            }
-            else
-            {
-                for (int i = 0; i < PartAnimationArgs.Count; i++)
-                {
-                    if (PartAnimationArgs[i].IsEqual(pg.PartAnimationArgs[i]))
-                    {
-                        b0 = true;
-                        break;
-                    }
-                }
+                return new(Value: true);
 
-                b0 = false;
-            }
+            for (int i_0 = 0; i_0 < PartAnimationArgs.Count; i_0++)
+                if (PartAnimationArgs[i_0].IsEqual(pg.PartAnimationArgs[i_0]))
+                    return new(Value: true);
 
-            return new(Value: b0);
+            return new(Value: false);
         }
     }
 }

@@ -25,25 +25,25 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
         public void Update(List<PartValueAndFL> pvfls)
         {
-            foreach (PartValueAndFL pvfl in pvfls.Reverse<PartValueAndFL>())
+            foreach (PartValueAndFL pvfl_0 in pvfls.Reverse<PartValueAndFL>())
             {
-                ControlledParametersOfPart cpp = pvfl.PartValue.ControlledParameters;
+                ControlledParametersOfPart cpp_0 = pvfl_0.PartValue.ControlledParameters;
 
-                if (cpp.InverseKinematicsArg is HavingSourceInverseKinematicsParameter hsikp)
+                if (cpp_0.InverseKinematicsArg is HavingSourceInverseKinematicsParameter hsikp_0)
                 {
-                    if (hsikp.SubArg is NoneIKParameter)
+                    if (hsikp_0.SubArg is NoneIKParameter)
                     {
                         break;
                     }
-                    else if (hsikp.SubArg is TypeAIKParameter tap)
+                    else if (hsikp_0.SubArg is TypeAIKParameter tap_0)
                     {
-                        RootPartTag = tap.RootPartTag;
-                        JointPartTag = tap.JointPartTag;
-                        EndEffectorPartTag = tap.EndEffectorPartTag;
-                        EndEffectorPointName = tap.EndEffectorPointName;
+                        RootPartTag = tap_0.RootPartTag;
+                        JointPartTag = tap_0.JointPartTag;
+                        EndEffectorPartTag = tap_0.EndEffectorPartTag;
+                        EndEffectorPointName = tap_0.EndEffectorPointName;
                         EndEffectorPointX = 0;
                         EndEffectorPointY = 0;
-                        PreEndEffectorPointName = tap.PreEndEffectorPointName;
+                        PreEndEffectorPointName = tap_0.PreEndEffectorPointName;
                         PreEndEffectorPointX = 0;
                         PreEndEffectorPointY = 0;
 
@@ -78,12 +78,11 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
 
         public PartNodeComparateResult Comparate(PGoPN_InverseKinematics pg)
         {
-            bool networkChanged =
+            // 描画位置の変化として扱う方が楽なのでValueのみ更新
+            bool b_4v =
                 pg.RootPartTag != RootPartTag ||
                 pg.JointPartTag != JointPartTag ||
-                pg.EndEffectorPartTag != EndEffectorPartTag;
-
-            bool valueChanged =
+                pg.EndEffectorPartTag != EndEffectorPartTag ||
                 pg.EndEffectorPointName != EndEffectorPointName ||
                 pg.EndEffectorPointX != EndEffectorPointX ||
                 pg.EndEffectorPointY != EndEffectorPointY ||
@@ -91,7 +90,7 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                 pg.PreEndEffectorPointX != PreEndEffectorPointX ||
                 pg.PreEndEffectorPointY != PreEndEffectorPointY;
 
-            return new(PartNetwork: networkChanged, Value: valueChanged);
+            return new(Value: b_4v);
         }
     }
 }

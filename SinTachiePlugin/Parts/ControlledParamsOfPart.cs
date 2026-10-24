@@ -104,7 +104,6 @@ namespace SinTachiePlugin.Parts
         {
             Appear = original.Appear;
             BusNum.CopyFrom(original.BusNum);
-            //BusNumView = original.BusNumView;
             TagName = original.TagName;
             Parent = original.Parent;
             ImagePath = original.ImagePath;
@@ -131,9 +130,10 @@ namespace SinTachiePlugin.Parts
             MirrorDependent = original.MirrorDependent;
             CameraDependent = original.CameraDependent;
             UnlazyEffectDependent = original.UnlazyEffectDependent;
+
             try
             {
-                string effectsStr = JsonConvert.SerializeObject(original.Effects, Newtonsoft.Json.Formatting.Indented, GetJsonSetting);
+                string effectsStr = JsonConvert.SerializeObject(original.Effects, Formatting.Indented, GetJsonSetting);
                 if (JsonConvert.DeserializeObject<IVideoEffect[]>(effectsStr, GetJsonSetting) is IVideoEffect[] effects)
                 {
                     Effects = [.. effects];

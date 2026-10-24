@@ -26,8 +26,12 @@ namespace SinTachiePlugin.Part.LayerInformation.SourceSelectArg.Parameter
         private string _parent = string.Empty;
 
         [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_ImageFile), ResourceType = typeof(TextResource))]
-        [FileSelector(YukkuriMovieMaker.Settings.FileGroupType.ImageItem)]
-        public string ImageFilePath { get => _imageFilePath; set => Set(ref _imageFilePath, value); }
+        [FileSelector(YukkuriMovieMaker.Settings.FileGroupType.ImageItem, ShowThumbnail = true)]
+        public string ImageFilePath
+        {
+            get => _imageFilePath;
+            set => Set(ref _imageFilePath, value);
+        }
         private string _imageFilePath = string.Empty;
 
         [Display(Name = nameof(TextResource.PartParam_LayerInfo_SourceSelectArg_ClippingMode), ResourceType = typeof(TextResource))]

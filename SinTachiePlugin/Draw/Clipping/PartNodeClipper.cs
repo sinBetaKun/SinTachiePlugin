@@ -21,6 +21,10 @@ namespace SinTachiePlugin.Draw.Clipping
             Output = ds.Output;
         }
 
+        /// <summary>
+        /// クリッピングの更新
+        /// </summary>
+        /// <param name="ms">アルファマスクに使うもの。nullならDestinationをそのまま描画</param>
         public void Update(PartNodeClipper? ms)
         {
             if (_effect is null)
@@ -54,6 +58,7 @@ namespace SinTachiePlugin.Draw.Clipping
                 {
                     _effect.SetInput(0, null, true);
                     _effect.SetInput(1, null, true);
+                    Output.Dispose();
                     _effect.Dispose();
                     _effect = null;
                     _mask = null;
@@ -84,10 +89,11 @@ namespace SinTachiePlugin.Draw.Clipping
 
         public void Dispose()
         {
-            if (_effect != null)
+            if (_effect is not null)
             {
                 _effect.SetInput(0, null, true);
                 _effect.SetInput(1, null, true);
+                Output.Dispose();
                 _effect.Dispose();
                 _effect = null;
             }
