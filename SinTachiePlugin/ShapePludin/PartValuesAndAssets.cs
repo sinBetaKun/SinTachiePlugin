@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using SinTachiePlugin.CharacterAsset;
+﻿using SinTachiePlugin.CharacterAsset;
 using SinTachiePlugin.Part;
 using System.Collections.Immutable;
 using YukkuriMovieMaker.Commons;
@@ -8,19 +7,17 @@ namespace SinTachiePlugin.ShapePludin
 {
     internal class PartValuesAndAssets : Animatable
     {
-        public ImmutableList<PartValue> PartValues { get => _partValues; set => Set(ref _partValues, value); }
-        private ImmutableList<PartValue> _partValues = [];
+        public ImmutableList<PartValue> PartValues { get; set => Set(ref field, value); } = [];
 
         public ImmutableList<CharacterAssetsData> Assets
         {
-            get => _assets;
+            get;
             set
             {
-                Set(ref _assets, value);
-                AssetsChanged.Invoke(null, EventArgs.Empty);
+                Set(ref field, value);
+                AssetsChanged?.Invoke(null, EventArgs.Empty);
             }
-        }
-        private ImmutableList<CharacterAssetsData> _assets = [];
+        } = [];
 
         public event EventHandler? AssetsChanged;
 

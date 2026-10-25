@@ -102,39 +102,33 @@ namespace SinTachiePlugin.Control.PartValueList
             SelectedIndex = Source.IndexOf(pv_1);
         }
 
-        public List<PartValue> Source { get => _source; set => Set(ref _source, value); }
-        private List<PartValue> _source = [];
+        public List<PartValue> Source { get; set => Set(ref field, value); } = [];
 
-        public int SelectedIndex
-        {
-            get => selectedIndex;
-            set => Set(ref selectedIndex, value);
-        }
-        int selectedIndex = -1;
+        public int SelectedIndex { get; set => Set(ref field, value); } = -1;
 
         public ImmutableList<int> SelectedIndexes { get; set => Set(ref field, value); } = [];
-
-        //private readonly List<PartValue> _openeds = [];
 
         public ImmutableList<CharacterAssetsData> Assets { get => _assets; set => Set(ref _assets, value); }
         private ImmutableList<CharacterAssetsData> _assets = [];
 
         public SinTachieCharacterParameter? CharacterParameter
         {
-            get => _characterParameter;
+            get;
             set
             {
-                var oldCP = _characterParameter;
-                if (Set(ref _characterParameter, value))
+                var oldCP = field;
+                if (Set(ref field, value))
                 {
                     oldCP?.PropertyChanged -= CharacterParameterChanged;
-                    _characterParameter?.PropertyChanged += CharacterParameterChanged;
+                    field?.PropertyChanged += CharacterParameterChanged;
                     SetAssetsFromCharacterParameter();
                 }
             }
         }
-        private SinTachieCharacterParameter? _characterParameter;
 
+        /// <summary>
+        /// ImageSynthesis用
+        /// </summary>
         private readonly PartValuesAndAssets? _partValuesAndAssets;
 
         private void CharacterParameterChanged(object sender, PropertyChangedEventArgs e)
@@ -144,7 +138,7 @@ namespace SinTachiePlugin.Control.PartValueList
 
         private void SetAssetsFromCharacterParameter()
         {
-            Assets = _characterParameter?.Assets ?? [];
+            Assets = CharacterParameter?.Assets ?? [];
         }
 
         public PartValueListViewModel(ItemProperty[] properties, PartValuesAndAssets? partValuesAndRoot = null)
@@ -218,8 +212,22 @@ namespace SinTachiePlugin.Control.PartValueList
 
         public void SetProperties()
         {
-            foreach (var property in _properties)
-                property.SetValue(PartValues.Select(pv => new PartValue(pv)).ToImmutableList());
+            if (_isShape)
+            {
+                foreach (var property in _properties)
+                {
+                    property.SetValue(new PartValuesAndAssets()
+                    {
+                        Assets = [.. Assets.Select(x => new CharacterAssetsData(x))],
+                        PartValues = [.. PartValues.Select(x => new PartValue(x))]
+                    });
+                }
+            }
+            else
+            {
+                foreach (var property in _properties)
+                    property.SetValue(PartValues.Select(pv => new PartValue(pv)).ToImmutableList());
+            }
         }
 
         public List<PartValue> GetDescendants(PartValue pv1)
