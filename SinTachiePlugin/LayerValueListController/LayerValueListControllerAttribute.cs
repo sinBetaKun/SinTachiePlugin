@@ -1,7 +1,12 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 using YukkuriMovieMaker.Commons;
 
-namespace SinTachiePlugin.LayerValueListController.Controller
+namespace SinTachiePlugin.LayerValueListController
 {
     public class LayerValueListControllerAttribute : PropertyEditorAttribute2
     {

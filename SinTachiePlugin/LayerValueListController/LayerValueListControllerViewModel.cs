@@ -1,9 +1,14 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using SinTachiePlugin.Informations;
+using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using YukkuriMovieMaker.Commons;
 
-namespace SinTachiePlugin.LayerValueListController.Controller
+namespace SinTachiePlugin.LayerValueListController
 {
     public class LayerValueListControllerViewModel : Bindable, INotifyPropertyChanged, IPropertyEditorControl, IDisposable
     {
@@ -16,15 +21,7 @@ namespace SinTachiePlugin.LayerValueListController.Controller
         public event EventHandler? EndEdit;
 
         public ImmutableList<LayerValue> LayerValues { get => blocks; set => Set(ref blocks, value); }
-        public int SelectedIndex
-        {
-            get => selectedIndex;
-            set
-            {
-                Set(ref selectedIndex, value);
-                blocks.ForEach(b => b.Selected = blocks.IndexOf(b) == value);
-            }
-        }
+        public int SelectedIndex { get => selectedIndex; set => Set(ref selectedIndex, value); }
         int selectedIndex = -1;
 
         public ActionCommand AddCommand { get; }
@@ -111,8 +108,6 @@ namespace SinTachiePlugin.LayerValueListController.Controller
             {
                 LayerValues = [.. values];
             }
-
-            blocks.ForEach(b => b.Selected = blocks.IndexOf(b) == SelectedIndex);
 
             var commands = new[] { AddCommand, RemoveCommand, MoveUpCommand, MoveDownCommand };
             foreach (var command in commands)

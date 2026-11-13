@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.IO;
 using YukkuriMovieMaker.Commons;
-using YukkuriMovieMaker.Controls;
-using ComboBox = System.Windows.Controls.ComboBox;
 
 namespace SinTachiePlugin.Parts
 {
@@ -25,10 +27,9 @@ namespace SinTachiePlugin.Parts
         public PartBlockUI()
         {
             InitializeComponent();
-            selector.ListupFilter = (x) => (!(from c in Path.GetFileName(x)
-                                              where c == '.'
-                                              select c).Skip(1).Any())
-                                              && (Path.GetDirectoryName(x) == Path.GetDirectoryName(selector.Value));
+            selector.ListupFilter = (x) => !(from c in Path.GetFileName(x)
+                                             where c == '.'
+                                             select c).Skip(1).Any();
         }
 
         private void PropertiesEditor_BeginEdit(object? sender, EventArgs e)
@@ -42,16 +43,6 @@ namespace SinTachiePlugin.Parts
             //複数のアイテムを選択している場合にすべてのアイテムを更新するために必要
             var vm = DataContext as PartBlock;
             EndEdit?.Invoke(this, e);
-        }
-
-        private void Switch_Appear(object sender, RoutedEventArgs e)
-        {
-            if (DataContext is PartBlock vm)
-            {
-                BeginEdit?.Invoke(this, e);
-                vm.Appear = !vm.Appear;
-                EndEdit?.Invoke(this, e);
-            }
         }
 
         private void Update_CheckBox(object sender, RoutedEventArgs e)

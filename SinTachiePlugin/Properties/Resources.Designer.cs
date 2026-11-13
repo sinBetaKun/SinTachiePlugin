@@ -22,7 +22,7 @@ namespace SinTachiePlugin.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace SinTachiePlugin.Properties {
         ///   このクラスで使用されているキャッシュされた ResourceManager インスタンスを返します。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SinTachiePlugin.Properties.Resources", typeof(Resources).Assembly);
@@ -51,39 +51,12 @@ namespace SinTachiePlugin.Properties {
         ///   現在のスレッドの CurrentUICulture プロパティをオーバーライドします。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   素材の場所 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string PlaceOfTachieSource {
-            get {
-                return ResourceManager.GetString("PlaceOfTachieSource", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   sin型カスタムパーツ立ち絵 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string PluginTitle {
-            get {
-                return ResourceManager.GetString("PluginTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   v1.1.0.0 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string STPVersion {
-            get {
-                return ResourceManager.GetString("STPVersion", resourceCulture);
             }
         }
     }

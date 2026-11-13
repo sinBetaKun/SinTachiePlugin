@@ -1,8 +1,14 @@
 ﻿using SinTachiePlugin.Parts;
 using SinTachiePlugin.ShapePludin.PartsListControllerForShape;
+using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using YukkuriMovieMaker.Commons;
+using YukkuriMovieMaker.Controls;
 using YukkuriMovieMaker.Exo;
 using YukkuriMovieMaker.Player.Video;
 using YukkuriMovieMaker.Plugin.Shape;
@@ -12,7 +18,7 @@ namespace SinTachiePlugin.ShapePludin
 {
     internal class ShapeParameterOfSinTachie(SharedDataStore? sharedData) : ShapeParameterBase(sharedData)
     {
-        [Display]
+        [Display(Name = "描画順序")]
         [PartsListControllerForShape(PropertyEditorSize = PropertyEditorSize.FullWidth)]
         public PartsOfShapeItem PartsAndRoot { get => partsAndRoot; set => Set(ref partsAndRoot, value); }
         PartsOfShapeItem partsAndRoot = new();

@@ -1,7 +1,13 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using SinTachiePlugin.Parts;
 using YukkuriMovieMaker.Commons;
 
-namespace SinTachiePlugin.Parts.Controller
+namespace SinTachiePlugin.Parts
 {
     public class PartsListControllerAttribute : PropertyEditorAttribute2, IPropertyEditorForTachieParameterAttribute
     {

@@ -1,20 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SinTachiePlugin.Enums
+namespace SinTachiePlugin.Parts.LayerValueListController
 {
     public enum LayerAnimationMode
     {
-        [Display(Name = nameof(Resources.Value_LyrAnmMd_CerrarPlusAbrir), Description = nameof(Resources.Desc_LyrAnmMd_CerrarPlusAbrir), ResourceType = typeof(Resources))]
+        [Display(Name = "２数の和", Description = "「セラール」と「アブリール」の値を足した結果でレイヤーを制御します。")]
         CerrarPlusAbrir,
-        [Display(Name = nameof(Resources.Value_LyrAnmMd_CerrarTimesAbrir), Description = nameof(Resources.Desc_LyrAnmMd_CerrarTimesAbrir), ResourceType = typeof(Resources))]
+        [Display(Name = "２数の積", Description = "「セラール」と「アブリール」の値を掛けた結果でレイヤーを制御します。")]
         CerrarTimesAbrir,
-        [Display(Name = nameof(Resources.Value_LyrAnmMd_Sin), Description = nameof(Resources.Desc_LyrAnmMd_Sin), ResourceType = typeof(Resources))]
+        [Display(Name = "sin", Description = "「セラール」を振幅、「アブリール」を位相とするsin波でレイヤーを制御します。")]
         Sin,
-        [Display(Name = nameof(Resources.Value_LyrAnmMd_VoiceVolume), Description = nameof(Resources.Desc_LyrAnmMd_VoiceVolume), ResourceType = typeof(Resources))]
+        [Display(Name = "口パク", Description = "（セラール）～（アブリール）の範囲で口パクします。\n口が閉じるときに(セラール)の値に、\n全開のときに(アブリール)の値になります。")]
         VoiceVolume,
-        [Display(Name = nameof(Resources.Value_LyrAnmMd_PeriodicShuttle), Description = nameof(Resources.Desc_LyrAnmMd_PeriodicShuttle), ResourceType = typeof(Resources))]
+        [Display(Name = "周期的往復", Description = "（セラール）～（アブリール）の範囲で「往復」と同じ動きを定期的にします。\n(セラール)の値と(アブリール)の値の間を周期的に往復します。")]
         PeriodicShuttle,
-        [Display(Name = nameof(Resources.Value_LyrAnmMd_PeriodicLoop), Description = nameof(Resources.Desc_LyrAnmMd_PeriodicLoop), ResourceType = typeof(Resources))]
+        [Display(Name = "周期的ループ", Description = "（セラール）～（アブリール）の範囲で「ループ」と同じ動きを定期的にします。\n(セラール)の値と(アブリール)の値の間を周期的に往復します。")]
         PeriodicLoop,
     }
 }

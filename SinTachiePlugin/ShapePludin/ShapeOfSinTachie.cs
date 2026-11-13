@@ -1,4 +1,9 @@
 ﻿using SinTachiePlugin.Informations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using YukkuriMovieMaker.Plugin;
 using YukkuriMovieMaker.Plugin.Shape;
 using YukkuriMovieMaker.Project;

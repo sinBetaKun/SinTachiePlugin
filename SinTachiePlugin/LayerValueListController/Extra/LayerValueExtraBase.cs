@@ -1,4 +1,9 @@
-﻿using SinTachiePlugin.Parts;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.LayerValueListController.Extra
@@ -13,7 +18,7 @@ namespace SinTachiePlugin.LayerValueListController.Extra
         {
         }
 
-        public abstract double GetValue(FrameAndLength fl, int fps);
+        public abstract double GetValue(long frame, long length, int fps);
         public abstract void CopyFrom(LayerValueExtraBase? origin);
     }
 }

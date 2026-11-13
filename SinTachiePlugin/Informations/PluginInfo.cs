@@ -1,14 +1,16 @@
-﻿namespace SinTachiePlugin.Informations
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SinTachiePlugin.Informations
 {
     /// <summary>
     /// このプラグインそのものの情報を記載したクラス
     /// </summary>
     public class PluginInfo
     {
-        static public string Title => Properties.Resources.PluginTitle;
-
-        static public string Version => Properties.Resources.STPVersion;
-
-        static public int PartsListHeight = 210;
+        static public string Title = "sin型カスタムパーツ立ち絵";
     }
 }

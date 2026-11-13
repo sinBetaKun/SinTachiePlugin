@@ -1,4 +1,10 @@
-﻿using System.Windows;
+﻿using SinTachiePlugin.Parts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 using YukkuriMovieMaker.Commons;
 
 namespace SinTachiePlugin.ShapePludin.PartsListControllerForShape
