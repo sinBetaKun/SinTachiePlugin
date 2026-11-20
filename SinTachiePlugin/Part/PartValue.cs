@@ -13,14 +13,16 @@ namespace SinTachiePlugin.Part
         /// リストを木構造にしたものにおける深度。
         /// </summary>
         [JsonIgnore]
-        public int Depth { get => _depth; set => Set(ref _depth, value); }
-        private int _depth = 0;
+        public int Depth { get; set => Set(ref field, value); } = 0;
 
         /// <summary>
         /// リストにおける、自分を内包するグループのインデックス
         /// </summary>
-        public int ParentIndex { get => _parentIndex; set => Set(ref _parentIndex, value); }
-        private int _parentIndex = -1;
+        public int ParentIndex
+        {
+            get;
+            set => Set(ref field, value);
+        } = -1;
 
         /// <summary>
         /// ユーザがコントローラで制御できるパラメータ群
@@ -68,6 +70,7 @@ namespace SinTachiePlugin.Part
         /// <param name="origin">複製元</param>
         public PartValue(PartValue origin)
         {
+            Depth = origin.Depth;
             ParentIndex = origin.ParentIndex;
             ControlledParameters = new (origin.ControlledParameters);
             ControlledParameters.ValueUpdated += UpdateViewParams;

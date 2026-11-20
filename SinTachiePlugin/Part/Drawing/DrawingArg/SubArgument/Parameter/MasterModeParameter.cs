@@ -94,7 +94,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter
             return clone;
         }
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [X, Y, Z, Opacity, Zoom, Rotation, Invert, Priority];
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [X, Y, Z, Opacity, Zoom, Rotation, Invert, Priority, Zoom_X, Zoom_Y];
 
         protected override void SaveSharedData(SharedDataStore store)
         {
