@@ -23,7 +23,7 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
             EndEffectorPointX = EndEffectorPointY = PreEndEffectorPointX = PreEndEffectorPointY = 0;
         }
 
-        public void Update(List<PartValueAndFL> pvfls)
+        public void Update(List<PartValueAndFL> pvfls, TachieSourceDescription desc)
         {
             foreach (PartValueAndFL pvfl_0 in pvfls.Reverse<PartValueAndFL>())
             {
@@ -37,15 +37,17 @@ namespace SinTachiePlugin.Draw.ParamGroupOfPartNode
                     }
                     else if (hsikp_0.SubArg is TypeAIKParameter tap_0)
                     {
+                        FrameAndLength fl_0 = pvfl_0.FL;
+                        int fps = desc.FPS;
                         RootPartTag = tap_0.RootPartTag;
                         JointPartTag = tap_0.JointPartTag;
                         EndEffectorPartTag = tap_0.EndEffectorPartTag;
                         EndEffectorPointName = tap_0.EndEffectorPointName;
-                        EndEffectorPointX = 0;
-                        EndEffectorPointY = 0;
+                        EndEffectorPointX = fl_0.GetValue(tap_0.EndEffectorPointX, fps);
+                        EndEffectorPointY = fl_0.GetValue(tap_0.EndEffectorPointY, fps);
                         PreEndEffectorPointName = tap_0.PreEndEffectorPointName;
-                        PreEndEffectorPointX = 0;
-                        PreEndEffectorPointY = 0;
+                        PreEndEffectorPointX = fl_0.GetValue(tap_0.PreEndEffectorPointX, fps);
+                        PreEndEffectorPointY = fl_0.GetValue(tap_0.PreEndEffectorPointY, fps);
 
                         return;
                     }

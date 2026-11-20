@@ -59,7 +59,7 @@ namespace SinTachiePlugin.Draw
             else
             {
                 LayerInformationGroup.Update(pvfls);
-                InverseKinematicsGroup.Update(pvfls);
+                InverseKinematicsGroup.Update(pvfls, desc);
                 OriginGroup.Update(pvfls);
                 DrawingGroup.Update(pvfls, desc);
                 CenterPointGroup.Update(pvfls, desc);

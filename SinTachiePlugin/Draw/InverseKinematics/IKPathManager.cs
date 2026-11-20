@@ -1,7 +1,6 @@
 ﻿using SinTachiePlugin.Draw.ParamGroupOfPartNode;
 using SinTachiePlugin.Draw.PointParam;
 using SinTachiePlugin.Enums;
-using SinTachiePlugin.Part.CustomPoint.CustomPointArg.SubArgument;
 using System.Collections.Immutable;
 using System.Numerics;
 
@@ -175,36 +174,45 @@ namespace SinTachiePlugin.Draw.InverseKinematics
                 float d_4L0 = vec_4r2e_0.Length();
                 float d_4L1 = vec_4r2j_0.Length();
                 float d_4L2 = vec_4j2e_0.Length();
-                float d_4alpha = MathF.Acos((d_4L1 * d_4L1 + d_4L2 * d_4L2 - d_4L0 * d_4L0) / 2 * d_4L1 * d_4L2);
-                float d_4beta = MathF.Acos((d_4L1 * d_4L1 - d_4L2 * d_4L2 + d_4L0 * d_4L0) / (2.0f * d_4L1 * d_4L0));
                 float d_4gamma = MathF.Atan2(vec_4r2e_0.Y, vec_4r2e_0.X);
-                float d_4theta1_0 = d_4gamma - d_4beta;
-                float d_4theta1_1 = d_4gamma + d_4beta;
-                float d_4theta2_0 = MathF.PI - d_4alpha;
-                Vector3 vec_4r2j_2 = new(d_4L1 * MathF.Cos(d_4theta1_0), d_4L1 * MathF.Sin(d_4theta1_0), 0.0f);
-                Vector3 vec_4r2j_3 = new(d_4L1 * MathF.Cos(d_4theta1_1), d_4L1 * MathF.Sin(d_4theta1_1), 0.0f);
-                Vector3 vec_4r2j_4;
-                float d_4theta1_2;
+                float d_4theta1_0, d_4theta2_0;
+                Vector3 vec_4r2j_2;
 
-                if ((vec_4r2j_2 - vec_4r2j_1).Length() < (vec_4r2j_3 - vec_4r2j_1).Length())
+                if (d_4L1 + d_4L2 < d_4L0)
                 {
-                    d_4theta1_2 = d_4theta1_0;
-                    vec_4r2j_4 = vec_4r2j_2;
+                    d_4theta1_0 = d_4gamma;
+                    d_4theta2_0 = 0.0f;
+                    vec_4r2j_2 = new(d_4L1 * MathF.Cos(d_4gamma), d_4L1 * MathF.Sin(d_4gamma), 0.0f);
                 }
-                else
-                {
-                    d_4theta1_2 = d_4theta1_1;
-                    vec_4r2j_4 = vec_4r2j_3;
-                    d_4theta2_0 *= -1.0f;
+                else {
+                    float d_4alpha = MathF.Acos((d_4L1 * d_4L1 + d_4L2 * d_4L2 - d_4L0 * d_4L0) / (2.0f * d_4L1 * d_4L2));
+                    float d_4beta = MathF.Acos((d_4L1 * d_4L1 - d_4L2 * d_4L2 + d_4L0 * d_4L0) / (2.0f * d_4L1 * d_4L0));
+                    float d_4theta1_1 = d_4gamma - d_4beta;
+                    float d_4theta1_2 = d_4gamma + d_4beta;
+                    d_4theta2_0 = MathF.PI - d_4alpha;
+                    Vector3 vec_4r2j_3 = new(d_4L1 * MathF.Cos(d_4theta1_1), d_4L1 * MathF.Sin(d_4theta1_1), 0.0f);
+                    Vector3 vec_4r2j_4 = new(d_4L1 * MathF.Cos(d_4theta1_2), d_4L1 * MathF.Sin(d_4theta1_2), 0.0f);
+
+                    if ((vec_4r2j_3 - vec_4r2j_1).Length() < (vec_4r2j_4 - vec_4r2j_1).Length())
+                    {
+                        d_4theta1_0 = d_4theta1_1;
+                        vec_4r2j_2 = vec_4r2j_3;
+                    }
+                    else
+                    {
+                        d_4theta1_0 = d_4theta1_2;
+                        vec_4r2j_2 = vec_4r2j_4;
+                        d_4theta2_0 *= -1.0f;
+                    }
                 }
 
-                float d_4dth1_0 = d_4theta1_2 - MathF.Atan2(vec_4r2j_1.Y, vec_4r2j_1.X);
-                float d_4dth2_0 = d_4theta1_2 + d_4theta2_0 - MathF.Atan2(vec_4j2e_0.Y, vec_4j2e_0.X);
+                float d_4dth1_0 = d_4theta1_0 - MathF.Atan2(vec_4r2j_1.Y, vec_4r2j_1.X);
+                float d_4dth2_0 = d_4theta1_0 + d_4theta2_0 - MathF.Atan2(vec_4j2e_0.Y, vec_4j2e_0.X);
                 PartNodeDrawDescription pndd_4j_0 = ikp_0.Joint.DrawDescByOnlyEffects;
                 Matrix4x4 m_4rtt4j2p = Matrix4x4.CreateRotationZ(d_4dth2_0);
                 PartNodeDrawDescription pndd_4j_1 = pndd_4j_0 with
                 {
-                    Draw = pndd_4r_0.Draw + vec_4r2j_4,
+                    Draw = pndd_4r_0.Draw + vec_4r2j_2,
                     Rotate = pndd_4j_0.Rotate * m_4rtt4j2p
                 };
                 ikp_0.Joint.DrawDescByIK = pndd_4j_1;
