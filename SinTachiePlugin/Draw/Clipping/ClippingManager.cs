@@ -22,112 +22,85 @@ namespace SinTachiePlugin.Draw.Clipping
             Clippers = [];
         }
 
-        public void Update(IEnumerable<PartNode> pns)
+        public void Update(IEnumerable<PartNode> overview)
         {
-            PartNode[] overview = [.. pns];
-            List<ClippingTuple> ct_l0 = [];
-            List<PartNode> pn_l0 = [];
+            PartNode[] pn_a0 = [.. overview];
+            List<ClippingTuple> ct_l0 = []; // クリッピング先指定先検証済み一時置き場A
+            List<ClippingTuple> ct_l1 = []; // クリッピング先指定未検証
 
-            foreach (PartNode pn_0 in overview)
+            foreach (PartNode pn_0 in pn_a0)
             {
                 PGoPN_LayerInformation lig_0 = pn_0.Params.LayerInformationGroup;
 
                 if (lig_0.ClippingMode == ClippingMode.ClipToParent)
                 {
-                    if (overview.FirstOrDefault(x => x.Tag == pn_0.Params.LayerInformationGroup.Parent) is not null)
+                    if (pn_a0.FirstOrDefault(x => x.Tag == lig_0.Parent) is PartNode pn_1)
                     {
-                        pn_l0.Add(pn_0);
+                        ct_l1.Add(new ClippingTuple(pn_0, pn_1));
+                        continue;
                     }
                 }
                 else if (lig_0.ClippingMode == ClippingMode.ClipWithTag)
                 {
-                    if (overview.FirstOrDefault(x => x.Tag == lig_0.TagToInsert) is not null)
+                    if (pn_a0.FirstOrDefault(x => x.Tag == lig_0.TagToClipTo) is PartNode pn_1)
                     {
-                        pn_l0.Add(pn_0);
+                        ct_l1.Add(new ClippingTuple(pn_0, pn_1));
+                        continue;
                     }
                 }
 
-                ct_l0.Add(new(pn_0, null));
+                ct_l0.Add(new ClippingTuple(pn_0, null));
             }
 
-            List<PartNode> pn_l1 = [];
+            List<ClippingTuple> ct_l2 = []; // クリッピング先指定先検証済み一時置き場B
+            List<ClippingTuple> ct_l3 = []; // クリッピング先指定検証済み最終置き場
 
-            while (pn_l0.Count > 0)
+            while (true) 
             {
-                PartNode pn_0 = pn_l0.First();
-                pn_l1.Clear();
-                pn_l1.Add(pn_0);
-
-                while (true)
+                if (ct_l1.Count == 0)
                 {
-                    PGoPN_LayerInformation lig_0 = pn_0.Params.LayerInformationGroup;
-
-                    if (lig_0.ClippingMode == ClippingMode.ClipToParent)
-                    {
-                        pn_0 = overview.First(x => x.Tag == pn_0.Params.LayerInformationGroup.Parent);
-                    }
-                    else
-                    {
-                        pn_0 = overview.First(x => x.Tag == lig_0.TagToInsert);
-                    }
-
-                    int i_0 = pn_l1.IndexOf(pn_0);
-
-                    if (i_0 >= 0)
-                    {
-                        pn_l1.ForEach(x => pn_l0.Remove(x));
-                        ct_l0.AddRange(pn_l1[i_0..].Select(x => new ClippingTuple(x, null)));
-                        pn_l1.RemoveRange(i_0, pn_l1.Count - i_0);
-                        PartNode pn_1 = pn_0;
-
-                        while (pn_l1.Count > 0)
-                        {
-                            pn_0 = pn_l1.Last();
-                            ct_l0.Add(new(pn_0, pn_1));
-                            pn_1 = pn_0;
-                            pn_l1.Remove(pn_0);
-                        }
-
-                        break;
-                    }
-
-                    if (ct_l0.FirstOrDefault(x => x.Destination == pn_0) is ClippingTuple ct_2)
-                    {
-                        PartNode pn_1 = ct_2.Destination;
-
-                        while (pn_l1.Count > 0)
-                        {
-                            pn_0 = pn_l1.Last();
-                            ct_l0.Add(new(pn_0, pn_1));
-                            pn_1 = pn_0;
-                            pn_l1.Remove(pn_0);
-                        }
-
-                        break;
-                    }
-
-                    pn_l1.Add(pn_0);
+                    ct_l3.AddRange(ct_l0);
+                    break;
                 }
-            }
 
-            List<PartNodeClipper> pnc_l0 = [.. Clippers];
-            List<PartNodeClipper> pnc_l1 = [];
+                foreach (ClippingTuple ct_0 in ct_l1)
+                    if (ct_l0.Exists(x => x.Destination == ct_0.Mask) || ct_l2.Exists(x => x.Destination == ct_0.Mask))
+                        ct_l2.Add(ct_0);
 
-            foreach (ClippingTuple ct_0 in ct_l0)
-            {
-                PartNodeClipper pnc_0;
+                ct_l3.AddRange(ct_l0);
+                ct_l0.Clear();
 
-                if (pnc_l0.FirstOrDefault(x => x.Destination == ct_0.Destination) is PartNodeClipper pnc_1)
+                if (ct_l2.Count > 0)
                 {
-                    pnc_l0.Remove(pnc_1);
-                    pnc_0 = pnc_1;
+                    ct_l0.AddRange(ct_l2);
+                    ct_l2.ForEach(x => ct_l1.Remove(x));
+                    ct_l2.Clear();
                 }
                 else
                 {
-                    pnc_0 = new(_devices, ct_0.Destination);
+                    ct_l3.AddRange(from x in ct_l1 select new ClippingTuple(x.Destination, null));
+                    break;
                 }
+            }
 
-                pnc_l1.Add(pnc_0);
+            List<PartNodeClipper> pnc_l0 = []; // 再利用するノード + 新規作成したノード
+            List<PartNodeClipper> pnc_l1 = []; // Dispose するノード
+
+            foreach (PartNodeClipper pnc_0 in Clippers)
+            {
+                if (pn_a0.Contains(pnc_0.Destination))
+                    pnc_l0.Add(pnc_0);
+                else
+                    pnc_l1.Add(pnc_0);
+            }
+
+            pnc_l0.AddRange(pn_a0.Except(pnc_l0.Select(x => x.Destination)).Select(x => new PartNodeClipper(_devices, x)));
+            List<PartNodeClipper> pnc_l2 = []; // 最終的なクリッパーリスト
+
+            foreach (ClippingTuple ct_0 in ct_l3.OrderBy(x => pn_a0.IndexOf(x.Destination)))
+            {
+                PartNodeClipper pnc_0 = pnc_l0.First(x => x.Destination == ct_0.Destination);
+                pnc_l2.Add(pnc_0);
 
                 if (ct_0.Mask is null)
                 {
@@ -135,12 +108,12 @@ namespace SinTachiePlugin.Draw.Clipping
                 }
                 else
                 {
-                    pnc_0.Update(pnc_l1.First(x => x.Destination == ct_0.Mask));
+                    pnc_0.Update(pnc_l0.First(x => x.Destination == ct_0.Mask));
                 }
             }
 
-            pnc_l0.ForEach(x => x.Dispose());
-            Clippers = [.. pnc_l1];
+            pnc_l1.ForEach(x => x.Dispose());
+            Clippers = [.. pnc_l2];
         }
 
         public void Dispose()
