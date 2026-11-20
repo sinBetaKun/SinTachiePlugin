@@ -34,13 +34,12 @@ namespace SinTachiePlugin.Control.PartValueList
         public event EventHandler? EndEdit;
 
         private static string _clipboad = "[]";
-        private static int _selectedInClip = -1;
         
         private static JsonSerializerSettings GetJsonSetting =>
             new() { TypeNameHandling = TypeNameHandling.Auto };
         
-        private static IEnumerable<PartValue> GetClipped() {
-            if (JsonConvert.DeserializeObject<IEnumerable<PartValue>>(_clipboad, GetJsonSetting) is IEnumerable<PartValue> pv_e0)
+        private static List<PartValue> GetClipped() {
+            if (JsonConvert.DeserializeObject<IEnumerable<PartValue>>(_clipboad, GetJsonSetting) is List<PartValue> pv_e0)
                 return pv_e0;
 
             SinTachieDialog.ShowWarning(TextResource.ErrorMessage_FailToGetClippedFromJson);
@@ -61,7 +60,7 @@ namespace SinTachiePlugin.Control.PartValueList
         public PartValueListView()
         {
             InitializeComponent();
-            DataContextChanged += PointsEditor_DataContextChanged;
+            DataContextChanged += PartValueListView_DataContextChanged;
         }
 
         public void SetEditorInfo(IEditorInfo? info)
@@ -84,7 +83,7 @@ namespace SinTachiePlugin.Control.PartValueList
             EndEdit?.Invoke(this, e);
         }
 
-        private void PointsEditor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void PartValueListView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.OldValue is PartValueListViewModel oldVm)
             {
@@ -146,8 +145,8 @@ namespace SinTachiePlugin.Control.PartValueList
             else
             {
                 AddButton.IsEnabled = true;
-                PartValue[] pv_a0 = [.. GetClipped()];
-                PasteButton.IsEnabled = pv_a0.Length > 0;
+                List<PartValue> pv_l0 = GetClipped();
+                PasteButton.IsEnabled = pv_l0.Count > 0;
                 ShowAllPartsButton.IsEnabled = true;
 
                 if (selecteds.Count < 1)
@@ -274,15 +273,13 @@ namespace SinTachiePlugin.Control.PartValueList
             UpdateButtons();
         }
 
-        private void UpdateSelecting()
+        private void SetSelecting(List<PartValue> list)
         {
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
             ItemList.SelectedItems.Clear();
-
-            foreach (int i_1 in vm.SelectedIndexes)
-                ItemList.SelectedItems.Add(ItemList.Items[i_1]);
+            list.ForEach(x => ItemList.SelectedItems.Add(x));
         }
 
         public List<PartValue> GetSelecteds()
@@ -330,7 +327,6 @@ namespace SinTachiePlugin.Control.PartValueList
 
                     if (dialog == MessageBoxResult.OK)
                     {
-                        var tmpSelectedIndex = vm.SelectedIndex;
                         BeginEdit?.Invoke(this, EventArgs.Empty);
                         string tagName = "[UnNamed]";
                         var tags = from pv1 in vm.PartValues select pv1.ControlledParameters.Tag;
@@ -346,8 +342,8 @@ namespace SinTachiePlugin.Control.PartValueList
                         ControlledParametersOfPart cp = pv2.ControlledParameters;
                         cp.Tag = tagName;
                         cp.SwitchType(_addingPartType);
-                        vm.InsertItems([pv2], pv2);
-                        UpdateSelecting();
+                        vm.InsertItems([pv2], ItemList.SelectedIndex);
+                        SetSelecting([pv2]);
                     }
                 }
             }
@@ -355,8 +351,8 @@ namespace SinTachiePlugin.Control.PartValueList
             {
                 PartValue pv3 = new();
                 pv3.ControlledParameters.SwitchType(_addingPartType);
-                vm.InsertItems([pv3], pv3);
-                UpdateSelecting();
+                vm.InsertItems([pv3], ItemList.SelectedIndex);
+                SetSelecting([pv3]);
             }
 
             UpdateButtons();
@@ -483,8 +479,7 @@ namespace SinTachiePlugin.Control.PartValueList
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
-            vm.MoveItems(GetSelecteds(), (PartValue)ItemList.SelectedItem, true);
-            UpdateSelecting();
+            vm.MoveUpItems(GetSelecteds());
             UpdateButtons();
         }
 
@@ -493,8 +488,7 @@ namespace SinTachiePlugin.Control.PartValueList
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
-            vm.MoveItems(GetSelecteds(), (PartValue)ItemList.SelectedItem, false);
-            UpdateSelecting();
+            vm.MoveDownItems(GetSelecteds());
             UpdateButtons();
         }
 
@@ -535,9 +529,8 @@ namespace SinTachiePlugin.Control.PartValueList
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
-            (List<PartValue> pv_l0, int i_0) = GetCloneOfSelected();
+            List<PartValue> pv_l0 = GetCloneOfSelected();
             SetClipped(pv_l0);
-            _selectedInClip = i_0;
             vm.RemoveItems(GetSelecteds());
             ItemList.SelectedIndex = -1;
             UpdateButtons();
@@ -545,9 +538,8 @@ namespace SinTachiePlugin.Control.PartValueList
 
         private void CopyButton_Click(object sender, RoutedEventArgs e)
         {
-            (List<PartValue> pv_l0, int i_0) = GetCloneOfSelected();
+            List<PartValue> pv_l0 = GetCloneOfSelected();
             SetClipped(pv_l0);
-            _selectedInClip = i_0;
             UpdateButtons();
         }
 
@@ -556,10 +548,9 @@ namespace SinTachiePlugin.Control.PartValueList
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
-            List<PartValue> pv_l0 = [.. GetClipped()];
-            PartValue lastSelected = pv_l0[_selectedInClip];
-            vm.InsertItems(pv_l0, lastSelected);
-            UpdateSelecting();
+            List<PartValue> pv_l0 = GetClipped();
+            vm.InsertItems(pv_l0, ItemList.SelectedIndex);
+            SetSelecting(pv_l0);
             UpdateButtons();
         }
 
@@ -568,10 +559,10 @@ namespace SinTachiePlugin.Control.PartValueList
             if (DataContext is not PartValueListViewModel vm)
                 return;
 
-            ItemList.SelectedIndex = GetSelecteds().Max(ItemList.Items.IndexOf);
-            (List<PartValue> pv_l0, int i_0) = GetCloneOfSelected();
-            vm.InsertItems(pv_l0, pv_l0[i_0]);
-            UpdateSelecting();
+            //ItemList.SelectedIndex = GetSelecteds().Max(ItemList.Items.IndexOf);
+            List<PartValue> pv_l0 = GetCloneOfSelected();
+            vm.InsertItems(pv_l0, ItemList.SelectedIndex);
+            SetSelecting(pv_l0);
             UpdateButtons();
         }
 
@@ -587,13 +578,13 @@ namespace SinTachiePlugin.Control.PartValueList
                 vm.ShowOnlySelectedParts(GetSelecteds());
         }
 
-        private (List<PartValue>, int) GetCloneOfSelected()
+        private List<PartValue> GetCloneOfSelected()
         {
             if (DataContext is not PartValueListViewModel vm)
-                return ([], -1);
+                return [];
 
             List<PartValue> pv_l0 = [];
-            PartValue? lastSelected = (PartValue)ItemList.SelectedItem;
+            PartValue? firstSelected = (PartValue)ItemList.SelectedItem;
 
             foreach (PartValue pv_0 in GetSelecteds())
             {
@@ -616,7 +607,6 @@ namespace SinTachiePlugin.Control.PartValueList
             }
 
             List<PartValue> pv_l3 = [.. pv_l0.Distinct().OrderBy(vm.PartValues.IndexOf)];
-            int i_0 = pv_l3.IndexOf(lastSelected);
             List<(PartValue, PartValue)> tp_l0 = [];
 
             foreach (PartValue pv_0 in pv_l3)
@@ -644,7 +634,7 @@ namespace SinTachiePlugin.Control.PartValueList
                 }
             }
 
-            return ([.. tp_l0.Select(item => item.Item2)], i_0);
+            return [.. tp_l0.Select(item => item.Item2)];
         }
 
         private void PartValueView_GroupPullDownChanged(object sender, EventArgs e)

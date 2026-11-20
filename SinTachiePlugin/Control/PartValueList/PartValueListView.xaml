@@ -48,7 +48,6 @@
                                  HorizontalContentAlignment="Stretch"
                                  SelectionChanged="ItemList_SelectionChanged"
                                  ItemsSource="{Binding Source}"
-                                 SelectedIndex="{Binding SelectedIndex}"
                                  SelectionMode="Extended"
                                  Name="ItemList"
                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"

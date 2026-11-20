@@ -49,7 +49,7 @@ namespace SinTachiePlugin.Control.PartValueList
             if (PartValues.FirstOrDefault(x => x.ControlledParameters == cp_0) is not PartValue pv_0)
                 return;
 
-            List<ValueTreeNode> n_l0 = ValueTreeNode.GetTree(new(PartValues, null, []));
+            List<ValueTreeNode> n_l0 = ValueTreeNode.GetTree(PartValues);
 
             if (n_l0.FirstOrDefault(x => x.Value == pv_0) is ValueTreeNode n_0)
             {
@@ -95,18 +95,12 @@ namespace SinTachiePlugin.Control.PartValueList
                 }
             }
 
-            PartValues = ValueTreeNode.GetList(n_l0).List;
-            PartValue pv_1 = Source[SelectedIndex];
+            PartValues = ValueTreeNode.GetList(n_l0);
             UpdateSource();
             SetProperties();
-            SelectedIndex = Source.IndexOf(pv_1);
         }
 
         public List<PartValue> Source { get; set => Set(ref field, value); } = [];
-
-        public int SelectedIndex { get; set => Set(ref field, value); } = -1;
-
-        public ImmutableList<int> SelectedIndexes { get; set => Set(ref field, value); } = [];
 
         public ImmutableList<CharacterAssetsData> Assets { get => _assets; set => Set(ref _assets, value); }
         private ImmutableList<CharacterAssetsData> _assets = [];
@@ -131,7 +125,7 @@ namespace SinTachiePlugin.Control.PartValueList
         /// </summary>
         private readonly PartValuesAndAssets? _partValuesAndAssets;
 
-        private void CharacterParameterChanged(object sender, PropertyChangedEventArgs e)
+        private void CharacterParameterChanged(object? sender, PropertyChangedEventArgs e)
         {
             SetAssetsFromCharacterParameter();
         }
@@ -187,20 +181,12 @@ namespace SinTachiePlugin.Control.PartValueList
                     PartValues = [.. list];
             }
 
-            int index = SelectedIndex;
             UpdateSource();
-            SelectedIndex = index;
         }
 
         public void UpdateSource()
         {
-            Source = [.. ValueTreeNode.GetVisibleList(ValueTreeNode.GetTree(new(PartValues, null, [])), out int _)];
-        }
-
-        public void UpdateSource(ValueTreeArgs vta)
-        {
-            Source = [.. ValueTreeNode.GetVisibleList(ValueTreeNode.GetTree(vta), out int _)];
-            SelectedIndexes = [.. vta.AdditionalSelecteds.Prepend(vta.Selected).Select(x => Source.IndexOf(x!))];
+            Source = [.. ValueTreeNode.GetVisibleList(ValueTreeNode.GetTree(PartValues))];
         }
 
         public void CopyToOtherItems()
@@ -218,15 +204,15 @@ namespace SinTachiePlugin.Control.PartValueList
                 {
                     property.SetValue(new PartValuesAndAssets()
                     {
-                        Assets = [.. Assets.Select(x => new CharacterAssetsData(x))],
-                        PartValues = [.. PartValues.Select(x => new PartValue(x))]
+                        Assets = [.. Assets],
+                        PartValues = [.. PartValues]
                     });
                 }
             }
             else
             {
                 foreach (var property in _properties)
-                    property.SetValue(PartValues.Select(pv => new PartValue(pv)).ToImmutableList());
+                    property.SetValue(PartValues.ToImmutableList());
             }
         }
 
@@ -258,9 +244,9 @@ namespace SinTachiePlugin.Control.PartValueList
             return list1;
         }
 
-        private (List<ValueTreeNode>, List<ValueTreeNode>) FindSelectedNodes(List<PartValue> items, PartValue? lastSelected)
+        private (List<ValueTreeNode>, List<ValueTreeNode>) FindSelectedNodes(List<PartValue> items)
         {
-            List<ValueTreeNode> n_l0 = ValueTreeNode.GetTree(new(PartValues, lastSelected, [.. items.Where(x => x != lastSelected)]));
+            List<ValueTreeNode> n_l0 = ValueTreeNode.GetTree(PartValues);
             List<ValueTreeNode> n_l1 = [];
 
             foreach (PartValue pv_0 in items)
@@ -273,26 +259,21 @@ namespace SinTachiePlugin.Control.PartValueList
                             n_l1.Add(n_2);
             }
 
-            return (n_l0, n_l1);
+            return (n_l0, [.. n_l1.OrderBy(x => PartValues.IndexOf(x.Value))]);
         }
 
-        public void InsertItems(List<PartValue> items, PartValue lastSelected)
+        public void InsertItems(List<PartValue> items, int selectedIndex)
         {
-            ValueTreeArgs vta_0 = new(items, lastSelected, [.. items.Except([lastSelected])]);
+            List<ValueTreeNode> n_l0 = ValueTreeNode.GetTree(PartValues);
+            List<ValueTreeNode> n_l1 = ValueTreeNode.GetTree(items);
 
-            if (SelectedIndex < -1 || SelectedIndex >= Source.Count)
-                return;
-
-            List<ValueTreeNode> n_l0 = ValueTreeNode.GetTree(new(PartValues, null, []));
-            List<ValueTreeNode> n_l1 = ValueTreeNode.GetTree(vta_0);
-
-            if (SelectedIndex < 0)
+            if (selectedIndex < 0)
             {
                 n_l0.AddRange(n_l1);
             }
             else
             {
-                PartValue pv_0 = Source[SelectedIndex];
+                PartValue pv_0 = Source[selectedIndex];
 
                 if (n_l0.FirstOrDefault(x => x.Value == pv_0) is ValueTreeNode n_0)
                 {
@@ -337,9 +318,8 @@ namespace SinTachiePlugin.Control.PartValueList
             }
 
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            ValueTreeArgs vta_1 = ValueTreeNode.GetList(n_l0);
-            PartValues = vta_1.List;
-            UpdateSource(vta_1);
+            PartValues = ValueTreeNode.GetList(n_l0);
+            UpdateSource();
             SetProperties();
             EndEdit?.Invoke(this, EventArgs.Empty);
             return;
@@ -347,10 +327,7 @@ namespace SinTachiePlugin.Control.PartValueList
 
         public void RemoveItems(IEnumerable<PartValue> items)
         {
-            if (SelectedIndex < -1 || SelectedIndex >= Source.Count)
-                return;
-
-            (List<ValueTreeNode> n_l0, List<ValueTreeNode> n_l1) = FindSelectedNodes([.. items], null);
+            (List<ValueTreeNode> n_l0, List<ValueTreeNode> n_l1) = FindSelectedNodes([.. items]);
 
             foreach (ValueTreeNode n_0 in n_l1)
             {
@@ -365,7 +342,7 @@ namespace SinTachiePlugin.Control.PartValueList
             }
 
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            PartValues = ValueTreeNode.GetList(n_l0).List;
+            PartValues = ValueTreeNode.GetList(n_l0);
             UpdateSource();
             SetProperties();
             EndEdit?.Invoke(this, EventArgs.Empty);
@@ -373,7 +350,7 @@ namespace SinTachiePlugin.Control.PartValueList
 
         public ItemMovable CanMoveItem(IEnumerable<PartValue> items)
         {
-            (List<ValueTreeNode> n_l0, List<ValueTreeNode> n_l1) = FindSelectedNodes([.. items], null);
+            (List<ValueTreeNode> n_l0, List<ValueTreeNode> n_l1) = FindSelectedNodes([.. items]);
 
             if (n_l1.Count == 0)
                 return ItemMovable.Neither;
@@ -407,42 +384,48 @@ namespace SinTachiePlugin.Control.PartValueList
             }
         }
 
-        public void MoveItems(IEnumerable<PartValue> items, PartValue lastSelected, bool isUp)
+        public void MoveUpItems(List<PartValue> items)
         {
-            PartValue pv_0 = Source[SelectedIndex];
-            (List<ValueTreeNode> n_l0, List<ValueTreeNode> n_l1) = FindSelectedNodes([.. items], lastSelected); // CanMoveUp/DownItemがtrueを返す前提
+            (List<ValueTreeNode> n_l0, List<ValueTreeNode> n_l1) = FindSelectedNodes([.. items]);
             List<ValueTreeNode> n_l2 = n_l1.First().Parent?.Children ?? n_l0;
-            (int, ValueTreeNode)[] tp_a0 = [.. n_l1.Select(x => (n_l2.IndexOf(x), x)).OrderBy(x => x.Item1)];
-            (int, ValueTreeNode)[] tp_a1 = new (int, ValueTreeNode)[tp_a0.Length];
-            tp_a1[0] = tp_a0[0];
 
-            for (int i_0 = 1; i_0 < tp_a0.Length; i_0++)
-                tp_a1[i_0] = (tp_a0[i_0].Item1 - tp_a0[i_0 - 1].Item1 - 1, tp_a0[i_0].Item2);
-
-            List<ValueTreeNode> n_l3 = [.. n_l2.Except(n_l1)];
-            List<ValueTreeNode> n_l4 = [.. n_l3[..(tp_a1[0].Item1 + (isUp ? -1 : 1))]];
-            n_l3.RemoveRange(0, n_l4.Count);
-            n_l4.Add(tp_a1[0].Item2);
-
-            foreach ((int i_0, ValueTreeNode n_0) in tp_a1.Skip(1))
+            for (int i = 1; i < n_l2.Count && n_l1.Count > 0; i++)
             {
-                IEnumerable<ValueTreeNode> n_e0 = n_l3.Take(i_0);
-                n_l3.RemoveRange(0, i_0);
-                n_l4.AddRange(n_e0);
-                n_l4.Add(n_0);
+                if (n_l2[i] == n_l1.First())
+                {
+                    (n_l2[i - 1], n_l2[i]) = (n_l2[i], n_l2[i - 1]);
+                    n_l1.RemoveAt(0);
+                }
             }
 
-            n_l4.AddRange(n_l3);
-            n_l2.Clear();
-            n_l2.AddRange(n_l4);
-
             BeginEdit?.Invoke(this, EventArgs.Empty);
-            ValueTreeArgs vta_0 = ValueTreeNode.GetList(n_l0);
-            PartValues = vta_0.List;
-            UpdateSource(vta_0);
+            List<PartValue> pv_l0 = ValueTreeNode.GetList(n_l0);
+            PartValues = pv_l0;
+            UpdateSource();
             SetProperties();
             EndEdit?.Invoke(this, EventArgs.Empty);
-            return;
+        }
+
+        public void MoveDownItems(List<PartValue> items)
+        {
+            (List<ValueTreeNode> n_l0, List<ValueTreeNode> n_l1) = FindSelectedNodes([.. items]);
+            List<ValueTreeNode> n_l2 = n_l1.First().Parent?.Children ?? n_l0;
+
+            for (int i = n_l2.Count - 2; i >= 0 && n_l1.Count > 0; i--)
+            {
+                if (n_l2[i] == n_l1.Last())
+                {
+                    (n_l2[i + 1], n_l2[i]) = (n_l2[i], n_l2[i + 1]);
+                    n_l1.RemoveAt(n_l1.Count - 1);
+                }
+            }
+
+            BeginEdit?.Invoke(this, EventArgs.Empty);
+            List<PartValue> pv_l0 = ValueTreeNode.GetList(n_l0);
+            PartValues = pv_l0;
+            UpdateSource();
+            SetProperties();
+            EndEdit?.Invoke(this, EventArgs.Empty);
         }
 
         public void ShowOnlySelectedParts(List<PartValue> items)
