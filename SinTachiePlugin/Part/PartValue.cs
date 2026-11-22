@@ -28,40 +28,16 @@ namespace SinTachiePlugin.Part
         /// ユーザがコントローラで制御できるパラメータ群
         /// </summary>
         [Display(AutoGenerateField = true)]
-        public ControlledParametersOfPart ControlledParameters
-        {
-            get => _controledParameters;
-            set
-            {
-                ControlledParametersOfPart oldCp = _controledParameters;
-                if (Set(ref _controledParameters, value))
-                {
-                    oldCp.ValueUpdated -= UpdateViewParams;
-                    value.ValueUpdated += UpdateViewParams;
-                }
-            }
-        }
-        private ControlledParametersOfPart _controledParameters = new();
+        public ControlledParametersOfPart ControlledParameters { get; set => Set(ref field, value); } = new();
 
         [JsonIgnore]
-        public ViewParametersOfPart ViewParameters
-        {
-            get => _viewParameters;
-            set => Set(ref _viewParameters, value);
-        }
-        private ViewParametersOfPart _viewParameters = new();
-
-        [JsonIgnore]
-        public Thickness DepthMargin { get => _depthMargin; set => Set(ref _depthMargin, value); }
-        private Thickness _depthMargin = new(0, 0, 0, 0);
+        public Thickness DepthMargin { get; set => Set(ref field, value); } = new(0, 0, 0, 0);
         const double Coef = 20;
 
-        protected override IEnumerable<IAnimatable> GetAnimatables() => [ControlledParameters, ViewParameters];
+        protected override IEnumerable<IAnimatable> GetAnimatables() => [ControlledParameters];
 
         public PartValue()
         {
-            ControlledParameters.ValueUpdated += UpdateViewParams;
-            UpdateViewParams();
         }
 
         /// <summary>
@@ -73,8 +49,6 @@ namespace SinTachiePlugin.Part
             Depth = origin.Depth;
             ParentIndex = origin.ParentIndex;
             ControlledParameters = new (origin.ControlledParameters);
-            ControlledParameters.ValueUpdated += UpdateViewParams;
-            UpdateViewParams();
         }
 
         [Obsolete]
@@ -83,20 +57,6 @@ namespace SinTachiePlugin.Part
             Depth = 0;
             ParentIndex = -1;
             ControlledParameters = new(block);
-            UpdateViewParams();
-        }
-
-        public void UpdateViewParams(object? sender, EventArgs events)
-        {
-            UpdateViewParams();
-        }
-
-        private void UpdateViewParams()
-        {
-            ViewParameters.Update(ControlledParameters);
-            //ViewParametersOfPart vp = new();
-            //vp.Update(ControlledParameters);
-            //ViewParameters = vp;
         }
 
         public override ValueTask EndEditAsync()

@@ -40,8 +40,7 @@ namespace SinTachiePlugin.Part
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_LayerInfo), Name = nameof(TextResource.PartParam_LayerInfo_Hide), ResourceType = typeof(TextResource))]
         [ToggleSlider]
-        public bool Hide { get => _hide; set => Set(ref _hide, value); }
-        private bool _hide = false;
+        public bool Hide { get; set => Set(ref field, value); } = false;
 
         /// <summary>
         /// レイヤーのタイプ。
@@ -49,8 +48,7 @@ namespace SinTachiePlugin.Part
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_LayerInfo), Name = nameof(TextResource.PartParam_LayerInfo_LayerType), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public LayerType ThisLayerType { get => _layerType; set => Set(ref _layerType, value); }
-        private LayerType _layerType = LayerType.Image;
+        public LayerType ThisLayerType { get; set => Set(ref field, value); } = LayerType.Image;
 
         /// <summary>
         /// タグ。
@@ -58,82 +56,67 @@ namespace SinTachiePlugin.Part
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_LayerInfo), Name = nameof(TextResource.PartParam_LayerInfo_Tag), ResourceType = typeof(TextResource))]
         [TextEditor]
-        public string Tag { get => _tag; set => Set(ref _tag, value); }
-        private string _tag = string.Empty;
+        public string Tag { get; set => Set(ref field, value); } = string.Empty;
 
         /// <summary>
         /// 親の名前や、描画するファイルやシーンのパラメータ、クリッピング・挿入先について纏めている。
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_LayerInfo), AutoGenerateField = true, ResourceType = typeof(TextResource))]
-        public SourceSelectArgBase SourceSelectArg { get => _sourceSelectArg; set => Set(ref _sourceSelectArg, value); }
-        private SourceSelectArgBase _sourceSelectArg = new ImageFileParameter();
+        public SourceSelectArgBase SourceSelectArg { get; set => Set(ref field, value); } = new ImageFileParameter();
 
         /// <summary>
         /// コメント。描画順序リストに表示されるメモ。
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_LayerInfo), Name = nameof(TextResource.PartParam_LayerInfo_Comment), ResourceType = typeof(TextResource))]
         [TextEditor]
-        public string Comment { get => _comment; set => Set(ref _comment, value); }
-        private string _comment = string.Empty;
+        public string Comment { get; set => Set(ref field, value); } = string.Empty;
 
         /// <summary>
         /// IKのパラメータを纏めている。
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_IK), AutoGenerateField = true, ResourceType = typeof(TextResource))]
-        public InverseKinematicsArgBase InverseKinematicsArg { get => _inverseKinematicsArg; set => Set(ref _inverseKinematicsArg, value); }
-        private InverseKinematicsArgBase _inverseKinematicsArg = new HavingSourceInverseKinematicsParameter();
+        public InverseKinematicsArgBase InverseKinematicsArg { get; set => Set(ref field, value); }= new HavingSourceInverseKinematicsParameter();
 
         /// <summary>
         /// 描画位置の座標平面の原点を調整するパラメータを纏めている。
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_Origin), AutoGenerateField = true, ResourceType = typeof(TextResource))]
-        public OriginArgBase OriginArg { get => _originArg; set => Set(ref _originArg, value); }
-        private OriginArgBase _originArg = new HavingSourceOriginParameter();
+        public OriginArgBase OriginArg { get; set => Set(ref field, value); } = new HavingSourceOriginParameter();
 
         /// <summary>
         /// 描画位置、拡大率など、描画情報を纏めている。
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_Drawing), AutoGenerateField = true, ResourceType = typeof(TextResource))]
-        public DrawingArgBase DrawingArg
-        { 
-            get => _drawingArg;
-            set => Set(ref _drawingArg, value);
-        }
-        private DrawingArgBase _drawingArg = new HavingSourceDrawingParameter();
+        public DrawingArgBase DrawingArg { get; set => Set(ref field, value); } = new HavingSourceDrawingParameter();
 
         /// <summary>
         /// 中心位置のパラメータを纏めている。
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_CenterPoint), AutoGenerateField = true, ResourceType = typeof(TextResource))]
-        public CenterPointArgBase CenterPointArg { get => _centerPointArg; set => Set(ref _centerPointArg, value); }
-        private CenterPointArgBase _centerPointArg = new HavingSourceCenterPointParameter();
+        public CenterPointArgBase CenterPointArg { get; set => Set(ref field, value); } = new HavingSourceCenterPointParameter();
 
         /// <summary>
         /// 名前付きポイントを纏めている。
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_CustomPoint), AutoGenerateField = true, ResourceType = typeof(TextResource))]
-        public CustomPointArgBase CustomPointArg { get => _customPointArg; set => Set(ref _customPointArg, value); }
-        private CustomPointArgBase _customPointArg = new HavingSourceCustomPointParameter();
+        public CustomPointArgBase CustomPointArg { get; set => Set(ref field, value); } = new HavingSourceCustomPointParameter();
 
         /// <summary>
         /// 値の依存設定を纏めている。
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_ValueDependent), AutoGenerateField = true, ResourceType = typeof(TextResource))]
-        public ValueDependentArgBase ValueDependentArg { get => _valueDependentArg; set => Set(ref _valueDependentArg, value); }
-        private ValueDependentArgBase _valueDependentArg = new HavingSourceValueDependentParameter();
+        public ValueDependentArgBase ValueDependentArg { get; set => Set(ref field, value); } = new HavingSourceValueDependentParameter();
 
         /// <summary>
         /// パーツ個別エフェクトを纏めている。
         /// </summary>
         [Display(GroupName = nameof(TextResource.GroupName_PartEffect), AutoGenerateField = true, ResourceType = typeof(TextResource))]
-        public PartEffectArgBase PartEffectArg { get => _partEffectArg; set => Set(ref _partEffectArg, value); }
-        private PartEffectArgBase _partEffectArg = new HavingSourcePartEffectParameter();
+        public PartEffectArgBase PartEffectArg { get; set => Set(ref field, value); } = new HavingSourcePartEffectParameter();
 
         /// <summary>
         /// レイヤータイプが変更された際に起動するイベント
         /// </summary>
         public event EventHandler? LayerTypeChanged;
-        public event EventHandler? ValueUpdated;
 
         public ControlledParametersOfPart()
         {
@@ -365,8 +348,6 @@ namespace SinTachiePlugin.Part
                 LayerTypeChanged?.Invoke(this, EventArgs.Empty);
                 oldType = ThisLayerType;
             }
-
-            ValueUpdated?.Invoke(this, EventArgs.Empty);
 
             return base.EndEditAsync();
         }

@@ -40,13 +40,11 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_Blend), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public Blend Blend { get => _blend; set => Set(ref _blend, value); }
-        private Blend _blend = Blend.Normal;
+        public Blend Blend { get; set => Set(ref field, value); } = Blend.Normal;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_ZSort), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public ZSortMode2 ZSort { get => _zSort; set => Set(ref _zSort, value); }
-        private ZSortMode2 _zSort = ZSortMode2.BasedOnPriority;
+        public ZSortMode2 ZSort { get; set => Set(ref field, value); } = ZSortMode2.BasedOnPriority;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_Priority), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "", -10, 10)]

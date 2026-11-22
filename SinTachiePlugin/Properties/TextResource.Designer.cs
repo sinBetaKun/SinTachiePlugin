@@ -1332,6 +1332,15 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
+        ///   (加算) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PartParam_Drawing_Mode_Priority_Add {
+            get {
+                return ResourceManager.GetString("PartParam_Drawing_Mode_Priority_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   回転角の合成 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PartParam_Drawing_Mode_Rotation {
