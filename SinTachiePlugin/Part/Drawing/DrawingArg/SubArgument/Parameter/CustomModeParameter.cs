@@ -13,8 +13,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter
     {
         [Display(Name = nameof(TextResource.PartParam_Drawing_Mode_XYZ), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public DrawingValueMode XYZMode { get => _xyzMode; set => Set(ref _xyzMode, value); }
-        private DrawingValueMode _xyzMode = DrawingValueMode.Override;
+        public DrawingValueMode XYZMode { get; set => Set(ref field, value); } = DrawingValueMode.Override;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_X), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "px", -500, 500)]
@@ -30,8 +29,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Mode_Opacity), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public DrawingValueMode OpacityMode { get => _opacityMode; set => Set(ref _opacityMode, value); }
-        private DrawingValueMode _opacityMode = DrawingValueMode.Override;
+        public DrawingValueMode OpacityMode { get; set => Set(ref field, value); } = DrawingValueMode.Override;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_Opacity), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", 0, 100)]
@@ -39,8 +37,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Mode_Zoom), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public DrawingValueMode ZoomMode { get => _zoomMode; set => Set(ref _zoomMode, value); }
-        private DrawingValueMode _zoomMode = DrawingValueMode.Override;
+        public DrawingValueMode ZoomMode { get; set => Set(ref field, value); } = DrawingValueMode.Override;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_Zoom), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "%", 0, 400)]
@@ -48,8 +45,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Mode_Rotation), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public DrawingValueMode RotationMode { get => _rotationMode; set => Set(ref _rotationMode, value); }
-        private DrawingValueMode _rotationMode = DrawingValueMode.Override;
+        public DrawingValueMode RotationMode { get; set => Set(ref field, value); } = DrawingValueMode.Override;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_Rotation), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "°", -360, 360)]
@@ -57,8 +53,7 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Mode_Inverse), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public DrawingValueMode InverseMode { get => _inverseMode; set => Set(ref _inverseMode, value); }
-        private DrawingValueMode _inverseMode = DrawingValueMode.Override;
+        public DrawingValueMode InverseMode { get; set => Set(ref field, value); } = DrawingValueMode.Override;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_Invert), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "", 0, 1)]
@@ -66,37 +61,31 @@ namespace SinTachiePlugin.Part.Drawing.DrawingArg.SubArgument.Parameter
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Mode_Blend), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public DrawingValueMode BlendMode { get => _blendMode; set => Set(ref _blendMode, value); }
-        private DrawingValueMode _blendMode = DrawingValueMode.Override;
+        public DrawingValueMode BlendMode { get; set => Set(ref field, value); } = DrawingValueMode.Override;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_Blend), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public Blend Blend { get => _blend; set => Set(ref _blend, value); }
-        private Blend _blend = Blend.Normal;
+        public Blend Blend { get; set => Set(ref field, value); } = Blend.Normal;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Mode_ZSort), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public DrawingValueMode ZSortMode { get => _zSortMode; set => Set(ref _zSortMode, value); }
-        private DrawingValueMode _zSortMode = DrawingValueMode.Override;
+        public DrawingValueMode ZSortMode { get; set => Set(ref field, value); } = DrawingValueMode.Override;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_ZSort), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public ZSortMode2 ZSort { get => _zSort; set => Set(ref _zSort, value); }
-        private ZSortMode2 _zSort = ZSortMode2.BasedOnPriority;
+        public ZSortMode2 ZSort { get; set => Set(ref field, value); } = ZSortMode2.BasedOnPriority;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Mode_Priority), ResourceType = typeof(TextResource))]
         [EnumComboBox]
-        public DrawingValueMode PriorityMode { get => _priorityMode; set => Set(ref _priorityMode, value); }
-        private DrawingValueMode _priorityMode = DrawingValueMode.Override;
-
-        [Display(Name = nameof(TextResource.PartParam_Drawing_Mode_Zoom), ResourceType = typeof(TextResource))]
-        [EnumComboBox]
-        public DrawingValueMode Origin { get => _origin; set => Set(ref _origin, value); }
-        private DrawingValueMode _origin = DrawingValueMode.Override;
+        public DrawingValueMode PriorityMode { get; set => Set(ref field, value); } = DrawingValueMode.Override;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_Priority), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "", -10, 10)]
         public Animation Priority { get; } = new(0, -10000, 10000);
+
+        [Display(Name = nameof(TextResource.PartParam_Drawing_Mode_Zoom), ResourceType = typeof(TextResource))]
+        [EnumComboBox]
+        public DrawingValueMode Origin { get; set => Set(ref field, value); } = DrawingValueMode.Override;
 
         [Display(Name = nameof(TextResource.PartParam_Drawing_Value_Zoom_X), ResourceType = typeof(TextResource))]
         [AnimationSlider("F1", "px", -500, 500)]

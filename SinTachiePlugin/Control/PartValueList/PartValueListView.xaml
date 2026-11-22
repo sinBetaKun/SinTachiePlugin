@@ -54,7 +54,8 @@
                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                                  PreviewMouseWheel="List_PreviewMouseWheel"
                                  VirtualizingPanel.IsVirtualizing="True"
-                                 VirtualizingPanel.VirtualizationMode="Recycling">
+                                 VirtualizingPanel.VirtualizationMode="Recycling"
+                                 Background="Transparent">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <local:PartValueView BeginEdit="PropertiesEditor_BeginEdit"

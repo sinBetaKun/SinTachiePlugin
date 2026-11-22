@@ -420,6 +420,9 @@
   <data name="PartParam_Drawing_Mode_Priority" xml:space="preserve">
     <value>優先度の合成</value>
   </data>
+  <data name="PartParam_Drawing_Mode_Priority_Add" xml:space="preserve">
+    <value>(加算)</value>
+  </data>
   <data name="PartParam_LayerInfo_SourceSelectArg_Parent" xml:space="preserve">
     <value>親</value>
   </data>
