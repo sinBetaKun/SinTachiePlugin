@@ -133,8 +133,7 @@ namespace SinTachiePlugin.Draw
                     AffineTransform2DInterpolationMode interPolationMode2d = desc.InterpolationMode.ToTransform2D();
                     _trans2D.InterPolationMode = interPolationMode2d;
                     Matrix4x4 rttM = desc.Rotate;
-                    _trans2D.TransformMatrix = Matrix3x2.CreateTranslation(-1 * desc.Center)
-                        * Matrix3x2.CreateScale(desc.Zoom)
+                    _trans2D.TransformMatrix = Matrix3x2.CreateScale(desc.Zoom)
                         * new Matrix3x2(rttM.M11, rttM.M12, rttM.M21, rttM.M22, desc.Draw.X, desc.Draw.Y);
                 }
                 else
@@ -143,7 +142,7 @@ namespace SinTachiePlugin.Draw
                     Transform3DInterpolationMode interPolationMode3d = desc.InterpolationMode.ToTransform3D();
                     _trans2D.InterPolationMode = interPolationMode2d;
                     _trans3D.InterPolationMode = interPolationMode3d;
-                    _trans2D.TransformMatrix = Matrix3x2.CreateTranslation(-1 * desc.Center) * Matrix3x2.CreateScale(desc.Zoom);
+                    _trans2D.TransformMatrix = Matrix3x2.CreateScale(desc.Zoom);
                     _trans3D.TransformMatrix = desc.Rotate
                         * Matrix4x4.CreateTranslation(desc.Draw)
                         * desc.Camera

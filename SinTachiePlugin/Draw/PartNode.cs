@@ -10,6 +10,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Numerics;
 using Vortice.Direct2D1;
+using Vortice.Direct2D1.Effects;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Player.Video;
 using YukkuriMovieMaker.Plugin.Effects;
@@ -28,10 +29,10 @@ namespace SinTachiePlugin.Draw
         private ImageFileNodeManager? _ifnm;
         private readonly IGraphicsDevicesAndContext _devices;
         private readonly ID2D1Bitmap _empty;
-        private ID2D1Image? _source; // SourceManagerで管理しているため、ノード内部でDisposeしてはいけない
-        private ID2D1Image _preOutput; // ただの一次沖であるため、Disposeすると他のDispose処理と重複するため厳禁
+        private readonly AffineTransform2D _centerEffect;
+        private ID2D1Image _preOutput; // ただの一次置きであるため、Disposeすると他のDispose処理と重複するため厳禁
         public PartNodeDrawDescription DrawDescByOnlyEffects { get; private set; } = PartNodeDrawDescription.Identity;
-        public PartNodeDrawDescription? DrawDescByIK { get; set; } = PartNodeDrawDescription.Identity;
+        public PartNodeDrawDescription DrawDescByIK { get; set; } = PartNodeDrawDescription.Identity;
         private readonly PartNodeDrawer _drawer;
         public ID2D1Image Output => _drawer.Output;
         public float Z { get; private set; } = 0.0f;
@@ -44,22 +45,15 @@ namespace SinTachiePlugin.Draw
             Params = new(asm);
             _devices = devices;
             _empty = devices.DeviceContext.CreateEmptyBitmap();
-            _preOutput = _empty;
+            _centerEffect = new(devices.DeviceContext);
+            _centerEffect.SetInput(0, _empty, true);
+            _preOutput = _centerEffect.Output;
             _drawer = new(devices);
         }
 
         public void SetSource(ID2D1Image source)
         {
-            _source = source;
-            //if (_source != source)
-            //{
-            //    _source = source;
-            //    _sourceChanged = true;
-            //}
-            //else
-            //{
-            //    _sourceChanged = false;
-            //}
+            _centerEffect.SetInput(0, source, true);
         }
 
         /// <summary>
@@ -111,7 +105,7 @@ namespace SinTachiePlugin.Draw
 
         public void UpdatePreOutput(TimelineSourceDescription tsDesc)
         {
-            ID2D1Image img_0 = _source ?? _empty;
+            ID2D1Image img_0 = _centerEffect.Output;
             List<VideoEffectChainNode> vecn_l0 = [.. _effectCain];
             List<VideoEffectChainNode> vecn_l1 = [];
             PartNode[] pn_a0 = [this, .. Ancestors];
@@ -128,6 +122,33 @@ namespace SinTachiePlugin.Draw
             bool b_4inv_0 = false;
             Matrix4x4 m_4cmr_0 = Matrix4x4.Identity;
             PGoPN_ValueDependent vdg_0 = new();
+
+            PGoPN_CenterPoint ctpg_1 = Params.CenterPointGroup;
+            Vector2 vec_4cnp_0;
+            if (ctpg_1.CenterMode != CenterPointMode.DontSet)
+            {
+                float x = (float)ctpg_1.X;
+                float y = (float)ctpg_1.Y;
+
+                if (ctpg_1.CenterMode == CenterPointMode.CustomPointName)
+                {
+                    PGoPN_CustomPoint cspg0 = Params.CustomPointGroup;
+
+                    if (cspg0.CustomNamePoints.FirstOrDefault(p => p.Name == ctpg_1.CustomPointName) is CustomNamePointParam p0)
+                    {
+                        x += (float)p0.X;
+                        y += (float)p0.Y;
+                    }
+                }
+
+                vec_4cnp_0 = new Vector2(x, y);
+            }
+            else
+            {
+                vec_4cnp_0 = new();
+            }
+
+            _centerEffect.TransformMatrix = Matrix3x2.CreateTranslation(-vec_4cnp_0);
 
             // 自身から祖先へ順番に
             foreach (PartNode pn_0 in pn_a0)
@@ -148,9 +169,8 @@ namespace SinTachiePlugin.Draw
                 PGoPN_CenterPoint ctpg_0 = pn_0.Params.CenterPointGroup;
                 PGoPN_Drawing dg_0 = pn_0.Params.DrawingGroup;
                 Vector3 vct_0 = new((float)dg_0.X, (float)dg_0.Y, (float)dg_0.Z);
-                Vector2 vct_1;
 
-                if (ctpg_0.CenterMode != CenterPointMode.DontSet)
+                if (ctpg_0.CenterMode != CenterPointMode.DontSet && ctpg_0.KeepPlace)
                 {
                     float x = (float)ctpg_0.X;
                     float y = (float)ctpg_0.Y;
@@ -166,16 +186,7 @@ namespace SinTachiePlugin.Draw
                         }
                     }
 
-                    vct_1 = new Vector2(x, y);
-
-                    if (ctpg_0.KeepPlace)
-                    {
-                        vct_0 += new Vector3(vct_1, 0);
-                    }
-                }
-                else
-                {
-                    vct_1 = new();
+                    vct_0 += new Vector3(x, y, 0);
                 }
 
                 DrawDescription dd_0 = new(
@@ -253,7 +264,6 @@ namespace SinTachiePlugin.Draw
                 {
                     pndd_l0.Add(new(
                         dd_0.Draw,
-                        vct_1,
                         dd_0.Zoom,
                         m_4rtt_2,
                         dd_0.Camera,
@@ -331,45 +341,20 @@ namespace SinTachiePlugin.Draw
                 PGoPN_ValueDependent vdg_1 = pn_0.Params.ValueDependentGroup;
 
                 if (vdg_1.Zoom)  vec_4zm_1 *= pndd_0.Zoom;
-                else            vec_4zm_1 = pndd_0.Zoom;
+                else             vec_4zm_1 = pndd_0.Zoom;
                 
                 if (vdg_1.Invert)    b_4inv_1 ^= pndd_0.Inverse;
-                else                b_4inv_1 = pndd_0.Inverse;
+                else                 b_4inv_1 = pndd_0.Inverse;
 
                 if (vdg_1.Rotation)  m_4rtt_1 *= pndd_0.Rotate;
-                else                m_4rtt_1 = pndd_0.Rotate;
+                else                 m_4rtt_1 = pndd_0.Rotate;
 
                 cnp_l0 = pn_0.Params.CustomPointGroup.CustomNamePoints;
             }
 
             _preOutput = img_0;
-            PGoPN_CenterPoint ctpg_1 = Params.CenterPointGroup;
-            Vector2 vec_4cnp_0;
-            if (ctpg_1.CenterMode != CenterPointMode.DontSet)
-            {
-                float x = (float)ctpg_1.X;
-                float y = (float)ctpg_1.Y;
-
-                if (ctpg_1.CenterMode == CenterPointMode.CustomPointName)
-                {
-                    PGoPN_CustomPoint cspg0 = Params.CustomPointGroup;
-
-                    if (cspg0.CustomNamePoints.FirstOrDefault(p => p.Name == ctpg_1.CustomPointName) is CustomNamePointParam p0)
-                    {
-                        x += (float)p0.X;
-                        y += (float)p0.Y;
-                    }
-                }
-
-                vec_4cnp_0 = new Vector2(x, y);
-            }
-            else
-            {
-                vec_4cnp_0 = new();
-            }
-
-            DrawDescByOnlyEffects = new(vec_4dr_0, vec_4cnp_0, vec_4zm_0, m_4rtt_0, m_4cmr_0, d_4opc_0, b_4inv_0, intm_0);
-            DrawDescByIK = null;
+            DrawDescByOnlyEffects = new(vec_4dr_0, vec_4zm_0, m_4rtt_0, m_4cmr_0, d_4opc_0, b_4inv_0, intm_0);
+            DrawDescByIK = DrawDescByOnlyEffects;
         }
 
         public void UpdateOutputAndZ()

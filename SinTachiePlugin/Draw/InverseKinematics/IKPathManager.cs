@@ -47,8 +47,7 @@ namespace SinTachiePlugin.Draw.InverseKinematics
 
                 if (!s_4tag_a1.Contains(ikg_0.RootPartTag)
                     || !s_4tag_a1.Contains(ikg_0.JointPartTag)
-                    || !(s_4tag_a0.Contains(ikg_0.EndEffectorPartTag) || string.IsNullOrEmpty(ikg_0.EndEffectorPartTag))
-                    || s_4tag_a1.Contains(ikg_0.EndEffectorPartTag))
+                    || !(s_4tag_a0.Contains(ikg_0.EndEffectorPartTag) || string.IsNullOrEmpty(ikg_0.EndEffectorPartTag)))
                 {
                     continue;
                 }
@@ -116,10 +115,10 @@ namespace SinTachiePlugin.Draw.InverseKinematics
             // 参考元：https://qiita.com/Ninagawa123/items/4ae058d819de1d5b698a
             foreach (IKPath ikp_0 in paths)
             {
-                PartNodeDrawDescription pndd_4r_0 = ikp_0.Root.DrawDescByOnlyEffects;
-                Vector3 vec_4r2j_0 = ikp_0.Joint.DrawDescByOnlyEffects.Draw - pndd_4r_0.Draw;
+                PartNodeDrawDescription pndd_4r_0 = ikp_0.Root.DrawDescByIK;
+                Vector3 vec_4r2j_0 = ikp_0.Joint.DrawDescByIK.Draw - pndd_4r_0.Draw;
                 Vector3 vec_4r2j_1 = new(vec_4r2j_0.X, vec_4r2j_0.Y, 0.0f);
-                Vector3 vec_4j2p_0 = ikp_0.PreEndEffect.DrawDescByOnlyEffects.Draw - ikp_0.Joint.DrawDescByOnlyEffects.Draw;
+                Vector3 vec_4j2p_0 = ikp_0.PreEndEffect.DrawDescByIK.Draw - ikp_0.Joint.DrawDescByIK.Draw;
                 Vector3 vec_4j2p_1 = new(vec_4j2p_0.X, vec_4j2p_0.Y, 0.0f);
                 PartNode pn_4p_0 = ikp_0.PreEndEffect;
                 PGoPN_InverseKinematics ikg_0p_0 = pn_4p_0.Params.InverseKinematicsGroup;
@@ -147,7 +146,7 @@ namespace SinTachiePlugin.Draw.InverseKinematics
 
                 if (ikp_0.EndEffect is PartNode pn_4e_0)
                 {
-                    PartNodeDrawDescription pndd_4e_0 = pn_4e_0.DrawDescByOnlyEffects;
+                    PartNodeDrawDescription pndd_4e_0 = pn_4e_0.DrawDescByIK;
                     Vector2 vec_4zm0e_0 = pndd_4e_0.Zoom;
 
                     if (pndd_4e_0.Inverse) vec_4zm0e_0.X *= -1.0f;
@@ -162,7 +161,7 @@ namespace SinTachiePlugin.Draw.InverseKinematics
                     vec_4r2e_0 = vec_4cstp0e_0 - pndd_4r_0.Draw;
                 }
 
-                PartNodeDrawDescription pndd_4p_0 = pn_4p_0.DrawDescByOnlyEffects;
+                PartNodeDrawDescription pndd_4p_0 = pn_4p_0.DrawDescByIK;
                 Vector2 vec_4zm0p_0 = pndd_4p_0.Zoom;
 
                 if (pndd_4p_0.Inverse) vec_4zm0p_0.X *= -1.0f;
@@ -208,7 +207,7 @@ namespace SinTachiePlugin.Draw.InverseKinematics
 
                 float d_4dth1_0 = d_4theta1_0 - MathF.Atan2(vec_4r2j_1.Y, vec_4r2j_1.X);
                 float d_4dth2_0 = d_4theta1_0 + d_4theta2_0 - MathF.Atan2(vec_4j2e_0.Y, vec_4j2e_0.X);
-                PartNodeDrawDescription pndd_4j_0 = ikp_0.Joint.DrawDescByOnlyEffects;
+                PartNodeDrawDescription pndd_4j_0 = ikp_0.Joint.DrawDescByIK;
                 Matrix4x4 m_4rtt4j2p = Matrix4x4.CreateRotationZ(d_4dth2_0);
                 PartNodeDrawDescription pndd_4j_1 = pndd_4j_0 with
                 {
@@ -224,7 +223,7 @@ namespace SinTachiePlugin.Draw.InverseKinematics
 
                 foreach (PartNode pn_0 in ikp_0.R2J)
                 {
-                    PartNodeDrawDescription pndd_0 = pn_0.DrawDescByOnlyEffects;
+                    PartNodeDrawDescription pndd_0 = pn_0.DrawDescByIK;
                     Vector3 vec_0 = pndd_0.Draw;
                     Vector3 vec_1 = Vector3.Transform(vec_0 - pndd_4r_0.Draw, m_4rtt4r2j_0);
                     PartNodeDrawDescription pndd_1 = pndd_0 with
@@ -239,7 +238,7 @@ namespace SinTachiePlugin.Draw.InverseKinematics
 
                 foreach (PartNode pn_0 in pn_a_4j2p_0)
                 {
-                    PartNodeDrawDescription pndd_0 = pn_0.DrawDescByOnlyEffects;
+                    PartNodeDrawDescription pndd_0 = pn_0.DrawDescByIK;
                     Vector3 vec_0 = pndd_0.Draw;
                     Vector3 vec_1 = Vector3.Transform(vec_0 - pndd_4j_0.Draw, m_4rtt4j2p);
                     PartNodeDrawDescription pndd_1 = pndd_0 with
