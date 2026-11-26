@@ -10,7 +10,7 @@ using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.ShapePludin
 {
-    internal class ShapeParameterOfSinTachie(SharedDataStore? sharedData) : ShapeParameterBase(sharedData)
+    internal class ShapeParameterOfSinTachie(SharedDataStore? sharedData) : ShapeParameterBase(sharedData), IFileItem
     {
         [Display]
         [PartsListControllerForShape(PropertyEditorSize = PropertyEditorSize.FullWidth)]
@@ -61,6 +61,18 @@ namespace SinTachiePlugin.ShapePludin
                 var newParam = new PartsOfShapeItem() { Root = Directory, Parts = [.. Parts.Select(x => new PartBlock(x))] };
                 parameter.PartsAndRoot = newParam;
             }
+        }
+
+        public IEnumerable<string> GetFiles() => [.. PartsAndRoot.GetFiles()];
+
+        public void ReplaceFile(string from, string to)
+        {
+            PartsAndRoot.ReplaceFile(from, to);
+        }
+
+        public IEnumerable<TimelineResource> GetResources()
+        {
+            return PartsAndRoot.GetResources();
         }
     }
 }

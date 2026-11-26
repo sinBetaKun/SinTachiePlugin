@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SinTachiePlugin.Informations;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using Path = System.IO.Path;
 

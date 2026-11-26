@@ -79,7 +79,7 @@ namespace SinTachiePlugin.Properties {
         }
         
         /// <summary>
-        ///   v1.1.1.0 に類似しているローカライズされた文字列を検索します。
+        ///   v1.1.2.0 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string STPVersion {
             get {

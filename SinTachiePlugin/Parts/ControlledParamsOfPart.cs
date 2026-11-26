@@ -2,13 +2,14 @@
 using SinTachiePlugin.Enums;
 using SinTachiePlugin.Informations;
 using SinTachiePlugin.LayerValueListController;
+using SinTachiePlugin.LayerValueListController.Controller;
+using SinTachiePlugin.Parts.Controller;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using YukkuriMovieMaker.Commons;
 using YukkuriMovieMaker.Controls;
 using YukkuriMovieMaker.Plugin.Effects;
-using SinTachiePlugin.Parts.Controller;
-using SinTachiePlugin.LayerValueListController.Controller;
+using YukkuriMovieMaker.Project;
 
 namespace SinTachiePlugin.Parts
 {
@@ -16,7 +17,7 @@ namespace SinTachiePlugin.Parts
     /// ユーザがコントローラーで編集できるパラメータをまとめたクラス。
     /// 何か新しくパラメータを追加したり、それらの管理システムを変更したいときは、このクラスを編集すること。
     /// </summary>
-    public class ControlledParamsOfPart : Animatable
+    public class ControlledParamsOfPart : Animatable, IFileItem
     {
         public bool Appear { get => appear; set => Set(ref appear, value); }
         bool appear = true;
@@ -215,5 +216,26 @@ namespace SinTachiePlugin.Parts
             };
 
         protected override IEnumerable<IAnimatable> GetAnimatables() => [BusNum, ..LayerValues, X, Y, Z, Opacity, Scale, Rotate, Mirror, Cnt_X, Cnt_Y, Exp_X, Exp_Y, .. Effects];
+
+        public IEnumerable<string> GetFiles() => [ImagePath, .. Effects.OfType<IFileItem>().Select(x => x.GetFiles()).SelectMany(x => x)];
+
+        public void ReplaceFile(string from, string to)
+        {
+            if (ImagePath == from)
+                ImagePath = to;
+
+            foreach (IFileItem item in Effects.OfType<IFileItem>())
+                item.ReplaceFile(from, to);
+        }
+
+        public IEnumerable<TimelineResource> GetResources()
+        {
+            if (TimelineResource.TryParseFromPath(ImagePath, TimelineResourceType.Image, out TimelineResource? tr_0))
+                yield return tr_0;
+
+            foreach (IFileItem item in Effects.OfType<IFileItem>())
+                foreach (TimelineResource tr_1 in item.GetResources())
+                    yield return tr_1;
+        }
     }
 }
